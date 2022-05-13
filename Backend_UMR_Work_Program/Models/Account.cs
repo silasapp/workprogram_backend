@@ -12,12 +12,12 @@ namespace Musewall.Models
     {
         private string id, COMPANYNAME, chairperson, scribe, presentation_date, presentation_time, meeting_room, days_to_go, system_date;
 
-        private readonly AppSettings _appSettings;
+        //private readonly AppSettings _appSettings;
 
-        public Account(IOptions<AppSettings> appSettings) 
-        {
-            _appSettings = appSettings.Value;
-        }
+        //public Account(IOptions<AppSettings> appSettings) 
+        //{
+        //    _appSettings = appSettings.Value;
+        //}
 
         private string Encrypt(string clearText)
         {
@@ -67,362 +67,362 @@ namespace Musewall.Models
         }
 
 
-        private void Update_login_date_time()
-        {
-            system_date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"); // DATE TIME
-            Connection mycon = new Connection();
-            SqlConnection con = new SqlConnection(mycon.Myconnection);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.Connection = con;
-            con.Open();
-
-            try
-            {
-                // string email_days_to_go = Check_Days_to_send_Email + "Day(s)";
-
-                cmd.CommandText = "Update ADMIN_COMPANY_INFORMATION  SET  last_login_date = '" + system_date + "'    WHERE  EMAIL  = '" + TextBox1.Text + "' ";
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                string myMsgErr = ex.Message;
-                con.Close();
-            }
-            finally
-            {
-                con.Close();
-                //  Response.Redirect("tx_view_status_installation.aspx");
-            }
-        }
-
-
-
-        private void isAutheticate(string uname, string password) // Pass the Isauthentication into access for username and password
-        {
-            Connection mycon = new Connection();
-            SqlConnection con = new SqlConnection(mycon.Myconnection);
-
-            SqlCommand cmd = new SqlCommand("select * from ADMIN_COMPANY_INFORMATION where EMAIL = '" + uname + "' and PASSWORDS =   '" + password + "' COLLATE Latin1_General_CS_AS  and STATUS_ =   'Activated' ", con);
-
-            cmd.CommandType = CommandType.Text;
-            cmd.Connection = con;
-            try
-            {
-                con.Open();
-
-                System.Data.SqlClient.SqlDataReader rd = cmd.ExecuteReader();
-
-                if (rd.Read())
-                {
-                    Session.Remove("Concession_Held");
-                    Session.Remove("BACK_PAGE_SESSION");
-
-                    Session["Company_Email"] = TextBox1.Text;
+        //private void Update_login_date_time()
+        //{
+        //    system_date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"); // DATE TIME
+        //    Connection mycon = new Connection();
+        //    SqlConnection con = new SqlConnection(mycon.Myconnection);
+        //    SqlCommand cmd = new SqlCommand();
+        //    cmd.CommandType = CommandType.Text;
+        //    cmd.Connection = con;
+        //    con.Open();
+
+        //    try
+        //    {
+        //        // string email_days_to_go = Check_Days_to_send_Email + "Day(s)";
+
+        //        cmd.CommandText = "Update ADMIN_COMPANY_INFORMATION  SET  last_login_date = '" + system_date + "'    WHERE  EMAIL  = '" + TextBox1.Text + "' ";
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string myMsgErr = ex.Message;
+        //        con.Close();
+        //    }
+        //    finally
+        //    {
+        //        con.Close();
+        //        //  Response.Redirect("tx_view_status_installation.aspx");
+        //    }
+        //}
+
+
+
+        //private void isAutheticate(string uname, string password) // Pass the Isauthentication into access for username and password
+        //{
+        //    Connection mycon = new Connection();
+        //    SqlConnection con = new SqlConnection(mycon.Myconnection);
+
+        //    SqlCommand cmd = new SqlCommand("select * from ADMIN_COMPANY_INFORMATION where EMAIL = '" + uname + "' and PASSWORDS =   '" + password + "' COLLATE Latin1_General_CS_AS  and STATUS_ =   'Activated' ", con);
+
+        //    cmd.CommandType = CommandType.Text;
+        //    cmd.Connection = con;
+        //    try
+        //    {
+        //        con.Open();
+
+        //        System.Data.SqlClient.SqlDataReader rd = cmd.ExecuteReader();
+
+        //        if (rd.Read())
+        //        {
+        //            Session.Remove("Concession_Held");
+        //            Session.Remove("BACK_PAGE_SESSION");
+
+        //            Session["Company_Email"] = TextBox1.Text;
 
-                    Session["CompanyName"] = rd["COMPANY_NAME"].ToString();
+        //            Session["CompanyName"] = rd["COMPANY_NAME"].ToString();
 
-                    Session["NAME"] = rd["NAME"].ToString();
+        //            Session["NAME"] = rd["NAME"].ToString();
 
-                    Session["COMPANY_ID"] = rd["COMPANY_ID"].ToString();
+        //            Session["COMPANY_ID"] = rd["COMPANY_ID"].ToString();
 
-                    return_Data_from_ADMIN_CONCESSIONS_INFORMATION();
+        //            return_Data_from_ADMIN_CONCESSIONS_INFORMATION();
 
-                    Update_login_date_time();
+        //            Update_login_date_time();
 
 
-                    if (Request.QueryString["ReturnUrl"] != null) //check if the user is requestin a page before redirected to login
-                    {
-                        FormsAuthentication.RedirectFromLoginPage(TextBox1.Text, false);
-                    }
-                    else
-                    {
-                        FormsAuthentication.SetAuthCookie(TextBox1.Text, false);
-                        Response.Redirect("work_programme_landing_page.aspx");
-                    }
+        //            if (Request.QueryString["ReturnUrl"] != null) //check if the user is requestin a page before redirected to login
+        //            {
+        //                FormsAuthentication.RedirectFromLoginPage(TextBox1.Text, false);
+        //            }
+        //            else
+        //            {
+        //                FormsAuthentication.SetAuthCookie(TextBox1.Text, false);
+        //                Response.Redirect("work_programme_landing_page.aspx");
+        //            }
 
-                }
-                else
-                {
-                    string strMsg = "Wrong Username or/and Password !!!! ..Please try again ";
-                    Response.WriteAsync("<script>alert('" + strMsg + "')</script>");
-                }
+        //        }
+        //        else
+        //        {
+        //            string strMsg = "Wrong Username or/and Password !!!! ..Please try again ";
+        //            Response.WriteAsync("<script>alert('" + strMsg + "')</script>");
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                //myStatus = false;
-                string ErrMsg = ex.Message;
-                con.Close();
-            }
-            finally
-            {
-                con.Close();
-            }
-            //  return myStatus;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //myStatus = false;
+        //        string ErrMsg = ex.Message;
+        //        con.Close();
+        //    }
+        //    finally
+        //    {
+        //        con.Close();
+        //    }
+        //    //  return myStatus;
 
-        }
+        //}
 
 
-        private void return_Data_from_ADMIN_CONCESSIONS_INFORMATION() // Pass the Isauthentication into access for username and password
-        {
-            Connection mycon = new Connection();
-            SqlConnection con = new SqlConnection(mycon.Myconnection);
+        //private void return_Data_from_ADMIN_CONCESSIONS_INFORMATION() // Pass the Isauthentication into access for username and password
+        //{
+        //    Connection mycon = new Connection();
+        //    SqlConnection con = new SqlConnection(mycon.Myconnection);
 
-            SqlCommand cmd = new SqlCommand("select * from ADMIN_CONCESSIONS_INFORMATION where COMPANY_EMAIL = '" + TextBox1.Text + "' ", con);
-            // OracleCommand cmd = new OracleCommand("select * from TXRMS_USERS where username = '" + uname + "' and password  = '" + pword + "'  ", con);
-            cmd.CommandType = CommandType.Text;
-            cmd.Connection = con;
-            try
-            {
-                con.Open();
-                System.Data.SqlClient.SqlDataReader rd = cmd.ExecuteReader();
+        //    SqlCommand cmd = new SqlCommand("select * from ADMIN_CONCESSIONS_INFORMATION where COMPANY_EMAIL = '" + TextBox1.Text + "' ", con);
+        //    // OracleCommand cmd = new OracleCommand("select * from TXRMS_USERS where username = '" + uname + "' and password  = '" + pword + "'  ", con);
+        //    cmd.CommandType = CommandType.Text;
+        //    cmd.Connection = con;
+        //    try
+        //    {
+        //        con.Open();
+        //        System.Data.SqlClient.SqlDataReader rd = cmd.ExecuteReader();
 
-                if (rd.Read())
-                {
-                    // Session["Company_Email"] = TextBox1.Text;
+        //        if (rd.Read())
+        //        {
+        //            // Session["Company_Email"] = TextBox1.Text;
 
-                    Session["Contract_Type"] = rd["Contract_Type"].ToString();
-                }
+        //            Session["Contract_Type"] = rd["Contract_Type"].ToString();
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                //myStatus = false;
-                string ErrMsg = ex.Message;
-                con.Close();
-            }
-            finally
-            {
-                con.Close();
-            }
-            //  return myStatus;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //myStatus = false;
+        //        string ErrMsg = ex.Message;
+        //        con.Close();
+        //    }
+        //    finally
+        //    {
+        //        con.Close();
+        //    }
+        //    //  return myStatus;
 
-        }
+        //}
 
 
 
 
 
-        private void Work_Program_Email_Notification()
-        {
-            ////***************************************** Mailing to user that he has requested Space**********
+        //private void Work_Program_Email_Notification()
+        //{
+        //    ////***************************************** Mailing to user that he has requested Space**********
 
-            mails requester_mail = new mails();
+        //    mails requester_mail = new mails();
 
-            requester_mail.NES_subject = "Work Program Notification";
+        //    requester_mail.NES_subject = "Work Program Notification";
 
-            requester_mail.Official_name = " <b> '" + TextBox1.Text + "'  </b> ";
+        //    requester_mail.Official_name = " <b> '" + TextBox1.Text + "'  </b> ";
 
-            requester_mail.NES_body = "You have been scheduled to officiate Work Program activity . <br/>  <br/> Please find Work Program details below.Thank you.";
+        //    requester_mail.NES_body = "You have been scheduled to officiate Work Program activity . <br/>  <br/> Please find Work Program details below.Thank you.";
 
-            requester_mail.Chairperson = "Project Manager's Comment: ";
+        //    requester_mail.Chairperson = "Project Manager's Comment: ";
 
-            requester_mail.Scribe = "Project Manager's Comment: ";
+        //    requester_mail.Scribe = "Project Manager's Comment: ";
 
-            requester_mail.Presentation_date = "Project Manager's Comment: ";
+        //    requester_mail.Presentation_date = "Project Manager's Comment: ";
 
-            requester_mail.Presentation_time = "Project Manager's Comment: ";
+        //    requester_mail.Presentation_time = "Project Manager's Comment: ";
 
-            requester_mail.Days_to_go = "Project Manager's Comment: ";
+        //    requester_mail.Days_to_go = "Project Manager's Comment: ";
 
-            requester_mail.Meeting_room = "Project Manager's Comment: ";
+        //    requester_mail.Meeting_room = "Project Manager's Comment: ";
 
-            requester_mail.ToRecieved = "anthony.nwosu@brandonetech.com";
-            requester_mail.ToRecievedCC = "tonygentle2000@yahoo.com";
+        //    requester_mail.ToRecieved = "anthony.nwosu@brandonetech.com";
+        //    requester_mail.ToRecievedCC = "tonygentle2000@yahoo.com";
 
-            //requester_mail.ToRecieved = "anthony.nwosu@brandonetech.com";
-            //requester_mail.ToRecievedCC = "tonygentle2000@yahoo.com";
-            //  requester_mail.Applink = "Click <a href=http://workprogram.azurewebsites.net/> HERE</a> to Action the request";
+        //    //requester_mail.ToRecieved = "anthony.nwosu@brandonetech.com";
+        //    //requester_mail.ToRecievedCC = "tonygentle2000@yahoo.com";
+        //    //  requester_mail.Applink = "Click <a href=http://workprogram.azurewebsites.net/> HERE</a> to Action the request";
 
-            requester_mail.NES_SendMail_Project_Team();
+        //    requester_mail.NES_SendMail_Project_Team();
 
-            Label48.Text = requester_mail.Email_test;
+        //    Label48.Text = requester_mail.Email_test;
 
 
-            ////***************************************************** END****************************************
-        }
+        //    ////***************************************************** END****************************************
+        //}
 
 
-        private void wp_check_ADMIN_DATETIME_PRESENTATION_Table_and_send_email()
-        {
+        //private void wp_check_ADMIN_DATETIME_PRESENTATION_Table_and_send_email()
+        //{
 
-            Connection mycon = new Connection();
-            SqlConnection con = new SqlConnection(mycon.Myconnection);
+        //    Connection mycon = new Connection();
+        //    SqlConnection con = new SqlConnection(mycon.Myconnection);
 
-            SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION ", con);
-            //   SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION where id = 117 ", con);
-            DataTable result = new DataTable();
+        //    SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION ", con);
+        //    //   SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION where id = 117 ", con);
+        //    DataTable result = new DataTable();
 
-            da.Fill(result);
+        //    da.Fill(result);
 
-            string countrecords = result.Rows.Count.ToString();
+        //    string countrecords = result.Rows.Count.ToString();
 
-            int count_record = int.Parse(countrecords);
-            for (int m = 0; m < count_record; m++)
-            {
-                try
-                {
-                    id = result.Rows[m]["id"].ToString(); // REPORT REF
-                    string COMPANYNAME = result.Rows[m]["COMPANYNAME"].ToString(); // 
+        //    int count_record = int.Parse(countrecords);
+        //    for (int m = 0; m < count_record; m++)
+        //    {
+        //        try
+        //        {
+        //            id = result.Rows[m]["id"].ToString(); // REPORT REF
+        //            string COMPANYNAME = result.Rows[m]["COMPANYNAME"].ToString(); // 
 
-                    string chairperson = result.Rows[m]["CHAIRPERSON"].ToString(); // 
-                    string scribe = result.Rows[m]["SCRIBE"].ToString(); // 
+        //            string chairperson = result.Rows[m]["CHAIRPERSON"].ToString(); // 
+        //            string scribe = result.Rows[m]["SCRIBE"].ToString(); // 
 
-                    string presentation_date = result.Rows[m]["DATE_TIME_TEXT"].ToString(); // 
-                    string presentation_time = result.Rows[m]["wp_time"].ToString(); // 
+        //            string presentation_date = result.Rows[m]["DATE_TIME_TEXT"].ToString(); // 
+        //            string presentation_time = result.Rows[m]["wp_time"].ToString(); // 
 
-                    string meeting_room = result.Rows[m]["MEETINGROOM"].ToString(); // 
-                                                                                    //string days_to_go = result.Rows[m]["wp_date"].ToString(); // 
+        //            string meeting_room = result.Rows[m]["MEETINGROOM"].ToString(); // 
+        //                                                                            //string days_to_go = result.Rows[m]["wp_date"].ToString(); // 
 
 
-                    string wp_date = result.Rows[m]["wp_date"].ToString(); // 
-                    DateTime wp_date_scheduled = System.Convert.ToDateTime(wp_date); // This Holds the value for the initiation date ...
+        //            string wp_date = result.Rows[m]["wp_date"].ToString(); // 
+        //            DateTime wp_date_scheduled = System.Convert.ToDateTime(wp_date); // This Holds the value for the initiation date ...
 
-                    string SystemDate_string = DateTime.Now.ToString("MM/dd/yyyy"); // DATE TIME
+        //            string SystemDate_string = DateTime.Now.ToString("MM/dd/yyyy"); // DATE TIME
 
-                    DateTime System_endDate = System.Convert.ToDateTime(SystemDate_string);
+        //            DateTime System_endDate = System.Convert.ToDateTime(SystemDate_string);
 
-                    TimeSpan ts_totalduration;
+        //            TimeSpan ts_totalduration;
 
-                    ts_totalduration = wp_date_scheduled.Subtract(System_endDate);
+        //            ts_totalduration = wp_date_scheduled.Subtract(System_endDate);
 
-                    int weekends = 0;
+        //            int weekends = 0;
 
-                    //// The for is to check if the date for the work program has passed ... this mean the start date must me less than the end date
-                    //for (DateTime tempDt = wp_date_scheduled; tempDt.Date < System_endDate.Date; tempDt = tempDt.AddDays(1))
-                    //{
-                    //    if (tempDt.DayOfWeek == DayOfWeek.Saturday || tempDt.DayOfWeek == DayOfWeek.Sunday)
-                    //        weekends++;
-                    //}
+        //            //// The for is to check if the date for the work program has passed ... this mean the start date must me less than the end date
+        //            //for (DateTime tempDt = wp_date_scheduled; tempDt.Date < System_endDate.Date; tempDt = tempDt.AddDays(1))
+        //            //{
+        //            //    if (tempDt.DayOfWeek == DayOfWeek.Saturday || tempDt.DayOfWeek == DayOfWeek.Sunday)
+        //            //        weekends++;
+        //            //}
 
 
-                    for (DateTime tempDt = System_endDate; tempDt.Date < wp_date_scheduled.Date; tempDt = tempDt.AddDays(1))
-                    {
-                        if (tempDt.DayOfWeek == DayOfWeek.Saturday || tempDt.DayOfWeek == DayOfWeek.Sunday)
-                            weekends++;
-                    }
+        //            for (DateTime tempDt = System_endDate; tempDt.Date < wp_date_scheduled.Date; tempDt = tempDt.AddDays(1))
+        //            {
+        //                if (tempDt.DayOfWeek == DayOfWeek.Saturday || tempDt.DayOfWeek == DayOfWeek.Sunday)
+        //                    weekends++;
+        //            }
 
 
-                    ts_totalduration = ts_totalduration.Subtract(new TimeSpan(weekends, 0, 0, 0));
+        //            ts_totalduration = ts_totalduration.Subtract(new TimeSpan(weekends, 0, 0, 0));
 
-                    string Check_Days_to_send_Email = ts_totalduration.Days.ToString();
+        //            string Check_Days_to_send_Email = ts_totalduration.Days.ToString();
 
-                    if (Check_Days_to_send_Email == "7")
-                    {
-                        string Check1 = "Yes";
-                    }
+        //            if (Check_Days_to_send_Email == "7")
+        //            {
+        //                string Check1 = "Yes";
+        //            }
 
-                    if (Check_Days_to_send_Email == "3")
-                    {
-                        string Check2 = "Yes";
-                    }
+        //            if (Check_Days_to_send_Email == "3")
+        //            {
+        //                string Check2 = "Yes";
+        //            }
 
-                    if (Check_Days_to_send_Email == "1")
-                    {
-                        string Check3 = "Yes";
-                    }
+        //            if (Check_Days_to_send_Email == "1")
+        //            {
+        //                string Check3 = "Yes";
+        //            }
 
 
-                    string Check = "Yes";
+        //            string Check = "Yes";
 
-                }
-                catch (Exception ex)
-                {
-                    string msg = ex.Message;
-                    con.Close();
-                }
-                finally
-                {
-                    con.Close();
-                }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            string msg = ex.Message;
+        //            con.Close();
+        //        }
+        //        finally
+        //        {
+        //            con.Close();
+        //        }
 
-            }
+        //    }
 
 
 
-        }
+        //}
 
 
 
 
-        public void Check_and_Login()
-        {
-            string cs = ConfigurationManager.ConnectionStrings["App_ConnectionString"].ConnectionString;
+        //public void Check_and_Login()
+        //{
+        //    string cs = ConfigurationManager.ConnectionStrings["App_ConnectionString"].ConnectionString;
 
-            using (SqlConnection con = new SqlConnection(cs))
-            {
+        //    using (SqlConnection con = new SqlConnection(cs))
+        //    {
 
-                SqlCommand cmd = new SqlCommand();
-                cmd = new SqlCommand("Select * from ADMIN_COMPANY_INFORMATION", con);
+        //        SqlCommand cmd = new SqlCommand();
+        //        cmd = new SqlCommand("Select * from ADMIN_COMPANY_INFORMATION", con);
 
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection = con;
-                con.Open();
+        //        cmd.CommandType = CommandType.Text;
+        //        cmd.Connection = con;
+        //        con.Open();
 
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
-                DataSet ds = new DataSet();
-                da.Fill(ds, "ADMIN_COMPANY_INFORMATION");
+        //        SqlDataAdapter da = new SqlDataAdapter();
+        //        da.SelectCommand = cmd;
+        //        DataSet ds = new DataSet();
+        //        da.Fill(ds, "ADMIN_COMPANY_INFORMATION");
 
-                DataTable dt = ds.Tables[0];
-                int rowCount = dt.Rows.Count;
+        //        DataTable dt = ds.Tables[0];
+        //        int rowCount = dt.Rows.Count;
 
-                int i = 1;
+        //        int i = 1;
 
-                if (rowCount > 0)
-                {
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        string EMAIL = row["EMAIL"].ToString();
-                        string PASSWORDS = row["PASSWORDS"].ToString();
-                        string STATUS_ = row["STATUS_"].ToString();
+        //        if (rowCount > 0)
+        //        {
+        //            foreach (DataRow row in dt.Rows)
+        //            {
+        //                string EMAIL = row["EMAIL"].ToString();
+        //                string PASSWORDS = row["PASSWORDS"].ToString();
+        //                string STATUS_ = row["STATUS_"].ToString();
 
-                        string COMPANY_NAME = row["COMPANY_NAME"].ToString();
-                        string NAME = row["NAME"].ToString();
-                        // string STATUS_ = row["STATUS_"].ToString();
+        //                string COMPANY_NAME = row["COMPANY_NAME"].ToString();
+        //                string NAME = row["NAME"].ToString();
+        //                // string STATUS_ = row["STATUS_"].ToString();
 
 
 
-                        if (EMAIL == TextBox1.Text && PASSWORDS == TextBox2.Text && STATUS_ == "Activated")
-                        {
-                            Session.Remove("Concession_Held");
+        //                if (EMAIL == TextBox1.Text && PASSWORDS == TextBox2.Text && STATUS_ == "Activated")
+        //                {
+        //                    Session.Remove("Concession_Held");
 
-                            Session["Company_Email"] = TextBox1.Text;
+        //                    Session["Company_Email"] = TextBox1.Text;
 
-                            Session["CompanyName"] = COMPANY_NAME;
+        //                    Session["CompanyName"] = COMPANY_NAME;
 
-                            Session["NAME"] = NAME;
+        //                    Session["NAME"] = NAME;
 
-                            return_Data_from_ADMIN_CONCESSIONS_INFORMATION();
+        //                    return_Data_from_ADMIN_CONCESSIONS_INFORMATION();
 
-                            Update_login_date_time();
+        //                    Update_login_date_time();
 
 
-                            if (Request.QueryString["ReturnUrl"] != null) //check if the user is requestin a page before redirected to login
-                            {
-                                FormsAuthentication.RedirectFromLoginPage(TextBox1.Text, false);
-                            }
-                            else
-                            {
-                                FormsAuthentication.SetAuthCookie(TextBox1.Text, false);
-                                Response.Redirect("work_programme_landing_page.aspx");
-                            }
+        //                    if (Request.QueryString["ReturnUrl"] != null) //check if the user is requestin a page before redirected to login
+        //                    {
+        //                        FormsAuthentication.RedirectFromLoginPage(TextBox1.Text, false);
+        //                    }
+        //                    else
+        //                    {
+        //                        FormsAuthentication.SetAuthCookie(TextBox1.Text, false);
+        //                        Response.Redirect("work_programme_landing_page.aspx");
+        //                    }
 
 
-                        }
-                        else
-                        {
-                            string strMsg = "Wrong Username or/and Password !!!! ..Please try again ";
-                            Response.Write("<script>alert('" + strMsg + "')</script>");
-                        }
-                        i++;
-                    }
-                }
+        //                }
+        //                else
+        //                {
+        //                    string strMsg = "Wrong Username or/and Password !!!! ..Please try again ";
+        //                    Response.Write("<script>alert('" + strMsg + "')</script>");
+        //                }
+        //                i++;
+        //            }
+        //        }
 
 
 
-            }
-        }
+        //    }
+        //}
     }
 }
