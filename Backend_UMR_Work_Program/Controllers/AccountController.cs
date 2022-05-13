@@ -7,10 +7,9 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
+    [Route("api/[controller]/[action]")]
     public class AccountController : ControllerBase
     {
-
-        [Route("api/[controller]/[action]")]
 
         [HttpPost(Name = "Authenticate")]
         public object Authenticate(string email, string password)
