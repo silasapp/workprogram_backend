@@ -16,16 +16,6 @@ namespace Backend_UMR_Work_Program.Services
         Task SendEmailAsync(string email, string subject, string body);
     }
 
-    public class SmtpSettings
-    {
-        public string? Server { get; set; }
-        public int Port { get; set; }
-        public string? SenderName { get; set; }
-        public string? SenderEmail { get; set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
-    }
-
     public class Mailer: IMailer
     {
         private readonly SmtpSettings _smtpSettings;

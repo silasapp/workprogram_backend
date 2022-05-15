@@ -7,28 +7,31 @@ using System.Net.Mail;
 using System.Configuration;
 using System.IO;
 using System.Net.Mime;
-using System.Net.Configuration;
-using System.Reflection;
-
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.Security;
-using System.Threading;
-using System.DirectoryServices;
 
 using System.Data.SqlClient;
 using System.Data;
 using System.Text;
+using Backend_UMR_Work_Program.Models;
+using Backend_UMR_Work_Program.Services;
+using Microsoft.Extensions.Options;
 
 namespace nes_workflow
 {
     public class SendMailJob : IJob
     {
-        private string systemdate_email, id, COMPANYNAME, chairperson, chairperson_email, scribe, scribe_email, presentation_date, presentation_time, meeting_room, days_to_go, systemdate, Check_Days_to_send_Email, officiating_names, officiating_emails, system_date , My_email_result ;
+        private string? systemdate_email, id, COMPANYNAME, chairperson, chairperson_email, scribe, scribe_email, presentation_date, presentation_time, meeting_room, days_to_go, systemdate, Check_Days_to_send_Email, officiating_names, officiating_emails, system_date , My_email_result ;
 
-        private string rep_name, rep_email;
+        private string? rep_name, rep_email;
 
         TimeSpan ts_totalduration;
+        Connection mycon;
+        private readonly AppSettings _appSettings;
+
+        public SendMailJob(Connection connection, IOptions<AppSettings> appSettings)
+        {
+            mycon = connection;
+            _appSettings = appSettings.Value;
+        }
 
         public void Execute(IJobExecutionContext context)
         {
@@ -401,7 +404,7 @@ namespace nes_workflow
         private void wp_check_ADMIN_DATETIME_PRESENTATION_Table_and_send_email()
         {
 
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
 
             SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION WHERE EMAIL_REMARK = 'ACTIVE' ", con);
@@ -532,7 +535,7 @@ namespace nes_workflow
         private void wp_check_ADMIN_DATETIME_PRESENTATION_Table_and_send_email_Divisional_Representative()
         {
 
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
 
             SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DIVISIONAL_REPS_PRESENTATION WHERE EMAIL_REMARK = 'ACTIVE' ", con);
@@ -656,7 +659,7 @@ namespace nes_workflow
         private void Update_EMAIL_INFORMATION()
         {
             system_date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"); // DATE TIME
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
@@ -687,7 +690,7 @@ namespace nes_workflow
         private void Update_EMAIL_INFORMATION__Divisional_Representative()
         {
             system_date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"); // DATE TIME
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
@@ -798,7 +801,7 @@ namespace nes_workflow
             string messageBody = MessageDNPlus.Replace("{ToName}", ToName).Replace("{intro}", intro).Replace("{EscalatedTo}", escalatedTo).Replace("{requestStatus}", RequestStatus).Replace("{requestPath}", requestPath).Replace("{copy}", DateTime.Now.Year.ToString()).Replace("{fontcolor}", color);
             //QS_BLL.WriteLog(message.Body);
 
-            HttpContext context = HttpContext.Current;
+            //HttpContext context = HttpContext.Current;
             //string filePath = Path.GetFullPath(".");
             //var buildDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             //string dir1 = Directory.GetCurrentDirectory();
@@ -807,10 +810,10 @@ namespace nes_workflow
             //string dir4 = this.GetType().Assembly.Location;
 
 
-            string imgLocation = ConfigurationManager.AppSettings["Location"];
-            string imgPath = imgDir + "\\" + imgLocation;
-            string logo = "\\logo.png";
-            string path = Path.Combine(imgDir, imgLocation);
+            string? imgLocation = _appSettings.Location;
+            string? imgPath = imgDir + "\\" + imgLocation;
+            string? logo = "\\logo.png";
+            string? path = Path.Combine(imgDir, imgLocation);
             Console.WriteLine(path + logo);
 
             message.AlternateViews.Add(getEmbeddedImage(messageCSS, messageBody, path + logo, path + "\\" + bannerLoc + ".jpg"));
@@ -867,6 +870,10 @@ namespace nes_workflow
 
             return alternateView;
         }
-        
+
+        Task IJob.Execute(IJobExecutionContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

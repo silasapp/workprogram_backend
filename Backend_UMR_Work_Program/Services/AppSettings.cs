@@ -8,9 +8,9 @@ namespace Backend_UMR_Work_Program.Services
         public string? ScheduleEmailForCompanies { get; set; }
         public string? ScheduleTEST { get; set; }
         public string? Schedule_Div_Rep { get; set; }
-        public string? AADTenantid { get; set; }
-        public string? AADClientid { get; set; }
-        public string? AADClientsecret { get; set; }
-        public string? AADAppiduri { get; set; }
+        public string? aad_tenantid { get; set; }
+        public string? aad_clientid { get; set; }
+        public string? aad_clientsecret { get; set; }
+        public string? aad_appiduri { get; set; }
     }
 }

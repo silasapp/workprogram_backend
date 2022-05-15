@@ -39,48 +39,48 @@ namespace Backend_UMR_Work_Program
         {
             // Get user that logged in 
 
-            HttpContext.Current.Session["usernameORemail2"] = Request.RequestContext.HttpContext.User.Identity.Name; 
+            //HttpContext.Current.Session["usernameORemail2"] = Request.RequestContext.HttpContext.User.Identity.Name; 
 
            // Request.RequestContext.HttpContext.User.Identity.Name
             // get stuff
             string nonce = System.Guid.NewGuid().ToString();
             string authUrl = "https://login.microsoftonline.com/common/oauth2/authorize";
-            string clientID = ConfigurationManager.AppSettings["aad.clientid"];
-            if (string.IsNullOrEmpty(clientID))
-                throw new ArgumentNullException("clientID", "ClientID must be specified in Web.Config as aad.clientid under AppSettings");
-            string clientSecret = ConfigurationManager.AppSettings["aad.clientsecret"];
-            if (string.IsNullOrEmpty(clientSecret))
-                throw new ArgumentNullException("clientSecret", "clientSecret must be specified in Web.Config as aad.clientsecret under AppSettings");
-            string appIdUri = ConfigurationManager.AppSettings["aad.appiduri"];
-            if (string.IsNullOrEmpty(appIdUri))
-                throw new ArgumentNullException("appIdUri", "clientSecret must be specified in Web.Config as aad.appiduri under AppSettings");
-            redirectUri = GetRedirectUrl(Request, redirectUri);
+           // string clientID = ConfigurationManager.AppSettings["aad.clientid"];
+           // if (string.IsNullOrEmpty(clientID))
+           //     throw new ArgumentNullException("clientID", "ClientID must be specified in Web.Config as aad.clientid under AppSettings");
+           //string clientSecret = ConfigurationManager.AppSettings["aad.clientsecret"];
+           // if (string.IsNullOrEmpty(clientSecret))
+           //     throw new ArgumentNullException("clientSecret", "clientSecret must be specified in Web.Config as aad.clientsecret under AppSettings");
+           // string appIdUri = ConfigurationManager.AppSettings["aad.appiduri"];
+            //if (string.IsNullOrEmpty(appIdUri))
+            //    throw new ArgumentNullException("appIdUri", "clientSecret must be specified in Web.Config as aad.appiduri under AppSettings");
+            //redirectUri = GetRedirectUrl(Request, redirectUri);
             if (string.IsNullOrEmpty(redirectUri))
                 throw new ArgumentNullException("redirectUri", "redirectUri must be specified in Web.Config as aad.appiduri under AppSettings");
             // build url for AAD auth and redirect to ourself 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0}?", authUrl);
-            sb.AppendFormat("redirect_uri={0}", Uri.EscapeDataString(redirectUri));
-            sb.AppendFormat("&nonce={0}", nonce);
-            sb.AppendFormat("&authorizationURL={0}", Uri.EscapeDataString(authUrl));
-            sb.AppendFormat("&callbackURL={0}", Uri.EscapeDataString(redirectUri));
-            sb.AppendFormat("&clientID={0}", clientID);
-            sb.AppendFormat("&clientSecret={0}", Uri.EscapeDataString(clientSecret));
-            sb.AppendFormat("&identifierField=openid_identifier");
-            sb.AppendFormat("&oidcIssuer={0}", Uri.EscapeDataString("https://sts.windows.net/{tenantid}/"));
-            sb.AppendFormat("&responseType=id_token");
-            sb.AppendFormat("&revocationURL={0}", Uri.EscapeDataString("https://login.microsoftonline.com/common/oauth2/logout"));
-            sb.AppendFormat("&scopeSeparator=%20");
-            sb.AppendFormat("&tokenInfoURL=");
-            sb.AppendFormat("&tokenURL={0}", Uri.EscapeDataString("https://login.microsoftonline.com/common/oauth2/token"));
-            sb.AppendFormat("&userInfoURL={0}", Uri.EscapeDataString("https://login.microsoftonline.com/common/openid/userinfo"));
-            sb.AppendFormat("&response_mode=form_post");
-            sb.AppendFormat("&response_type=id_token");
-            sb.AppendFormat("&scope=openid");
-            sb.AppendFormat("&client_id={0}", clientID);
-            sb.AppendFormat("&state={0}", nonce);
+            //StringBuilder sb = new StringBuilder();
+            //sb.AppendFormat("{0}?", authUrl);
+            //sb.AppendFormat("redirect_uri={0}", Uri.EscapeDataString(redirectUri));
+            //sb.AppendFormat("&nonce={0}", nonce);
+            //sb.AppendFormat("&authorizationURL={0}", Uri.EscapeDataString(authUrl));
+            //sb.AppendFormat("&callbackURL={0}", Uri.EscapeDataString(redirectUri));
+            //sb.AppendFormat("&clientID={0}", clientID);
+            //sb.AppendFormat("&clientSecret={0}", Uri.EscapeDataString(clientSecret));
+            //sb.AppendFormat("&identifierField=openid_identifier");
+            //sb.AppendFormat("&oidcIssuer={0}", Uri.EscapeDataString("https://sts.windows.net/{tenantid}/"));
+            //sb.AppendFormat("&responseType=id_token");
+            //sb.AppendFormat("&revocationURL={0}", Uri.EscapeDataString("https://login.microsoftonline.com/common/oauth2/logout"));
+            //sb.AppendFormat("&scopeSeparator=%20");
+            //sb.AppendFormat("&tokenInfoURL=");
+            //sb.AppendFormat("&tokenURL={0}", Uri.EscapeDataString("https://login.microsoftonline.com/common/oauth2/token"));
+            //sb.AppendFormat("&userInfoURL={0}", Uri.EscapeDataString("https://login.microsoftonline.com/common/openid/userinfo"));
+            //sb.AppendFormat("&response_mode=form_post");
+            //sb.AppendFormat("&response_type=id_token");
+            //sb.AppendFormat("&scope=openid");
+            //sb.AppendFormat("&client_id={0}", clientID);
+            //sb.AppendFormat("&state={0}", nonce);
             // redirect to auth via AAD (and then redirect back to ourself)
-            Response.Redirect(sb.ToString(), true);
+            //Response.Redirect(sb.ToString(), true);
         }
         /// <summary>
         /// Method that initiates the Azure AD OAuth2 logout sequence. The method will issue a 302 Redirect response to the browser
@@ -102,9 +102,9 @@ namespace Backend_UMR_Work_Program
 
             // call AAD and tell it we logout
             redirectUri = GetRedirectUrl(Request, redirectUri);
-            string clientID = ConfigurationManager.AppSettings["aad.clientid"];
+            //string clientID = ConfigurationManager.AppSettings["aad.clientid"];
             string authUrl = "https://login.microsoftonline.com/{clientid}/oauth2/logout";
-            authUrl = authUrl.Replace("{clientid}", clientID);
+            //authUrl = authUrl.Replace("{clientid}", clientID);
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("{0}?", authUrl);
             sb.AppendFormat("post_logout_redirect_uri={0}", Uri.EscapeDataString(redirectUri));
@@ -127,12 +127,12 @@ namespace Backend_UMR_Work_Program
             // if blank, first get from Web.Config
             if (string.IsNullOrWhiteSpace(redirectUri))
             {
-                redirectUri = ConfigurationManager.AppSettings["aad.redirecturl"];
+                //redirectUri = ConfigurationManager.AppSettings["aad.redirecturl"];
             }
             // if still blank, construct url to default web app page
             if (string.IsNullOrWhiteSpace(redirectUri))
             {
-                redirectUri = string.Format("{0}{1}{2}", Request.Url.Scheme, Uri.SchemeDelimiter, Request.Url.Authority);
+                //redirectUri = string.Format("{0}{1}{2}", Request.Url.Scheme, Uri.SchemeDelimiter, Request.Url.Authority);
             }
             return redirectUri;
         }
@@ -142,24 +142,24 @@ namespace Backend_UMR_Work_Program
 
             // we shouln't already be Auth'd and we need the "id_token" part in the body
           //  if (Request.IsAuthenticated) return;
-            if (!Request.Form.AllKeys.Contains("id_token")) return;
+            //if (!Request.Form.AllKeys.Contains("id_token")) return;
 
-            // decode shit
-            string value = Request.Form.Get("id_token");
-            JObject id_token = JwtDecode(value);
-            // UserPrincipalNme, ie a fancy word for the original e-mail address you have in ActiveDirectory
-             string upn = id_token.GetValue("upn").ToString();
+            //// decode shit
+            //string value = Request.Form.Get("id_token");
+            //JObject id_token = JwtDecode(value);
+            //// UserPrincipalNme, ie a fancy word for the original e-mail address you have in ActiveDirectory
+            // string upn = id_token.GetValue("upn").ToString();
             
-            HttpContext.Current.Session["usernameORemail"] = upn;
-            DateTime expireTime = GetExpireTime(id_token);
-            SetUserPrincipal(id_token);
+            //HttpContext.Current.Session["usernameORemail"] = upn;
+            //DateTime expireTime = GetExpireTime(id_token);
+            //SetUserPrincipal(id_token);
 
-            // create the cookie and store the JWT token in the UserData attrribute so we can pick it up 
-            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, upn, DateTime.UtcNow, expireTime, false, id_token.ToString(), FormsAuthentication.FormsCookiePath);
-            string encryptedCookie = FormsAuthentication.Encrypt(ticket);
-            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedCookie);
-            cookie.Expires = expireTime;
-            Response.Cookies.Add(cookie);
+            //// create the cookie and store the JWT token in the UserData attrribute so we can pick it up 
+            //FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, upn, DateTime.UtcNow, expireTime, false, id_token.ToString(), FormsAuthentication.FormsCookiePath);
+            //string encryptedCookie = FormsAuthentication.Encrypt(ticket);
+            //HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedCookie);
+            //cookie.Expires = expireTime;
+            //Response.Cookies.Add(cookie);
 
             //// redirect to ourself
             //redirectUri = GetRedirectUrl(Request, redirectUri);
@@ -215,20 +215,20 @@ namespace Backend_UMR_Work_Program
             //HttpContext.Current.Response.SetCookie(currentUserCookie);
 
 
-            if (!Request.IsAuthenticated && Request.Cookies.AllKeys.Contains(FormsAuthentication.FormsCookieName))
-            {
-                HttpCookie cookie = Request.Cookies.Get(FormsAuthentication.FormsCookieName);
-                if (cookie != null)
-                {
-                    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
-                    var id_token = JObject.Parse(ticket.UserData);
-                    DateTime expireTime = GetExpireTime(id_token);
-                    if (DateTime.UtcNow < expireTime)
-                    {
-                        SetUserPrincipal(id_token);
-                    }
-                }
-            }
+            //if (!Request.IsAuthenticated && Request.Cookies.AllKeys.Contains(FormsAuthentication.FormsCookieName))
+            //{
+            //    HttpCookie cookie = Request.Cookies.Get(FormsAuthentication.FormsCookieName);
+            //    if (cookie != null)
+            //    {
+            //        FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+            //        var id_token = JObject.Parse(ticket.UserData);
+            //        DateTime expireTime = GetExpireTime(id_token);
+            //        if (DateTime.UtcNow < expireTime)
+            //        {
+            //            SetUserPrincipal(id_token);
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace Backend_UMR_Work_Program
 
             // login_Credentials = upn.ToString();
 
-            HttpContext.Current.Session["usernameORemail"] = upn;
+            //HttpContext.Current.Session["usernameORemail"] = upn;
 
             //List<Claim> claims = new List<Claim>
             //            {

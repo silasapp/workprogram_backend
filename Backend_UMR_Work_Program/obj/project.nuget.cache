@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "evhAYI1q1tdwRuXePRAbt/KoW9/WqjHRGKKFdtljniVbPQXV7061wJ35f03DT5KkaiHovlNffJTSdxWK3m7QaA==",
+  "dgSpecHash": "MxsXhMh5CkAhi9rt5ApHpL6I8UTuth2n8RJD99uP+d5E9vcVx1CmbUo1o8bVoKJJkGtS5vfcY951UmdB9AG6PQ==",
   "success": true,
   "projectFilePath": "C:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
   "expectedPackageFiles": [
@@ -49,6 +49,7 @@
     "C:\\Users\\prisc\\.nuget\\packages\\mimekit\\3.2.0\\mimekit.3.2.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\portable.bouncycastle\\1.9.0\\portable.bouncycastle.1.9.0.nupkg.sha512",
+    "C:\\Users\\prisc\\.nuget\\packages\\quartz\\3.4.0\\quartz.3.4.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
