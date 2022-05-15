@@ -3,9 +3,9 @@
 namespace Backend_UMR_Work_Program.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class ReportController : Controller
+    public class ReportController : ControllerBase
     {
-        [HttpPost(Name = "GetIndex")]
+        [HttpPost(Name = "GetReportIndex")]
         public void Index()
         {
 

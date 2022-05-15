@@ -24,12 +24,14 @@ namespace nes_workflow
         private string? rep_name, rep_email;
 
         TimeSpan ts_totalduration;
-        Connection mycon;
+        private Connection mycon;
         private readonly AppSettings _appSettings;
+        private readonly SmtpSettings _smtpSettings;
 
-        public SendMailJob(Connection connection, IOptions<AppSettings> appSettings)
+        public SendMailJob(Connection connection, IOptions<SmtpSettings> smtpSettings, IOptions<AppSettings> appSettings)
         {
             mycon = connection;
+            _smtpSettings = smtpSettings.Value;
             _appSettings = appSettings.Value;
         }
 
@@ -821,15 +823,15 @@ namespace nes_workflow
 
             try
             {
-                SmtpSection section = (SmtpSection)ConfigurationManager.GetSection("mailSettings/smtp_1");
+                //SmtpSection section = (SmtpSection)ConfigurationManager.GetSection("mailSettings/smtp_1");
                 SmtpClient sc = new SmtpClient();
 
-                if (section.Network != null)
+                if (_smtpSettings.Server != null)
                 {
-                    sc.Host = section.Network.Host;
-                    sc.Port = section.Network.Port;
+                    sc.Host = _smtpSettings.Server;
+                    sc.Port = _smtpSettings.Port;
 
-                    sc.EnableSsl = section.Network.EnableSsl;
+                    sc.EnableSsl = false;
                     //QS_BLL.WriteLog("Sending Notification to: " + createdBy + ": " + to);
 
                     //SendAsynEmail(sc, message);

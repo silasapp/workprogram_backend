@@ -1,19 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Data.SqlClient;
-using System.Security.Cryptography;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Backend_UMR_Work_Program.Models;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
     [Route("api/[controller]/[action]")]
     public class AccountController : ControllerBase
     {
+        private Account _account;
+        public AccountController(Account account)
+        {
+            _account = account;
+        }
 
         [HttpPost(Name = "Authenticate")]
         public object Authenticate(string email, string password)
         {
+            _account.isAutheticate(email, password);
             return null;
         }
 

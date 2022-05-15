@@ -10,10 +10,14 @@ namespace Backend_UMR_Work_Program
 {
     public class check_super_admin_role
     {
+        private Connection cn2;
+        public check_super_admin_role(Connection connection) {
+            cn2 = connection;
+        }
 
         public void Check_Super_Admin_Role() //
         {
-            Connection cn2 = new Connection();
+            //Connection cn2 = new Connection();
             System.Data.SqlClient.SqlConnection cnn2 = new System.Data.SqlClient.SqlConnection();
             cnn2.ConnectionString = cn2.Myconnection;
             System.Data.SqlClient.SqlCommand cmd2 = new SqlCommand("Select * from ROLES_SUPER_ADMIN where  DELETED_STATUS IS NULL", cnn2);

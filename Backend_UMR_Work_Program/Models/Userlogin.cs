@@ -5,39 +5,39 @@ using System.Web;
 using System.Data.SqlClient;
 using System.Data;
 using System.Data.OracleClient;
+using Backend_UMR_Work_Program.Models;
 
-namespace nes_workflow
+namespace Backend_UMR_Work_Program
 {
     public class Userlogin
     {
-        public Userlogin()
+        private Connection mycon;
+        public Userlogin(Connection connection)
         {
-            //
-            // TODO: Add constructor logic here
-            //
+            mycon = connection;
         }
 
 
 
 
 
-        private string usernamecandidate;
-        public string Usernamecandidate
+        private string? usernamecandidate;
+        public string? Usernamecandidate
         {
             get { return usernamecandidate; }
             set { usernamecandidate = value; }
         }
 
-        private string passwordcan;
-        public string Passwordcan
+        private string? passwordcan;
+        public string? Passwordcan
         {
             get { return passwordcan; }
             set { passwordcan = value; }
         }
 
-        private string Name;
+        private string? Name;
 
-        public string myName
+        public string? myName
         {
             get { return Name; }
             set { Name = value; }
@@ -137,7 +137,7 @@ namespace nes_workflow
         //  public bool isAutheticate(string uname, string pword) // Pass the Isauthentication into access for username and password
         public bool isAutheticate(string uname) // Pass the Isauthentication into access for username and password
         {
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             OracleConnection con = new OracleConnection(mycon.Myconnection);
          
             OracleCommand cmd = new OracleCommand("select * from NES_USERS where username = '" + uname + "' ", con);
@@ -189,7 +189,7 @@ namespace nes_workflow
 
         public bool isAutheticate_users_in_setup(string uname) // Pass the Isauthentication into access for username and password
         {
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             OracleConnection con = new OracleConnection(mycon.Myconnection);
 
             OracleCommand cmd = new OracleCommand("select * from NES_USERS where username = '" + uname + "' ", con);
@@ -241,7 +241,7 @@ namespace nes_workflow
 
         public bool isAutheticate_vendor(string uname, string pword, string vendor) // Pass the Isauthentication into access for username and password
         {
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             OracleConnection con = new OracleConnection(mycon.Myconnection);
 
             // OracleCommand cmd = new OracleCommand("select * from SOCR_USERS where username = '" + uname + "' ", con);
@@ -295,7 +295,7 @@ namespace nes_workflow
 
         public bool isAutheticate_check_approvals_NPQA(string uname) // Pass the Isauthentication into access for username and password
         {
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             OracleConnection con = new OracleConnection(mycon.Myconnection);
 
             // OracleCommand cmd = new OracleCommand("select * from SOCR_USERS where username = '" + uname + "' ", con);
@@ -343,7 +343,7 @@ namespace nes_workflow
 
         public bool isAutheticate_check_approvals_oss_Manager(string uname) // Pass the Isauthentication into access for username and password
         {
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             OracleConnection con = new OracleConnection(mycon.Myconnection);
 
 
@@ -394,7 +394,7 @@ namespace nes_workflow
 
         public bool isAutheticate_check_approvals_SUPERVISOR_Manager(string uname) // Pass the Isauthentication into access for username and password
         {
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             OracleConnection con = new OracleConnection(mycon.Myconnection);
 
             // OracleCommand cmd = new OracleCommand("select * from SOCR_USERS where username = '" + uname + "' ", con);

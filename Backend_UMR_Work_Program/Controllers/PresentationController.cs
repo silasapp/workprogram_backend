@@ -5,7 +5,7 @@ namespace Backend_UMR_Work_Program.Controllers
     [Route("api/[controller]/[action]")]
     public class PresentationController : ControllerBase
     {
-        [HttpPost(Name = "GetIndex")]
+        [HttpPost(Name = "GetPresentationIndex")]
         public void Index()
         {
             

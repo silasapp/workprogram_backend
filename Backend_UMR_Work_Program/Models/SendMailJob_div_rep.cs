@@ -7,28 +7,36 @@ using System.Net.Mail;
 using System.Configuration;
 using System.IO;
 using System.Net.Mime;
-using System.Net.Configuration;
 using System.Reflection;
 
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.Security;
 using System.Threading;
-using System.DirectoryServices;
 
 using System.Data.SqlClient;
 using System.Data;
 using System.Text;
+using Backend_UMR_Work_Program.Models;
+using Backend_UMR_Work_Program.Services;
+using Microsoft.Extensions.Options;
 
-namespace nes_workflow
+namespace Backend_UMR_Work_Program
 {
     public class SendMailJob_div_rep : IJob
      {
-        private string systemdate_email, id, COMPANYNAME, chairperson, chairperson_email, scribe, scribe_email, presentation_date, presentation_time, meeting_room, days_to_go, systemdate, Check_Days_to_send_Email, officiating_names, officiating_emails, system_date, My_email_result;
+        private string? systemdate_email, id, COMPANYNAME, chairperson, chairperson_email, scribe, scribe_email, presentation_date, presentation_time, meeting_room, days_to_go, systemdate, Check_Days_to_send_Email, officiating_names, officiating_emails, system_date, My_email_result;
 
-        private string rep_name, rep_email;
+        private string? rep_name, rep_email;
 
         TimeSpan ts_totalduration;
+        private Connection mycon;
+        private readonly AppSettings _appSettings;
+        private readonly SmtpSettings _smtpSettings;
+
+        public SendMailJob_div_rep(Connection connection, IOptions<SmtpSettings> smtpSettings, IOptions<AppSettings> appSettings)
+        {
+            mycon = connection;
+            _smtpSettings = smtpSettings.Value;
+            _appSettings = appSettings.Value;
+        }
 
         public void Execute(IJobExecutionContext context)
         {
@@ -272,7 +280,7 @@ namespace nes_workflow
         private void wp_check_ADMIN_DATETIME_PRESENTATION_Table_and_send_email()
         {
 
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
 
             SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION ", con);
@@ -403,7 +411,7 @@ namespace nes_workflow
         private void wp_check_ADMIN_DATETIME_PRESENTATION_Table_and_send_email_Divisional_Representative()
         {
 
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
 
             SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DIVISIONAL_REPS_PRESENTATION  WHERE EMAIL_REMARK = 'ACTIVE' ", con);
@@ -528,7 +536,7 @@ namespace nes_workflow
         private void Update_EMAIL_INFORMATION()
         {
             system_date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"); // DATE TIME
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
@@ -559,7 +567,7 @@ namespace nes_workflow
         private void Update_EMAIL_INFORMATION__Divisional_Representative()
         {
             system_date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"); // DATE TIME
-            Connection mycon = new Connection();
+            //Connection mycon = new Connection();
             SqlConnection con = new SqlConnection(mycon.Myconnection);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
@@ -670,7 +678,7 @@ namespace nes_workflow
             string messageBody = MessageDNPlus.Replace("{ToName}", ToName).Replace("{intro}", intro).Replace("{EscalatedTo}", escalatedTo).Replace("{requestStatus}", RequestStatus).Replace("{requestPath}", requestPath).Replace("{copy}", DateTime.Now.Year.ToString()).Replace("{fontcolor}", color);
             //QS_BLL.WriteLog(message.Body);
 
-            HttpContext context = HttpContext.Current;
+            //HttpContext context = HttpContext.Current;
             //string filePath = Path.GetFullPath(".");
             //var buildDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             //string dir1 = Directory.GetCurrentDirectory();
@@ -679,7 +687,7 @@ namespace nes_workflow
             //string dir4 = this.GetType().Assembly.Location;
 
 
-            string imgLocation = ConfigurationManager.AppSettings["Location"];
+            string? imgLocation = _appSettings.Location;
             string imgPath = imgDir + "\\" + imgLocation;
             string logo = "\\logo.png";
             string path = Path.Combine(imgDir, imgLocation);
@@ -690,15 +698,15 @@ namespace nes_workflow
 
             try
             {
-                SmtpSection section = (SmtpSection)ConfigurationManager.GetSection("mailSettings/smtp_1");
+                //SmtpSection section = (SmtpSection)ConfigurationManager.GetSection("mailSettings/smtp_1");
                 SmtpClient sc = new SmtpClient();
 
-                if (section.Network != null)
+                if (_smtpSettings.Server != null)
                 {
-                    sc.Host = section.Network.Host;
-                    sc.Port = section.Network.Port;
+                    sc.Host = _smtpSettings.Server;
+                    sc.Port = _smtpSettings.Port;
 
-                    sc.EnableSsl = section.Network.EnableSsl;
+                    sc.EnableSsl = false;
                     //QS_BLL.WriteLog("Sending Notification to: " + createdBy + ": " + to);
 
                     //SendAsynEmail(sc, message);
@@ -740,5 +748,9 @@ namespace nes_workflow
             return alternateView;
         }
 
+        Task IJob.Execute(IJobExecutionContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

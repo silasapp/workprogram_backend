@@ -104,7 +104,7 @@ namespace Backend_UMR_Work_Program.Models
 
 
 
-        private void isAutheticate(string email, string password) // Pass the Isauthentication into access for username and password
+        public void isAutheticate(string email, string password) // Pass the Isauthentication into access for username and password
         {
             this.email = email.ToLower();
             this.password = password;
