@@ -95,27 +95,29 @@ namespace Backend_UMR_Work_Program.Models
                         getUser.LAST_LOGIN_DATE = DateTime.Now;
                         _context.Entry(getUser).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
-                        var concessionInfo = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.COMPANY_EMAIL == this.Email select c).FirstOrDefault();
-                        
+                        var concessionInfo = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.COMPANY_EMAIL == email.Trim() select c).FirstOrDefault();
+                        var contractType = concessionInfo?.Contract_Type ?? "";  
+
                         var tokenHandler = new JwtSecurityTokenHandler();
                         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                         var tokenDescriptor = new SecurityTokenDescriptor
                         {
                             Subject = new ClaimsIdentity(new Claim[]
                             {
-                                new Claim(ClaimTypes.Name, getUser.COMPANY_NAME),
-                                new Claim(ClaimTypes.Email, getUser.EMAIL),
-                                new Claim(ClaimTypes.NameIdentifier, getUser.COMPANY_ID),
-                                new Claim(ClaimTypes.GivenName, getUser.NAME),
-                                new Claim(ClaimTypes.Role, concessionInfo.Contract_Type)
+                                new Claim(ClaimTypes.Name, getUser?.COMPANY_NAME ?? ""),
+                                new Claim(ClaimTypes.Email, getUser?.EMAIL ?? ""),
+                                new Claim(ClaimTypes.NameIdentifier, getUser?.COMPANY_ID ?? ""),
+                                new Claim(ClaimTypes.GivenName, getUser?.NAME ?? ""),
+                                new Claim(ClaimTypes.Role, contractType)
                             }),
                             Expires = DateTime.UtcNow.AddDays(7),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                         };
                         var token = tokenHandler.CreateToken(tokenDescriptor);
-                        UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, Name = getUser.NAME, ContractType = concessionInfo.Contract_Type, token = tokenHandler.WriteToken(token), code = 1 };
+                        UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, Name = getUser.NAME, ContractType = contractType, token = tokenHandler.WriteToken(token), code = 1 };
                         return tok;
                     }
+                    return new UserToken { code = 2 };
                 }
                 return new UserToken { code = 3 };
 
@@ -123,7 +125,7 @@ namespace Backend_UMR_Work_Program.Models
             }
             catch (Exception ex)
             {
-                return new UserToken { code = 3 };
+                return new UserToken { code = 0 };
             }
         }
 
@@ -133,14 +135,14 @@ namespace Backend_UMR_Work_Program.Models
         {
             var getUser = (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() select a).FirstOrDefault();
 
-                    if (getUser == null)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
+            if (getUser == null)
+            {
+              return false;
+            }
+            else
+            {
+               return true;
+            }
         }
 
         public object GetData()
@@ -172,81 +174,5 @@ namespace Backend_UMR_Work_Program.Models
 
                 
         }
-
-        //public void CHECK_and_LOGIN()
-        //{
-        //    string cs = ConfigurationManager.ConnectionStrings["App_ConnectionString"].ConnectionString;
-
-        //    using (SqlConnection con = new SqlConnection(cs))
-        //    {
-
-        //        SqlCommand cmd = new SqlCommand();
-        //        cmd = new SqlCommand("Select * from ADMIN_COMPANY_INFORMATION", con);
-
-        //        cmd.CommandType = CommandType.Text;
-        //        cmd.Connection = con;
-        //        con.Open();
-
-        //        SqlDataAdapter da = new SqlDataAdapter();
-        //        da.SelectCommand = cmd;
-        //        DataSet ds = new DataSet();
-        //        da.Fill(ds, "ADMIN_COMPANY_INFORMATION");
-
-        //        DataTable dt = ds.Tables[0];
-        //        int rowCount = dt.Rows.Count;
-
-        //        int i = 1;
-
-        //        if (rowCount > 0)
-        //        {
-        //            foreach (DataRow row in dt.Rows)
-        //            {
-        //                string EMAIL = row["EMAIL"].ToString();
-        //                string PASSWORDS = row["PASSWORDS"].ToString();
-        //                string STATUS_ = row["STATUS_"].ToString();
-
-        //                string COMPANY_NAME = row["COMPANY_NAME"].ToString();
-        //                string NAME = row["NAME"].ToString();
-        //                // string STATUS_ = row["STATUS_"].ToString();
-
-
-
-        //                if (EMAIL == TextBox1.Text && PASSWORDS == TextBox2.Text && STATUS_ == "Activated")
-        //                {
-        //                    Session.Remove("Concession_Held");
-
-        //                    Session["Company_Email"] = TextBox1.Text;
-
-        //                    Session["CompanyName"] = COMPANY_NAME;
-
-        //                    Session["NAME"] = NAME;
-
-        //                    return_Data_from_ADMIN_CONCESSIONS_INFORMATION();
-
-        //                    Update_login_date_time();
-
-
-        //                    if (Request.QueryString["ReturnUrl"] != null) //check if the user is requestin a page before redirected to login
-        //                    {
-        //                        FormsAuthentication.RedirectFromLoginPage(TextBox1.Text, false);
-        //                    }
-        //                    else
-        //                    {
-        //                        FormsAuthentication.SetAuthCookie(TextBox1.Text, false);
-        //                        Response.Redirect("work_programme_landing_page.aspx");
-        //                    }
-
-
-        //                }
-        //                else
-        //                {
-        //                    string strMsg = "Wrong Username or/and Password !!!! ..Please try again ";
-                            
-        //                }
-        //                i++;
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

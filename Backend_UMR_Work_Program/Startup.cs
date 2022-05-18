@@ -20,6 +20,7 @@ using System;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
+using Backend_UMR_Work_Program.Controllers;
 
 namespace Backend_UMR_Work_Program
 {
@@ -75,13 +76,17 @@ namespace Backend_UMR_Work_Program
 
             services.AddTransient<Account>();
             services.AddTransient<Connection>();
-            //services.AddTransient<BlobService2>();
+            services.AddTransient<HelpersController>();
             services.AddScoped(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorage")));
-            services.AddDbContext<WKP_DBContext>(options => options.UseSqlServer(Configuration.GetSection("Data").GetSection("Wkpconnect").GetSection("ConnectionString").Value.ToString()));
+            //services.AddDbContext<WKP_DBContext>(options => options.UseSqlServer(Configuration.GetSection("Data").GetSection("Wkpconnect").GetSection("ConnectionString").Value.ToString()));
 
-            //services.AddDbContext<IdentityDataContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration["Data:WallConnect:ConnectionString"]));
+            services.AddDbContext<WKP_DBContext>(options =>
+                options.UseSqlServer(Configuration["Data:Wkpconnect:ConnectionString"],
+                options => options.EnableRetryOnFailure(
+                    maxRetryCount: 3,
+                    maxRetryDelay: System.TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null)
+                ));
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
             services.AddSingleton<IMailer, Mailer>();
             services.AddAzureClients(builder =>
