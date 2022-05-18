@@ -77,6 +77,7 @@ namespace Backend_UMR_Work_Program
             services.AddTransient<Connection>();
             //services.AddTransient<BlobService2>();
             services.AddScoped(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorage")));
+            services.AddDbContext<WKP_DBContext>(options => options.UseSqlServer(Configuration.GetSection("Data").GetSection("Wkpconnect").GetSection("ConnectionString").Value.ToString()));
 
             //services.AddDbContext<IdentityDataContext>(options =>
             //    options.UseSqlServer(
@@ -132,12 +133,7 @@ namespace Backend_UMR_Work_Program
             //);
 
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            
         }
     }
 

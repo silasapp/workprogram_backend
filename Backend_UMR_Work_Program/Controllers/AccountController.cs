@@ -1,90 +1,81 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Backend_UMR_Work_Program.Models;
+using Newtonsoft.Json;
+using static Backend_UMR_Work_Program.Models.GeneralModel;
+using static Backend_UMR_Work_Program.Helpers.GeneralClass;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [ApiController]
+    [Route("[controller]")]
+
     public class AccountController : ControllerBase
     {
         private Account _account;
-        public AccountController(Account account)
+        public WKP_DBContext _context;
+        public IConfiguration _configuration;
+        private HelpersController _helpersController;
+        public AccountController(Account account, WKP_DBContext context, IConfiguration configuration, HelpersController helpersController)
         {
             _account = account;
+            _configuration = configuration;
+            _helpersController = new HelpersController(_context, _configuration);
         }
 
-        [HttpPost(Name = "Authenticate")]
-        public object Authenticate(string email, string password)
+        [HttpPost("Authenticate")]
+        public IActionResult Authenticate(string email, string password)
         {
-            _account.isAutheticate(email, password);
-            return null;
+            var tokenData = _account.isAutheticate(email, password);
+            if (tokenData.code == 4)
+            {
+                return BadRequest("An Error has occurred");
+            }
+            return Ok(tokenData);
         }
 
-        //private string id, COMPANYNAME, chairperson, scribe, presentation_date, presentation_time, meeting_room, days_to_go, system_date;
+        [HttpGet("yes")]
+        public string Sayyes()
+        {
+            var reel = "Yes Yes";
+            return "Yes YES";
+        }
 
-        //protected void Page_Load(object sender, EventArgs e)
-        //{
-        //    // string foldertosave = Server.MapPath("") + "\\Test\\";
+        [HttpGet("GetData")]
+        public object GetData()
+        {
+            var table = _account.GetData();
+            string JSONString = string.Empty;
+            JSONString = JsonConvert.SerializeObject(table);
+            return JSONString;
+        }
 
-        //}
+        [HttpPost(Name = "ResetPassword")]
+        public async Task<WebApiResponse> ResetPassword(string email, string currentPassword, string newPassword)
+        {
+            string encryptCP = _helpersController.Encrypt(currentPassword);
 
+            var getUser = (from u in _context.ADMIN_COMPANY_INFORMATIONs where u.EMAIL == email.Trim() && u.PASSWORDS == encryptCP select u).FirstOrDefault();
+            if (getUser != null)
+            {
+                getUser.PASSWORDS = _helpersController.Encrypt(newPassword);
+                getUser.UPDATED_BY = getUser.Id.ToString();
+                getUser.UPDATED_DATE = DateTime.Now.ToString();
 
-        //public string ShowClaimsInTable()
-        //{
-        //    //long exp = long.Parse(ClaimsPrincipal.Current.FindFirst("exp").Value);
-        //    //DateTime expireTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-        //    //expireTime = expireTime.AddSeconds(exp);
+                if (_context.SaveChanges() > 0)
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Password updated successfully", StatusCode = ResponseCodes.Success };
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while updating this password.", StatusCode = ResponseCodes.Failure };
+                }
+            }
+            else
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Unable to fetch user details from Work Program.", StatusCode = ResponseCodes.RecordNotFound };
+            }
 
-        //    StringBuilder sb = new StringBuilder();
-        //    sb.AppendFormat("<table>");
-        //    sb.AppendFormat("<tr><td>App Client Id:</td><td>{0}</td></tr>", ConfigurationManager.AppSettings["aad.clientid"]);
-        //    sb.AppendFormat("<tr><td>App URI:</td><td>{0}</td></tr>", ConfigurationManager.AppSettings["aad.appiduri"]);
-        //    sb.AppendFormat("<tr><td>Unique Name:</td><td>{0}</td></tr>", ClaimsPrincipal.Current.FindFirst(ClaimTypes.Name).Value);
-        //    //sb.AppendFormat("<tr><td>Object Id:</td><td>{0}</td></tr>", ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value);
-        //    //sb.AppendFormat("<tr><td>tenant Id:</td><td>{0}</td></tr>", ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value);
-        //    //sb.AppendFormat("<tr><td>Name:</td><td>{0}</td></tr>", ClaimsPrincipal.Current.FindFirst("name").Value);
-        //    //sb.AppendFormat("<tr><td>Given Name:</td><td>{0}</td></tr>", ClaimsPrincipal.Current.FindFirst(ClaimTypes.GivenName).Value);
-        //    //sb.AppendFormat("<tr><td>Surname:</td><td>{0}</td></tr>", ClaimsPrincipal.Current.FindFirst(ClaimTypes.Surname).Value);
-        //    //sb.AppendFormat("<tr><td>UPN:</td><td>{0}</td></tr>", ClaimsPrincipal.Current.FindFirst(ClaimTypes.Upn).Value);
-        //    //sb.AppendFormat("<tr><td>Expires:</td><td>{0}</td></tr>", expireTime.ToString("u"));
-        //    sb.AppendFormat("</table>");
-
-        //    return sb.ToString();
-        //}
-
-        //protected void Button2_Click(object sender, EventArgs e)
-        //{
-        //    if (TextBox1.Text == "")
-        //    {
-        //        string strMsg = "Please Enter Email";
-        //        Response.WriteAsync("<script>alert('" + strMsg + "')</script>");
-        //        TextBox1.Focus();
-        //        return;
-        //    }
-
-        //    if (TextBox2.Text == "")
-        //    {
-        //        string strMsg = "Please Enter Password ";
-        //        Response.WriteAsync("<script>alert('" + strMsg + "')</script>");
-        //        TextBox2.Focus();
-        //        return;
-        //    }
-
-
-        //    // Response.Redirect("work_programme_landing_page.aspx");
-
-        //    TextBox1.Text = TextBox1.Text.ToLower();
-
-        //    isAutheticate(TextBox1.Text, Encrypt(TextBox2.Text));
-
-        //    // CHECK_and_LOGIN();
-        //}
-
-
-
-
-
-
-
+        }
 
     }
 }
