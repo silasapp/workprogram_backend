@@ -23,13 +23,11 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("Authenticate")]
-        public IActionResult Authenticate(string email, string password)
+        public async Task<IActionResult> Authenticate(string email, string password)
         {
-            var tokenData = _account.isAutheticate(email, password);
-            if (tokenData.code == 4)
-            {
-                return BadRequest("An Error has occurred");
-            }
+            var tokenData = await _account.isAutheticate(email, password);
+            string JSONString = string.Empty;
+            JSONString = JsonConvert.SerializeObject(tokenData);
             return Ok(tokenData);
         }
 

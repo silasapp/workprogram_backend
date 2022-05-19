@@ -9,10 +9,10 @@ using Backend_UMR_Work_Program.Models;
 
 namespace Backend_UMR_Work_Program
 {
-    public class Userlogin
+    public class UserLogine
     {
         private Connection mycon;
-        public Userlogin(Connection connection)
+        public UserLogine(Connection connection)
         {
             mycon = connection;
         }
