@@ -75,6 +75,7 @@ namespace Backend_UMR_Work_Program
 
             services.AddTransient<Account>();
             services.AddTransient<Connection>();
+            services.AddTransient<Presentation>();
             //services.AddTransient<BlobService2>();
             services.AddScoped(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorage")));
 

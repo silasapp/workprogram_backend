@@ -1,20 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Workcode\\WORKPROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {}
+    "C:\\Users\\ABK\\Desktop\\BackEnd_UMR_WorkProgram\\WORK20PROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {}
   },
   "projects": {
-    "C:\\Workcode\\WORKPROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {
+    "C:\\Users\\ABK\\Desktop\\BackEnd_UMR_WorkProgram\\WORK20PROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Workcode\\WORKPROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+        "projectUniqueName": "C:\\Users\\ABK\\Desktop\\BackEnd_UMR_WorkProgram\\WORK20PROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
         "projectName": "Backend_UMR_Work_Program",
-        "projectPath": "C:\\Workcode\\WORKPROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
-        "packagesPath": "C:\\Users\\Silas\\.nuget\\packages\\",
-        "outputPath": "C:\\Workcode\\WORKPROGRAMV2\\Backend_UMR_Work_Program\\obj\\",
+        "projectPath": "C:\\Users\\ABK\\Desktop\\BackEnd_UMR_WorkProgram\\WORK20PROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+        "packagesPath": "C:\\Users\\ABK\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ABK\\Desktop\\BackEnd_UMR_WorkProgram\\WORK20PROGRAMV2\\Backend_UMR_Work_Program\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Silas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ABK\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +27,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "http://packages.nuget.org": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -111,7 +117,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.104\\RuntimeIdentifierGraph.json"
         }
       }
     }
