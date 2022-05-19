@@ -1,4 +1,6 @@
-﻿using Backend_UMR_Work_Program.Models;
+﻿//using Backend_UMR_Work_Program.BusinessLogic.IRepository;
+using Backend_UMR_Work_Program.Controllers.Authentications;
+using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Net.Mail;
@@ -12,11 +14,15 @@ namespace Backend_UMR_Work_Program.Controllers
     {
         public IConfiguration _configuration;
         public WKP_DBContext _context;
-        public HelpersController (WKP_DBContext context, IConfiguration configuration){
+        IHttpContextAccessor _httpContextAccessor;
+
+        public HelpersController(WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        {
             _context = context;
             _configuration = configuration;
-       }
+            _httpContextAccessor = httpContextAccessor;
 
+        }
 
 
         public List<AppMessage> SaveMessage(int AppID, int userID, string subject, string content, string userElpsID, string type)
@@ -106,10 +112,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
             body += "<table style = 'width: 100%;'><tbody>";
             body += "<tr><td style='width: 200px;'><strong>Company Name:</strong></td><td> " + msg.CompanyName + " </td></tr>";
-              body += "</tbody></table><br/>";
+            body += "</tbody></table><br/>";
 
             body += "<p> </p>";
-            body += "&copy; " + DateTime.Now.Year  + "<p>  Powered by NUPRC Work Program Team. </p>";
+            body += "&copy; " + DateTime.Now.Year + "<p>  Powered by NUPRC Work Program Team. </p>";
             body += "<div style='padding:10px 0 10px; 10px; background-color:#888; color:#f9f9f9; width:800px;'> &copy; " + DateTime.UtcNow.AddHours(1).Year + " Nigerian Midstream and Downstream Petroleum Regulatory Authority &minus; NMDPRA Nigeria</div></div></div>";
 
             return body;
@@ -161,48 +167,71 @@ namespace Backend_UMR_Work_Program.Controllers
             return cipherText;
         }
 
+        public int DecryptIDs(string ids)
+        {
+            int id = 0;
+            var ID = this.Decrypt(ids);
+
+            if (ID == "Error")
+            {
+                id = 0;
+            }
+            else
+            {
+                id = Convert.ToInt32(ID);
+            }
+
+            return id;
+        }
+
+
+        public int getSessionRoleID()
+        {
+            try
+            {
+                return Convert.ToInt32(Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionRoleID)));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
 
-        //public string Encrypt(string clearText)
-        //{
-        //    try
-        //    {
-        //        byte[] b = ASCIIEncoding.ASCII.GetBytes(clearText);
-        //        string crypt = Convert.ToBase64String(b);
-        //        byte[] c = ASCIIEncoding.ASCII.GetBytes(crypt);
-        //        string encrypt = Convert.ToBase64String(c);
-
-        //        return encrypt;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return "Error";
-        //        throw ex;
-        //    }
-        //}
-
-        //public string Decrypt(string cipherText)
-        //{
-        //    try
-        //    {
-        //        byte[] b;
-        //        byte[] c;
-        //        string decrypt;
-        //        b = Convert.FromBase64String(cipherText);
-        //        string crypt = ASCIIEncoding.ASCII.GetString(b);
-        //        c = Convert.FromBase64String(crypt);
-        //        decrypt = ASCIIEncoding.ASCII.GetString(c);
-
-        //        return decrypt;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return "Error";
-        //        throw ex;
-        //    }
-
-        //}
-
+        public string getSessionEmail()
+        {
+            try
+            {
+                return Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionEmail));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public int getSessionLogin()
+        {
+            try
+            {
+                int sessionLogin = Convert.ToInt32(Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionLogin)));
+                return sessionLogin;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public int getSessionUserID()
+        {
+            try
+            {
+                return Convert.ToInt32(Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionUserID)));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

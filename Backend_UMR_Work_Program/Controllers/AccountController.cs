@@ -2,7 +2,7 @@
 using Backend_UMR_Work_Program.Models;
 using Newtonsoft.Json;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
-using static Backend_UMR_Work_Program.Helpers.GeneralClass;
+//using static Backend_UMR_Work_Program.Helpers.GeneralClass;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -14,12 +14,17 @@ namespace Backend_UMR_Work_Program.Controllers
         private Account _account;
         public WKP_DBContext _context;
         public IConfiguration _configuration;
-        private HelpersController _helpersController;
-        public AccountController(Account account, WKP_DBContext context, IConfiguration configuration, HelpersController helpersController)
+        HelpersController _helpersController;
+        IHttpContextAccessor _httpContextAccessor;
+        public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account)
         {
+            //_httpContextAccessor = httpContextAccessor;
             _account = account;
+            _context = context;
             _configuration = configuration;
-            _helpersController = new HelpersController(_context, _configuration);
+
+            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor);
+            //_helpersController = new HelpersController(_context, _configuration);
         }
 
         [HttpPost("Authenticate")]
