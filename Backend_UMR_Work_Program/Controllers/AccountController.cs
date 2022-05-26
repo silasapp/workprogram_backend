@@ -7,8 +7,8 @@ using static Backend_UMR_Work_Program.Models.ViewModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]/[action]")]
+
 
     public class AccountController : ControllerBase
     {
