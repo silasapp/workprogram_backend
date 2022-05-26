@@ -2,6 +2,7 @@
 using Backend_UMR_Work_Program.Models;
 using Newtonsoft.Json;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
+using static Backend_UMR_Work_Program.Models.ViewModel;
 //using static Backend_UMR_Work_Program.Helpers.GeneralClass;
 
 namespace Backend_UMR_Work_Program.Controllers
@@ -28,9 +29,9 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("Authenticate")]
-        public async Task<IActionResult> Authenticate(string email, string password)
+        public async Task<IActionResult> Authenticate([FromBody] Logine logine)
         {
-            var tokenData = await _account.isAutheticate(email, password);
+            var tokenData = await _account.isAutheticate(logine.email, logine.password);
             string JSONString = string.Empty;
             JSONString = JsonConvert.SerializeObject(tokenData);
             return Ok(tokenData);

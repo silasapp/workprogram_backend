@@ -81,7 +81,7 @@ namespace Backend_UMR_Work_Program.Models
 
 
 
-        public async Task<UserToken> isAutheticate(string email, string password)
+        public async Task<UserToken> isAutheticate(string? email, string? password)
         {
             try
             {
