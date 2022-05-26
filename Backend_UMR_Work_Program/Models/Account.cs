@@ -96,7 +96,8 @@ namespace Backend_UMR_Work_Program.Models
                         _context.Entry(getUser).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
                         var concessionInfo = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.COMPANY_EMAIL == email.Trim() select c).FirstOrDefault();
-                        var contractType = concessionInfo?.Contract_Type ?? "";  
+                        var contractType = concessionInfo?.Contract_Type ?? "";
+                        var companyName = getUser?.COMPANY_NAME == "Admin" ? "Admin" : "Company";
 
                         var tokenHandler = new JwtSecurityTokenHandler();
                         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -104,11 +105,11 @@ namespace Backend_UMR_Work_Program.Models
                         {
                             Subject = new ClaimsIdentity(new Claim[]
                             {
-                                new Claim(ClaimTypes.Name, getUser?.COMPANY_NAME ?? ""),
-                                new Claim(ClaimTypes.Email, getUser?.EMAIL ?? ""),
-                                new Claim(ClaimTypes.NameIdentifier, getUser?.COMPANY_ID ?? ""),
+                                new Claim(ClaimTypes.Name, getUser.COMPANY_NAME ?? ""),
+                                new Claim(ClaimTypes.Email, getUser.EMAIL ?? ""),
+                                new Claim(ClaimTypes.NameIdentifier, getUser.COMPANY_ID ?? ""),
                                 new Claim(ClaimTypes.GivenName, getUser?.NAME ?? ""),
-                                new Claim(ClaimTypes.Role, contractType)
+                                new Claim(ClaimTypes.Role, companyName)
                             }),
                             Expires = DateTime.UtcNow.AddDays(7),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

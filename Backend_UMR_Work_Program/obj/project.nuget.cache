@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "wMF7gwnRvTe4S5AjxBtZaYpeuERO9XVKahGCGYTIl2Uv0uRacCS3XtqQ9Nx9a5ZzsLO0hFdCFjC96gwgTuE49A==",
+  "dgSpecHash": "5viBfleJvHNhZSgWOpSD89S4JGhB5XJjOVt1UeZLZK1WRXJ2Npc75bwMpPE3Lf69bAIk7lN8dlPF8f/oNisnHg==",
   "success": true,
   "projectFilePath": "C:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\prisc\\.nuget\\packages\\automapper\\11.0.1\\automapper.11.0.1.nupkg.sha512",
+    "C:\\Users\\prisc\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\azure.storage.blobs\\12.12.0\\azure.storage.blobs.12.12.0.nupkg.sha512",
@@ -12,7 +14,7 @@
     "C:\\Users\\prisc\\.nuget\\packages\\mailkit\\3.2.0\\mailkit.3.2.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.5\\microsoft.aspnetcore.authentication.jwtbearer.6.0.5.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
-    "C:\\Users\\prisc\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\prisc\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.1.1\\microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.5\\microsoft.entityframeworkcore.6.0.5.nupkg.sha512",

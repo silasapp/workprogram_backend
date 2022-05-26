@@ -7,8 +7,8 @@ using static Backend_UMR_Work_Program.Models.ViewModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
+
 
     public class AccountController : ControllerBase
     {
@@ -37,12 +37,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return Ok(tokenData);
         }
 
-        [HttpGet("yes")]
-        public string Sayyes()
-        {
-            var reel = "Yes Yes";
-            return "Yes YES";
-        }
+        
 
         [HttpGet("GetData")]
         public object GetData()

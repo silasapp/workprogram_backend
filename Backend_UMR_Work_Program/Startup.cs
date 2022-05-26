@@ -21,6 +21,8 @@ using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Backend_UMR_Work_Program.Controllers;
+using AutoMapper;
+using Backend_UMR_Work_Program.Helper.AutoMapperSettings;
 
 namespace Backend_UMR_Work_Program
 {
@@ -46,6 +48,7 @@ namespace Backend_UMR_Work_Program
             //{
             //    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
             //}));
+            services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddMvc()
                 .AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });

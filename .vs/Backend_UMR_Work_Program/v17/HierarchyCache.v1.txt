@@ -1,0 +1,1043 @@
+﻿++Solution 'Backend_UMR_Work_Program' ‎(1 of 1 project)
+i:{00000000-0000-0000-0000-000000000000}:Backend_UMR_Work_Program.sln
+++Backend_UMR_Work_Program
+i:{00000000-0000-0000-0000-000000000000}:Backend_UMR_Work_Program
+++Connected Services 
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1233
+++Dependencies
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1232
+++Properties
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\properties\
+++App_Logs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\app_logs\
+++Controllers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\
+++AccountController.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\accountcontroller.cs
+++AuthController.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\authcontroller.cs
+++DashboardController.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\dashboardcontroller.cs
+++ErrorController.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\errorcontroller.cs
+++HelpersController.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\helperscontroller.cs
+++PresentationController.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\presentationcontroller.cs
+++ReportController.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\controllers\reportcontroller.cs
+++WeatherForecastController.cs
+++DataModels
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\
+++ActualExpenditure.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\actualexpenditure.cs
+++ActualProposed_Year.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\actualproposed_year.cs
+++ADMIN_ACCIDENT_INCIDENCE_REPORT_CAUSE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_accident_incidence_report_cause.cs
+++ADMIN_ACCIDENT_INCIDENCE_REPORT_CONSEQUENCE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_accident_incidence_report_consequence.cs
+++ADMIN_BUDGET_CAPEX_OPEX.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_budget_capex_opex.cs
+++ADMIN_CATEGORy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_category.cs
+++ADMIN_CHAIRPERSON.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_chairperson.cs
+++ADMIN_COMPANY_CODE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_company_code.cs
+++ADMIN_COMPANY_DETAIL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_company_detail.cs
+++ADMIN_COMPANY_INFORMATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_company_information.cs
+++ADMIN_COMPANY_INFORMATION_AUDIT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_company_information_audit.cs
+++ADMIN_COMPANY_INFORMATION_old_18052020.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_company_information_old_18052020.cs
+++ADMIN_COMPANYEMAIL_REMINDER_TABLE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_companyemail_reminder_table.cs
+++ADMIN_COMPLIANCE_INDEX_TABLE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_compliance_index_table.cs
+++ADMIN_CONCESSION_STATUS.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_concession_status.cs
+++ADMIN_CONCESSIONS_INFORMATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_concessions_information.cs
+++ADMIN_CONCESSIONS_INFORMATION_AUDIT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_concessions_information_audit.cs
+++ADMIN_CONCESSIONS_INFORMATION_BK_23112021.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_concessions_information_bk_23112021.cs
+++ADMIN_CONCESSIONS_INFORMATION_HISTORY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_concessions_information_history.cs
+++ADMIN_CONCESSIONS_INFORMATION_old_18052020.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_concessions_information_old_18052020.cs
+++ADMIN_DATETIME_PRESENTATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_datetime_presentation.cs
+++ADMIN_DEVELOPMENT_PLAN_STATUS.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_development_plan_status.cs
+++ADMIN_DIVISION_REP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_division_rep.cs
+++ADMIN_DIVISION_REP_LIST.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_division_rep_list.cs
+++ADMIN_DIVISIONAL_REPRESENTATIVE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_divisional_representative.cs
+++ADMIN_DIVISIONAL_REPS_PRESENTATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_divisional_reps_presentation.cs
+++ADMIN_EMAIL_DAY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_email_day.cs
+++ADMIN_ENVIROMENTAL_STUDIES_APPROVED_ONGOING.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_enviromental_studies_approved_ongoing.cs
+++ADMIN_ENVIROMENTAL_STUDIES_IF_ONGOING.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_enviromental_studies_if_ongoing.cs
+++ADMIN_ENVIROMENTAL_STUDy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_enviromental_study.cs
+++ADMIN_ENVIRONMENTAL_STUDY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_environmental_study.cs
+++ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI_.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_fatalities_casualties_manoverboard_tri_lti_.cs
+++ADMIN_FEILDDEVELOPMENTPLAN_WELLORGA.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_feilddevelopmentplan_wellorga.cs
+++ADMIN_FIVE_YEAR_TREND.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_five_year_trend.cs
+++ADMIN_GASPRODUCTION_UTILIZED_MMSCF.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_gasproduction_utilized_mmscf.cs
+++ADMIN_HSE_CONDITION_OF_EQUIPMENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_hse_condition_of_equipment.cs
+++ADMIN_HSE_OSP_REGISTRATIONS_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_hse_osp_registrations_new.cs
+++ADMIN_HSE_OSP_REGISTRATIONS_NEW1.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_hse_osp_registrations_new1.cs
+++ADMIN_INSPECTION_MAINTENANCE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_inspection_maintenance.cs
+++ADMIN_LIST_OF_OMLS_OPL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_list_of_omls_opl.cs
+++ADMIN_LITIGATION_JURISDICTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_litigation_jurisdiction.cs
+++ADMIN_MEETING_ROOM.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_meeting_room.cs
+++ADMIN_MONTH.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_month.cs
+++ADMIN_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facility.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_oil_condensate_production_activities_operating_facility.cs
+++ADMIN_ONGOING_COMPLETED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_ongoing_completed.cs
+++ADMIN_PERFOMANCE_INDEX.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_perfomance_index.cs
+++ADMIN_PRESENTATION_CATEGORy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_presentation_category.cs
+++ADMIN_PRESENTATION_TIME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_presentation_time.cs
+++ADMIN_PRODUCED_WATER_MANAGEMENT_EXPORT_TO.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_produced_water_management_export_to.cs
+++ADMIN_PRODUCED_WATER_MANAGEMENT_how_do_you_handle_your_produced_water.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_produced_water_management_how_do_you_handle_your_produced_water.cs
+++ADMIN_PRODUCED_WATER_MANAGEMENT_TYPE_OF_REPORT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_produced_water_management_type_of_report.cs
+++ADMIN_PRODUCED_WATER_MANAGEMENT_ZONE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_produced_water_management_zone.cs
+++ADMIN_PUBLIC_HOLIDAY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_public_holiday.cs
+++ADMIN_QUARTER.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_quarter.cs
+++ADMIN_REASON_FOR_ADDITION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_reason_for_addition.cs
+++ADMIN_REASON_FOR_DECLINE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_reason_for_decline.cs
+++ADMIN_SCHEDULED_STATUS.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_scheduled_status.cs
+++ADMIN_SCRIBE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_scribe.cs
+++ADMIN_STRATEGIC_PLANS_ON_COMPANY_BASI.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_strategic_plans_on_company_basi.cs
+++ADMIN_SUBMISSION_WINDOW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_submission_window.cs
+++ADMIN_Terrain.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_terrain.cs
+++ADMIN_TRAINING_LOCAL_CONTENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_training_local_content.cs
+++ADMIN_TRAINING_NIGERIA_CONTENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_training_nigeria_content.cs
+++ADMIN_TYPE_OF_TEST.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_type_of_test.cs
+++ADMIN_WASTE_MANAGEMENT_FACILITY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_waste_management_facility.cs
+++ADMIN_WELL_CATEGORy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_well_category.cs
+++ADMIN_WELL_Trajectory.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_well_trajectory.cs
+++ADMIN_WELL_TYPE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_well_type.cs
+++ADMIN_WORK_PROGRAM_REPORT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_work_program_report.cs
+++ADMIN_WORK_PROGRAM_REPORT_History.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_work_program_report_history.cs
+++ADMIN_WP_PENALTIES_AUDIT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_wp_penalties_audit.cs
+++ADMIN_WP_PENALTy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_wp_penalty.cs
+++ADMIN_WP_START_END_DATE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_wp_start_end_date.cs
+++ADMIN_WP_START_END_DATE_AUDIT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_wp_start_end_date_audit.cs
+++ADMIN_WP_START_END_DATE_DATA_UPLOAD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_wp_start_end_date_data_upload.cs
+++ADMIN_WP_START_END_DATE_DATA_UPLOAD_AUDIT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_wp_start_end_date_data_upload_audit.cs
+++ADMIN_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_year.cs
+++ADMIN_YES_NO.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\admin_yes_no.cs
+++Appraisal_Drilling.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\appraisal_drilling.cs
+++BUDGET_ACTUAL_EXPENDITURE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budget_actual_expenditure.cs
+++BUDGET_CAPEX_OPEX.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budget_capex_opex.cs
+++BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budget_performance_development_drilling_activity.cs
+++BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budget_performance_exploratory_activity.cs
+++BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budget_performance_facilities_development_project.cs
+++BUDGET_PERFORMANCE_PRODUCTION_COST.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budget_performance_production_cost.cs
+++BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budget_proposal_in_naira_and_dollar_component.cs
+++BudgetProposal.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\budgetproposal.cs
+++Class_Table.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\class_table.cs
+++CompletionJob.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\completionjob.cs
+++CONCESSION_SITUATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\concession_situation.cs
+++ConcessionSituation.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\concessionsituation.cs
+++ConcessionSituationTwo.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\concessionsituationtwo.cs
+++Contract_Type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\contract_type.cs
+++CSR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\csr.cs
+++Data_Type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\data_type.cs
+++DevelopmentDrilling.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\developmentdrilling.cs
+++Division.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\division.cs
+++DRILLING_EACH_WELL_COST.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\drilling_each_well_cost.cs
+++DRILLING_EACH_WELL_COST_PROPOSED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\drilling_each_well_cost_proposed.cs
+++Drilling_Operation.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\drilling_operation.cs
+++DRILLING_OPERATIONS_.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\drilling_operations_.cs
+++DRILLING_OPERATIONS_CATEGORIES_OF_WELL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\drilling_operations_categories_of_well.cs
+++Error_logs.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\error_logs.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\error_logs.cs
+++ExcelWriter.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\excelwriter.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\excelwriter.cs
+++Exploration_Drilling.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\exploration_drilling.cs
+++FACILITIES_PROJECT_PERFORMANCE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\facilities_project_performance.cs
+++FacilityConstruction.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\facilityconstruction.cs
+++FIELD_DEVELOPMENT_FIELDS_AND_STATUS.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\field_development_fields_and_status.cs
+++FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\field_development_fields_to_submit_fdp.cs
+++FIELD_DEVELOPMENT_PLAN.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\field_development_plan.cs
+++FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\field_development_plan_excessive_reserf.cs
+++Functionality.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\functionality.cs
+++GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\gas_production_activities_domestic_supply.cs
+++GAS_PRODUCTION_ACTIVITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\gas_production_activity.cs
+++Gas_Production_Activity1.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\gas_production_activity1.cs
+++Gas_Reserve_Update.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\gas_reserve_update.cs
+++GeographicalActivity.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\geographicalactivity.cs
+++GEOPHYSICAL_ACTIVITIES_ACQUISITION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\geophysical_activities_acquisition.cs
+++GEOPHYSICAL_ACTIVITIES_PROCESSING.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\geophysical_activities_processing.cs
+++Geophysical_Activity.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\geophysical_activity.cs
+++HSE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse.cs
+++HSE_ACCIDENT_INCIDENCE_REPORTING_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_accident_incidence_reporting_new.cs
+++HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_accident_incidence_reporting_type_of_accident_new.cs
+++HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_asset_register_template_prescriptive_equipment_inspection_strategy_new.cs
+++HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_asset_register_template_rbi_equipment_inspection_strategy_new.cs
+++HSE_CAUSES_OF_SPILL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_causes_of_spill.cs
+++HSE_CLIMATE_CHANGE_AND_AIR_QUALITY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_climate_change_and_air_quality.cs
+++HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_community_disturbances_and_oil_spill_cost.cs
+++HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_community_disturbances_and_oil_spill_cost_new.cs
+++HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NUMBER_AND_QUALITY_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_community_disturbances_and_oil_spill_cost_number_and_quality_new.cs
+++HSE_DESIGNS_SAFETY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_designs_safety.cs
+++HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_compliance_monitoring_chemical_usage_new.cs
+++HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_compliance_monitoring_new.cs
+++HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_TYPE_OF_REPORT_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_compliance_monitoring_type_of_report_new.cs
+++HSE_ENVIRONMENTAL_IMPACT_ASSESSMENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_impact_assessment.cs
+++HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_management_system.cs
+++HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_studies_five_year_strategic_plan_new.cs
+++HSE_ENVIRONMENTAL_STUDIES_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_studies_new.cs
+++HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_environmental_studies_new_updated.cs
+++HSE_FATALITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_fatality.cs
+++HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_inspection_and_maintenance_facility_type_new.cs
+++HSE_INSPECTION_AND_MAINTENANCE_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_inspection_and_maintenance_new.cs
+++HSE_MANAGEMENT_POSITION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_management_position.cs
+++HSE_OCCUPATIONAL_HEALTH_MANAGEMENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_occupational_health_management.cs
+++HSE_OIL_SPILL_INCIDENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_oil_spill_incident.cs
+++HSE_OIL_SPILL_REPORTING_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_oil_spill_reporting_new.cs
+++HSE_OSP_REGISTRATIONS_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_osp_registrations_new.cs
+++HSE_PRODUCED_WATER_MANAGEMENT_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_produced_water_management_new.cs
+++HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_produced_water_management_new_updated.cs
+++HSE_QUALITY_CONTROL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_quality_control.cs
+++HSE_QUESTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_question.cs
+++HSE_SAFETY_CULTURE_TRAINING.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_safety_culture_training.cs
+++HSE_SAFETY_STUDIES_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_safety_studies_new.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_csr.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_csr_new.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_csr_new_scholarship.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_csr_new_training_skill_acquisition.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_mou.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_planned_and_actual.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_question.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_scholaship_scheme.cs
+++HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_sustainable_development_community_project_program_training_scheme.cs
+++HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_technical_safety_control_studies_new.cs
+++HSE_WASTE_MANAGEMENT_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_waste_management_new.cs
+++HSE_WASTE_MANAGEMENT_SYSTEM.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_waste_management_system.cs
+++HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\hse_waste_management_type_of_facility_new.cs
+++Initial_Well_Completion_Job.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\initial_well_completion_job.cs
+++INITIAL_WELL_COMPLETION_JOB1.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\initial_well_completion_job1.cs
+++Legal.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\legal.cs
+++LEGAL_ARBITRATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\legal_arbitration.cs
+++LEGAL_LITIGATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\legal_litigation.cs
+++LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\local_content_and_human_capacity_development_programme.cs
+++LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_and_Nigeria_Content_Training.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\local_content_and_human_capacity_development_programmes_and_nigeria_content_training.cs
+++LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriate.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\local_content_and_human_capacity_development_programmes_expatriate.cs
+++LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Training.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\local_content_and_human_capacity_development_programmes_training.cs
+++LocalContent.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\localcontent.cs
+++Menu.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\menu.cs
+++NDPR_SUBSCRIPTION_FEE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\ndpr_subscription_fee.cs
+++NDR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\ndr.cs
+++NDR_Data_Population.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\ndr_data_population.cs
+++NDR_DATA_POPULATION_ON_BLOCK_BASI.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\ndr_data_population_on_block_basi.cs
+++NIGERIA_CONTENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\nigeria_content.cs
+++NIGERIA_CONTENT_QUESTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\nigeria_content_question.cs
+++NIGERIA_CONTENT_Training.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\nigeria_content_training.cs
+++NIGERIA_CONTENT_Upload_Succession_Plan.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\nigeria_content_upload_succession_plan.cs
+++NigerianContent.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\nigeriancontent.cs
+++OIL_AND_GAS_FACILITY_MAINTENANCE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_and_gas_facility_maintenance.cs
+++OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_and_gas_facility_maintenance_expenditure.cs
+++OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_and_gas_facility_maintenance_project.cs
+++OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_condensate_production_activities_five_year_projection.cs
+++OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_condensate_production_activities_monthly_activities_proposed.cs
+++OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_condensate_production_activities_monthly_activity.cs
+++OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_condensate_production_activities_new_technology_conformity_assessment.cs
+++OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facility.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_condensate_production_activities_operating_facility.cs
+++OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_condensate_production_activities_unitization.cs
+++OIL_CONDENSATE_PRODUCTION_ACTIVITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oil_condensate_production_activity.cs
+++OilCondensateProduction.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oilcondensateproduction.cs
+++OilSpill_Incident.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\oilspill_incident.cs
+++PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\picture_upload_community_development_project.cs
+++PRESENTATION_UPLOAD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\presentation_upload.cs
+++Reserve_Update_Oil_Condensate.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserve_update_oil_condensate.cs
+++RESERVES_REPLACEMENT_RATIO.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_replacement_ratio.cs
+++RESERVES_UPDATES_DEPLETION_RATE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_depletion_rate.cs
+++RESERVES_UPDATES_LIFE_INDEX.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_life_index.cs
+++RESERVES_UPDATES_OIL_CONDENSATE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_company_annual_production.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_CURRENT_RESERVE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_current_reserve.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_fiveyear_projection.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_MMBBL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_mmbbl.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_reserves_addition.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_reserves_decline.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_RESERVOIR_PERFORMANCE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_reservoir_performance.cs
+++RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\reserves_updates_oil_condensate_status_of_reserve.cs
+++Role.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\role.cs
+++ROLES_.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\roles_.cs
+++ROLES_SUPER_ADMIN.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\roles_super_admin.cs
+++SafetyManagement.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\safetymanagement.cs
+++send_autoemail.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\send_autoemail.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\send_autoemail.cs
+++SendMailJob.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\sendmailjob.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\sendmailjob.cs
+++SendMailToCompanies_Job.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\sendmailtocompanies_job.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\sendmailtocompanies_job.cs
+++STRATEGIC_PLANS_ON_COMPANY_BASI.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\strategic_plans_on_company_basi.cs
+++SubstainableDevelopment.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\substainabledevelopment.cs
+++Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\sum_drilling_operations_categories_of_well.cs
+++Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\sum_geophysical_activities_acquisition.cs
+++Sum_GEOPHYSICAL_ACTIVITIES_PROCESSING.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\sum_geophysical_activities_processing.cs
+++Table_1.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\table_1.cs
+++tbl_fruitanalysis.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\tbl_fruitanalysis.cs
+++TrainingForStaff.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\trainingforstaff.cs
+++Userlogin.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\userlogin.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\userlogin.cs
+++UserMaster.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\usermaster.cs
+++View_2.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\view_2.cs
+++VW_company_and_contract_type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_company_and_contract_type.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_appraisal.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_appraisal.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_development.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_development.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_exploration.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_exploration.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_by_year.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot_by_year.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_by_year_companyemail.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot_by_year_companyemail.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_Completion_Workover.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot_completion_workover.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_Completion_Workover__join_Contracttype.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot_completion_workover__join_contracttype.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_Completion_Workover_by_year.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot_completion_workover_by_year.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_Completion_Workover_by_year_companyemail.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot_completion_workover_by_year_companyemail.cs
+++VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_Completion_Workover_by_year_contract_type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_drilling_operations_categories_of_wells_pivot_completion_workover_by_year_contract_type.cs
+++VW_GAS_PRODUCTION_ACTIVITIES_total.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_gas_production_activities_total.cs
+++VW_GAS_PRODUCTION_ACTIVITIES_total_summed.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_gas_production_activities_total_summed.cs
+++VW_GAS_PRODUCTION_ACTIVITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_gas_production_activity.cs
+++VW_GEOPHYSICAL_ACTIVITIES_PROCESSING.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_geophysical_activities_processing.cs
+++VW_GEOPHYSICAL_ACTIVITIES_PROCESSING_SUM_BY_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_geophysical_activities_processing_sum_by_year.cs
+++VW_Geophysical_SEISMIC_DATA_old.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_geophysical_seismic_data_old.cs
+++VW_Geophysical_SEISMIC_DATA_total.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_geophysical_seismic_data_total.cs
+++VW_Geophysical_SEISMIC_DATA_total_summed.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_geophysical_seismic_data_total_summed.cs
+++VW_Geophysical_SEISMIC_DATum.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_geophysical_seismic_datum.cs
+++VW_HSE_OIL_SPILL_REPORTING_NEW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_hse_oil_spill_reporting_new.cs
+++VW_HSE_OIL_SPILL_REPORTING_NEW_total.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_hse_oil_spill_reporting_new_total.cs
+++VW_HSE_OIL_SPILL_REPORTING_NEW_total_summed.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_hse_oil_spill_reporting_new_total_summed.cs
+++VW_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_total.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_oil_condensate_production_activities_total.cs
+++VW_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_total_summed.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_oil_condensate_production_activities_total_summed.cs
+++VW_OIL_CONDENSATE_PRODUCTION_ACTIVITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_oil_condensate_production_activity.cs
+++VW_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_reserves_updates_oil_condensate_mmbbl.cs
+++VW_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL_PERCENTAGE_CALCULATED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_reserves_updates_oil_condensate_mmbbl_percentage_calculated.cs
+++VW_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL_total_4_percentage_calculation.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_reserves_updates_oil_condensate_mmbbl_total_4_percentage_calculation.cs
+++VW_SEISMIC_DATA_QUANTUM.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_seismic_data_quantum.cs
+++VW_SEISMIC_DATA_QUANTUM_SUM_BY_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\vw_seismic_data_quantum_sum_by_year.cs
+++WORK_PROGRAM_FLOW.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\work_program_flow.cs
+++WorkOverJob.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\workoverjob.cs
+++WorkOvers_Recompletion_Job.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\workovers_recompletion_job.cs
+++WorkOvers_Recompletion_Job_Field_Dvelopment_Plan.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\workovers_recompletion_job_field_dvelopment_plan.cs
+++WORKOVERS_RECOMPLETION_JOB1.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\workovers_recompletion_job1.cs
+++WP_Cost_Efficiency_Metric_CAPEX_OPEX.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_cost_efficiency_metric_capex_opex.cs
+++WP_Cost_Efficiency_Metric_CAPEX_OPEX_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_cost_efficiency_metric_capex_opex_old.cs
+++WP_Cost_Efficiency_Metric_CAPEX_OPEX_PRODUCTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_cost_efficiency_metric_capex_opex_production.cs
+++WP_Cost_Efficiency_Metric_NET_PRODUCTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_cost_efficiency_metric_net_production.cs
+++WP_Cost_Efficiency_Metric_NET_PRODUCTION_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_cost_efficiency_metric_net_production_old.cs
+++WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_count_admin_datetime_presentation_by_total_count_yearly.cs
+++WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_count_admin_datetime_presentation_by_year_presented_category.cs
+++WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_COMPANYNAME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_count_admin_datetime_presentation_by_year_presented_companyname.cs
+++WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_count_drilling_operations_categories_of_well.cs
+++WP_COUNT_PRESENTATION_CATERGORY_BY_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_count_presentation_catergory_by_year.cs
+++WP_COUNT_PRESENTATION_CATERGORY_BY_YEAR_old.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_count_presentation_catergory_by_year_old.cs
+++WP_COUNT_PRESENTATION_CATERGORY_BY_YEAR_STATUS_COMPANYNAME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_count_presentation_catergory_by_year_status_companyname.cs
+++WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_drilling_operations_categories_of_well.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_contract_type.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_contract_type_basis.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_contract_type_basis.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_contract_type_basis_planned.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_contract_type_pivoted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_contract_type_pivoted.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_contract_type_tobe_pivoted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_contract_type_tobe_pivoted.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_penalty_payment.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_penalty_payment.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_Percentage.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_percentage.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_produced_utilized_flared.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PERCENTAGE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_produced_utilized_flared_percentage.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PERCENTAGE_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_produced_utilized_flared_percentage_planned.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_produced_utilized_flared_planned.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_terrain_pivotted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_terrain_pivotted.cs
+++WP_GAS_PRODUCTION_ACTIVITIES_terrain_tobe_pivotted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activities_terrain_tobe_pivotted.cs
+++WP_GAS_PRODUCTION_ACTIVITy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_activity.cs
+++WP_Gas_Production_Utilisation_And_Flaring_Forecast.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_gas_production_utilisation_and_flaring_forecast.cs
+++WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_geophysical_activities_acquisition.cs
+++WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_count_contract_type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_geophysical_activities_acquisition_count_contract_type.cs
+++WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_geophysical_activities_acquisition_sum_and_count.cs
+++WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_contract_type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_geophysical_activities_acquisition_sum_contract_type.cs
+++WP_GEOPHYSICAL_ACTIVITIES_PROCESSING.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_geophysical_activities_processing.cs
+++WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_hse_accident_incidence_reporting_type_of_accident_new_by_consequence.cs
+++WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_consequence_is_spill.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_hse_accident_incidence_reporting_type_of_accident_new_consequence_is_spill.cs
+++WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_consequence_is_spill_total.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_hse_accident_incidence_reporting_type_of_accident_new_consequence_is_spill_total.cs
+++WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_hse_accident_incidence_reporting_type_of_accident_new_total_accident.cs
+++WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_hse_accident_incidence_reporting_type_of_accident_new_total_spill_accident_and_percentage.cs
+++WP_HSE_FATALITIES_accident_statistic_table.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_hse_fatalities_accident_statistic_table.cs
+++WP_INITIAL_WELL_COMPLETION_JOB.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_initial_well_completion_job.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Type.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_contract_type.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_Pivotted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_by_contracttype_pivotted.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_tobe_pivoted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_by_contracttype_tobe_pivoted.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_by_month_year.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_by_month_year_proposed.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_by_terrain_pivoted.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoted_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_by_terrain_pivoted_planned.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Five_Year_Trend_for_Companies_Reserve_Replacement_Ratio.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_five_year_trend_for_companies_reserve_replacement_ratio.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_oil_production.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_oil_production_by_terrain.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_oil_production_by_terrain_planned.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_oil_production_contract_type.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_chart.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_oil_production_contract_type_chart.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_oil_production_contract_type_proposed.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_oil_production_proposed.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdown.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_pivotted_by_company_productionmonth_year_breakdown.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdown_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_pivotted_by_company_productionmonth_year_breakdown_planned.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_tobe_Pivoted.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_tobe_pivoted.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_tobe_Pivoted_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_tobe_pivoted_planned.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_TOBE_Pivotted_by_company_productionmonth_year.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_tobe_pivotted_by_company_productionmonth_year.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_TOBE_Pivotted_by_company_productionmonth_year_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_monthly_activities_tobe_pivotted_by_company_productionmonth_year_planned.cs
+++WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oil_condensate_production_activities_total_reconciled_crude_oil.cs
+++WP_OML_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_acquisition_index_mn_max_rgt_by_year.cs
+++WP_OML_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_acquisition_index_mn_max_rgt_by_year_old.cs
+++WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_acqusition_index_weighted_score.cs
+++WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_acqusition_index_weighted_score_old.cs
+++WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD2021.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_acqusition_index_weighted_score_old2021.cs
+++WP_OML_COMPLIANCE_INDEX_CALCULATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_compliance_index_calculation.cs
+++WP_OML_COMPLIANCE_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_compliance_index_weighted_score.cs
+++WP_OML_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_concession_rentals_index_mn_max_rgt_by_year.cs
+++WP_OML_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_concession_rentals_index_weighted_score.cs
+++WP_OML_Discovery_Index_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_discovery_index_mn_max_rgt_by_year.cs
+++WP_OML_Discovery_Index_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_discovery_index_mn_max_rgt_by_year_old.cs
+++WP_OML_DISCOVERY_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_discovery_index_weighted_score.cs
+++WP_OML_DISCOVERY_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_discovery_index_weighted_score_old.cs
+++WP_OML_Domestic_Gas_obligation_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_domestic_gas_obligation_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_Domestic_Gas_obligation_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_domestic_gas_obligation_index_weighted_score.cs
+++WP_OML_Exploratory_Drilling_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_exploratory_drilling_index_mn_max_rgt_by_year.cs
+++WP_OML_EXPLORATORY_DRILLING_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_exploratory_drilling_index_weighted_score.cs
+++WP_OML_Facility_Project_Performance_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_facility_project_performance_index_mn_max_rgt_by_year.cs
+++WP_OML_Facility_Project_Performance_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_facility_project_performance_index_mn_max_rgt_by_year_old.cs
+++WP_OML_Facility_Project_Performance_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_facility_project_performance_index_weighted_score.cs
+++WP_OML_Facility_Project_Performance_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_facility_project_performance_index_weighted_score_old.cs
+++WP_OML_FATALITY_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_fatality_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_FATALITY_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_fatality_index_weighted_score.cs
+++WP_OML_Gas_flare_Royalty_payment_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_flare_royalty_payment_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_Gas_flare_Royalty_payment_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_flare_royalty_payment_index_weighted_score.cs
+++WP_OML_Gas_Sales_Royalty_Payment_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_sales_royalty_payment_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_Gas_Sales_Royalty_Payment_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_sales_royalty_payment_index_weighted_score.cs
+++WP_OML_GAS_Utilisation_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_utilisation_index_mn_max_rgt_by_year.cs
+++WP_OML_GAS_Utilisation_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_utilisation_index_mn_max_rgt_by_year_old.cs
+++WP_OML_GAS_Utilisation_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_utilisation_index_weighted_score.cs
+++WP_OML_GAS_Utilisation_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_gas_utilisation_index_weighted_score_old.cs
+++WP_OML_Has_annual_NDR_subscription_fee_been_paid_new_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_has_annual_ndr_subscription_fee_been_paid_new_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_Has_annual_NDR_subscription_fee_been_paid_new_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_has_annual_ndr_subscription_fee_been_paid_new_index_weighted_score.cs
+++WP_OML_HSE_ACCIDENT_INCIDENCE_REPORTING_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_hse_accident_incidence_reporting_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_HSE_ACCIDENT_INCIDENCE_REPORTING_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_hse_accident_incidence_reporting_index_weighted_score.cs
+++WP_OML_INCREMENT_IN_PRODUCTION_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_increment_in_production_index_mn_max_rgt_by_year.cs
+++WP_OML_INCREMENT_IN_PRODUCTION_STAGE_1.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_increment_in_production_stage_1.cs
+++WP_OML_INJURY_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_injury_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_INJURY_Index_MN_MAX_RGT_by_Year_of_WP_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_injury_index_mn_max_rgt_by_year_of_wp_old.cs
+++WP_OML_INJURY_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_injury_index_weighted_score.cs
+++WP_OML_INJURY_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_injury_index_weighted_score_old.cs
+++WP_OML_NDPR_SUBSCRIPTION_FEE_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_ndpr_subscription_fee_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_NDPR_SUBSCRIPTION_FEE_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_ndpr_subscription_fee_index_weighted_score.cs
+++WP_OML_Oil_spill_reported_Index_MN_MAX_RGT_by_Year_of_WP.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_oil_spill_reported_index_mn_max_rgt_by_year_of_wp.cs
+++WP_OML_Oil_spill_reported_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_oil_spill_reported_index_weighted_score.cs
+++WP_OML_Reserve_Replacement_Ratio_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_reserve_replacement_ratio_index_mn_max_rgt_by_year.cs
+++WP_OML_Reserve_Replacement_Ratio_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_reserve_replacement_ratio_index_mn_max_rgt_by_year_old.cs
+++WP_OML_RESERVE_REPLACEMENT_RATIO_STAGE_1.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_reserve_replacement_ratio_stage_1.cs
+++WP_OML_RESERVE_REPLACEMENT_RATIO_STAGE_1_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_reserve_replacement_ratio_stage_1_old.cs
+++WP_OML_RESERVE_REPLACEMENT_RATIO_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_reserve_replacement_ratio_weighted_score.cs
+++WP_OML_Senior_Staff_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_senior_staff_index_mn_max_rgt_by_year.cs
+++WP_OML_Senior_Staff_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_senior_staff_index_mn_max_rgt_by_year_old.cs
+++WP_OML_Senior_Staff_INDEX_MN_MAX_RGT_by_YEAR_OLD2021.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_senior_staff_index_mn_max_rgt_by_year_old2021.cs
+++WP_OML_Senior_Staff_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_senior_staff_index_weighted_score.cs
+++WP_OML_Senior_Staff_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_senior_staff_index_weighted_score_old.cs
+++WP_OML_Senior_Staff_INDEX_WEIGHTED_SCORE_OLD2021.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_senior_staff_index_weighted_score_old2021.cs
+++WP_OML_SIGNATURE_BONUS_Index_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_signature_bonus_index_mn_max_rgt_by_year.cs
+++WP_OML_SIGNATURE_BONUS_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_signature_bonus_index_weighted_score.cs
+++WP_OML_Top_Management_Staff_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_top_management_staff_index_mn_max_rgt_by_year.cs
+++WP_OML_Top_Management_Staff_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_top_management_staff_index_mn_max_rgt_by_year_old.cs
+++WP_OML_Top_Management_Staff_INDEX_MN_MAX_RGT_by_YEAR_OLD2021.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_top_management_staff_index_mn_max_rgt_by_year_old2021.cs
+++WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_top_management_staff_index_weighted_score.cs
+++WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_top_management_staff_index_weighted_score_old.cs
+++WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD2021.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_oml_top_management_staff_index_weighted_score_old2021.cs
+++WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_acquisition_index_mn_max_rgt_by_year.cs
+++WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_acquisition_index_mn_max_rgt_by_year_old.cs
+++WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_acqusition_index_weighted_score.cs
+++WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_acqusition_index_weighted_score_old.cs
+++WP_OPL_Aggregated_Score_ALL_COMPANIES_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_aggregated_score_all_companies_old.cs
+++WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_aggregated_score_all_companies_without_index_type.cs
+++WP_OPL_Aggregated_Score_ALL_COMPANy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_aggregated_score_all_company.cs
+++WP_OPL_COMPLIANCE_INDEX_CALCULATION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_compliance_index_calculation.cs
+++WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_concession_rentals_index_mn_max_rgt_by_year.cs
+++WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_concession_rentals_index_weighted_score.cs
+++WP_OPL_Discovery_Index_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_discovery_index_mn_max_rgt_by_year.cs
+++WP_OPL_Discovery_Index_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_discovery_index_mn_max_rgt_by_year_old.cs
+++WP_OPL_DISCOVERY_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_discovery_index_weighted_score.cs
+++WP_OPL_DISCOVERY_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_discovery_index_weighted_score_old.cs
+++WP_OPL_Exploratory_Drilling_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_exploratory_drilling_index_mn_max_rgt_by_year.cs
+++WP_OPL_EXPLORATORY_DRILLING_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_exploratory_drilling_index_weighted_score.cs
+++WP_OPL_OML_Cost_Efficiency_Metric_INDEX_MN_MAX_RGT_by_YEAR.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_oml_cost_efficiency_metric_index_mn_max_rgt_by_year.cs
+++WP_OPL_OML_Cost_Efficiency_Metric_INDEX_MN_MAX_RGT_by_YEAR_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_oml_cost_efficiency_metric_index_mn_max_rgt_by_year_old.cs
+++WP_OPL_OML_Cost_Efficiency_Metric_INDEX_WEIGHTED_SCORE.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_oml_cost_efficiency_metric_index_weighted_score.cs
+++WP_OPL_OML_Cost_Efficiency_Metric_INDEX_WEIGHTED_SCORE_OLD.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_oml_cost_efficiency_metric_index_weighted_score_old.cs
+++WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_opl_weighted_and_recalibrated_score_union_all_company.cs
+++WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_reserves_replacement_ratio_value_pivotted.cs
+++WP_RESERVES_REPLACEMENT_RATIO_VALUE_TO_BE_PIVOTTED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_reserves_replacement_ratio_value_to_be_pivotted.cs
+++WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_reserves_updates_oil_condensate_mmbbl.cs
+++WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_reserves_updates_oil_condensate_status_of_reserve_current.cs
+++WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_reserves_updates_oil_condensate_status_of_reserve_current_planned.cs
+++WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_sum_initial_well_completion_jobs_workovers_recompletion.cs
+++WP_Total_E_and_P_companies_old.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_total_e_and_p_companies_old.cs
+++WP_Total_E_and_P_company.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_total_e_and_p_company.cs
+++WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_total_incidence_and_oil_spill_and_recovered.cs
+++WP_TOTAL_NO_OF_INCIDENCE_BY_YEAR_COMPANYNAME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_total_no_of_incidence_by_year_companyname.cs
+++WP_TOTAL_NO_OF_OIL_SPILLED_AND_RECOVERED_BY_YEAR_COMPANYNAME.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_total_no_of_oil_spilled_and_recovered_by_year_companyname.cs
+++WP_WORKOVERS_RECOMPLETION_JOB.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\datamodels\wp_workovers_recompletion_job.cs
+++Helpers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\
+++Models
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\
+++Account.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\account.cs
+++check_super_admin_role.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\check_super_admin_role.cs
+++Connection.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\connection.cs
+++Dashboard.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\dashboard.cs
+++general_error_log.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\general_error_log.cs
+++GeneralModel.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\generalmodel.cs
+++Generic.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\generic.cs
+++mails.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\mails.cs
+++Mimail.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\mimail.cs
+++nes_crud_operation.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\nes_crud_operation.cs
+++nes_project_classes.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\nes_project_classes.cs
+++NumberText .cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\numbertext .cs
+++OAuthHandler.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\oauthhandler.cs
+++Presentation.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\presentation.cs
+++QuartzScheduler.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\quartzscheduler.cs
+++QuartzSchedulerJob.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\quartzschedulerjob.cs
+++Report.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\report.cs
+++ReturnData.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\returndata.cs
+++SendMailJob_div_rep.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\sendmailjob_div_rep.cs
+++ViewModel.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\viewmodel.cs
+++WKP_DBContext.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\models\wkp_dbcontext.cs
+++Services
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\services\
+++appsettings.json
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\appsettings.json
+++Program.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\program.cs
+++Startup.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\startup.cs
+++WeatherForecast.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\weatherforecast.cs
+++No service dependencies discovered
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1234
+++Analyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:analyzers
+++Frameworks
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:frameworks
+++Packages
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:packages
+++launchSettings.json
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\properties\launchsettings.json
+++ErrorLog.txt
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\app_logs\errorlog.txt
+++ElpsManagerModels.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\elpsmanagermodels.cs
+++ElpsServices.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\elpsservices.cs
+++GeneralClass.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\generalclass.cs
+++HtmlHelpers.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\htmlhelpers.cs
+++NumberToWordHelper.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\numbertowordhelper.cs
+++ParameterDataModel.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\parameterdatamodel.cs
+++RestSharpServices.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\restsharpservices.cs
+++AppSettings.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\services\appsettings.cs
+++ExtensionMethods.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\services\extensionmethods.cs
+++SmtpSettings.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\services\smtpsettings.cs
+++appsettings.Development.json
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\appsettings.development.json
+++Microsoft.AspNetCore.Analyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk.web\analyzers\cs\microsoft.aspnetcore.analyzers.dll
+++Microsoft.AspNetCore.App.Analyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\packs\microsoft.aspnetcore.app.ref\6.0.4\analyzers\dotnet\cs\microsoft.aspnetcore.app.analyzers.dll
+++Microsoft.AspNetCore.App.CodeFixes
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\packs\microsoft.aspnetcore.app.ref\6.0.4\analyzers\dotnet\cs\microsoft.aspnetcore.app.codefixes.dll
+++Microsoft.AspNetCore.Components.Analyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk.web\analyzers\cs\microsoft.aspnetcore.components.analyzers.dll
+++Microsoft.AspNetCore.Mvc.Analyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk.web\analyzers\cs\microsoft.aspnetcore.mvc.analyzers.dll
+++Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk.razor\source-generators\microsoft.aspnetcore.razor.sourcegenerator.tooling.internal.dll
+++Microsoft.CodeAnalysis.CSharp.NetAnalyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.csharp.netanalyzers.dll
+++Microsoft.CodeAnalysis.NetAnalyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.netanalyzers.dll
+++Microsoft.EntityFrameworkCore.Analyzers
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\.nuget\packages\microsoft.entityframeworkcore.analyzers\6.0.5\analyzers\dotnet\cs\microsoft.entityframeworkcore.analyzers.dll
+++Microsoft.Extensions.Logging.Generators
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\packs\microsoft.aspnetcore.app.ref\6.0.4\analyzers\dotnet\roslyn4.0\cs\microsoft.extensions.logging.generators.dll
+++Microsoft.NET.Sdk.Razor.SourceGenerators
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk.razor\source-generators\microsoft.net.sdk.razor.sourcegenerators.dll
+++System.Text.Json.SourceGeneration
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\program files\dotnet\packs\microsoft.netcore.app.ref\6.0.4\analyzers\dotnet\cs\system.text.json.sourcegeneration.dll
+++Microsoft.AspNetCore.App
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\microsoft.aspnetcore.app
+++Microsoft.NETCore.App
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\microsoft.netcore.app
+++Azure.Storage.Blobs (12.12.0)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1251
+++Azure.Storage.Queues (12.10.0)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1246
+++MailKit (3.2.0)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1256
+++Microsoft.AspNetCore.Authentication.JwtBearer (6.0.5)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1254
+++Microsoft.EntityFrameworkCore (6.0.5)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1245
+++Microsoft.EntityFrameworkCore.SqlServer (6.0.5)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1247
+++Microsoft.Extensions.Azure (1.2.0)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1252
+++Newtonsoft.Json (13.0.1)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1249
+++Quartz (3.4.0)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1257
+++RestSharp (107.3.0)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1255
+++Swashbuckle.AspNetCore (6.2.3)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1248
+++System.Data.OracleClient (1.0.8)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1258
+++System.Data.SqlClient (4.8.3)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1253
+++System.Net.Security (4.3.2)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1250
+++AutoMapper (11.0.1)
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:>1273
+++AutoMapperSettings
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\automappersettings\
+++MappingProfiles.cs
+i:{925693f4-20f3-4dfe-9fb9-06acfd236f33}:c:\users\admin\source\repos\work-program (main)\backend_umr_work_program\helpers\automappersettings\mappingprofiles.cs
