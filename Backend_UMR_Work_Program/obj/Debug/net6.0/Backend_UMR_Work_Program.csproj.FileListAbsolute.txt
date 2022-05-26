@@ -246,3 +246,5 @@ C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Deb
 C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
