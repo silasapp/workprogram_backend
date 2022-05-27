@@ -27,7 +27,7 @@ namespace Backend_UMR_Work_Program.Controllers
     }
 
 
-        [HttpGet(Name = "WORKPROGRAMME_REPORT")]
+        [HttpGet("WORKPROGRAMME_REPORT")]
         public async Task<WebApiResponse> WORKPROGRAMME_REPORT(string year = null)
         {
             try
@@ -288,7 +288,7 @@ namespace Backend_UMR_Work_Program.Controllers
             
         }
 
-        [HttpGet(Name = "CONCESSIONSINFORMATION")]
+        [HttpGet("CONCESSIONSINFORMATION")]
         public async Task<WebApiResponse> Get_ADMIN_CONCESSIONS_INFORMATION_BY_CURRENT_YEAR(string year = null)
         {
 
@@ -328,7 +328,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet(Name = "CONCESSIONSITUATION")]
+        [HttpGet("CONCESSIONSITUATION")]
         public async Task<WebApiResponse> Get_CONCESSION_SITUATION(string year = null )
         {
 
@@ -359,7 +359,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         
-        [HttpGet(Name = "GEOPHYSICALACTIVITIES")]
+        [HttpGet("GEOPHYSICALACTIVITIES")]
         public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year = null )
         {
             var userRole = "Admin";
@@ -389,7 +389,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
       
       
-        [HttpGet(Name = "GEOPHYSICALPROCESSING")]
+        [HttpGet("GEOPHYSICALPROCESSING")]
         public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year = null )
         {
             var userRole = "Admin";
@@ -418,7 +418,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet(Name = "DRILLING-OPERATIONS")]
+        [HttpGet("DRILLING-OPERATIONS")]
         public async Task<WebApiResponse> Get_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS(string year = null )
         {
             var userRole = "Admin";
@@ -447,7 +447,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         
-        [HttpGet(Name = "WORKOVERS_RECOMPLETION")]
+        [HttpGet("WORKOVERS_RECOMPLETION")]
         public async Task<WebApiResponse> Get_WORKOVERS_RECOMPLETION_JOBs(string year = null )
         {
             var userRole = "Admin";
@@ -476,7 +476,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
          
-        [HttpGet(Name = "INITIAL_WELLCOMPLETION")]
+        [HttpGet("INITIAL_WELLCOMPLETION")]
         public async Task<WebApiResponse> Get_INITIAL_WELL_COMPLETION(string year = null )
         {
             var userRole = "Admin";
@@ -505,7 +505,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet(Name = "FDP_EXPECTED_RESERVES")]
+        [HttpGet("FDP_EXPECTED_RESERVES")]
         public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_EXPECTED_RESERVES(string year = null )
         {
             var userRole = "Admin";
@@ -538,7 +538,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet(Name = "FDP_TOSUBMIT")]
+        [HttpGet("FDP_TOSUBMIT")]
         public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_TOBESUBMITTED(string year = null )
         {
             var userRole = "Admin";
@@ -571,7 +571,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet(Name = "FDP_FIELDSTATUS")]
+        [HttpGet("FDP_FIELDSTATUS")]
         public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year = null )
         {
             var userRole = "Admin";
@@ -604,7 +604,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet(Name = "NDR")]
+        [HttpGet("NDR")]
         public async Task<WebApiResponse> NDR(string year = null )
         {
             var userRole = "Admin";
@@ -637,7 +637,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "OIL_CONDENSATE_PRODUCTION_ACTIVITIES")]
+        [HttpGet("OIL_CONDENSATE_PRODUCTION_ACTIVITIES")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES(string year = null )
         {
             var userRole = "Admin";
@@ -670,7 +670,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         
-        [HttpGet(Name = "OIL_CONDENSATE_MONTHLY_ACTIVITIES")]
+        [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities(string year = null )
         {
             var userRole = "Admin";
@@ -703,7 +703,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED")]
+        [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year = null )
         {
             var userRole = "Admin";
@@ -736,7 +736,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED_FIVEYEARS")]
+        [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED_FIVEYEARS")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(string year = null )
         {
             var userRole = "Admin";
@@ -769,7 +769,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "GAS_PRODUCTION_ACTIVITIES")]
+        [HttpGet("GAS_PRODUCTION_ACTIVITIES")]
         public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year = null )
         {
             var userRole = "Admin";
@@ -802,7 +802,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
+        [HttpGet("GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
         public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year = null )
         {
             var userRole = "Admin";
@@ -835,7 +835,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "UNITIZATION")]
+        [HttpGet("UNITIZATION")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year = null )
         {
             var userRole = "Admin";
@@ -868,7 +868,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "CONCESSION_RESERVES_FOR_1ST_JANUARY")]
+        [HttpGet("CONCESSION_RESERVES_FOR_1ST_JANUARY")]
         public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_1ST_JANUARY(string year = null )
         {
             var userRole = "Admin";
@@ -902,7 +902,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "RESERVES_OIL_CONDENSATE_PRODUCTION")]
+        [HttpGet("RESERVES_OIL_CONDENSATE_PRODUCTION")]
         public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year = null )
         {
             var userRole = "Admin";
@@ -936,7 +936,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "RESERVES_ADDITION")]
+        [HttpGet("RESERVES_ADDITION")]
         public async Task<WebApiResponse> RESERVES_ADDITION(string year = null )
         {
             var userRole = "Admin";
@@ -970,7 +970,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "RESERVES_DECLINE")]
+        [HttpGet("RESERVES_DECLINE")]
         public async Task<WebApiResponse> RESERVES_DECLINE(string year = null )
         {
             var userRole = "Admin";
@@ -1004,7 +1004,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "RESERVES_LIFE_INDEX")]
+        [HttpGet("RESERVES_LIFE_INDEX")]
         public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(string year = null )
         {
             var userRole = "Admin";
@@ -1038,7 +1038,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "RESERVES_UPDATES_DEPLETION_RATE")]
+        [HttpGet("RESERVES_UPDATES_DEPLETION_RATE")]
         public async Task<WebApiResponse> RESERVES_UPDATES_DEPLETION_RATE(string year = null )
         {
             var userRole = "Admin";
@@ -1072,7 +1072,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "RESERVES_OIL_CONDENSATE_MMBBL")]
+        [HttpGet("RESERVES_OIL_CONDENSATE_MMBBL")]
         public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_MMBBL(string year = null )
         {
             var userRole = "Admin";
@@ -1106,7 +1106,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "RESERVES_REPLACEMENT_RATIO")]
+        [HttpGet("RESERVES_REPLACEMENT_RATIO")]
         public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(string year = null )
         {
             var userRole = "Admin";
@@ -1140,7 +1140,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "BUDGET_CAPEX_OPEX")]
+        [HttpGet("BUDGET_CAPEX_OPEX")]
         public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(string year = null )
         {
             var userRole = "Admin";
@@ -1174,7 +1174,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "OIL_AND_GAS__MAINTENANCE_PROJECTS")]
+        [HttpGet("OIL_AND_GAS__MAINTENANCE_PROJECTS")]
         public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year = null )
         {
             var userRole = "Admin";
@@ -1208,7 +1208,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "OIL_CONDENSATE_CONFORMITY")]
+        [HttpGet("OIL_CONDENSATE_CONFORMITY")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year = null )
         {
             var userRole = "Admin";
@@ -1242,7 +1242,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "FACILITIES_PROJECT_PERFORMANCE")]
+        [HttpGet("FACILITIES_PROJECT_PERFORMANCE")]
         public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(string year = null )
         {
             var userRole = "Admin";
@@ -1276,7 +1276,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "LEGAL_LITIGATION")]
+        [HttpGet("LEGAL_LITIGATION")]
         public async Task<WebApiResponse> LEGAL_LITIGATION(string year = null )
         {
             var userRole = "Admin";
@@ -1310,7 +1310,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
          
         
-        [HttpGet(Name = "LEGAL_ARBITRATION")]
+        [HttpGet("LEGAL_ARBITRATION")]
         public async Task<WebApiResponse> LEGAL_ARBITRATION(string year = null )
         {
             var userRole = "Admin";
@@ -1344,7 +1344,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "NIGERIA_CONTENT_TRAINING")]
+        [HttpGet("NIGERIA_CONTENT_TRAINING")]
         public async Task<WebApiResponse> NIGERIA_CONTENT_TRAINING(string year = null )
         {
             var userRole = "Admin";
@@ -1378,7 +1378,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "NIGERIA_CONTENT_SUCCESSIONPLAN")]
+        [HttpGet("NIGERIA_CONTENT_SUCCESSIONPLAN")]
         public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(string year = null )
         {
             var userRole = "Admin";
@@ -1412,7 +1412,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "STRATEGIC_PLANS_ON_COMPANY_BASIS")]
+        [HttpGet("STRATEGIC_PLANS_ON_COMPANY_BASIS")]
         public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASIS(string year = null )
         {
             var userRole = "Admin";
@@ -1446,7 +1446,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
+        [HttpGet("HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
         public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year = null )
         {
             var userRole = "Admin";
@@ -1480,7 +1480,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "HSE_MANAGEMENT_POSITION")]
+        [HttpGet("HSE_MANAGEMENT_POSITION")]
         public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(string year = null )
         {
             var userRole = "Admin";
@@ -1514,7 +1514,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "HSE_SAFETY_CULTURE_TRAINING")]
+        [HttpGet("HSE_SAFETY_CULTURE_TRAINING")]
         public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(string year = null )
         {
             var userRole = "Admin";
@@ -1548,7 +1548,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
+        [HttpGet("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
         public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year = null )
         {
             var userRole = "Admin";
@@ -1582,7 +1582,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "HSE_QUALITY_CONTROL")]
+        [HttpGet("HSE_QUALITY_CONTROL")]
         public async Task<WebApiResponse> HSE_QUALITY_CONTROL(string year = null )
         {
             var userRole = "Admin";
@@ -1616,7 +1616,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
           
         
-        [HttpGet(Name = "HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
+        [HttpGet("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
         public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year = null )
         {
             var userRole = "Admin";
@@ -1650,7 +1650,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         
-        [HttpGet(Name = "HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
+        [HttpGet("HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
         public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year = null )
         {
             var userRole = "Admin";

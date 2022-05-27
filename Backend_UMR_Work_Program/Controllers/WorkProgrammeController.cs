@@ -35,7 +35,7 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKPRole => User.FindFirstValue(ClaimTypes.Role);
 
 
-        [HttpPost(Name = "POST_WORKPROGRAMME")]
+        [HttpPost("POST_WORKPROGRAMME")]
         public async Task<WebApiResponse> Post_WORKPROGRAMME(WorkProgramme_Model wkp)
         {
             
@@ -202,7 +202,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         
-        [HttpPost(Name = "POST_CONCESSION")]
+        [HttpPost("POST_CONCESSION")]
         public async Task<WebApiResponse> Post_CONCESSION_SITUATION(CONCESSION_SITUATION wkp)
         {
             
@@ -256,7 +256,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
 
-        [HttpPost(Name = "POST_GEOPHYSICAL_ACQUISITION")]
+        [HttpPost("POST_GEOPHYSICAL_ACQUISITION")]
         public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_ACQUISITION(GEOPHYSICAL_ACTIVITIES_ACQUISITION wkp)
         {
             
@@ -310,7 +310,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost(Name = "POST_GEOPHYSICAL_ACTIVITIES_PROCESSING")]
+        [HttpPost("POST_GEOPHYSICAL_ACTIVITIES_PROCESSING")]
         public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_PROCESSING(GEOPHYSICAL_ACTIVITIES_PROCESSING wkp)
         {
 
@@ -365,7 +365,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost(Name = "DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
+        [HttpPost("DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
         public async Task<WebApiResponse> Post_DRILLING_OPERATIONS(DRILLING_OPERATIONS_CATEGORIES_OF_WELL wkp)
         {
 
@@ -420,7 +420,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost(Name = "POST_DRILLING_EACH_WELL_COST")]
+        [HttpPost("POST_DRILLING_EACH_WELL_COST")]
         public async Task<WebApiResponse> Post_DRILLING_EACH_WELL_COST(DRILLING_EACH_WELL_COST wkp)
         {
 
@@ -475,7 +475,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost(Name = "POST_WELL_PROPOSED")]
+        [HttpPost("POST_WELL_PROPOSED")]
         public async Task<WebApiResponse> Post_DRILLING_WELL_PROPOSED(WorkProgramme_Model wkp)
         {
 
@@ -529,7 +529,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet(Name = "PRESENTATION SCHEDULES")]
+        [HttpGet("PRESENTATION SCHEDULES")]
         public async Task<WebApiResponse> PRESENTATION_SCHEDULES(string year)
         {
             var userEmail = "test@mailinator.com";
@@ -557,7 +557,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-         [HttpGet(Name = "DIVISIONAL_PRESENTATIONS")]
+         [HttpGet("DIVISIONAL_PRESENTATIONS")]
         public async Task<WebApiResponse> DIVISIONAL_PRESENTATIONS(string year)
         {
             var userEmail = "test@mailinator.com";
