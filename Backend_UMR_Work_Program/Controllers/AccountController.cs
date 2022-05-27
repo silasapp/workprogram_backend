@@ -3,13 +3,12 @@ using Backend_UMR_Work_Program.Models;
 using Newtonsoft.Json;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using static Backend_UMR_Work_Program.Models.ViewModel;
+using AutoMapper;
 //using static Backend_UMR_Work_Program.Helpers.GeneralClass;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
     [Route("api/[controller]")]
-
-
     public class AccountController : ControllerBase
     {
         private Account _account;
@@ -17,15 +16,16 @@ namespace Backend_UMR_Work_Program.Controllers
         public IConfiguration _configuration;
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
-        public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account)
+        private readonly IMapper _mapper;
+
+        public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper)
         {
             //_httpContextAccessor = httpContextAccessor;
             _account = account;
             _context = context;
             _configuration = configuration;
-
-            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor);
-            //_helpersController = new HelpersController(_context, _configuration);
+            _mapper = mapper;
+            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
 
         [HttpPost("Authenticate")]
