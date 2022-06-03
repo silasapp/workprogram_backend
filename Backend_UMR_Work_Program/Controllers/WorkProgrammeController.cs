@@ -10,8 +10,8 @@ using Newtonsoft.Json.Linq;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]/[action]")]
     public class WorkProgrammeController : ControllerBase
     {
 
@@ -31,10 +31,14 @@ namespace Backend_UMR_Work_Program.Controllers
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
 
-        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private string? WKPUserId => "1";
+        private string? WKPUserName => "Name";
+        private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        private string? WKUserRole => "Admin";
+        // private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        //private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
         [HttpPost("POST_WORKPROGRAMME_1")]

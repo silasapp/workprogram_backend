@@ -1003,45 +1003,6 @@ public class DRILLING_EACH_WELL_COST_Model
         }
 
         #endregion
-        public class WorkProgramme_Model
-        {
-            public string WorkProgramme_Year { get; set; }
-            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_PROCESSING_Model GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
-            public DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
-            public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
-            public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
-
-            //For Form 2
-            public INITIAL_WELL_COMPLETION_JOB1 Initial_Well_Completion_Job { get; set; }
-            public WORKOVERS_RECOMPLETION_JOB1_Model WORKOVERS_RECOMPLETION_JOB1 { get; set; }
-            public FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
-
-            public FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
-
-            public FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
-
-            public RESERVES_UPDATES_LIFE_INDEX_Model RESERVES_UPDATES_LIFE_INDEX { get; set; }
-
-            public FIELD_DEVELOPMENT_PLAN_Model FIELD_DEVELOPMENT_PLAN { get; set; }
-
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
-            public GAS_PRODUCTION_ACTIVITy_Model GAS_PRODUCTION_ACTIVITy { get; set; }
-            public NDR_Model NDR { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity { get; set; }
-            public RESERVES_REPLACEMENT_RATIO_Model RESERVES_REPLACEMENT_RATIO { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED { get; set; }
-            public GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
-
-        }
 
         #region Form 4
 
@@ -1910,6 +1871,7 @@ public class DRILLING_EACH_WELL_COST_Model
 
         #endregion
         #endregion
+
         public class UploadedDocument
         {
             public string filePath { get; set; }
