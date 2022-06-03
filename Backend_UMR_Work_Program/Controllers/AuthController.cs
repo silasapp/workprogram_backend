@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Backend_UMR_Work_Program.Helpers;
+using AutoMapper;
 
 namespace Backend_UMR_Work_Program.Controllers.Authentications
 {
@@ -29,7 +30,7 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
         ElpsServices elpsServices = new ElpsServices();
         RestSharpServices _restService = new RestSharpServices();
         Helpers.Authentications auth = new Helpers.Authentications();
-
+        private readonly IMapper _mapper;
         HelpersController _helpersController;
 
         //session
@@ -46,14 +47,14 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
         public const string sessionTheme = "_sessionTheme";
         public const string sessionCompanyName = "_sessionCompanyName";
       
-        public AuthController(WKP_DBContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+        public AuthController(WKP_DBContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
-            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor);
-            //_helpersController = new HelpersController(_context, _configuration);
-
+            _mapper = mapper;
+            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
+            _mapper = mapper;
         }
 
 
