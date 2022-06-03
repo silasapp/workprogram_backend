@@ -2,6 +2,7 @@
 using Backend_UMR_Work_Program.Models;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using AutoMapper;
+using System.Security.Claims;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -22,9 +23,13 @@ namespace Backend_UMR_Work_Program.Controllers
         _context = context;
         _configuration = configuration;
          _mapper = mapper;
-        _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor);
-        //_helpersController = new HelpersController(_context, _configuration);
+        _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
     }
+        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
+
 
 
         [HttpGet("WORKPROGRAMME_REPORT")]
@@ -292,25 +297,21 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<WebApiResponse> Get_ADMIN_CONCESSIONS_INFORMATION_BY_CURRENT_YEAR(string year = null)
         {
 
-            //var userRole = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionRoleName));
-            //var userEmail = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionEmail));
-            //var companyID = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionUserID));
 
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+
+
 
             try { 
             var dateYear = DateTime.Now.AddYears(0).ToString("yyyy");
             var ConcessionsInformation = new List<ADMIN_CONCESSIONS_INFORMATION>();
 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.DELETED_STATUS == null).ToList();
             }
             else
             {
-                ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.Company_ID == companyID && c.DELETED_STATUS == null).ToList();
+                ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.Company_ID == WKPUserId && c.DELETED_STATUS == null).ToList();
             }
 
             if (year != null)
@@ -327,25 +328,20 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-
         [HttpGet("CONCESSIONSITUATION")]
         public async Task<WebApiResponse> Get_CONCESSION_SITUATION(string year = null )
         {
 
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ConcessionSituation = new List<CONCESSION_SITUATION>();
             try { 
 
-                if (userRole == GeneralModel.Admin)
+                if (WKPUserRole == GeneralModel.Admin)
                 {
                     ConcessionSituation = _context.CONCESSION_SITUATIONs.Where(c => c.Year == year).ToList();
                 }
                 else
                 {
-                    ConcessionSituation = _context.CONCESSION_SITUATIONs.Where(c => c.Year == year && c.COMPANY_ID == companyID).ToList();
+                    ConcessionSituation = _context.CONCESSION_SITUATIONs.Where(c => c.Year == year && c.COMPANY_ID == WKPUserId).ToList();
                 }
 
 
@@ -362,20 +358,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GEOPHYSICALACTIVITIES")]
         public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_ACQUISITION>();
             try
             {
-                if (userRole == GeneralModel.Admin)
+                if (WKPUserRole == GeneralModel.Admin)
                 {
                     GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(c => c.Year_of_WP == year).ToList();
                 }
                 else
                 {
-                    GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == companyID).ToList();
+                    GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
                 }
 
 
@@ -392,19 +384,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GEOPHYSICALPROCESSING")]
         public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
 
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_PROCESSING>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(c => c.Year_of_WP == year).ToList();
             }
             else
             {
-                GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == companyID).ToList();
+                GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
             }
 
 
@@ -421,19 +410,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("DRILLING-OPERATIONS")]
         public async Task<WebApiResponse> Get_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
 
             var DRILLING_OPERATIONS = new List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year).ToList();
             }
             else
             {
-                DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == companyID).ToList();
+                DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
             }
 
 
@@ -450,19 +436,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("WORKOVERS_RECOMPLETION")]
         public async Task<WebApiResponse> Get_WORKOVERS_RECOMPLETION_JOBs(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var WORKOVERS_RECOMPLETION = new List<WORKOVERS_RECOMPLETION_JOB1>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 WORKOVERS_RECOMPLETION = _context.WORKOVERS_RECOMPLETION_JOBs1.Where(c => c.Year_of_WP == year).ToList();
             }
             else
             {
-                WORKOVERS_RECOMPLETION = _context.WORKOVERS_RECOMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == companyID).ToList();
+                WORKOVERS_RECOMPLETION = _context.WORKOVERS_RECOMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
             }
 
 
@@ -479,19 +461,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("INITIAL_WELLCOMPLETION")]
         public async Task<WebApiResponse> Get_INITIAL_WELL_COMPLETION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var INITIAL_WELLCOMPLETION = new List<INITIAL_WELL_COMPLETION_JOB1>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 INITIAL_WELLCOMPLETION = _context.INITIAL_WELL_COMPLETION_JOBs1.Where(c => c.Year_of_WP == year).ToList();
             }
             else
             {
-                INITIAL_WELLCOMPLETION = _context.INITIAL_WELL_COMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == companyID).ToList();
+                INITIAL_WELLCOMPLETION = _context.INITIAL_WELL_COMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
             }
 
 
@@ -508,19 +486,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("FDP_EXPECTED_RESERVES")]
         public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_EXPECTED_RESERVES(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var FDP_Reserves = new List<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 FDP_Reserves = _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.ToList();
             }
             else
             {
-                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Where(c => c.COMPANY_ID == companyID).ToList();
+                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -541,19 +515,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("FDP_TOSUBMIT")]
         public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_TOBESUBMITTED(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var FDP_Reserves = new List<FIELD_DEVELOPMENT_PLAN>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 FDP_Reserves = _context.FIELD_DEVELOPMENT_PLANs.ToList();
             }
             else
             {
-                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLANs.Where(c => c.COMPANY_ID == companyID).ToList();
+                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLANs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -574,19 +544,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("FDP_FIELDSTATUS")]
         public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var FDP_Fields = new List<FIELD_DEVELOPMENT_FIELDS_AND_STATUS>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 FDP_Fields = _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.ToList();
             }
             else
             {
-                FDP_Fields = _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Where(c => c.COMPANY_ID == companyID).ToList();
+                FDP_Fields = _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -607,19 +573,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("NDR")]
         public async Task<WebApiResponse> NDR(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var NDR = new List<NDR>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 NDR = _context.NDRs.ToList();
             }
             else
             {
-                NDR = _context.NDRs.Where(c => c.COMPANY_ID == companyID).ToList();
+                NDR = _context.NDRs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -640,19 +602,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("OIL_CONDENSATE_PRODUCTION_ACTIVITIES")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITy>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.ToList();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -673,19 +631,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.ToList();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -706,19 +660,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.ToList();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -739,19 +689,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED_FIVEYEARS")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.ToList();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -772,19 +718,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GAS_PRODUCTION_ACTIVITIES")]
         public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITy>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 GasProduction = _context.GAS_PRODUCTION_ACTIVITIEs.ToList();
             }
             else
             {
-                GasProduction = _context.GAS_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == companyID).ToList();
+                GasProduction = _context.GAS_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -805,19 +747,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
         public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
 
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 GasProduction = _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.ToList();
             }
             else
             {
-                GasProduction = _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Where(c => c.COMPANY_ID == companyID).ToList();
+                GasProduction = _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -838,19 +777,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("UNITIZATION")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
 
             var GasProduction = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 GasProduction = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.ToList();
             }
             else
             {
-                GasProduction = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Where(c => c.COMPANY_ID == companyID).ToList();
+                GasProduction = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -871,20 +807,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("CONCESSION_RESERVES_FOR_1ST_JANUARY")]
         public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_1ST_JANUARY(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var Concession = new List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 Concession = _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR").ToList();
             }
 
             else
             {
-                Concession = _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" && c.COMPANY_ID == companyID).ToList();
+                Concession = _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" && c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -905,20 +837,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("RESERVES_OIL_CONDENSATE_PRODUCTION")]
         public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.ToList();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -939,20 +867,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("RESERVES_ADDITION")]
         public async Task<WebApiResponse> RESERVES_ADDITION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.ToList();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -973,20 +897,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("RESERVES_DECLINE")]
         public async Task<WebApiResponse> RESERVES_DECLINE(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.ToList();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1007,20 +927,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("RESERVES_LIFE_INDEX")]
         public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_LIFE_INDEX>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate_Reserves = _context.RESERVES_UPDATES_LIFE_INDices.ToList();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_LIFE_INDices.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate_Reserves = _context.RESERVES_UPDATES_LIFE_INDices.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1041,20 +957,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("RESERVES_UPDATES_DEPLETION_RATE")]
         public async Task<WebApiResponse> RESERVES_UPDATES_DEPLETION_RATE(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_DEPLETION_RATE>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate_Reserves = _context.RESERVES_UPDATES_DEPLETION_RATEs.ToList();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_DEPLETION_RATEs.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate_Reserves = _context.RESERVES_UPDATES_DEPLETION_RATEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1075,20 +987,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("RESERVES_OIL_CONDENSATE_MMBBL")]
         public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_MMBBL(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_MMBBL>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.ToList();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(c => c.Companyemail == companyID).ToList();
+                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(c => c.Companyemail == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1109,20 +1017,17 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("RESERVES_REPLACEMENT_RATIO")]
         public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
 
             var OilCondensate_Reserves = new List<RESERVES_REPLACEMENT_RATIO>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate_Reserves = _context.RESERVES_REPLACEMENT_RATIOs.ToList();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_REPLACEMENT_RATIOs.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate_Reserves = _context.RESERVES_REPLACEMENT_RATIOs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1143,20 +1048,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("BUDGET_CAPEX_OPEX")]
         public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var BudgetCapex = new List<BUDGET_CAPEX_OPEX>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 BudgetCapex = _context.BUDGET_CAPEX_OPices.ToList();
             }
 
             else
             {
-                BudgetCapex = _context.BUDGET_CAPEX_OPices.Where(c => c.COMPANY_ID == companyID).ToList();
+                BudgetCapex = _context.BUDGET_CAPEX_OPices.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1177,20 +1078,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("OIL_AND_GAS__MAINTENANCE_PROJECTS")]
         public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var BudgetCapex = new List<OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 BudgetCapex = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.ToList();
             }
 
             else
             {
-                BudgetCapex = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(c => c.COMPANY_ID == companyID).ToList();
+                BudgetCapex = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1211,20 +1108,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("OIL_CONDENSATE_CONFORMITY")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.ToList();
             }
 
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(c => c.COMPANY_ID == companyID).ToList();
+                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1245,20 +1138,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("FACILITIES_PROJECT_PERFORMANCE")]
         public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<FACILITIES_PROJECT_PERFORMANCE>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.FACILITIES_PROJECT_PERFORMANCEs.ToList();
             }
 
             else
             {
-                ResultData = _context.FACILITIES_PROJECT_PERFORMANCEs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.FACILITIES_PROJECT_PERFORMANCEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1279,20 +1168,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("LEGAL_LITIGATION")]
         public async Task<WebApiResponse> LEGAL_LITIGATION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<LEGAL_LITIGATION>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.LEGAL_LITIGATIONs.ToList();
             }
 
             else
             {
-                ResultData = _context.LEGAL_LITIGATIONs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.LEGAL_LITIGATIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1313,20 +1198,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("LEGAL_ARBITRATION")]
         public async Task<WebApiResponse> LEGAL_ARBITRATION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<LEGAL_ARBITRATION>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.LEGAL_ARBITRATIONs.ToList();
             }
 
             else
             {
-                ResultData = _context.LEGAL_ARBITRATIONs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.LEGAL_ARBITRATIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1347,20 +1228,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("NIGERIA_CONTENT_TRAINING")]
         public async Task<WebApiResponse> NIGERIA_CONTENT_TRAINING(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<NIGERIA_CONTENT_Training>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.NIGERIA_CONTENT_Trainings.ToList();
             }
 
             else
             {
-                ResultData = _context.NIGERIA_CONTENT_Trainings.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.NIGERIA_CONTENT_Trainings.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1381,20 +1258,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("NIGERIA_CONTENT_SUCCESSIONPLAN")]
         public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<NIGERIA_CONTENT_Upload_Succession_Plan>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.NIGERIA_CONTENT_Upload_Succession_Plans.ToList();
             }
 
             else
             {
-                ResultData = _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1415,20 +1288,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("STRATEGIC_PLANS_ON_COMPANY_BASIS")]
         public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASIS(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<STRATEGIC_PLANS_ON_COMPANY_BASI>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.STRATEGIC_PLANS_ON_COMPANY_BAses.ToList();
             }
 
             else
             {
-                ResultData = _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1449,20 +1318,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
         public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.ToList();
             }
 
             else
             {
-                ResultData = _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1483,20 +1348,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("HSE_MANAGEMENT_POSITION")]
         public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<HSE_MANAGEMENT_POSITION>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.HSE_MANAGEMENT_POSITIONs.ToList();
             }
 
             else
             {
-                ResultData = _context.HSE_MANAGEMENT_POSITIONs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.HSE_MANAGEMENT_POSITIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1517,20 +1378,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("HSE_SAFETY_CULTURE_TRAINING")]
         public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<HSE_SAFETY_CULTURE_TRAINING>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.HSE_SAFETY_CULTURE_TRAININGs.ToList();
             }
 
             else
             {
-                ResultData = _context.HSE_SAFETY_CULTURE_TRAININGs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.HSE_SAFETY_CULTURE_TRAININGs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1551,20 +1408,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
         public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.ToList();
             }
 
             else
             {
-                ResultData = _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1585,20 +1438,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("HSE_QUALITY_CONTROL")]
         public async Task<WebApiResponse> HSE_QUALITY_CONTROL(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<HSE_QUALITY_CONTROL>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.HSE_QUALITY_CONTROLs.ToList();
             }
 
             else
             {
-                ResultData = _context.HSE_QUALITY_CONTROLs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.HSE_QUALITY_CONTROLs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1619,20 +1468,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
         public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.ToList();
             }
 
             else
             {
-                ResultData = _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
@@ -1653,20 +1498,16 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
         public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var ResultData = new List<HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW>();
             try { 
-            if (userRole == GeneralModel.Admin)
+            if (WKPUserRole == GeneralModel.Admin)
             {
                 ResultData = _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.ToList();
             }
 
             else
             {
-                ResultData = _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                ResultData = _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
             }
 
             if(year != null)
