@@ -44,5 +44,16 @@
             public string? email { get; set; }
             public string? password { get; set; }
         }
+
+        public class CreateUser
+        {
+            public string? companyName { get; set; }
+            public string? companyCode { get; set; }
+            public string? name { get; set; }
+            public string? designation { get; set; }
+            public string? phone { get; set; }
+            public string? email { get; set; }
+            public string? password { get; set; }
+        }
     }
 }

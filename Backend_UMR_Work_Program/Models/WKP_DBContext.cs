@@ -606,7 +606,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("ADMIN_COMPANY_CODE");
 
@@ -988,7 +987,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_CONCESSIONS_INFORMATION>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Consession_Id);
 
                 entity.ToTable("ADMIN_CONCESSIONS_INFORMATION");
 
@@ -1023,8 +1022,6 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Concession_Unique_ID)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Consession_Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Consession_Type)
                     .HasMaxLength(50)

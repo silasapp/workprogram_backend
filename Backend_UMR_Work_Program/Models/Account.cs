@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using static Backend_UMR_Work_Program.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
 
 namespace Backend_UMR_Work_Program.Models
 {
@@ -19,6 +20,7 @@ namespace Backend_UMR_Work_Program.Models
         private string? Email, Password;
         private string? CompanyEmail, CompanyName, Name, CompanyId, ContractType;
         private string? id, COMPANYNAME, chairperson, scribe, presentation_date, presentation_time, meeting_room, days_to_go, system_date;
+        private string? myOldCompanyCode, myNewCompanyCode, myEmail, myPopText, myIsValid;
 
         private readonly AppSettings _appSettings;
         //private IConfiguration _configuration;
@@ -87,15 +89,15 @@ namespace Backend_UMR_Work_Program.Models
             {
                 this.Email = email.ToLower();
                 this.Password = password;
-                if (CheckEmail(email))
+                if (await CheckEmail(email))
                 {
-                    var getUser = (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() && a.PASSWORDS == Encrypt(password) && a.STATUS_ == "Activated" select a).FirstOrDefault();
+                    var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() && a.PASSWORDS == Encrypt(password) && a.STATUS_ == "Activated" select a).FirstOrDefaultAsync();
                     if (getUser != null)
                     {
                         getUser.LAST_LOGIN_DATE = DateTime.Now;
                         _context.Entry(getUser).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
-                        var concessionInfo = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.COMPANY_EMAIL == email.Trim() select c).FirstOrDefault();
+                        var concessionInfo = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.COMPANY_EMAIL == email.Trim() select c).FirstOrDefaultAsync();
                         var contractType = concessionInfo?.Contract_Type ?? "";
                         var companyName = getUser?.COMPANY_NAME == "Admin" ? "Admin" : "Company";
 
@@ -132,9 +134,9 @@ namespace Backend_UMR_Work_Program.Models
 
 
 
-        public bool CheckEmail(string email)
+        public async Task<bool> CheckEmail(string email)
         {
-            var getUser = (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() select a).FirstOrDefault();
+            var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() select a).FirstOrDefaultAsync();
 
             if (getUser == null)
             {
@@ -173,7 +175,353 @@ namespace Backend_UMR_Work_Program.Models
                 return dt;
             }
 
+        }
+
+
+        public async Task<object> VerifyCompanyCode(string companycode)
+        {
+
+            var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == companycode.Trim() && c.IsActive == "YES" select c).FirstOrDefaultAsync();
+            if (getCode == null)
+            {
+                return new {isValid = false, errorText = "Verification Code does not exist in our database..Please contact NUPRC Admin" };
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(getCode.GUID))
+                {
+                    return new { isValid = true, isGuid = false};
+                }
+                return new {isValid = true, isGuid = true, companyName = getCode.CompanyName, companyCode = getCode.CompanyCode};
+            }
+        }
+
+        public async Task<object> CheckNewPinCode(string oldCompanycode, string email, string newCompanyCode)
+        {
+            myNewCompanyCode = newCompanyCode;
+            myOldCompanyCode = oldCompanycode;
+            myEmail = email;
+            var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == newCompanyCode.Trim() select c).FirstOrDefaultAsync();
+            if (getCode == null)
+            {
+                var isVerified = await VerifyCompanyCode_GenerateUniqueCode(oldCompanycode, email, newCompanyCode);
+                if (isVerified)
+                {
+                    return new { isValid = true, popText = myPopText, companyCode = myNewCompanyCode, companyName = CompanyName };
+                } 
+                else
+                {
+                    return new { isValid = false, popText = myPopText };
+                }
                 
+            }
+            else
+            {
+                myPopText = "Please try another new company code";
+                return new {isValid = false, popText = myPopText};
+            }
+        }
+
+        private async Task<bool> VerifyCompanyCode_GenerateUniqueCode(string oldCompanycode, string email, string newCompanyCode)
+        {
+            var getCode = await(from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == oldCompanycode.Trim() && c.IsActive == "YES" select c).FirstOrDefaultAsync();
+            //SqlCommand spcmd = new SqlCommand(" Select * from ADMIN_COMPANY_CODE  WHERE  CompanyCode =  '" + TextBox1.Text.Trim() + "' AND IsActive = 'YES' ", con);
+
+            if (getCode != null)
+            {
+                await Update_GUID(oldCompanycode, email, newCompanyCode);
+
+                await Update_ADMIN_CONCESSIONS_INFORMATION(oldCompanycode, newCompanyCode);
+
+                await Send_New_Company_Code(newCompanyCode);
+                
+                myPopText = " Your New Company Code have been sent to the email address you provided";
+                return true;
+                //Server.Transfer("companyresource.aspx");
+            } 
+            else
+            {
+                myPopText = "Company Code does not exist ... Please contact NUPRC Admin";
+                return false;
+            }
+        }
+
+        private async Task<int> Update_GUID(string oldCompanycode, string email, string newCompanyCode)
+        {
+             string GUID = Guid.NewGuid().ToString();
+             var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == oldCompanycode.Trim() select c).FirstOrDefaultAsync();
+             getCode.Email = email.Trim();
+             getCode.GUID = GUID;
+             getCode.Date_Updated = DateTime.Now;
+             getCode.CompanyCode = newCompanyCode;
+             _context.Entry(getCode).State = EntityState.Modified;
+             return await _context.SaveChangesAsync();
+             //cmd.CommandText = "Update ADMIN_COMPANY_CODE  SET  GUID = '" + GUID + "' ,  Email  = '" + TextBox2.Text.Trim() + "' , CompanyCode  = '" + TextBox3.Text.Trim() + "' , Date_Updated = '" + system_date + "'    WHERE  CompanyCode  = '" + TextBox1.Text.Trim() + "' ";
+        }
+
+        private async Task<int> Update_ADMIN_CONCESSIONS_INFORMATION(string oldCompanycode, string newCompanyCode)
+        {
+            string GUID = Guid.NewGuid().ToString();
+            var getCode = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.Company_ID == oldCompanycode.Trim() select c).FirstOrDefaultAsync();
+            getCode.Date_Updated = DateTime.Now;
+            getCode.Company_ID = newCompanyCode.Trim();
+            _context.Entry(getCode).State = EntityState.Modified;
+            return await _context.SaveChangesAsync();
+        }
+
+        private async Task<int> Send_New_Company_Code(string newCompanyCode)
+        {
+
+            var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == newCompanyCode.Trim() && c.IsActive == "YES" select c).FirstOrDefaultAsync();
+            //SqlCommand spcmd = new SqlCommand(" Select * from ADMIN_COMPANY_CODE  WHERE  CompanyCode =  '" + TextBox3.Text.Trim() + "' AND IsActive = 'YES' ", con);
+
+            if (getCode != null)
+            {
+                myNewCompanyCode = getCode.CompanyCode;
+                CompanyName = getCode.CompanyName;
+
+                if (getCode?.Email != "")
+                {
+                    New_Code_Email_Notification();
+                }
+            }
+            else
+            {
+                myPopText = "Verification Code does not exist .. Please contact NUPRC Admin";
+            }
+            return 1;
+        }
+
+        private void New_Code_Email_Notification()
+        {
+            // Start 
+
+            string subject = "Work Program New Company Code";
+
+            string nes_body = "See New Company Code Below to profile resouce(s)";
+
+            //string company_operator_name = Session["CN"].ToString();
+            //string company_rep_name = TextBox1.Text;
+            //string Email = TextBox4.Text;
+            //string Password = TextBox5.Text;
+            string Applink = "Click <a href= https://workprogram.nuprc.gov.ng > HERE</a> to login to Work Program Application";
+
+            string URLComment = "";
+
+
+
+            string to = myEmail; // "anthony.nwosu@brandonetech.com"; //To address    
+            string from = "no-reply@nuprc.gov.ng"; //From address    
+            MailMessage message = new MailMessage(from, to);
+
+            string mailbody = "<html><body>" + "<table width=100% border=0 bordercolor=#CCCCCC cellspacing=0 cellpadding=0>" +
+
+
+                "<tr>" + "<td align=left valign=top>" + "<table width=100% border=0 cellspacing=0 cellpadding=0>"
+
+                + "<tr>" + "<td align=left valign=top>" + "<span style=\"font-size: 33 px; font-family:Myriad Pro, Arial\">"
+
+                + "<b>" + " Workprogam Notification - New company code " + "</b></span>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top height=2 bgcolor=#FFFFFF>"
+
+                + "&nbsp;" + "</td>" + "</tr>" + "<tr>" + "<td height=2 align=right valign=top bgcolor=#00a65a>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top>"
+
+
+                  + "<p>" + "</p>"  //  This will give a paragraph
+
+                + "<span style=\"font-size: 13 px; color:#000000; font-family:Trebuchet MS, Myriad Pro, Arial\">"
+
+                 + "Dear " + myEmail + ", <br>" + "</span>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top>" + "<p>" + "<span style=\"font-size: 13 px; color:#000000; font-family:Trebuchet MS, Myriad Pro, Arial\"> "
+
+                   + "<p>" + "  " + nes_body + "</p>"
+
+                   + "<p>" + "<b>" + " New Company Code : " + "</b> " + myNewCompanyCode + "</p>"
+
+                       + "<p>" + " " + Applink + "</p>"
+
+                      + URLComment + "<p>" + " Please contact NUPRC Work Program Team for any help. " + "</p>" + "</span>" + "</p>" + "<p>"
+
+                      + URLComment + "<p>" + " Thank you " + "</p>" + "</span>"
+
+                      + "</p>" + "<p>" + "</b></span>" + "</p>"
+
+                 //  + "<p><span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">" + " " + "<br>" + " " + "<br>"
+
+                 + "<p><span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">" + " " + "<br>"
+
+
+                + "Note: This email Message is auto-generated, Please do not reply to the email address" + "</b></p>" + "</td>" + "</tr>" + "<tr>" + "<td height=3 align=left valign=top  bgcolor=#00a65a>"
+
+                + "</td>" + "</tr>" + "<tr>" + "<td align=center valign=middle height=11  bgcolor=#FFFFFF>"
+
+
+                + "<span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">"
+
+                + "&copy;" + " 2021 Powered by NUPRC Work Program Team"
+
+                + "</span>"
+
+
+                + "</td> " + "</tr>" + "</table>" + "</td>" + "</tr>" + "</table>" + "</html></body>";
+
+            message.Subject = subject;
+            message.Body = mailbody;
+            message.BodyEncoding = Encoding.UTF8;
+            message.IsBodyHtml = true;
+            SmtpClient client = new SmtpClient("email-smtp.us-west-2.amazonaws.com", 25); //Gmail smtp    
+            System.Net.NetworkCredential basicCredential1 = new
+            System.Net.NetworkCredential("AKIAQCM2OPFBW35OSTFV", "BNW5He3DoWQAJVMkeMlEzPTtbYIXNveS4t+GuGtXzxQJ");
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Credentials = basicCredential1;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            try
+            {
+                client.Send(message);
+            }
+
+            catch (Exception ex)
+            {
+                //throw ex;
+            }
+        }
+
+        public async Task<ADMIN_COMPANY_INFORMATION?> GetCompanyResource(string compCode)
+        {
+            var getInfo = await (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.COMPANY_ID == compCode.Trim() && c.STATUS_ == "Activated" select c).FirstOrDefaultAsync();
+            return getInfo;
+        }
+
+        public async Task<object> CheckIfUserExistBeforeCreating(string? compName, string? compCode, string? name, string? designation, string? phone, string? email, string? password)
+        {
+            myPopText = "";
+            var getInfo = await (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.EMAIL == email.Trim() && c.STATUS_ == "Activated" select c).FirstOrDefaultAsync();
+            if (getInfo != null)
+            {
+                myPopText = "User with email already Exist";
+                return new { isValid = false, popText = myPopText };
+            }
+            else
+            {
+
+                await Insert_ADMIN_COMPANY_INFORMATION(compName, compCode, name, designation, phone, email, password);
+                await GetCompanyResource(compCode);
+                Send_Email_to_Profiled_User(compName, compCode, name, designation, phone, email, password);
+                myPopText = "User Created";
+                return new { isValid = true, popText = myPopText };
+            }
+        }
+
+        private async Task<int> Insert_ADMIN_COMPANY_INFORMATION(string compName, string compCode, string name, string designation, string phone, string email, string password)
+        {
+            var newInfo = new ADMIN_COMPANY_INFORMATION {COMPANY_NAME = compName, COMPANY_ID = compCode, EMAIL = email, PASSWORDS = password, NAME = name, DESIGNATION = designation, PHONE_NO = phone, STATUS_ = "Activated",  Created_by = compName, Date_Created = DateTime.Now};
+            try
+            {
+                await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(newInfo);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                general_error_log icheck = new general_error_log();
+                icheck.call_general_error_log(ex, email, "insert into ADMIN_COMPANY_INFORMATION");
+            }
+            return 1;
+        }
+
+        private void Send_Email_to_Profiled_User(string compName, string compCode, string name, string designation, string phone, string email, string password)
+        {
+            // Start 
+
+            string subject = "Work Programme Login Credentials";
+
+            string nes_body = "See Login Credentials Below";
+
+            string company_operator_name = compName;
+            string company_rep_name = name;
+            string Email = email;
+            string Password = password;
+            string Applink = "Click <a href= https://workprogram.nuprc.gov.ng > HERE</a> to login to Work Program Application. Please change password for security reasons";
+
+            string URLComment = "";
+
+            string to = email;// "anthony.nwosu@brandonetech.com"; //To address
+
+            string from = "no-reply@nuprc.gov.ng"; //From address 
+
+            MailMessage message = new MailMessage(from, to);
+
+            string mailbody = "<html><body>" + "<table width=100% border=0 bordercolor=#CCCCCC cellspacing=0 cellpadding=0>" +
+
+
+                "<tr>" + "<td align=left valign=top>" + "<table width=100% border=0 cellspacing=0 cellpadding=0>"
+
+                + "<tr>" + "<td align=left valign=top>" + "<span style=\"font-size: 33 px; font-family:Myriad Pro, Arial\">"
+
+                + "<b>" + " Workprogam Notification " + "</b></span>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top height=2 bgcolor=#FFFFFF>"
+
+                + "&nbsp;" + "</td>" + "</tr>" + "<tr>" + "<td height=2 align=right valign=top bgcolor=#00a65a>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top>"
+
+
+                  + "<p>" + "</p>"  //  This will give a paragraph
+
+                + "<span style=\"font-size: 13 px; color:#000000; font-family:Trebuchet MS, Myriad Pro, Arial\">"
+
+                 + "Dear " + company_rep_name + ", <br>" + "</span>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top>" + "<p>" + "<span style=\"font-size: 13 px; color:#000000; font-family:Trebuchet MS, Myriad Pro, Arial\"> "
+
+
+                   + "<p>" + "  " + nes_body + "</p>"
+
+                   + "<p>" + "<b>" + " Company Name : " + "</b> " + company_operator_name + "</p>"
+                   + "<p>" + "<b>" + " Login Email : " + "</b> " + Email + "</p>"
+                   + "<p>" + "<b>" + " Password : " + "</b> " + Password + "</p>"
+
+                       + "<p>" + " " + Applink + "</p>"
+
+                      + URLComment + "<p>" + " Please contact NUPRC Work Programme Team for any help. " + "</p>" + "</span>" + "</p>" + "<p>"
+
+                      + URLComment + "<p>" + " Thank you " + "</p>" + "</span>"
+
+                      + "</p>" + "<p>" + "</b></span>" + "</p>"
+
+                 //  + "<p><span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">" + " " + "<br>" + " " + "<br>"
+
+                 + "<p><span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">" + " " + "<br>"
+
+
+                + "Note: This email Message is auto-generated, Please do not reply to the email address" + "</b></p>" + "</td>" + "</tr>" + "<tr>" + "<td height=3 align=left valign=top  bgcolor=#00a65a>"
+
+                + "</td>" + "</tr>" + "<tr>" + "<td align=center valign=middle height=11  bgcolor=#FFFFFF>"
+
+
+                + "<span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">"
+
+                + "&copy;" + " 2021 Powered by NUPRC Work Program Team"
+
+                + "</span>"
+
+                + "</td> " + "</tr>" + "</table>" + "</td>" + "</tr>" + "</table>" + "</html></body>";
+
+            message.Subject = subject;
+            message.Body = mailbody;
+            message.BodyEncoding = Encoding.UTF8;
+            message.IsBodyHtml = true;
+            SmtpClient client = new SmtpClient("email-smtp.us-west-2.amazonaws.com", 25); //Gmail smtp             
+            System.Net.NetworkCredential basicCredential1 = new
+            System.Net.NetworkCredential("AKIAQCM2OPFBW35OSTFV", "BNW5He3DoWQAJVMkeMlEzPTtbYIXNveS4t+GuGtXzxQJ");
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Credentials = basicCredential1;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            try
+            {
+                client.Send(message);
+            }
+            catch (Exception ex)
+            {
+                //throw ex;
+            }
+
+
+            // End
         }
     }
 }
