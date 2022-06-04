@@ -63,16 +63,23 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("GetCompanyResource")]
-        public async Task<IActionResult> GetCompanyResource(string CompanyCode)
+        public async Task<IActionResult> GetCompanyResource(string companyCode)
         {
-            var isAvailable = await _account.GetCompanyResource(CompanyCode);
+            var isAvailable = await _account.GetCompanyResource(companyCode);
             return Ok(isAvailable);
         }
 
-        [HttpGet("CreateCompanyResource")]
+        [HttpPost("CreateCompanyResource")]
         public async Task<IActionResult> CreateCompanyResource([FromBody] CreateUser user)
         {
             var isAvailable = await _account.CheckIfUserExistBeforeCreating(user.companyName, user.companyCode, user.name, user.designation, user.phone, user.email, user.password);
+            return Ok(isAvailable);
+        }
+
+        [HttpPost("DeleteCompanyResource")]
+        public async Task<IActionResult> DeleteCompanyResource(string id, string companyCode)
+        {
+            var isAvailable = await _account.DeleteUser(companyCode, id);
             return Ok(isAvailable);
         }
 

@@ -250,3 +250,6 @@ C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Deb
 C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Workcode\WORKPROGRAMV2\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.dll
+C:\Workcode\WORKPROGRAMV2\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Workcode\WORKPROGRAMV2\Backend_UMR_Work_Program\bin\Debug\net6.0\RestSharp.dll

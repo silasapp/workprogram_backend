@@ -385,9 +385,9 @@ namespace Backend_UMR_Work_Program.Models
             }
         }
 
-        public async Task<ADMIN_COMPANY_INFORMATION?> GetCompanyResource(string compCode)
+        public async Task<List<ADMIN_COMPANY_INFORMATION?>> GetCompanyResource(string compCode)
         {
-            var getInfo = await (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.COMPANY_ID == compCode.Trim() && c.STATUS_ == "Activated" select c).FirstOrDefaultAsync();
+            var getInfo = await (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.COMPANY_ID == compCode.Trim() && c.STATUS_ == "Activated" select c).ToListAsync();
             return getInfo;
         }
 
@@ -404,16 +404,16 @@ namespace Backend_UMR_Work_Program.Models
             {
 
                 await Insert_ADMIN_COMPANY_INFORMATION(compName, compCode, name, designation, phone, email, password);
-                await GetCompanyResource(compCode);
+                var resourceData = await GetCompanyResource(compCode);
                 Send_Email_to_Profiled_User(compName, compCode, name, designation, phone, email, password);
                 myPopText = "User Created";
-                return new { isValid = true, popText = myPopText };
+                return new { isValid = true, popText = myPopText, data = resourceData };
             }
         }
 
         private async Task<int> Insert_ADMIN_COMPANY_INFORMATION(string compName, string compCode, string name, string designation, string phone, string email, string password)
         {
-            var newInfo = new ADMIN_COMPANY_INFORMATION {COMPANY_NAME = compName, COMPANY_ID = compCode, EMAIL = email, PASSWORDS = password, NAME = name, DESIGNATION = designation, PHONE_NO = phone, STATUS_ = "Activated",  Created_by = compName, Date_Created = DateTime.Now};
+            var newInfo = new ADMIN_COMPANY_INFORMATION {COMPANY_NAME = compName, COMPANY_ID = compCode, EMAIL = email, PASSWORDS = Encrypt(password), NAME = name, DESIGNATION = designation, PHONE_NO = phone, STATUS_ = "Activated",  Created_by = compName, Date_Created = DateTime.Now};
             try
             {
                 await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(newInfo);
@@ -522,6 +522,20 @@ namespace Backend_UMR_Work_Program.Models
 
 
             // End
+        }
+
+        public async Task<List<ADMIN_COMPANY_INFORMATION?>> DeleteUser(string compCode, string Id)
+        {
+            
+            var getInfo = await (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.COMPANY_ID == compCode select c).FirstOrDefaultAsync();
+            //System.Data.SqlClient.SqlCommand cmd2 = new SqlCommand("Select * from  ADMIN_COMPANY_INFORMATION  WHERE  COMPANY_ID = '" + compCode.ToString() + "' ", cnn2);
+            if (getInfo != null) {
+                var compInfo = await _context.ADMIN_COMPANY_INFORMATIONs.FindAsync(Convert.ToInt32(Id));
+                _context.ADMIN_COMPANY_INFORMATIONs.Remove(compInfo);
+                await _context.SaveChangesAsync();
+                return await GetCompanyResource(compCode);
+            }
+            return null;
         }
     }
 }
