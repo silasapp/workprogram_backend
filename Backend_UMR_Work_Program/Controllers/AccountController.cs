@@ -83,6 +83,13 @@ namespace Backend_UMR_Work_Program.Controllers
             return Ok(isAvailable);
         }
 
+        [HttpPost("ReturnPasswordInfo")]
+        public async Task<IActionResult> ReturnPasswordInfo(string email)
+        {
+            var isAvailable = await _account.ReturnPasswordInfo(email);
+            return Ok(isAvailable);
+        }
+
         [HttpPost(Name = "ResetPassword")]
         public async Task<WebApiResponse> ResetPassword(string email, string currentPassword, string newPassword)
         {

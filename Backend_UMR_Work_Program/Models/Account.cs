@@ -537,5 +537,128 @@ namespace Backend_UMR_Work_Program.Models
             }
             return null;
         }
+
+        public async Task<object> ReturnPasswordInfo(string email)
+        {
+            var getInfo = await (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.EMAIL == email select c).FirstOrDefaultAsync();
+            //SqlCommand spcmd = new SqlCommand(" Select * from ADMIN_COMPANY_INFORMATION  WHERE  EMAIL =  '" + TextBox1.Text + "'  ", con);
+
+            try
+            {
+                if (getInfo != null) {
+                    var myPassword = Decrypt(getInfo.PASSWORDS);
+                    Work_Program_Email_Notification_When_Password_is_Changed(email, myPassword, getInfo.COMPANY_NAME);
+                    myPopText = " Your Password have been sent to email address specified .. Please login and change your password";
+                    return new {isValid = true, popText = myPopText};
+                }
+                else 
+                {
+                    myPopText = "Email does not exist in our database .. Please check and try again";
+                    return new {isValid = false, popText = myPopText};
+                }
+            }
+            catch (Exception ex)
+            {
+                string myMsgErr = ex.Message;
+                return new {isValid = false, popText = myMsgErr};
+            }
+        }
+
+        private void Work_Program_Email_Notification_When_Password_is_Changed(string email, string password, string compName)
+        {
+
+            string subject = "Forgot Password Notification";
+
+            string nes_body = "See Password Below";
+
+            string company_operator_name = compName;
+            string company_rep_name = email;
+            //string Email = TextBox4.Text;
+            //string Password = TextBox5.Text;
+            string Applink = "Click <a href= https://workprogram.nuprc.gov.ng > HERE</a> to login to Work Program Application. Please change password for security reasons";
+
+            string URLComment = "";
+
+
+
+            string to = email;// "anthony.nwosu@brandonetech.com"; //To address    
+            string from = "no-reply@nuprc.gov.ng"; //From address    
+            MailMessage message = new MailMessage(from, to);
+
+            string mailbody = "<html><body>" + "<table width=100% border=0 bordercolor=#CCCCCC cellspacing=0 cellpadding=0>" +
+
+
+                "<tr>" + "<td align=left valign=top>" + "<table width=100% border=0 cellspacing=0 cellpadding=0>"
+
+                + "<tr>" + "<td align=left valign=top>" + "<span style=\"font-size: 33 px; font-family:Myriad Pro, Arial\">"
+
+                + "<b>" + " Workprogam Notification " + "</b></span>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top height=2 bgcolor=#FFFFFF>"
+
+                + "&nbsp;" + "</td>" + "</tr>" + "<tr>" + "<td height=2 align=right valign=top bgcolor=#00a65a>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top>"
+
+
+                  + "<p>" + "</p>"  //  This will give a paragraph
+
+                + "<span style=\"font-size: 13 px; color:#000000; font-family:Trebuchet MS, Myriad Pro, Arial\">"
+
+                 + "Dear " + company_rep_name + ", <br>" + "</span>" + "</td>" + "</tr>" + "<tr>" + "<td align=left valign=top>" + "<p>" + "<span style=\"font-size: 13 px; color:#000000; font-family:Trebuchet MS, Myriad Pro, Arial\"> "
+
+
+                   //+ "</p>" + " Notification of Request - see below details" + "</p>" + "<p>"
+
+                   //  + "<p>" + " " + "<b>" + notification_header + "</b>" + "</p>" + "<p>"   Company_operator_name
+
+                   + "<p>" + "  " + nes_body + "</p>"
+
+                   + "<p>" + "<b>" + " Password : " + "</b> " + password + "</p>"
+
+                       + "<p>" + " " + Applink + "</p>"
+
+                      + URLComment + "<p>" + " Please contact NUPRC Work Programme Team for  any help. " + "</p>" + "</span>" + "</p>" + "<p>"
+
+                      + URLComment + "<p>" + " Thank you " + "</p>" + "</span>"
+
+                      + "</p>" + "<p>" + "</b></span>" + "</p>"
+
+                 //  + "<p><span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">" + " " + "<br>" + " " + "<br>"
+
+                 + "<p><span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">" + " " + "<br>"
+
+
+                + "Note: This email Message is auto-generated, Please do not reply to the email address" + "</b></p>" + "</td>" + "</tr>" + "<tr>" + "<td height=3 align=left valign=top  bgcolor=#00a65a>"
+
+                + "</td>" + "</tr>" + "<tr>" + "<td align=center valign=middle height=11  bgcolor=#FFFFFF>"
+
+
+                + "<span style=\"font-size: 11px; color:#000000; font-family:Verdana,Helvetica, sans-serif\">"
+
+                + "&copy;" + " 2021 Powered by NUPRC Work Program Team"
+
+                + "</span>"
+
+
+                + "</td> " + "</tr>" + "</table>" + "</td>" + "</tr>" + "</table>" + "</html></body>";
+
+            message.Subject = subject;
+            message.Body = mailbody;
+            message.BodyEncoding = Encoding.UTF8;
+            message.IsBodyHtml = true;
+            SmtpClient client = new SmtpClient("email-smtp.us-west-2.amazonaws.com", 25); //Gmail smtp    
+            System.Net.NetworkCredential basicCredential1 = new
+            System.Net.NetworkCredential("AKIAQCM2OPFBW35OSTFV", "BNW5He3DoWQAJVMkeMlEzPTtbYIXNveS4t+GuGtXzxQJ");
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Credentials = basicCredential1;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            try
+            {
+                client.Send(message);
+            }
+
+            catch (Exception ex)
+            {
+                //throw ex;
+            }
+        }
     }
 }
