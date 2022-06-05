@@ -31,10 +31,15 @@ namespace Backend_UMR_Work_Program.Controllers
             _httpContextAccessor = httpContextAccessor;
 
         }
-        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private string? WKPUserId => "1";
+        private string? WKPUserName => "Name";
+        private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        private string? WKUserRole => "Admin";
+        // private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        //private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+
         public List<AppMessage> SaveMessage(int AppID, int userID, string subject, string content, string userElpsID, string type)
         {
 
@@ -268,7 +273,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         {
                             document.CopyTo(s);
                         }
-                   }
+
+                    }
                     var uploadedDoc = new UploadedDocument()
                     {
                         fileName = document_fileName,
@@ -278,7 +284,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 return null;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 return null;
 
