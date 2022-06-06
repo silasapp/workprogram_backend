@@ -6,17 +6,17 @@
     <Name>WKP_Database</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{da7a1f48-f357-44dc-8fca-581071c35a7e}</ProjectGuid>
+    <ProjectGuid>{d61e2789-507a-4e8b-9a17-0262dbb928dd}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>WKP__Database</RootNamespace>
-    <AssemblyName>WKP__Database</AssemblyName>
+    <RootNamespace>WKP_Database</RootNamespace>
+    <AssemblyName>WKP_Database</AssemblyName>
     <ModelCollation>1033,CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>

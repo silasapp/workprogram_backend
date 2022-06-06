@@ -99,80 +99,41 @@ namespace Backend_UMR_Work_Program.Controllers
                                                      }).ToList();
                     var WP_CRUDE_OIL_PY = WP_CRUDE_OIL.Where(x => x.Year.ToString() == previousYear).ToList();
                     var WP_CRUDE_OIL_CY = WP_CRUDE_OIL.Where(x => x.Year.ToString() == year).ToList();
-                    //CONVERT(INT, CONVERT(VARCHAR(12), a.value))
                     
                     var WP_OIL_PRODUCTION_total_barrel = (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs
                                                           where u.Year_of_WP == year select u).ToList().GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToList();
 
                     var WP_Terrain_Continental = (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains
                                                   where u.Year_of_WP == year select u).ToList().GroupBy(x => x.Terrain).Select(x => x.FirstOrDefault()).ToList();
-                    #region Gas Production Activities For Previous Year 
-                    //var PY_GAS_ACTIVITIES = (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages
-                    //                            where u.Year_of_WP == previousYear
-                    //                            select new 
-                    //                            {
-                    //                                Actual_Total_Gas_Produced = u.Actual_Total_Gas_Produced,
-                    //                                Utilized_Gas_Produced = u.Utilized_Gas_Produced,
-                    //                                Percentage_Utilized = u.Percentage_Utilized > 0 ? Decimal.Round(Convert.ToDecimal(u.Percentage_Utilized), 2) : u.Percentage_Utilized,
-                    //                                Flared_Gas_Produced = u.Flared_Gas_Produced
-                    //                            }).ToList();
-                    //var PY_GAS_PRODUCTION = (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types
-                    //                         where u.Year_of_WP == previousYear
-                    //                         select new WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type
-                    //                         {
-                    //                             Actual_Total_Gas_Produced = u.Actual_Total_Gas_Produced,
-                    //                             Utilized_Gas_Produced = u.Utilized_Gas_Produced,
-                    //                             Flared_Gas_Produced = u.Flared_Gas_Produced
-                    //                         }).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToList();
+                    #region Gas Production Activities For Previous Year & Current Year
+                    
+                     var GAS_ACTIVITIES = (from u in _context.GAS_PRODUCTION_ACTIVITIEs
+                                             select u).ToList();
 
+                    var GAS_ACTIVITIES_YEAR = (from u in _context.GAS_PRODUCTION_ACTIVITIEs
+                                             select u).ToList().GroupBy(x=> x.Year_of_WP).Select(x=> x.FirstOrDefault()).ToList();
 
-                   
-                    #endregion
+                    var WP_GAS_ACTIVITIES = (from g in GAS_ACTIVITIES_YEAR
+                                             select new
+                                             {
+                                                 Actual_Total_Gas_Produced = Convert.ToInt64(g.Current_Actual_Year),
+                                                 Utilized_Gas_Produced = Convert.ToInt64(g.Utilized),
+                                                 Flared_Gas_Produced = Convert.ToInt64(Convert.ToDouble(g.Flared)),
+                                                 Year_of_WP = g.Year_of_WP,
+                                                 Percentage_Utilized= (Convert.ToDecimal(g.Utilized)/Convert.ToDecimal(g.Actual_year))*100
+                                             }).ToList();
 
-                    #region Gas Production Activities For Current Year 
-                    var WP_GAS_ACTIVITIES_CY = (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages
-                                                where u.Year_of_WP == year
-                                                select new WP_GAS_PRODUCTION_ACTIVITIES_Percentage
-                                                {
-                                                    Actual_Total_Gas_Produced = u.Actual_Total_Gas_Produced,
-                                                    Utilized_Gas_Produced = u.Utilized_Gas_Produced,
-                                                    Percentage_Utilized = u.Percentage_Utilized> 0? Decimal.Round(Convert.ToDecimal(u.Percentage_Utilized), 2): u.Percentage_Utilized,
-                                                    Flared_Gas_Produced = u.Flared_Gas_Produced
-                                                }).ToList();
-                    //string Actual_Total_Gas_Produced_CY = WP_GAS_ACTIVITIES_CY.Actual_Total_Gas_Produced.ToString();
-                    //string Utilized_Gas_Produced_CY = WP_GAS_ACTIVITIES_CY.Utilized_Gas_Produced.ToString();
-                    //string Flared_Gas_Produced_CY = WP_GAS_ACTIVITIES_CY.Flared_Gas_Produced.ToString();
-                    //string Percentage_Utilized_CY = WP_GAS_ACTIVITIES_CY.Percentage_Utilized.ToString();
-                    //Decimal CY_GasPercentage = Decimal.Parse(Percentage_Utilized_CY);
-                    //CY_GasPercentage = Decimal.Round(CY_GasPercentage, 2);
-                    //Percentage_Utilized_CY = CY_GasPercentage.ToString();
+                    var PY_GAS_ACTIVITIES = WP_GAS_ACTIVITIES.Where(x=> x.Year_of_WP.ToString() == previousYear);
+                    var CY_GAS_ACTIVITIES = WP_GAS_ACTIVITIES.Where(x=> x.Year_of_WP.ToString() == year);
 
-                    //var CY_GAS_PRODUCTION = (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types
-                    //                         where u.Year_of_WP == year
-                    //                         select new WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type
-                    //                         {
-                    //                             Actual_Total_Gas_Produced = u.Actual_Total_Gas_Produced,
-                    //                             Utilized_Gas_Produced = u.Utilized_Gas_Produced,
-                    //                             Flared_Gas_Produced = u.Flared_Gas_Produced
-                    //                         }).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToList();
+                    var GAS_ACTIVITIES_CONTRACTTYPES = (from u in _context.GAS_PRODUCTION_ACTIVITIEs
+                                               select u).ToList().GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToList();
 
-
-                    //var CY_GAS_PRODUCTION_JV = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.JV).ToList();
-                    //string JV_Total_Gas_Produced_CY = WP_GAS_PRODUCTION_JV.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
-
-                    //var CY_GAS_PRODUCTION_MF = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.MF).ToList();
-                    //string MF_Total_Gas_Produced_CY = WP_GAS_PRODUCTION_MF.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
-
-                    //var CY_GAS_PRODUCTION_PSC = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.PSC).ToList();
-                    //string PSC_Total_Gas_Produced_CY = WP_GAS_PRODUCTION_PSC.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
-
+                  
                     #endregion
 
                     var OIL_CONDENSATE_MMBBL = _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(x => x.Year_of_WP == year).ToList();
-                    //string Reserves_as_at_MMbbl = OIL_CONDENSATE_MMBBL.Reserves_as_at_MMbbl.ToString();
-                    //string Reserves_as_at_MMbbl_gas = OIL_CONDENSATE_MMBBL.Reserves_as_at_MMbbl_gas.ToString();
-                    //string Reserves_as_at_MMbbl_condensate = OIL_CONDENSATE_MMBBL.Reserves_as_at_MMbbl_condensate.ToString();
-
+                   
                     #region HSE Accident
                     var HSE_ACCIDENT_Consequences = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequences.Where(x => x.Year_of_WP == year && x.Consequence == GeneralModel.Fatality).ToList();
                     //string Sum_accident = HSE_ACCIDENT_Consequences.sum_accident.ToString();
@@ -180,13 +141,14 @@ namespace Backend_UMR_Work_Program.Controllers
                     var HSE_ACCIDENT_Total = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accidents.Where(x => x.Year_of_WP == year).ToList();
                     //string Sum_accident_total = HSE_ACCIDENT_Total.Sum_accident.ToString();
 
-                    //var HSE_ACCIDENT = (from u in _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages
-                    //                    where u.Year_of_WP == year
-                    //                    select new WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage
-                    //                    {
-                    //                        sum_accident = u.sum_accident,
-                    //                        Percentage_Spill = u.Percentage_Spill,
-                    //                    }).GroupBy(x => x.Cause).Select(x => x.FirstOrDefault()).ToList();
+                    var HSE_ACCIDENT = (from u in _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages
+                                        where u.Year_of_WP == year
+                                        select new WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage
+                                        {
+                                            Cause= u.Cause,
+                                            sum_accident = u.sum_accident,
+                                            Percentage_Spill = u.Percentage_Spill,
+                                        }).GroupBy(x => x.Cause).Select(x => x.FirstOrDefault()).ToList();
 
                     #endregion
 
@@ -212,26 +174,31 @@ namespace Backend_UMR_Work_Program.Controllers
                                                 Highest_1st = g.Min(x => x.Frequency),
                                                 Highest_2nd = g.Min(x => x.Frequency),
                                                 Highest_3rd = g.Min(x => x.Frequency),
-                                                TOTAL_QUANTITY_SPILLED = g.Sum(x => Convert.ToInt32(x.Total_Quantity_Spilled)),
+                                                TOTAL_QUANTITY_SPILLED = g.Sum(x => x.Total_Quantity_Spilled),
                                                 CompanyName = g.Key,
                                                 Year_of_WP = g.FirstOrDefault().Year_of_WP,
+                                            }).ToList().OrderBy(x => x.Frequency).Take(5);
 
-                                            }).OrderBy(x => x.Frequency).Take(5);
+                    //TOTAL_PRODUCED_WATER
+                    var TOTAL_PRODUCED_WATER = (from o in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs
+                                                where o.Year_of_WP == year
+                                                group o by new
+                                                {
+                                                    o.Year_of_WP
+                                                }
+                                                into g
+                                                select new
+                                                {
+                                                    TOTAL_QUANTITY_SPILLED = g.Sum(x => Convert.ToInt32(x.Produced_water_volumes)),
+                                                    CompanyName = g.Key,
+                                                    Year_of_WP = g.FirstOrDefault().Year_of_WP
+                                                }).ToList();
 
-                    //var Oil_Spill_REPORT_1st = Oil_Spill_REPORT.Take(1);
-                    //var Oil_Spill_REPORT_2nd = Oil_Spill_REPORT.Take(2);
-                    //var Oil_Spill_REPORT_3rd = Oil_Spill_REPORT.Take(3);
-                    //var Oil_Spill_REPORT_4th = Oil_Spill_REPORT.Take(4);
-                    //var Oil_Spill_REPORT_5th = Oil_Spill_REPORT.Take(5);
-
-                    var QUANTITY_RECOVERED = (from o in _context.HSE_CAUSES_OF_SPILLs
+                    var HSE_QUANTITY  = (from o in _context.HSE_CAUSES_OF_SPILLs
                                               where o.Year_of_WP == year
                                               select o).ToList();
 
-                    //var Total_no_of_QUANTITY_RECOVERED = QUANTITY_RECOVERED.Sum(x => int.Parse(x.Total_Quantity_Recovered));
-                    //var Total_no_of_QUANTITY_SPILLED = QUANTITY_RECOVERED.Sum(x => int.Parse(x.Total_Quantity_Spilled));
-                    //var TOTAL_PRODUCED_WATER = _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Where(x => x.Year_of_WP == year).Sum(x => int.Parse(x.Produced_water_volumes));
-
+                    
                     var PRODUCTION_TOTAL_BARREL_PROPOSED = (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs
                                                         where u.Year_of_WP == year
                                                         select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToList();
@@ -257,17 +224,18 @@ namespace Backend_UMR_Work_Program.Controllers
                     WorkProgrammeReport.WP_GAS_PRODUCTION_ACTIVITY_PREVIOUSYEAR_Model = WP_CRUDE_OIL_PY;
                     WorkProgrammeReport.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_Model = WP_OIL_PRODUCTION_total_barrel;
                     WorkProgrammeReport.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_Model = WP_Terrain_Continental;
-                    //WorkProgrammeReport.WP_GAS_PRODUCTION_ACTIVITY_Percentage_Model = PY_GAS_ACTIVITIES;
-                    //WorkProgrammeReport.WP_GAS_PRODUCTION_Model = PY_GAS_PRODUCTION;
+                    WorkProgrammeReport.PY_GAS_ACTIVITIES_Model = PY_GAS_ACTIVITIES;
+                    WorkProgrammeReport.CY_GAS_ACTIVITIES_Model = CY_GAS_ACTIVITIES;
+                    WorkProgrammeReport.GAS_ACTIVITIES_CONTRACTTYPES_Model = GAS_ACTIVITIES_CONTRACTTYPES;
                     WorkProgrammeReport.WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL_Model = OIL_CONDENSATE_MMBBL;
                     WorkProgrammeReport.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence_Model = HSE_ACCIDENT_Consequences;
                     WorkProgrammeReport.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident_Model = HSE_ACCIDENT_Total;
-                    //WorkProgrammeReport.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage_Model = HSE_ACCIDENT;
+                    WorkProgrammeReport.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage_Model = HSE_ACCIDENT;
                     WorkProgrammeReport.GEO_sum_and_count_Model = GEO_ACTIVITIES;
                     WorkProgrammeReport.VOLUME_OF_OILSPILL = HSE_VOLUME_OF_OILSPILL.ToString();
                     WorkProgrammeReport.OILSPILL_REPORT_Model = OILSPILL_REPORT;
-                    WorkProgrammeReport.HSE_CAUSES_OF_SPILL_Model = QUANTITY_RECOVERED;
-                    //WorkProgrammeReport.TOTAL_PRODUCED_WATER_Model = TOTAL_PRODUCED_WATER.ToString();
+                    WorkProgrammeReport.HSE_QUANTITY_Model = HSE_QUANTITY;
+                    WorkProgrammeReport.TOTAL_PRODUCED_WATER_Model = TOTAL_PRODUCED_WATER.ToString();
                     WorkProgrammeReport.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model = PLANNED_TERRAIN;
                     WorkProgrammeReport.WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model = FLARINGFORECAST;
 

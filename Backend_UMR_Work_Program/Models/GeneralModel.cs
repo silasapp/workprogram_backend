@@ -57,6 +57,9 @@ namespace Backend_UMR_Work_Program.Models
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_Model { get; set; }
             public List<WP_GAS_PRODUCTION_ACTIVITIES_Percentage> WP_GAS_PRODUCTION_ACTIVITY_Percentage_Model { get; set; }
+            public object PY_GAS_ACTIVITIES_Model { get; set; }
+            public object CY_GAS_ACTIVITIES_Model { get; set; }
+            public object GAS_ACTIVITIES_CONTRACTTYPES_Model { get; set; }
             public List<WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type> WP_GAS_PRODUCTION_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_PreviousYearr_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_CurrentYearr_Model { get; set; }
@@ -73,7 +76,7 @@ namespace Backend_UMR_Work_Program.Models
             public List<WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED> WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED_Model { get; set; }
             public object OILSPILL_REPORT_Model { get; set; }
             public string TOTAL_PRODUCED_WATER_Model { get; set; }
-            public List<HSE_CAUSES_OF_SPILL> HSE_CAUSES_OF_SPILL_Model { get; set; }
+            public List<HSE_CAUSES_OF_SPILL> HSE_QUANTITY_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED_Model { get; set; }
             //public List<WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
