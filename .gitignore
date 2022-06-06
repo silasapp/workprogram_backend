@@ -2,4 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/WKP__Database/obj/Debug/WKP_Database.sqlproj.AssemblyReference.cache
+/WKP__Database/WKP__Database.dbmdl
+/WKP_Database/WKP_Database.dbmdl
+/WKP_Database/WKP_Database.dbmdl
+/WKP__Database/WKP__Database.jfm
+/WKP__Database/WKP__Database.jfm
