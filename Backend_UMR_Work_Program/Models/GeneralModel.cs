@@ -38,7 +38,49 @@ namespace Backend_UMR_Work_Program.Models
         public static string Update = "UPDATE";
         public static string Delete = "DELETE";
 
-        public class WorkProgramme_Model_1
+
+
+        public class WorkProgrammeReport_Model
+        {
+            public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
+            public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLY> E_and_P_companies_Model { get; set; }
+            public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY> WP_Presentations_Model { get; set; }
+            //public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY> WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION> WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model{ get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_PROCESSING> WP_GEOPHYSICAL_ACTIVITIES_PROCESSING_Model{ get; set; }
+            public List<WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL> WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model{ get; set; }
+            public List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL> WP_SUM_APPRAISAL_WELL_Model{ get; set; }
+            public List<WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION> WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION_Model{ get; set; }
+            public List<WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL> DRILLING_OPERATIONS_Appraisal_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Type> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_Contract_Type_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_Model { get; set; }
+            public List<WP_GAS_PRODUCTION_ACTIVITIES_Percentage> WP_GAS_PRODUCTION_ACTIVITY_Percentage_Model { get; set; }
+            public List<WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type> WP_GAS_PRODUCTION_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_PreviousYearr_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_CurrentYearr_Model { get; set; }
+            public object WP_GAS_PRODUCTION_ACTIVITY_PREVIOUSYEAR_Model { get; set; }
+            public object WP_GAS_PRODUCTION_ACTIVITY_CURRENTYEAR_Model { get; set; }
+            public List<WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL> WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count> WP_GEOPHYSICAL_ACTIVITY_ACQUISITION_sum_and_count_Model { get; set; }
+            public List<HSE_OIL_SPILL_REPORTING_NEW> HSE_OIL_SPILL_REPORTING_NEW_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count> GEO_sum_and_count_Model { get; set; }
+            public string VOLUME_OF_OILSPILL { get; set; }
+            public List<WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED> WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED_Model { get; set; }
+            public object OILSPILL_REPORT_Model { get; set; }
+            public string TOTAL_PRODUCED_WATER_Model { get; set; }
+            public List<HSE_CAUSES_OF_SPILL> HSE_CAUSES_OF_SPILL_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED_Model { get; set; }
+            //public List<WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
+            public List<WP_Gas_Production_Utilisation_And_Flaring_Forecast> WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model { get; set; }
+
+        }
+            public class WorkProgramme_Model_1
         {
             public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
             public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }

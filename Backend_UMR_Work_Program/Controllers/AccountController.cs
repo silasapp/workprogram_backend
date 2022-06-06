@@ -48,7 +48,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return JSONString;
         }
 
-        [HttpPost(Name = "ResetPassword")]
+        [HttpPost("ResetPassword")]
         public async Task<WebApiResponse> ResetPassword(string email, string currentPassword, string newPassword)
         {
             string encryptCP = _helpersController.Encrypt(currentPassword);
