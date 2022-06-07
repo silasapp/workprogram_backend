@@ -586,7 +586,91 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        #region work program admin     
+        [HttpGet("OPL-RECLIBRATED-SCALED")]
+        public async Task<WebApiResponse> opl_reclibrated(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
 
+            var details = new List<WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.ToList();
+                }
+                else
+                {
+                    //details = _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyID == companyID).ToList();
+                }
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
 
         }
+        [HttpGet("OPL-AGGREGATED-SCORE(%))")]
+        public async Task<WebApiResponse> opl_aggregated_score(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+            var presentYear = DateTime.Now.Year;
+
+            var details = new List<WP_OPL_Aggregated_Score_ALL_COMPANy>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.ToList();
+                }
+                else
+                {
+                    //details = _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyID == companyID).ToList();
+                }
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        //[HttpGet(Name = "OML-RECLIBRATED-SCALED")]
+        //public async Task<WebApiResponse> oml_reclibrated(string year = null)
+        //{
+        //    try
+        //    {
+               
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+        //    }
+
+        //}
+
+       
+        #endregion
+
     }
+}
