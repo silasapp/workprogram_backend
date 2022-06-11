@@ -2,9 +2,14 @@
 using Backend_UMR_Work_Program.Models;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -25,6 +30,11 @@ namespace Backend_UMR_Work_Program.Controllers
         _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor);
         //_helpersController = new HelpersController(_context, _configuration);
     }
+
+    private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKPRole => User.FindFirstValue(ClaimTypes.Role);
 
 
         [HttpGet("WORKPROGRAMME_REPORT")]
@@ -296,9 +306,9 @@ namespace Backend_UMR_Work_Program.Controllers
             //var userEmail = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionEmail));
             //var companyID = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionUserID));
 
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+            var userRole = WKPRole;
+            var userEmail = WKPCompanyEmail;
+            var companyID = WKPCompanyId;
 
             try { 
             var dateYear = DateTime.Now.AddYears(0).ToString("yyyy");
@@ -358,13 +368,19 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpGet("GEOPHYSICALACTIVITIESYEARLIST")]
+        public async Task<List<CONCESSION_SITUATION>> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Yearlist() {
+            var yearlist = await _context.CONCESSION_SITUATIONs.FromSqlRaw("Select distinct Year from CONCESSION_SITUATION  order by YEAR").ToListAsync();
+            return yearlist;
+        }
+
         
         [HttpGet("GEOPHYSICALACTIVITIES")]
         public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+            var userRole = WKPRole;
+            var userEmail = WKPCompanyEmail;
+            var companyID = WKPCompanyId;
 
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_ACQUISITION>();
             try
