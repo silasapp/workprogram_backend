@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -369,8 +369,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("GEOPHYSICALACTIVITIESYEARLIST")]
-        public async Task<List<CONCESSION_SITUATION>> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Yearlist() {
-            var yearlist = await _context.CONCESSION_SITUATIONs.FromSqlRaw("Select distinct Year from CONCESSION_SITUATION  order by YEAR").ToListAsync();
+        public async Task<object> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Yearlist() {
+            var yearlist = await (from a in _context.CONCESSION_SITUATIONs orderby a.Year select a.Year).Distinct().ToListAsync();
             return yearlist;
         }
 
