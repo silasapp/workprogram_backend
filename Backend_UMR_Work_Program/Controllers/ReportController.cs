@@ -33,7 +33,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("WORKPROGRAMME_REPORT")]
-        public async Task<WebApiResponse> WORKPROGRAMME_REPORT(string year = null)
+        public async Task<WebApiResponse> WORKPROGRAMME_REPORT(string year)
         {
             try
             {
@@ -254,7 +254,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("CONCESSIONSINFORMATION")]
-        public async Task<WebApiResponse> Get_ADMIN_CONCESSIONS_INFORMATION_BY_CURRENT_YEAR(string year = null)
+        public async Task<WebApiResponse> Get_ADMIN_CONCESSIONS_INFORMATION_BY_CURRENT_YEAR(string year)
         {
 
             try { 
@@ -285,7 +285,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("CONCESSIONSITUATION")]
-        public async Task<WebApiResponse> Get_CONCESSION_SITUATION(string year = null )
+        public async Task<WebApiResponse> Get_CONCESSION_SITUATION(string year )
         {
 
             var ConcessionSituation = new List<CONCESSION_SITUATION>();
@@ -312,7 +312,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         
         [HttpGet("GEOPHYSICALACTIVITIES")]
-        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year = null )
+        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year )
         {
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_ACQUISITION>();
             try
@@ -338,7 +338,7 @@ namespace Backend_UMR_Work_Program.Controllers
       
       
         [HttpGet("GEOPHYSICALPROCESSING")]
-        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year = null )
+        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year )
         {
 
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_PROCESSING>();
@@ -364,7 +364,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("DRILLING-OPERATIONS")]
-        public async Task<WebApiResponse> Get_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS(string year = null )
+        public async Task<WebApiResponse> Get_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS(string year )
         {
 
             var DRILLING_OPERATIONS = new List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL>();
@@ -390,7 +390,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         
         [HttpGet("WORKOVERS_RECOMPLETION")]
-        public async Task<WebApiResponse> Get_WORKOVERS_RECOMPLETION_JOBs(string year = null )
+        public async Task<WebApiResponse> Get_WORKOVERS_RECOMPLETION_JOBs(string year )
         {
             var WORKOVERS_RECOMPLETION = new List<WORKOVERS_RECOMPLETION_JOB1>();
             try { 
@@ -415,7 +415,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
          
         [HttpGet("INITIAL_WELLCOMPLETION")]
-        public async Task<WebApiResponse> Get_INITIAL_WELL_COMPLETION(string year = null )
+        public async Task<WebApiResponse> Get_INITIAL_WELL_COMPLETION(string year )
         {
             var INITIAL_WELLCOMPLETION = new List<INITIAL_WELL_COMPLETION_JOB1>();
             try { 
@@ -440,7 +440,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("FDP_EXPECTED_RESERVES")]
-        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_EXPECTED_RESERVES(string year = null )
+        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_EXPECTED_RESERVES(string year )
         {
             var FDP_Reserves = new List<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>();
             try { 
@@ -469,7 +469,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("FDP_TOSUBMIT")]
-        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_TOBESUBMITTED(string year = null )
+        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_TOBESUBMITTED(string year )
         {
             var FDP_Reserves = new List<FIELD_DEVELOPMENT_PLAN>();
             try { 
@@ -498,7 +498,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("FDP_FIELDSTATUS")]
-        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year = null )
+        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year )
         {
             var FDP_Fields = new List<FIELD_DEVELOPMENT_FIELDS_AND_STATUS>();
             try { 
@@ -527,7 +527,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("NDR")]
-        public async Task<WebApiResponse> NDR(string year = null )
+        public async Task<WebApiResponse> NDR(string year )
         {
             var NDR = new List<NDR>();
             try { 
@@ -556,7 +556,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("OIL_CONDENSATE_PRODUCTION_ACTIVITIES")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITy>();
             try { 
@@ -585,7 +585,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity>();
             try { 
@@ -614,7 +614,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED>();
             try { 
@@ -643,7 +643,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED_FIVEYEARS")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION>();
             try { 
@@ -672,7 +672,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("GAS_PRODUCTION_ACTIVITIES")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year = null )
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year )
         {
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITy>();
             try { 
@@ -701,7 +701,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year = null )
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year )
         {
 
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY>();
@@ -731,7 +731,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("UNITIZATION")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year )
         {
 
             var GasProduction = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION>();
@@ -761,7 +761,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("CONCESSION_RESERVES_FOR_1ST_JANUARY")]
-        public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_1ST_JANUARY(string year = null )
+        public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_1ST_JANUARY(string year )
         {
             var Concession = new List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE>();
             try { 
@@ -791,7 +791,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("RESERVES_OIL_CONDENSATE_PRODUCTION")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION>();
             try { 
@@ -821,7 +821,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("RESERVES_ADDITION")]
-        public async Task<WebApiResponse> RESERVES_ADDITION(string year = null )
+        public async Task<WebApiResponse> RESERVES_ADDITION(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition>();
             try { 
@@ -851,7 +851,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("RESERVES_DECLINE")]
-        public async Task<WebApiResponse> RESERVES_DECLINE(string year = null )
+        public async Task<WebApiResponse> RESERVES_DECLINE(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE>();
             try { 
@@ -881,7 +881,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("RESERVES_LIFE_INDEX")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_LIFE_INDEX>();
             try { 
@@ -911,7 +911,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("RESERVES_UPDATES_DEPLETION_RATE")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_DEPLETION_RATE(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_DEPLETION_RATE(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_DEPLETION_RATE>();
             try { 
@@ -941,7 +941,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("RESERVES_OIL_CONDENSATE_MMBBL")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_MMBBL(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_MMBBL(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_MMBBL>();
             try { 
@@ -971,7 +971,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("RESERVES_REPLACEMENT_RATIO")]
-        public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(string year = null )
+        public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(string year )
         {
 
             var OilCondensate_Reserves = new List<RESERVES_REPLACEMENT_RATIO>();
@@ -1002,7 +1002,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("BUDGET_CAPEX_OPEX")]
-        public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(string year = null )
+        public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(string year )
         {
             var BudgetCapex = new List<BUDGET_CAPEX_OPEX>();
             try { 
@@ -1032,7 +1032,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("OIL_AND_GAS__MAINTENANCE_PROJECTS")]
-        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year = null )
+        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year )
         {
             var BudgetCapex = new List<OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT>();
             try { 
@@ -1062,7 +1062,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("OIL_CONDENSATE_CONFORMITY")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment>();
             try { 
@@ -1092,7 +1092,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("FACILITIES_PROJECT_PERFORMANCE")]
-        public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(string year = null )
+        public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(string year )
         {
             var ResultData = new List<FACILITIES_PROJECT_PERFORMANCE>();
             try { 
@@ -1122,7 +1122,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("LEGAL_LITIGATION")]
-        public async Task<WebApiResponse> LEGAL_LITIGATION(string year = null )
+        public async Task<WebApiResponse> LEGAL_LITIGATION(string year )
         {
             var ResultData = new List<LEGAL_LITIGATION>();
             try { 
@@ -1152,7 +1152,7 @@ namespace Backend_UMR_Work_Program.Controllers
          
         
         [HttpGet("LEGAL_ARBITRATION")]
-        public async Task<WebApiResponse> LEGAL_ARBITRATION(string year = null )
+        public async Task<WebApiResponse> LEGAL_ARBITRATION(string year )
         {
             var ResultData = new List<LEGAL_ARBITRATION>();
             try { 
@@ -1182,7 +1182,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("NIGERIA_CONTENT_TRAINING")]
-        public async Task<WebApiResponse> NIGERIA_CONTENT_TRAINING(string year = null )
+        public async Task<WebApiResponse> NIGERIA_CONTENT_TRAINING(string year )
         {
             var ResultData = new List<NIGERIA_CONTENT_Training>();
             try { 
@@ -1212,7 +1212,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("NIGERIA_CONTENT_SUCCESSIONPLAN")]
-        public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(string year = null )
+        public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(string year )
         {
             var ResultData = new List<NIGERIA_CONTENT_Upload_Succession_Plan>();
             try { 
@@ -1242,7 +1242,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("STRATEGIC_PLANS_ON_COMPANY_BASIS")]
-        public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASIS(string year = null )
+        public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASIS(string year )
         {
             var ResultData = new List<STRATEGIC_PLANS_ON_COMPANY_BASI>();
             try { 
@@ -1272,7 +1272,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
-        public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year = null )
+        public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year )
         {
             var ResultData = new List<HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW>();
             try { 
@@ -1302,7 +1302,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("HSE_MANAGEMENT_POSITION")]
-        public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(string year = null )
+        public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(string year )
         {
             var ResultData = new List<HSE_MANAGEMENT_POSITION>();
             try { 
@@ -1332,7 +1332,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("HSE_SAFETY_CULTURE_TRAINING")]
-        public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(string year = null )
+        public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(string year )
         {
             var ResultData = new List<HSE_SAFETY_CULTURE_TRAINING>();
             try { 
@@ -1362,7 +1362,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
-        public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year = null )
+        public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year )
         {
             var ResultData = new List<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>();
             try { 
@@ -1392,7 +1392,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("HSE_QUALITY_CONTROL")]
-        public async Task<WebApiResponse> HSE_QUALITY_CONTROL(string year = null )
+        public async Task<WebApiResponse> HSE_QUALITY_CONTROL(string year )
         {
             var ResultData = new List<HSE_QUALITY_CONTROL>();
             try { 
@@ -1422,7 +1422,7 @@ namespace Backend_UMR_Work_Program.Controllers
           
         
         [HttpGet("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
-        public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year = null )
+        public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year )
         {
             var ResultData = new List<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>();
             try { 
@@ -1452,7 +1452,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
-        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year = null )
+        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year )
         {
             var ResultData = new List<HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW>();
             try { 

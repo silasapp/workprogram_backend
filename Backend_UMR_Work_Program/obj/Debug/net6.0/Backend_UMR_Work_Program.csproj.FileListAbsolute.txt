@@ -420,3 +420,5 @@ C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\obj\Debu
 C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debug\net6.0\Humanizer.dll
+C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll

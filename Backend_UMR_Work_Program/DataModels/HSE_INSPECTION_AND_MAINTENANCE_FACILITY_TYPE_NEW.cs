@@ -28,5 +28,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? If_RBI_was_approval_granted { get; set; }
         public string? If_No_Give_reasonS { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

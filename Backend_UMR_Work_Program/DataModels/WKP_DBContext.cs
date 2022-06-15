@@ -272,7 +272,6 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<VW_SEISMIC_DATA_QUANTUM> VW_SEISMIC_DATA_QUANTa { get; set; } = null!;
         public virtual DbSet<VW_SEISMIC_DATA_QUANTUM_SUM_BY_YEAR> VW_SEISMIC_DATA_QUANTUM_SUM_BY_YEARs { get; set; } = null!;
         public virtual DbSet<VW_company_and_contract_type> VW_company_and_contract_types { get; set; } = null!;
-        public virtual DbSet<View_2> View_2s { get; set; } = null!;
         public virtual DbSet<WORKOVERS_RECOMPLETION_JOB1> WORKOVERS_RECOMPLETION_JOBs1 { get; set; } = null!;
         public virtual DbSet<WORK_PROGRAM_FLOW> WORK_PROGRAM_FLOWs { get; set; } = null!;
         public virtual DbSet<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLY> WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies { get; set; } = null!;
@@ -443,8 +442,7 @@ namespace Backend_UMR_Work_Program.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Trusted_Connection=True;Initial Catalog=WorkProgrammeDB_;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer("name=Data:Wkpconnect:ConnectionString");
             }
         }
 
@@ -13255,6 +13253,10 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.RoleName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.SN).ValueGeneratedOnAdd();
             });
 
@@ -13334,6 +13336,10 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RoleName)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.id).ValueGeneratedOnAdd();
@@ -14813,17 +14819,6 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.Contract_Type)
                     .HasMaxLength(3900)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<View_2>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("View_2");
-
-                entity.Property(e => e.name)
-                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
