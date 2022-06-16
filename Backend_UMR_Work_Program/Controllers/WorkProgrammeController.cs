@@ -14,8 +14,6 @@ namespace Backend_UMR_Work_Program.Controllers
     [Route("api/[controller]/[action]")]
     public class WorkProgrammeController : ControllerBase
     {
-
-
         private Account _account;
         public WKP_DBContext _context;
         public IConfiguration _configuration;
@@ -54,8 +52,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (wkp.CONCESSION_SITUATION != null)
                 {
                     numberofTablesDataToSave++;
-                    WebApiResponse ConcessionData = CONCESSION_SITUATION(wkp.CONCESSION_SITUATION, wkp.WorkProgramme_Year);
-                    if (ConcessionData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> ConcessionData = CONCESSION_SITUATION(wkp.CONCESSION_SITUATION, wkp.WorkProgramme_Year);
+                    if (ConcessionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -64,8 +62,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Geophysical Activites
-                    WebApiResponse GeophysicalActivitesData = GEOPHYSICAL_ACTIVITIES_ACQUISITION(wkp.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs, wkp.WorkProgramme_Year);
-                    if (GeophysicalActivitesData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> GeophysicalActivitesData = GEOPHYSICAL_ACTIVITIES_ACQUISITION(wkp.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs, wkp.WorkProgramme_Year);
+                    if (GeophysicalActivitesData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -74,8 +72,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Geophysical Activites Processing
-                    WebApiResponse GeoActivitesProcessingData = GEOPHYSICAL_ACTIVITIES_PROCESSING(wkp.GEOPHYSICAL_ACTIVITIES_PROCESSINGs, wkp.WorkProgramme_Year);
-                    if (GeoActivitesProcessingData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> GeoActivitesProcessingData = GEOPHYSICAL_ACTIVITIES_PROCESSING(wkp.GEOPHYSICAL_ACTIVITIES_PROCESSINGs, wkp.WorkProgramme_Year);
+                    if (GeoActivitesProcessingData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -88,8 +86,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     DriilingFiles.Add(FieldDiscoveryUploadFile);
                     DriilingFiles.Add(HydrocarbonCountUploadFile);
 
-                    WebApiResponse DrillingOperationsData = DRILLING_OPERATIONS_CATEGORIES_OF_WELL(wkp.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs, wkp.WorkProgramme_Year, DriilingFiles);
-                    if (DrillingOperationsData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> DrillingOperationsData = DRILLING_OPERATIONS_CATEGORIES_OF_WELL(wkp.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs, wkp.WorkProgramme_Year, DriilingFiles);
+                    if (DrillingOperationsData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -98,8 +96,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Drilling Well Cost
-                    WebApiResponse DrillingWellCostData = DRILLING_EACH_WELL_COST(wkp.DRILLING_EACH_WELL_COSTs, wkp.WorkProgramme_Year);
-                    if (DrillingWellCostData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> DrillingWellCostData = DRILLING_EACH_WELL_COST(wkp.DRILLING_EACH_WELL_COSTs, wkp.WorkProgramme_Year);
+                    if (DrillingWellCostData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -108,8 +106,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Geophysical Activites
-                    WebApiResponse DrillingWellCostProposedData = DRILLING_EACH_WELL_COST_PROPOSED(wkp.DRILLING_EACH_WELL_COST_PROPOSEDs, wkp.WorkProgramme_Year);
-                    if (DrillingWellCostProposedData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> DrillingWellCostProposedData = DRILLING_EACH_WELL_COST_PROPOSED(wkp.DRILLING_EACH_WELL_COST_PROPOSEDs, wkp.WorkProgramme_Year);
+                    if (DrillingWellCostProposedData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -123,14 +121,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
@@ -151,8 +149,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     //Saving Well Completion Job
-                    WebApiResponse Well_Completion_JobData = INITIAL_WELL_COMPLETION_JOB1(wkp.Initial_Well_Completion_Job, wkp.WorkProgramme_Year);
-                    if (Well_Completion_JobData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Well_Completion_JobData = INITIAL_WELL_COMPLETION_JOB1(wkp.Initial_Well_Completion_Job, wkp.WorkProgramme_Year);
+                    if (Well_Completion_JobData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -161,8 +159,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     //Saving Well Completion Job
-                    WebApiResponse Workover_JobData = WORKOVERS_RECOMPLETION_JOB1(wkp.WORKOVERS_RECOMPLETION_JOB1, wkp.WorkProgramme_Year);
-                    if (Workover_JobData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Workover_JobData = WORKOVERS_RECOMPLETION_JOB1(wkp.WORKOVERS_RECOMPLETION_JOB1, wkp.WorkProgramme_Year);
+                    if (Workover_JobData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -171,8 +169,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving FDP_Excess Reserve
-                    WebApiResponse FDP_ExcessReserveData = FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE(wkp.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE, wkp.WorkProgramme_Year);
-                    if (FDP_ExcessReserveData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> FDP_ExcessReserveData = FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE(wkp.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE, wkp.WorkProgramme_Year);
+                    if (FDP_ExcessReserveData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -181,8 +179,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving FDP To Submit
-                    WebApiResponse FDP_ToSubmitData = FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP(wkp.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP, wkp.WorkProgramme_Year);
-                    if (FDP_ToSubmitData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> FDP_ToSubmitData = FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP(wkp.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP, wkp.WorkProgramme_Year);
+                    if (FDP_ToSubmitData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -191,8 +189,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving FDP Status
-                    WebApiResponse FDP_StatusData = FIELD_DEVELOPMENT_FIELDS_AND_STATUS(wkp.FIELD_DEVELOPMENT_FIELDS_AND_STATUS, wkp.WorkProgramme_Year);
-                    if (FDP_StatusData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> FDP_StatusData = FIELD_DEVELOPMENT_FIELDS_AND_STATUS(wkp.FIELD_DEVELOPMENT_FIELDS_AND_STATUS, wkp.WorkProgramme_Year);
+                    if (FDP_StatusData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -201,8 +199,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Reserve Update
-                    WebApiResponse Reserve_UpdateData = RESERVES_UPDATES_LIFE_INDEX(wkp.RESERVES_UPDATES_LIFE_INDEX, wkp.WorkProgramme_Year);
-                    if (Reserve_UpdateData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Reserve_UpdateData = RESERVES_UPDATES_LIFE_INDEX(wkp.RESERVES_UPDATES_LIFE_INDEX, wkp.WorkProgramme_Year);
+                    if (Reserve_UpdateData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -214,8 +212,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     List<IFormFile> FDPFiles = new List<IFormFile>();
                     FDPFiles.Add(Uploaded_approved_FDP_Document);
 
-                    WebApiResponse FDP_Data = FIELD_DEVELOPMENT_PLAN(wkp.FIELD_DEVELOPMENT_PLAN, wkp.WorkProgramme_Year, FDPFiles);
-                    if (FDP_Data.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> FDP_Data = FIELD_DEVELOPMENT_PLAN(wkp.FIELD_DEVELOPMENT_PLAN, wkp.WorkProgramme_Year, FDPFiles);
+                    if (FDP_Data.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -224,8 +222,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Production
-                    WebApiResponse Oil_ProductionData = OIL_CONDENSATE_PRODUCTION_ACTIVITy(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITy, wkp.WorkProgramme_Year);
-                    if (Oil_ProductionData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_ProductionData = OIL_CONDENSATE_PRODUCTION_ACTIVITy(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITy, wkp.WorkProgramme_Year);
+                    if (Oil_ProductionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -238,8 +236,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     OilFiles.Add(PUAUploadFile_Document);
                     OilFiles.Add(UUOAUploadFilePath_Document);
 
-                    WebApiResponse OilUnitizationData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION, wkp.WorkProgramme_Year, OilFiles);
-                    if (OilUnitizationData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> OilUnitizationData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION, wkp.WorkProgramme_Year, OilFiles);
+                    if (OilUnitizationData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -251,8 +249,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     List<IFormFile> GasFiles = new List<IFormFile>();
                     GasFiles.Add(Upload_NDR_payment_receipt);
 
-                    WebApiResponse Gas_ProductionData = GAS_PRODUCTION_ACTIVITy(wkp.GAS_PRODUCTION_ACTIVITy, wkp.WorkProgramme_Year, GasFiles);
-                    if (Gas_ProductionData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Gas_ProductionData = GAS_PRODUCTION_ACTIVITy(wkp.GAS_PRODUCTION_ACTIVITy, wkp.WorkProgramme_Year, GasFiles);
+                    if (Gas_ProductionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -264,8 +262,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     List<IFormFile> NDRFiles = new List<IFormFile>();
                     NDRFiles.Add(Upload_NDR_payment_receipt);
 
-                    WebApiResponse NDRData = NDR(wkp.NDR, wkp.WorkProgramme_Year, NDRFiles);
-                    if (NDRData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> NDRData = NDR(wkp.NDR, wkp.WorkProgramme_Year, NDRFiles);
+                    if (NDRData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -274,8 +272,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Condensate Reserve Status
-                    WebApiResponse Oil_Condensate_ReserveStatusData = RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE(wkp.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE, wkp.WorkProgramme_Year);
-                    if (Oil_Condensate_ReserveStatusData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_Condensate_ReserveStatusData = RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE(wkp.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE, wkp.WorkProgramme_Year);
+                    if (Oil_Condensate_ReserveStatusData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -284,8 +282,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Condensate Reserve Update
-                    WebApiResponse Oil_Condensate_ReserveProjectionData = RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection(wkp.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection, wkp.WorkProgramme_Year);
-                    if (Oil_Condensate_ReserveProjectionData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_Condensate_ReserveProjectionData = RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection(wkp.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection, wkp.WorkProgramme_Year);
+                    if (Oil_Condensate_ReserveProjectionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -298,8 +296,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     OilCondFiles.Add(ProductionOilCondensateAGNAGUFile);
                     OilCondFiles.Add(ProductionOilCondensateAGNAGUFile);
 
-                    WebApiResponse Oil_Condensate_ProjectionData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION, wkp.WorkProgramme_Year, OilCondFiles);
-                    if (Oil_Condensate_ProjectionData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_Condensate_ProjectionData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION, wkp.WorkProgramme_Year, OilCondFiles);
+                    if (Oil_Condensate_ProjectionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -308,8 +306,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Condensate Annual Data
-                    WebApiResponse Oil_Condensate_AnnualData = RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(wkp.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION, wkp.WorkProgramme_Year);
-                    if (Oil_Condensate_AnnualData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_Condensate_AnnualData = RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(wkp.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION, wkp.WorkProgramme_Year);
+                    if (Oil_Condensate_AnnualData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -318,8 +316,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Condensate Decline Data
-                    WebApiResponse Oil_Condensate_DeclineData = RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE(wkp.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE, wkp.WorkProgramme_Year);
-                    if (Oil_Condensate_DeclineData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_Condensate_DeclineData = RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE(wkp.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE, wkp.WorkProgramme_Year);
+                    if (Oil_Condensate_DeclineData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -328,8 +326,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Condensate Production Data
-                    WebApiResponse Oil_Condensate_ProductionData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity, wkp.WorkProgramme_Year);
-                    if (Oil_Condensate_ProductionData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_Condensate_ProductionData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity, wkp.WorkProgramme_Year);
+                    if (Oil_Condensate_ProductionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -338,8 +336,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Reserve Replacement Data
-                    WebApiResponse Reserve_ReplacementData = RESERVES_REPLACEMENT_RATIO(wkp.RESERVES_REPLACEMENT_RATIO, wkp.WorkProgramme_Year);
-                    if (Reserve_ReplacementData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Reserve_ReplacementData = RESERVES_REPLACEMENT_RATIO(wkp.RESERVES_REPLACEMENT_RATIO, wkp.WorkProgramme_Year);
+                    if (Reserve_ReplacementData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -348,8 +346,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Monthly Data
-                    WebApiResponse Oil_MonthlyData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED, wkp.WorkProgramme_Year);
-                    if (Oil_MonthlyData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Oil_MonthlyData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED, wkp.WorkProgramme_Year);
+                    if (Oil_MonthlyData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -358,8 +356,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
                     // Saving Oil Gas Activities Data
-                    WebApiResponse Gas_ActivitiesData = GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(wkp.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY, wkp.WorkProgramme_Year);
-                    if (Gas_ActivitiesData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> Gas_ActivitiesData = GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(wkp.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY, wkp.WorkProgramme_Year);
+                    if (Gas_ActivitiesData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -378,7 +376,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
@@ -397,67 +395,67 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 #region Saving form data
                 //Saving Budget Actual Expenditure
-                WebApiResponse BudgetActualExData = BUDGET_ACTUAL_EXPENDITURE(wkp.BUDGET_ACTUAL_EXPENDITURE, wkp.WorkProgramme_Year);
-                if (BudgetActualExData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> BudgetActualExData = BUDGET_ACTUAL_EXPENDITURE(wkp.BUDGET_ACTUAL_EXPENDITURE, wkp.WorkProgramme_Year);
+                if (BudgetActualExData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Budget Proposal
-                WebApiResponse BudgetProposalData = BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(wkp.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT, wkp.WorkProgramme_Year);
-                if (BudgetProposalData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> BudgetProposalData = BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(wkp.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT, wkp.WorkProgramme_Year);
+                if (BudgetProposalData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Budget Performance Exploratory
-                WebApiResponse BudgetPerformanceExpData = BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(wkp.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy, wkp.WorkProgramme_Year);
-                if (BudgetPerformanceExpData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> BudgetPerformanceExpData = BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(wkp.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy, wkp.WorkProgramme_Year);
+                if (BudgetPerformanceExpData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Budget Performance Development 
-                WebApiResponse BudgetPerformanceDevData = BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(wkp.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy, wkp.WorkProgramme_Year);
-                if (BudgetPerformanceDevData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> BudgetPerformanceDevData = BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(wkp.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy, wkp.WorkProgramme_Year);
+                if (BudgetPerformanceDevData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Budget Performance Production
-                WebApiResponse BudgetPerformanceProdData = BUDGET_PERFORMANCE_PRODUCTION_COST(wkp.BUDGET_PERFORMANCE_PRODUCTION_COST, wkp.WorkProgramme_Year);
-                if (BudgetPerformanceProdData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> BudgetPerformanceProdData = BUDGET_PERFORMANCE_PRODUCTION_COST(wkp.BUDGET_PERFORMANCE_PRODUCTION_COST, wkp.WorkProgramme_Year);
+                if (BudgetPerformanceProdData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Budget Performance Facility
-                WebApiResponse BudgetPerformanceFacData = BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(wkp.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT, wkp.WorkProgramme_Year);
-                if (BudgetPerformanceFacData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> BudgetPerformanceFacData = BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(wkp.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT, wkp.WorkProgramme_Year);
+                if (BudgetPerformanceFacData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Oil Gas Facility
-                WebApiResponse OilGasFacData = OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(wkp.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE, wkp.WorkProgramme_Year);
-                if (OilGasFacData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> OilGasFacData = OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(wkp.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE, wkp.WorkProgramme_Year);
+                if (OilGasFacData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Oil Gas Production
-                WebApiResponse OilGasProdData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment, wkp.WorkProgramme_Year);
-                if (OilGasProdData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> OilGasProdData = OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(wkp.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment, wkp.WorkProgramme_Year);
+                if (OilGasProdData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Oil Gas Facilty Maintenance
-                WebApiResponse OilGasFacProjectData = OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(wkp.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT, wkp.WorkProgramme_Year);
-                if (OilGasFacProjectData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> OilGasFacProjectData = OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(wkp.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT, wkp.WorkProgramme_Year);
+                if (OilGasFacProjectData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Oil Gas Facilty Project
-                WebApiResponse FacProjectData = FACILITIES_PROJECT_PERFORMANCE(wkp.FACILITIES_PROJECT_PERFORMANCE, wkp.WorkProgramme_Year);
-                if (FacProjectData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> FacProjectData = FACILITIES_PROJECT_PERFORMANCE(wkp.FACILITIES_PROJECT_PERFORMANCE, wkp.WorkProgramme_Year);
+                if (FacProjectData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }//Saving acilty Project
-                WebApiResponse BudgetCapexOpexData = BUDGET_CAPEX_OPEX(wkp.BUDGET_CAPEX_OPEX, wkp.WorkProgramme_Year);
-                if (BudgetCapexOpexData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> BudgetCapexOpexData = BUDGET_CAPEX_OPEX(wkp.BUDGET_CAPEX_OPEX, wkp.WorkProgramme_Year);
+                if (BudgetCapexOpexData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -470,14 +468,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
@@ -495,38 +493,38 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 #region Saving form data
                 //Saving Nigeria Training
-                WebApiResponse NigeriaTrainingData = NIGERIA_CONTENT_Training(wkp.NIGERIA_CONTENT_Training, wkp.WorkProgramme_Year);
-                if (NigeriaTrainingData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> NigeriaTrainingData = NIGERIA_CONTENT_Training(wkp.NIGERIA_CONTENT_Training, wkp.WorkProgramme_Year);
+                if (NigeriaTrainingData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Nigeria Content Upload
-                WebApiResponse NigeriaUploadData = NIGERIA_CONTENT_Upload_Succession_Plan(wkp.NIGERIA_CONTENT_Upload_Succession_Plan, wkp.WorkProgramme_Year);
-                if (NigeriaUploadData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> NigeriaUploadData = NIGERIA_CONTENT_Upload_Succession_Plan(wkp.NIGERIA_CONTENT_Upload_Succession_Plan, wkp.WorkProgramme_Year);
+                if (NigeriaUploadData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Nigeria Content Upload
-                WebApiResponse NigeriaQuestionData = NIGERIA_CONTENT_QUESTION(wkp.NIGERIA_CONTENT_QUESTION, wkp.WorkProgramme_Year);
-                if (NigeriaQuestionData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> NigeriaQuestionData = NIGERIA_CONTENT_QUESTION(wkp.NIGERIA_CONTENT_QUESTION, wkp.WorkProgramme_Year);
+                if (NigeriaQuestionData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Nigeria Content Upload
-                WebApiResponse LegalLitigationData = LEGAL_LITIGATION(wkp.LEGAL_LITIGATION, wkp.WorkProgramme_Year);
-                if (LegalLitigationData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> LegalLitigationData = LEGAL_LITIGATION(wkp.LEGAL_LITIGATION, wkp.WorkProgramme_Year);
+                if (LegalLitigationData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Nigeria Content Upload
-                WebApiResponse LegalArbitrationData = LEGAL_ARBITRATION(wkp.LEGAL_ARBITRATION, wkp.WorkProgramme_Year);
-                if (LegalArbitrationData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> LegalArbitrationData = LEGAL_ARBITRATION(wkp.LEGAL_ARBITRATION, wkp.WorkProgramme_Year);
+                if (LegalArbitrationData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving Strategic Plans
-                WebApiResponse StrategicPlansData = STRATEGIC_PLANS_ON_COMPANY_BASI(wkp.STRATEGIC_PLANS_ON_COMPANY_BASI, wkp.WorkProgramme_Year);
-                if (StrategicPlansData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> StrategicPlansData = STRATEGIC_PLANS_ON_COMPANY_BASI(wkp.STRATEGIC_PLANS_ON_COMPANY_BASI, wkp.WorkProgramme_Year);
+                if (StrategicPlansData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -538,14 +536,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
@@ -571,8 +569,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 
                     numberofTablesDataToSave++;
 
-                    WebApiResponse HseQuestionData = HSE_QUESTION(wkp.HSE_QUESTION, wkp.WorkProgramme_Year);
-                    if (HseQuestionData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> HseQuestionData = HSE_QUESTION(wkp.HSE_QUESTION, wkp.WorkProgramme_Year);
+                    if (HseQuestionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
@@ -582,15 +580,15 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     numberofTablesDataToSave++;
 
-                    WebApiResponse HseFatalityData = HSE_FATALITy(wkp.HSE_FATALITy, wkp.WorkProgramme_Year);
-                    if (HseFatalityData.ResponseCode == AppResponseCodes.Success)
+                    Task<WebApiResponse> HseFatalityData = HSE_FATALITy(wkp.HSE_FATALITy, wkp.WorkProgramme_Year);
+                    if (HseFatalityData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
                     }
                 }
                 //Saving HSE Design Safety
-                WebApiResponse HseDesignData = HSE_DESIGNS_SAFETY(wkp.HSE_DESIGNS_SAFETY, wkp.WorkProgramme_Year);
-                if (HseDesignData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseDesignData = HSE_DESIGNS_SAFETY(wkp.HSE_DESIGNS_SAFETY, wkp.WorkProgramme_Year);
+                if (HseDesignData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -598,134 +596,134 @@ namespace Backend_UMR_Work_Program.Controllers
                 List<IFormFile> HSEFiles = new List<IFormFile>();
                 HSEFiles.Add(SMSFileUploadPath);
 
-                WebApiResponse HseSafetyData = HSE_SAFETY_STUDIES_NEW(wkp.HSE_SAFETY_STUDIES_NEW, wkp.WorkProgramme_Year, HSEFiles);
-                if (HseSafetyData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseSafetyData = HSE_SAFETY_STUDIES_NEW(wkp.HSE_SAFETY_STUDIES_NEW, wkp.WorkProgramme_Year, HSEFiles);
+                if (HseSafetyData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Inspection Maintenance
-                WebApiResponse HseInspectionMaintenanceData = HSE_INSPECTION_AND_MAINTENANCE_NEW(wkp.HSE_INSPECTION_AND_MAINTENANCE_NEW, wkp.WorkProgramme_Year);
-                if (HseInspectionMaintenanceData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseInspectionMaintenanceData = HSE_INSPECTION_AND_MAINTENANCE_NEW(wkp.HSE_INSPECTION_AND_MAINTENANCE_NEW, wkp.WorkProgramme_Year);
+                if (HseInspectionMaintenanceData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Inspection Maintenance and Facility
-                WebApiResponse HseInspectionMaintenanceFacData = HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(wkp.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW, wkp.WorkProgramme_Year);
-                if (HseInspectionMaintenanceFacData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseInspectionMaintenanceFacData = HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(wkp.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW, wkp.WorkProgramme_Year);
+                if (HseInspectionMaintenanceFacData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Technical Safety
-                WebApiResponse HseTechnicalData = HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(wkp.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW, wkp.WorkProgramme_Year);
-                if (HseTechnicalData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseTechnicalData = HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(wkp.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW, wkp.WorkProgramme_Year);
+                if (HseTechnicalData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Asset Register
-                WebApiResponse HseAssetData = HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(wkp.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW, wkp.WorkProgramme_Year);
-                if (HseAssetData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseAssetData = HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(wkp.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW, wkp.WorkProgramme_Year);
+                if (HseAssetData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Oil Spill
-                WebApiResponse HseOilData = HSE_OIL_SPILL_REPORTING_NEW(wkp.HSE_OIL_SPILL_REPORTING_NEW, wkp.WorkProgramme_Year);
-                if (HseOilData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseOilData = HSE_OIL_SPILL_REPORTING_NEW(wkp.HSE_OIL_SPILL_REPORTING_NEW, wkp.WorkProgramme_Year);
+                if (HseOilData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Asset Register
-                WebApiResponse HseAssetRegisterData = HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(wkp.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW, wkp.WorkProgramme_Year);
-                if (HseAssetRegisterData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseAssetRegisterData = HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(wkp.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW, wkp.WorkProgramme_Year);
+                if (HseAssetRegisterData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Accident
-                WebApiResponse HseAccidentData = HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(wkp.HSE_ACCIDENT_INCIDENCE_REPORTING_NEW, wkp.WorkProgramme_Year);
-                if (HseAccidentData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseAccidentData = HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(wkp.HSE_ACCIDENT_INCIDENCE_REPORTING_NEW, wkp.WorkProgramme_Year);
+                if (HseAccidentData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Accident Incidence
-                WebApiResponse HseAccidentIncidenceData = HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(wkp.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW, wkp.WorkProgramme_Year);
-                if (HseAccidentIncidenceData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseAccidentIncidenceData = HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(wkp.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW, wkp.WorkProgramme_Year);
+                if (HseAccidentIncidenceData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Community Disturbances
-                WebApiResponse HseCommunityDisturbancesData = HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(wkp.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW, wkp.WorkProgramme_Year);
-                if (HseCommunityDisturbancesData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseCommunityDisturbancesData = HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(wkp.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW, wkp.WorkProgramme_Year);
+                if (HseCommunityDisturbancesData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Environmental Studies
-                WebApiResponse HseEnvironmentalData = HSE_ENVIRONMENTAL_STUDIES_NEW(wkp.HSE_ENVIRONMENTAL_STUDIES_NEW, wkp.WorkProgramme_Year);
-                if (HseEnvironmentalData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseEnvironmentalData = HSE_ENVIRONMENTAL_STUDIES_NEW(wkp.HSE_ENVIRONMENTAL_STUDIES_NEW, wkp.WorkProgramme_Year);
+                if (HseEnvironmentalData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Waste Management
-                WebApiResponse HseWasteData = HSE_WASTE_MANAGEMENT_NEW(wkp.HSE_WASTE_MANAGEMENT_NEW, wkp.WorkProgramme_Year);
-                if (HseWasteData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseWasteData = HSE_WASTE_MANAGEMENT_NEW(wkp.HSE_WASTE_MANAGEMENT_NEW, wkp.WorkProgramme_Year);
+                if (HseWasteData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Waste Management Facility
-                WebApiResponse HseWasteMgtData = HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(wkp.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW, wkp.WorkProgramme_Year);
-                if (HseWasteMgtData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseWasteMgtData = HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(wkp.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW, wkp.WorkProgramme_Year);
+                if (HseWasteMgtData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Produced Water
-                WebApiResponse HseWaterMgtData = HSE_PRODUCED_WATER_MANAGEMENT_NEW(wkp.HSE_PRODUCED_WATER_MANAGEMENT_NEW, wkp.WorkProgramme_Year);
-                if (HseWaterMgtData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseWaterMgtData = HSE_PRODUCED_WATER_MANAGEMENT_NEW(wkp.HSE_PRODUCED_WATER_MANAGEMENT_NEW, wkp.WorkProgramme_Year);
+                if (HseWaterMgtData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Environmental Compliance
-                WebApiResponse HseEnvironmentalComplianceData = HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(wkp.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW, wkp.WorkProgramme_Year);
-                if (HseEnvironmentalComplianceData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseEnvironmentalComplianceData = HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(wkp.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW, wkp.WorkProgramme_Year);
+                if (HseEnvironmentalComplianceData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Environmental Studies
-                WebApiResponse HseEnvironmentalStudiesData = HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(wkp.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW, wkp.WorkProgramme_Year);
-                if (HseEnvironmentalStudiesData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseEnvironmentalStudiesData = HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(wkp.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW, wkp.WorkProgramme_Year);
+                if (HseEnvironmentalStudiesData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Sustainable Development
-                WebApiResponse HseSustainableData = HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(wkp.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL, wkp.WorkProgramme_Year);
-                if (HseSustainableData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseSustainableData = HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(wkp.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL, wkp.WorkProgramme_Year);
+                if (HseSustainableData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Environmental Studies
-                WebApiResponse HseEnvironmentalStudiesUpdatedData = HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(wkp.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED, wkp.WorkProgramme_Year);
-                if (HseEnvironmentalStudiesUpdatedData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseEnvironmentalStudiesUpdatedData = HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(wkp.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED, wkp.WorkProgramme_Year);
+                if (HseEnvironmentalStudiesUpdatedData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE OSP Registrations
-                WebApiResponse HseOSPData = HSE_OSP_REGISTRATIONS_NEW(wkp.HSE_OSP_REGISTRATIONS_NEW, wkp.WorkProgramme_Year);
-                if (HseOSPData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseOSPData = HSE_OSP_REGISTRATIONS_NEW(wkp.HSE_OSP_REGISTRATIONS_NEW, wkp.WorkProgramme_Year);
+                if (HseOSPData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE OSP Registrations
-                WebApiResponse HseProducedWaterData = HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(wkp.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED, wkp.WorkProgramme_Year);
-                if (HseProducedWaterData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseProducedWaterData = HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(wkp.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED, wkp.WorkProgramme_Year);
+                if (HseProducedWaterData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Environmental Monitoring Chemical
-                WebApiResponse HseEnvironmentalMonitoringData = HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(wkp.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW, wkp.WorkProgramme_Year);
-                if (HseEnvironmentalMonitoringData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseEnvironmentalMonitoringData = HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(wkp.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW, wkp.WorkProgramme_Year);
+                if (HseEnvironmentalMonitoringData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
                 //Saving HSE Environmental Monitoring Chemical
-                WebApiResponse HseCausesData = HSE_CAUSES_OF_SPILL(wkp.HSE_CAUSES_OF_SPILL, wkp.WorkProgramme_Year);
-                if (HseCausesData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseCausesData = HSE_CAUSES_OF_SPILL(wkp.HSE_CAUSES_OF_SPILL, wkp.WorkProgramme_Year);
+                if (HseCausesData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -733,8 +731,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 List<IFormFile> HSESustainableDevelopmentFiles = new List<IFormFile>();
                 HSESustainableDevelopmentFiles.Add(SMSFileUploadPath);
 
-                WebApiResponse HseSustainableDevData = HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(wkp.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU, wkp.WorkProgramme_Year, HSESustainableDevelopmentFiles);
-                if (HseSustainableDevData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseSustainableDevData = HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(wkp.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU, wkp.WorkProgramme_Year, HSESustainableDevelopmentFiles);
+                if (HseSustainableDevData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -742,8 +740,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 List<IFormFile> HSESustainableCommunityFiles = new List<IFormFile>();
                 HSESustainableCommunityFiles.Add(SSUploadFile);
 
-                WebApiResponse HseSustainableComData = HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(wkp.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME, wkp.WorkProgramme_Year, HSESustainableDevelopmentFiles);
-                if (HseSustainableComData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseSustainableComData = HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(wkp.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME, wkp.WorkProgramme_Year, HSESustainableDevelopmentFiles);
+                if (HseSustainableComData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -752,8 +750,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 HSEMgtPositionFiles.Add(PromotionLetterFile);
                 HSEMgtPositionFiles.Add(OrganogramFile);
 
-                WebApiResponse HseManagmentData = HSE_MANAGEMENT_POSITION(wkp.HSE_MANAGEMENT_POSITION, wkp.WorkProgramme_Year, HSEMgtPositionFiles);
-                if (HseManagmentData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseManagmentData = HSE_MANAGEMENT_POSITION(wkp.HSE_MANAGEMENT_POSITION, wkp.WorkProgramme_Year, HSEMgtPositionFiles);
+                if (HseManagmentData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -761,8 +759,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 List<IFormFile> HSEQualityFiles = new List<IFormFile>();
                 HSEQualityFiles.Add(QualityControlFile);
 
-                WebApiResponse HseQualityData = HSE_QUALITY_CONTROL(wkp.HSE_QUALITY_CONTROL, wkp.WorkProgramme_Year, HSEQualityFiles);
-                if (HseQualityData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseQualityData = HSE_QUALITY_CONTROL(wkp.HSE_QUALITY_CONTROL, wkp.WorkProgramme_Year, HSEQualityFiles);
+                if (HseQualityData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -770,8 +768,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 List<IFormFile> HSEClimateFiles = new List<IFormFile>();
                 HSEClimateFiles.Add(GHGFile);
 
-                WebApiResponse HseClimateData = HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(wkp.HSE_CLIMATE_CHANGE_AND_AIR_QUALITY, wkp.WorkProgramme_Year, HSEClimateFiles);
-                if (HseClimateData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseClimateData = HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(wkp.HSE_CLIMATE_CHANGE_AND_AIR_QUALITY, wkp.WorkProgramme_Year, HSEClimateFiles);
+                if (HseClimateData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -780,8 +778,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 HSESafetyFiles.Add(SafetyCurrentYearFile);
                 HSESafetyFiles.Add(SafetyLast2YearsFile);
 
-                WebApiResponse HseSafetyCultureData = HSE_SAFETY_CULTURE_TRAINING(wkp.HSE_SAFETY_CULTURE_TRAINING, wkp.WorkProgramme_Year, HSESafetyFiles);
-                if (HseSafetyCultureData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseSafetyCultureData = HSE_SAFETY_CULTURE_TRAINING(wkp.HSE_SAFETY_CULTURE_TRAINING, wkp.WorkProgramme_Year, HSESafetyFiles);
+                if (HseSafetyCultureData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -790,8 +788,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 HSEOccupationalFiles.Add(SafetyCurrentYearFile);
                 HSEOccupationalFiles.Add(SafetyLast2YearsFile);
 
-                WebApiResponse HseOccupationalData = HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(wkp.HSE_OCCUPATIONAL_HEALTH_MANAGEMENT, wkp.WorkProgramme_Year, HSEOccupationalFiles);
-                if (HseOccupationalData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseOccupationalData = HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(wkp.HSE_OCCUPATIONAL_HEALTH_MANAGEMENT, wkp.WorkProgramme_Year, HSEOccupationalFiles);
+                if (HseOccupationalData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -800,8 +798,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 HSEWasteMgtFiles.Add(DecomCertificateFile);
                 HSEWasteMgtFiles.Add(WasteManagementPlanFile);
 
-                WebApiResponse HseWasteMgtSysData = HSE_WASTE_MANAGEMENT_SYSTEM(wkp.HSE_WASTE_MANAGEMENT_SYSTEM, wkp.WorkProgramme_Year, HSEWasteMgtFiles);
-                if (HseWasteMgtSysData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseWasteMgtSysData = HSE_WASTE_MANAGEMENT_SYSTEM(wkp.HSE_WASTE_MANAGEMENT_SYSTEM, wkp.WorkProgramme_Year, HSEWasteMgtFiles);
+                if (HseWasteMgtSysData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -810,8 +808,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 HseEnvWasteFiles.Add(EMSFile);
                 HseEnvWasteFiles.Add(AUDITFile);
 
-                WebApiResponse HseEnvWasteData = HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(wkp.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM, wkp.WorkProgramme_Year, HseEnvWasteFiles);
-                if (HseEnvWasteData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> HseEnvWasteData = HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(wkp.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM, wkp.WorkProgramme_Year, HseEnvWasteFiles);
+                if (HseEnvWasteData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -819,8 +817,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 List<IFormFile> PictureUploadFiles = new List<IFormFile>();
                 PictureUploadFiles.Add(UploadedPresentation);
 
-                WebApiResponse PictureUploadData = PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(wkp.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT, wkp.WorkProgramme_Year, PictureUploadFiles);
-                if (PictureUploadData.ResponseCode == AppResponseCodes.Success)
+                Task<WebApiResponse> PictureUploadData = PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(wkp.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT, wkp.WorkProgramme_Year, PictureUploadFiles);
+                if (PictureUploadData.Result.ToString() == AppResponseCodes.Success)
                 {
                     save++;
                 }
@@ -834,14 +832,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
 
         }
@@ -851,7 +849,7 @@ namespace Backend_UMR_Work_Program.Controllers
         #region database tables actions
 
         [HttpPost]
-        public WebApiResponse CONCESSION_SITUATION(CONCESSION_SITUATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> CONCESSION_SITUATION(CONCESSION_SITUATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -875,13 +873,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     ConcessionData.Created_by = WKPUserId;
                     ConcessionData.Date_Created = DateTime.Now;
-                    _context.CONCESSION_SITUATIONs.AddAsync(ConcessionData);
+                   await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.CONCESSION_SITUATIONs.Remove(ConcessionData);
+                  _context.CONCESSION_SITUATIONs.Remove(ConcessionData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -891,19 +889,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse GEOPHYSICAL_ACTIVITIES_ACQUISITION(GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> GEOPHYSICAL_ACTIVITIES_ACQUISITION(GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -930,14 +928,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     GeophysicalActivitesData.Date_Created = DateTime.Now;
                     GeophysicalActivitesData.Created_by = WKPUserId;
-                    _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.AddAsync(GeophysicalActivitesData);
+                  await _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.AddAsync(GeophysicalActivitesData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Remove(GeophysicalActivitesData);
+                   _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Remove(GeophysicalActivitesData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -947,19 +945,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse GEOPHYSICAL_ACTIVITIES_PROCESSING(GEOPHYSICAL_ACTIVITIES_PROCESSING_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> GEOPHYSICAL_ACTIVITIES_PROCESSING(GEOPHYSICAL_ACTIVITIES_PROCESSING_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -986,14 +984,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     GeoActivitesProcessingData.Created_by = WKPUserId;
                     GeoActivitesProcessingData.Date_Created = DateTime.Now;
-                    _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.AddAsync(GeoActivitesProcessingData);
+                  await _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.AddAsync(GeoActivitesProcessingData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Remove(GeoActivitesProcessingData);
+                   _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Remove(GeoActivitesProcessingData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1003,19 +1001,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse DRILLING_OPERATIONS_CATEGORIES_OF_WELL(DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> DRILLING_OPERATIONS_CATEGORIES_OF_WELL(DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1067,14 +1065,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     DrillingOperationsData.Date_Created = DateTime.Now;
                     DrillingOperationsData.Created_by = WKPUserId;
-                    _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(DrillingOperationsData);
+                  await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(DrillingOperationsData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(DrillingOperationsData);
+                   _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(DrillingOperationsData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1084,19 +1082,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse DRILLING_EACH_WELL_COST(DRILLING_EACH_WELL_COST_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> DRILLING_EACH_WELL_COST(DRILLING_EACH_WELL_COST_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1123,14 +1121,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     DrillingData.Date_Created = DateTime.Now;
                     DrillingData.Created_by = WKPUserId;
-                    _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(DrillingData);
+                  await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(DrillingData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(DrillingData);
+                   _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(DrillingData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1140,19 +1138,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse DRILLING_EACH_WELL_COST_PROPOSED(DRILLING_EACH_WELL_COST_PROPOSED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> DRILLING_EACH_WELL_COST_PROPOSED(DRILLING_EACH_WELL_COST_PROPOSED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1179,14 +1177,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     DrillingData.Date_Created = DateTime.Now;
                     DrillingData.Created_by = WKPUserId;
-                    _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(DrillingData);
+                  await _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(DrillingData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(DrillingData);
+                   _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(DrillingData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1196,19 +1194,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse INITIAL_WELL_COMPLETION_JOB1(INITIAL_WELL_COMPLETION_JOB1_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> INITIAL_WELL_COMPLETION_JOB1(INITIAL_WELL_COMPLETION_JOB1_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1234,14 +1232,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Well_Completion_JobData.Created_by = WKPUserId;
                     Well_Completion_JobData.Date_Created = DateTime.Now;
-                    _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(Well_Completion_JobData);
+                  await _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(Well_Completion_JobData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(Well_Completion_JobData);
+                   _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(Well_Completion_JobData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1251,19 +1249,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse WORKOVERS_RECOMPLETION_JOB1(WORKOVERS_RECOMPLETION_JOB1_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> WORKOVERS_RECOMPLETION_JOB1(WORKOVERS_RECOMPLETION_JOB1_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1288,13 +1286,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Workover_JobData.Created_by = WKPUserId;
                     Workover_JobData.Date_Created = DateTime.Now;
-                    _context.WORKOVERS_RECOMPLETION_JOBs1.Add(Workover_JobData);
+                  await _context.WORKOVERS_RECOMPLETION_JOBs1.AddAsync(Workover_JobData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(Workover_JobData);
+                   _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(Workover_JobData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
 
@@ -1305,19 +1303,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE(FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE(FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1343,15 +1341,15 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     FDP_ExcessReserveData.Created_by = WKPUserId;
                     FDP_ExcessReserveData.Date_Created = DateTime.Now;
-                    _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(FDP_ExcessReserveData);
+                  await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(FDP_ExcessReserveData);
                 }
 
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(FDP_ExcessReserveData);
+                   _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(FDP_ExcessReserveData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1361,19 +1359,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP(FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP(FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1399,15 +1397,15 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     FDP_ToSubmitData.Created_by = WKPUserId;
                     FDP_ToSubmitData.Date_Created = DateTime.Now;
-                    _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(FDP_ToSubmitData);
+                  await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(FDP_ToSubmitData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(FDP_ToSubmitData);
+                   _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(FDP_ToSubmitData);
                 }
 
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1417,19 +1415,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse FIELD_DEVELOPMENT_FIELDS_AND_STATUS(FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1455,13 +1453,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     FDP_StatusData.Created_by = WKPUserId;
                     FDP_StatusData.Date_Created = DateTime.Now;
-                    _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(FDP_StatusData);
+                  await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(FDP_StatusData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(FDP_StatusData);
+                   _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(FDP_StatusData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1471,19 +1469,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse RESERVES_UPDATES_LIFE_INDEX(RESERVES_UPDATES_LIFE_INDEX_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(RESERVES_UPDATES_LIFE_INDEX_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1509,14 +1507,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Reserve_UpdateData.Created_by = WKPUserId;
                     Reserve_UpdateData.Date_Created = DateTime.Now;
-                    _context.RESERVES_UPDATES_LIFE_INDices.AddAsync(Reserve_UpdateData);
+                  await _context.RESERVES_UPDATES_LIFE_INDices.AddAsync(Reserve_UpdateData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.RESERVES_UPDATES_LIFE_INDices.Remove(Reserve_UpdateData);
+                   _context.RESERVES_UPDATES_LIFE_INDices.Remove(Reserve_UpdateData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1526,19 +1524,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse FIELD_DEVELOPMENT_PLAN(FIELD_DEVELOPMENT_PLAN_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> FIELD_DEVELOPMENT_PLAN(FIELD_DEVELOPMENT_PLAN_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1579,13 +1577,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     FDP_Data.Created_by = WKPUserId;
                     FDP_Data.Date_Created = DateTime.Now;
-                    _context.FIELD_DEVELOPMENT_PLANs.AddAsync(FDP_Data);
+                  await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(FDP_Data);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.FIELD_DEVELOPMENT_PLANs.Remove(FDP_Data);
+                   _context.FIELD_DEVELOPMENT_PLANs.Remove(FDP_Data);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1595,19 +1593,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_CONDENSATE_PRODUCTION_ACTIVITy(OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITy(OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1633,14 +1631,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_ProductionData.Created_by = WKPUserId;
                     Oil_ProductionData.Date_Created = DateTime.Now;
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(Oil_ProductionData);
+                  await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(Oil_ProductionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(Oil_ProductionData);
+                   _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(Oil_ProductionData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1650,19 +1648,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1714,13 +1712,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_UnitizationData.Created_by = WKPUserId;
                     Oil_UnitizationData.Date_Created = DateTime.Now;
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.AddAsync(Oil_UnitizationData);
+                  await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.AddAsync(Oil_UnitizationData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Remove(Oil_UnitizationData);
+                   _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Remove(Oil_UnitizationData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1730,19 +1728,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse GAS_PRODUCTION_ACTIVITy(GAS_PRODUCTION_ACTIVITy_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITy(GAS_PRODUCTION_ACTIVITy_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1784,13 +1782,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Gas_ProductionData.Created_by = WKPUserId;
                     Gas_ProductionData.Date_Created = DateTime.Now;
-                    _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(Gas_ProductionData);
+                  await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(Gas_ProductionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.GAS_PRODUCTION_ACTIVITIEs.Remove(Gas_ProductionData);
+                   _context.GAS_PRODUCTION_ACTIVITIEs.Remove(Gas_ProductionData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1800,19 +1798,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse NDR(NDR_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> NDR(NDR_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1844,14 +1842,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     NDRData.Created_by = WKPUserId;
                     NDRData.Date_Created = DateTime.Now;
-                    _context.NDRs.AddAsync(NDRData);
+                  await _context.NDRs.AddAsync(NDRData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.NDRs.Remove(NDRData);
+                   _context.NDRs.Remove(NDRData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1861,19 +1859,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE(RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE(RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1899,13 +1897,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_Condensate_ReserveStatusData.Created_by = WKPUserId;
                     Oil_Condensate_ReserveStatusData.Date_Created = DateTime.Now;
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(Oil_Condensate_ReserveStatusData);
+                  await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(Oil_Condensate_ReserveStatusData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(Oil_Condensate_ReserveStatusData);
+                   _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(Oil_Condensate_ReserveStatusData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1915,19 +1913,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection(RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection(RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1953,13 +1951,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_Condensate_ReserveProjectionData.Created_by = WKPUserId;
                     Oil_Condensate_ReserveProjectionData.Date_Created = DateTime.Now;
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.AddAsync(Oil_Condensate_ReserveProjectionData);
+                  await _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.AddAsync(Oil_Condensate_ReserveProjectionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.Remove(Oil_Condensate_ReserveProjectionData);
+                   _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.Remove(Oil_Condensate_ReserveProjectionData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -1969,19 +1967,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2022,13 +2020,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_Condensate_ProjectionData.Created_by = WKPUserId;
                     Oil_Condensate_ProjectionData.Date_Created = DateTime.Now;
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(Oil_Condensate_ProjectionData);
+                  await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(Oil_Condensate_ProjectionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(Oil_Condensate_ProjectionData);
+                   _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(Oil_Condensate_ProjectionData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2038,19 +2036,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2076,13 +2074,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_Condensate_AnnualData.Created_by = WKPUserId;
                     Oil_Condensate_AnnualData.Date_Created = DateTime.Now;
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.AddAsync(Oil_Condensate_AnnualData);
+                  await _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.AddAsync(Oil_Condensate_AnnualData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Remove(Oil_Condensate_AnnualData);
+                   _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Remove(Oil_Condensate_AnnualData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2092,19 +2090,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE(RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE(RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2130,13 +2128,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_Condensate_DeclineData.Created_by = WKPUserId;
                     Oil_Condensate_DeclineData.Date_Created = DateTime.Now;
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.AddAsync(Oil_Condensate_DeclineData);
+                  await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.AddAsync(Oil_Condensate_DeclineData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Remove(Oil_Condensate_DeclineData);
+                   _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Remove(Oil_Condensate_DeclineData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2146,19 +2144,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2184,13 +2182,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_Condensate_ProductionData.Created_by = WKPUserId;
                     Oil_Condensate_ProductionData.Date_Created = DateTime.Now;
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.AddAsync(Oil_Condensate_ProductionData);
+                  await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.AddAsync(Oil_Condensate_ProductionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Remove(Oil_Condensate_ProductionData);
+                   _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Remove(Oil_Condensate_ProductionData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -2199,19 +2197,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse RESERVES_REPLACEMENT_RATIO(RESERVES_REPLACEMENT_RATIO_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(RESERVES_REPLACEMENT_RATIO_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2238,13 +2236,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Reserve_ReplacementData.Created_by = WKPUserId;
                     Reserve_ReplacementData.Date_Created = DateTime.Now;
-                    _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(Reserve_ReplacementData);
+                  await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(Reserve_ReplacementData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.RESERVES_REPLACEMENT_RATIOs.Remove(Reserve_ReplacementData);
+                   _context.RESERVES_REPLACEMENT_RATIOs.Remove(Reserve_ReplacementData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -2253,19 +2251,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2291,13 +2289,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Oil_MonthlyData.Created_by = WKPUserId;
                     Oil_MonthlyData.Date_Created = DateTime.Now;
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Add(Oil_MonthlyData);
+                  await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(Oil_MonthlyData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(Oil_MonthlyData);
+                   _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(Oil_MonthlyData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -2306,19 +2304,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2344,13 +2342,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     Gas_ActivitiesData.Created_by = WKPUserId;
                     Gas_ActivitiesData.Date_Created = DateTime.Now;
-                    _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(Gas_ActivitiesData);
+                  await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(Gas_ActivitiesData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(Gas_ActivitiesData);
+                   _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(Gas_ActivitiesData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -2359,19 +2357,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse BUDGET_ACTUAL_EXPENDITURE(BUDGET_ACTUAL_EXPENDITURE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> BUDGET_ACTUAL_EXPENDITURE(BUDGET_ACTUAL_EXPENDITURE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2397,13 +2395,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     BudgetActualExData.Created_by = WKPUserId;
                     BudgetActualExData.Date_Created = DateTime.Now;
-                    _context.BUDGET_ACTUAL_EXPENDITUREs.AddAsync(BudgetActualExData);
+                  await _context.BUDGET_ACTUAL_EXPENDITUREs.AddAsync(BudgetActualExData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(BudgetActualExData);
+                   _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(BudgetActualExData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2413,19 +2411,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2453,13 +2451,13 @@ namespace Backend_UMR_Work_Program.Controllers
                     BudgetProposalData.Created_by = WKPUserId;
                     BudgetProposalData.Date_Created = DateTime.Now;
 
-                    _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.AddAsync(BudgetProposalData);
+                  await _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.AddAsync(BudgetProposalData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(BudgetProposalData);
+                   _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(BudgetProposalData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2469,19 +2467,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2508,14 +2506,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     BudgetPerformanceExpData.Created_by = WKPUserId;
                     BudgetPerformanceExpData.Date_Created = DateTime.Now;
-                    _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(BudgetPerformanceExpData);
+                  await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(BudgetPerformanceExpData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(BudgetPerformanceExpData);
+                   _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(BudgetPerformanceExpData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2525,19 +2523,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2564,13 +2562,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     BudgetPerformanceDevData.Created_by = WKPUserId;
                     BudgetPerformanceDevData.Date_Created = DateTime.Now;
-                    _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Add(BudgetPerformanceDevData);
+                  await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.AddAsync(BudgetPerformanceDevData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(BudgetPerformanceDevData);
+                   _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(BudgetPerformanceDevData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
 
@@ -2581,19 +2579,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse BUDGET_PERFORMANCE_PRODUCTION_COST(BUDGET_PERFORMANCE_PRODUCTION_COST_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> BUDGET_PERFORMANCE_PRODUCTION_COST(BUDGET_PERFORMANCE_PRODUCTION_COST_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2620,14 +2618,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     BudgetPerformanceProdData.Created_by = WKPUserId;
                     BudgetPerformanceProdData.Date_Created = DateTime.Now;
-                    _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.AddAsync(BudgetPerformanceProdData);
+                  await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.AddAsync(BudgetPerformanceProdData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(BudgetPerformanceProdData);
+                   _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(BudgetPerformanceProdData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2637,19 +2635,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2676,14 +2674,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     BudgetPerformanceFacData.Created_by = WKPUserId;
                     BudgetPerformanceFacData.Date_Created = DateTime.Now;
-                    _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.AddAsync(BudgetPerformanceFacData);
+                  await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.AddAsync(BudgetPerformanceFacData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(BudgetPerformanceFacData);
+                   _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(BudgetPerformanceFacData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2693,19 +2691,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2732,14 +2730,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     OilGasFacData.Created_by = WKPUserId;
                     OilGasFacData.Date_Created = DateTime.Now;
-                    _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.AddAsync(OilGasFacData);
+                  await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.AddAsync(OilGasFacData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(OilGasFacData);
+                   _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(OilGasFacData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2749,19 +2747,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2788,14 +2786,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     OilGasProdData.Created_by = WKPUserId;
                     OilGasProdData.Date_Created = DateTime.Now;
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(OilGasProdData);
+                  await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(OilGasProdData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(OilGasProdData);
+                   _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(OilGasProdData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2805,19 +2803,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2844,13 +2842,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     OilGasFacProjectData.Created_by = WKPUserId;
                     OilGasFacProjectData.Date_Created = DateTime.Now;
-                    _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(OilGasFacProjectData);
+                  await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(OilGasFacProjectData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(OilGasFacProjectData);
+                   _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(OilGasFacProjectData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2860,19 +2858,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse FACILITIES_PROJECT_PERFORMANCE(FACILITIES_PROJECT_PERFORMANCE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(FACILITIES_PROJECT_PERFORMANCE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2899,13 +2897,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     FacProjectData.Created_by = WKPUserId;
                     FacProjectData.Date_Created = DateTime.Now;
-                    _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(FacProjectData);
+                  await _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(FacProjectData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(FacProjectData);
+                   _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(FacProjectData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2915,19 +2913,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse BUDGET_CAPEX_OPEX(BUDGET_CAPEX_OPEX_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(BUDGET_CAPEX_OPEX_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2954,13 +2952,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     BudgetCapexOpexData.Created_by = WKPUserId;
                     BudgetCapexOpexData.Date_Created = DateTime.Now;
-                    _context.BUDGET_CAPEX_OPices.AddAsync(BudgetCapexOpexData);
+                  await _context.BUDGET_CAPEX_OPices.AddAsync(BudgetCapexOpexData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_CAPEX_OPices.Remove(BudgetCapexOpexData);
+                   _context.BUDGET_CAPEX_OPices.Remove(BudgetCapexOpexData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -2970,19 +2968,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse NIGERIA_CONTENT_Training(NIGERIA_CONTENT_Training_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> NIGERIA_CONTENT_Training(NIGERIA_CONTENT_Training_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3008,14 +3006,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     NigeriaTrainingData.Created_by = WKPUserId;
                     NigeriaTrainingData.Date_Created = DateTime.Now;
-                    _context.NIGERIA_CONTENT_Trainings.AddAsync(NigeriaTrainingData);
+                  await _context.NIGERIA_CONTENT_Trainings.AddAsync(NigeriaTrainingData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.NIGERIA_CONTENT_Trainings.Remove(NigeriaTrainingData);
+                   _context.NIGERIA_CONTENT_Trainings.Remove(NigeriaTrainingData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3025,19 +3023,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse NIGERIA_CONTENT_Upload_Succession_Plan(NIGERIA_CONTENT_Upload_Succession_Plan_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(NIGERIA_CONTENT_Upload_Succession_Plan_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3064,13 +3062,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     NigeriaUploadData.Created_by = WKPUserId;
                     NigeriaUploadData.Date_Created = DateTime.Now;
-                    _context.NIGERIA_CONTENT_Upload_Succession_Plans.AddAsync(NigeriaUploadData);
+                  await _context.NIGERIA_CONTENT_Upload_Succession_Plans.AddAsync(NigeriaUploadData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.NIGERIA_CONTENT_Upload_Succession_Plans.Remove(NigeriaUploadData);
+                   _context.NIGERIA_CONTENT_Upload_Succession_Plans.Remove(NigeriaUploadData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3080,19 +3078,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse NIGERIA_CONTENT_QUESTION(NIGERIA_CONTENT_QUESTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> NIGERIA_CONTENT_QUESTION(NIGERIA_CONTENT_QUESTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3119,13 +3117,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     NigeriaQuestionData.Created_by = WKPUserId;
                     NigeriaQuestionData.Date_Created = DateTime.Now;
-                    _context.NIGERIA_CONTENT_QUESTIONs.AddAsync(NigeriaQuestionData);
+                  await _context.NIGERIA_CONTENT_QUESTIONs.AddAsync(NigeriaQuestionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.NIGERIA_CONTENT_QUESTIONs.Remove(NigeriaQuestionData);
+                   _context.NIGERIA_CONTENT_QUESTIONs.Remove(NigeriaQuestionData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3135,19 +3133,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse LEGAL_LITIGATION(LEGAL_LITIGATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> LEGAL_LITIGATION(LEGAL_LITIGATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3174,13 +3172,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     LegalLitigationData.Created_by = WKPUserId;
                     LegalLitigationData.Date_Created = DateTime.Now;
-                    _context.LEGAL_LITIGATIONs.AddAsync(LegalLitigationData);
+                  await _context.LEGAL_LITIGATIONs.AddAsync(LegalLitigationData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.LEGAL_LITIGATIONs.Remove(LegalLitigationData);
+                   _context.LEGAL_LITIGATIONs.Remove(LegalLitigationData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3190,19 +3188,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse LEGAL_ARBITRATION(LEGAL_ARBITRATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> LEGAL_ARBITRATION(LEGAL_ARBITRATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3229,14 +3227,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     LegalArbitrationData.Created_by = WKPUserId;
                     LegalArbitrationData.Date_Created = DateTime.Now;
-                    _context.LEGAL_ARBITRATIONs.AddAsync(LegalArbitrationData);
+                  await _context.LEGAL_ARBITRATIONs.AddAsync(LegalArbitrationData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.LEGAL_ARBITRATIONs.Remove(LegalArbitrationData);
+                   _context.LEGAL_ARBITRATIONs.Remove(LegalArbitrationData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3246,19 +3244,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse STRATEGIC_PLANS_ON_COMPANY_BASI(STRATEGIC_PLANS_ON_COMPANY_BASI_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASI(STRATEGIC_PLANS_ON_COMPANY_BASI_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3285,14 +3283,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     StrategicPlansData.Created_by = WKPUserId;
                     StrategicPlansData.Date_Created = DateTime.Now;
-                    _context.STRATEGIC_PLANS_ON_COMPANY_BAses.AddAsync(StrategicPlansData);
+                  await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.AddAsync(StrategicPlansData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Remove(StrategicPlansData);
+                   _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Remove(StrategicPlansData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3302,19 +3300,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_QUESTION(HSE_QUESTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_QUESTION(HSE_QUESTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3340,14 +3338,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseQuestionData.Created_by = WKPUserId;
                     HseQuestionData.Date_Created = DateTime.Now;
-                    _context.HSE_QUESTIONs.AddAsync(getHseQuestionData);
+                  await _context.HSE_QUESTIONs.AddAsync(getHseQuestionData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_QUESTIONs.Remove(getHseQuestionData);
+                   _context.HSE_QUESTIONs.Remove(getHseQuestionData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3357,19 +3355,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_FATALITy(HSE_FATALITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_FATALITy(HSE_FATALITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3395,14 +3393,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseFatalityData.Created_by = WKPUserId;
                     HseFatalityData.Date_Created = DateTime.Now;
-                    _context.HSE_FATALITIEs.AddAsync(getHseFatalityData);
+                  await _context.HSE_FATALITIEs.AddAsync(getHseFatalityData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_FATALITIEs.Remove(getHseFatalityData);
+                   _context.HSE_FATALITIEs.Remove(getHseFatalityData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3412,19 +3410,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_DESIGNS_SAFETY(HSE_DESIGNS_SAFETY_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_DESIGNS_SAFETY(HSE_DESIGNS_SAFETY_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3450,14 +3448,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseDesignData.Created_by = WKPUserId;
                     HseDesignData.Date_Created = DateTime.Now;
-                    _context.HSE_DESIGNS_SAFETies.AddAsync(getHseDesignData);
+                  await _context.HSE_DESIGNS_SAFETies.AddAsync(getHseDesignData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_DESIGNS_SAFETies.Remove(getHseDesignData);
+                   _context.HSE_DESIGNS_SAFETies.Remove(getHseDesignData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3467,19 +3465,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_SAFETY_STUDIES_NEW(HSE_SAFETY_STUDIES_NEW_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_SAFETY_STUDIES_NEW(HSE_SAFETY_STUDIES_NEW_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3519,13 +3517,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseSafetyData.Created_by = WKPUserId;
                     HseSafetyData.Date_Created = DateTime.Now;
-                    _context.HSE_SAFETY_STUDIES_NEWs.AddAsync(getHseSafetyData);
+                  await _context.HSE_SAFETY_STUDIES_NEWs.AddAsync(getHseSafetyData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_SAFETY_STUDIES_NEWs.Remove(getHseSafetyData);
+                   _context.HSE_SAFETY_STUDIES_NEWs.Remove(getHseSafetyData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3535,19 +3533,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_INSPECTION_AND_MAINTENANCE_NEW(HSE_INSPECTION_AND_MAINTENANCE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_NEW(HSE_INSPECTION_AND_MAINTENANCE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3573,13 +3571,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseInspectionMaintenanceData.Created_by = WKPUserId;
                     HseInspectionMaintenanceData.Date_Created = DateTime.Now;
-                    _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.AddAsync(getHseInspectionMaintenanceData);
+                  await _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.AddAsync(getHseInspectionMaintenanceData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.Remove(getHseInspectionMaintenanceData);
+                   _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.Remove(getHseInspectionMaintenanceData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3589,19 +3587,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3627,13 +3625,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseInspectionMaintenanceFacData.Created_by = WKPUserId;
                     HseInspectionMaintenanceFacData.Date_Created = DateTime.Now;
-                    _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.AddAsync(getHseInspectionMaintenanceFacData);
+                  await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.AddAsync(getHseInspectionMaintenanceFacData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(getHseInspectionMaintenanceFacData);
+                   _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(getHseInspectionMaintenanceFacData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3643,19 +3641,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3681,14 +3679,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseTechnicalData.Created_by = WKPUserId;
                     HseTechnicalData.Date_Created = DateTime.Now;
-                    _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(getHseTechnicalData);
+                  await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(getHseTechnicalData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(getHseTechnicalData);
+                   _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(getHseTechnicalData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -3698,19 +3696,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3736,13 +3734,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseAssetData.Created_by = WKPUserId;
                     HseAssetData.Date_Created = DateTime.Now;
-                    _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(getHseAssetData);
+                  await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(getHseAssetData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getHseAssetData);
+                   _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getHseAssetData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -3751,19 +3749,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_OIL_SPILL_REPORTING_NEW(HSE_OIL_SPILL_REPORTING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING_NEW(HSE_OIL_SPILL_REPORTING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3788,13 +3786,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseOilData.Created_by = WKPUserId;
                     HseOilData.Date_Created = DateTime.Now;
-                    _context.HSE_OIL_SPILL_REPORTING_NEWs.AddAsync(getHseOilData);
+                  await _context.HSE_OIL_SPILL_REPORTING_NEWs.AddAsync(getHseOilData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(getHseOilData);
+                   _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(getHseOilData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -3803,19 +3801,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3840,14 +3838,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseAssetRegisterData.Created_by = WKPUserId;
                     HseAssetRegisterData.Date_Created = DateTime.Now;
-                    _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(getHseAssetRegisterData);
+                  await _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(getHseAssetRegisterData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getHseAssetRegisterData);
+                   _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getHseAssetRegisterData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -3856,19 +3854,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3893,13 +3891,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseAccidentData.Created_by = WKPUserId;
                     HseAccidentData.Date_Created = DateTime.Now;
-                    _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(getHseAccidentData);
+                  await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(getHseAccidentData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(getHseAccidentData);
+                   _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(getHseAccidentData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -3908,19 +3906,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3945,13 +3943,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseAccidentIncidenceData.Created_by = WKPUserId;
                     HseAccidentIncidenceData.Date_Created = DateTime.Now;
-                    _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(getHseAccidentIncidenceData);
+                  await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(getHseAccidentIncidenceData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(getHseAccidentIncidenceData);
+                   _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(getHseAccidentIncidenceData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -3960,19 +3958,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3997,13 +3995,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseCommunityDisturbancesData.Created_by = WKPUserId;
                     HseCommunityDisturbancesData.Date_Created = DateTime.Now;
-                    _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.AddAsync(getHseCommunityDisturbancesData);
+                  await _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.AddAsync(getHseCommunityDisturbancesData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.Remove(getHseCommunityDisturbancesData);
+                   _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.Remove(getHseCommunityDisturbancesData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4012,19 +4010,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ENVIRONMENTAL_STUDIES_NEW(HSE_ENVIRONMENTAL_STUDIES_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_NEW(HSE_ENVIRONMENTAL_STUDIES_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4049,14 +4047,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseEnvironmentalData.Created_by = WKPUserId;
                     HseEnvironmentalData.Date_Created = DateTime.Now;
-                    _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.AddAsync(getHseEnvironmentalData);
+                  await _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.AddAsync(getHseEnvironmentalData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.Remove(getHseEnvironmentalData);
+                   _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.Remove(getHseEnvironmentalData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4065,19 +4063,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_WASTE_MANAGEMENT_NEW(HSE_WASTE_MANAGEMENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_NEW(HSE_WASTE_MANAGEMENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4102,13 +4100,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseWasteData.Created_by = WKPUserId;
                     HseWasteData.Date_Created = DateTime.Now;
-                    _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(getHseWasteData);
+                  await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(getHseWasteData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getHseWasteData);
+                   _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getHseWasteData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4117,19 +4115,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4154,13 +4152,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseWasteMgtData.Created_by = WKPUserId;
                     HseWasteMgtData.Date_Created = DateTime.Now;
-                    _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(getHseWasteMgtData);
+                  await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(getHseWasteMgtData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getHseWasteMgtData);
+                   _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getHseWasteMgtData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4169,19 +4167,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_PRODUCED_WATER_MANAGEMENT_NEW(HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW(HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4206,14 +4204,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseWaterMgtData.Created_by = WKPUserId;
                     HseWaterMgtData.Date_Created = DateTime.Now;
-                    _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(getHseWaterMgtData);
+                  await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(getHseWaterMgtData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getHseWaterMgtData);
+                   _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getHseWaterMgtData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4222,19 +4220,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4259,14 +4257,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseEnvironmentalComplianceData.Created_by = WKPUserId;
                     HseEnvironmentalComplianceData.Date_Created = DateTime.Now;
-                    _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(getHseEnvironmentalComplianceData);
+                  await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(getHseEnvironmentalComplianceData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getHseEnvironmentalComplianceData);
+                   _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getHseEnvironmentalComplianceData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4275,19 +4273,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4312,14 +4310,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseEnvironmentalStudiesData.Created_by = WKPUserId;
                     HseEnvironmentalStudiesData.Date_Created = DateTime.Now;
-                    _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(getHseEnvironmentalStudiesData);
+                  await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(getHseEnvironmentalStudiesData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getHseEnvironmentalStudiesData);
+                   _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getHseEnvironmentalStudiesData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4328,19 +4326,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4365,14 +4363,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseSustainableData.Created_by = WKPUserId;
                     HseSustainableData.Date_Created = DateTime.Now;
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(HseSustainableData);
+                  await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(HseSustainableData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(HseSustainableData);
+                   _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(HseSustainableData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4381,19 +4379,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4418,13 +4416,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseEnvironmentalStudiesUpdatedData.Created_by = WKPUserId;
                     HseEnvironmentalStudiesUpdatedData.Date_Created = DateTime.Now;
-                    _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(getHseEnvironmentalStudiesUpdatedData);
+                  await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(getHseEnvironmentalStudiesUpdatedData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getHseEnvironmentalStudiesUpdatedData);
+                   _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getHseEnvironmentalStudiesUpdatedData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4433,19 +4431,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_OSP_REGISTRATIONS_NEW(HSE_OSP_REGISTRATIONS_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW(HSE_OSP_REGISTRATIONS_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4470,14 +4468,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseOSPData.Created_by = WKPUserId;
                     HseOSPData.Date_Created = DateTime.Now;
-                    _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(getHseOSPData);
+                  await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(getHseOSPData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getHseOSPData);
+                   _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getHseOSPData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4486,19 +4484,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4522,14 +4520,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseProducedWaterData.Created_by = WKPUserId;
                     HseProducedWaterData.Date_Created = DateTime.Now;
-                    _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(getHseProducedWaterData);
+                  await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(getHseProducedWaterData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getHseProducedWaterData);
+                   _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getHseProducedWaterData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4538,19 +4536,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4574,13 +4572,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseEnvironmentalMonitoringData.Created_by = WKPUserId;
                     HseEnvironmentalMonitoringData.Date_Created = DateTime.Now;
-                    _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(getHseEnvironmentalMonitoringData);
+                  await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(getHseEnvironmentalMonitoringData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getHseEnvironmentalMonitoringData);
+                   _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getHseEnvironmentalMonitoringData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4589,19 +4587,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_CAUSES_OF_SPILL(HSE_CAUSES_OF_SPILL_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_CAUSES_OF_SPILL(HSE_CAUSES_OF_SPILL_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4625,14 +4623,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseCausesData.Created_by = WKPUserId;
                     HseCausesData.Date_Created = DateTime.Now;
-                    _context.HSE_CAUSES_OF_SPILLs.AddAsync(getHseCausesData);
+                  await _context.HSE_CAUSES_OF_SPILLs.AddAsync(getHseCausesData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_CAUSES_OF_SPILLs.Remove(getHseCausesData);
+                   _context.HSE_CAUSES_OF_SPILLs.Remove(getHseCausesData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
                 if (save > 0)
                 {
@@ -4641,19 +4639,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4692,13 +4690,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseSustainableDevData.Created_by = WKPUserId;
                     HseSustainableDevData.Date_Created = DateTime.Now;
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(getHseSustainableDevData);
+                  await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(getHseSustainableDevData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getHseSustainableDevData);
+                   _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getHseSustainableDevData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -4708,19 +4706,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4758,14 +4756,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseSustainableComData.Created_by = WKPUserId;
                     HseSustainableComData.Date_Created = DateTime.Now;
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(getHseSustainableComData);
+                  await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(getHseSustainableComData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getHseSustainableComData);
+                   _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getHseSustainableComData);
                 }
 
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -4775,19 +4773,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_MANAGEMENT_POSITION(HSE_MANAGEMENT_POSITION_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(HSE_MANAGEMENT_POSITION_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4837,13 +4835,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseManagmentData.Created_by = WKPUserId;
                     HseManagmentData.Date_Created = DateTime.Now;
-                    _context.HSE_MANAGEMENT_POSITIONs.AddAsync(getHseManagmentData);
+                  await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(getHseManagmentData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_MANAGEMENT_POSITIONs.Remove(getHseManagmentData);
+                   _context.HSE_MANAGEMENT_POSITIONs.Remove(getHseManagmentData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -4853,19 +4851,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_QUALITY_CONTROL(HSE_QUALITY_CONTROL_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_QUALITY_CONTROL(HSE_QUALITY_CONTROL_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4905,13 +4903,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseQualityData.Created_by = WKPUserId;
                     HseQualityData.Date_Created = DateTime.Now;
-                    _context.HSE_QUALITY_CONTROLs.AddAsync(getHseQualityData);
+                  await _context.HSE_QUALITY_CONTROLs.AddAsync(getHseQualityData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_QUALITY_CONTROLs.Remove(getHseQualityData);
+                   _context.HSE_QUALITY_CONTROLs.Remove(getHseQualityData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -4921,19 +4919,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -4972,13 +4970,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseClimateData.Created_by = WKPUserId;
                     HseClimateData.Date_Created = DateTime.Now;
-                    _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(getHseClimateData);
+                  await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(getHseClimateData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getHseClimateData);
+                   _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getHseClimateData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -4988,19 +4986,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_SAFETY_CULTURE_TRAINING(HSE_SAFETY_CULTURE_TRAINING_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(HSE_SAFETY_CULTURE_TRAINING_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -5051,13 +5049,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseSafetyCultureData.Created_by = WKPUserId;
                     HseSafetyCultureData.Date_Created = DateTime.Now;
-                    _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(getHseSafetyCultureData);
+                  await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(getHseSafetyCultureData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(getHseSafetyCultureData);
+                   _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(getHseSafetyCultureData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -5067,19 +5065,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -5129,13 +5127,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseOccupationalData.Created_by = WKPUserId;
                     HseOccupationalData.Date_Created = DateTime.Now;
-                    _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(getHseOccupationalData);
+                  await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(getHseOccupationalData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getHseOccupationalData);
+                   _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getHseOccupationalData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -5145,19 +5143,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_WASTE_MANAGEMENT_SYSTEM(HSE_WASTE_MANAGEMENT_SYSTEM_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_SYSTEM(HSE_WASTE_MANAGEMENT_SYSTEM_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -5206,13 +5204,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseWasteMgtSysData.Created_by = WKPUserId;
                     HseWasteMgtSysData.Date_Created = DateTime.Now;
-                    _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(getHseWasteMgtSysData);
+                  await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(getHseWasteMgtSysData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getHseWasteMgtSysData);
+                   _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getHseWasteMgtSysData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -5222,19 +5220,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -5284,13 +5282,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     HseEnvWasteData.Created_by = WKPUserId;
                     HseEnvWasteData.Date_Created = DateTime.Now;
-                    _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(getHseEnvWasteData);
+                  await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(getHseEnvWasteData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getHseEnvWasteData);
+                   _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getHseEnvWasteData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -5300,19 +5298,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
         [HttpPost]
-        public WebApiResponse PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
             int save = 0;
@@ -5348,13 +5346,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     PictureUploadData.Created_by = WKPUserId;
                     PictureUploadData.Date_Created = DateTime.Now;
-                    _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(getPictureUploadData);
+                  await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(getPictureUploadData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(getPictureUploadData);
+                   _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(getPictureUploadData);
                 }
-                save += _context.SaveChanges();
+                save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
@@ -5364,14 +5362,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                 }
 
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
