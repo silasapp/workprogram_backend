@@ -89,7 +89,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return yearlist;
         }
 
-        [HttpGet(Name = "SCRIBES_&_CHAIRMEN")]
+        [HttpGet("SCRIBES_&_CHAIRMEN")]
         public async Task<WebApiResponse> scribes(string year = null)
         {
             var userRole = "Admin";
@@ -124,7 +124,45 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
 
-        [HttpGet(Name = "GET_COMPANY_REP")]
+        [HttpGet("DIVISIONAL_SCHEDULE_LIST")]
+        public async Task<WebApiResponse> Get_Divisional_Schedule_list(string year = null)
+        {
+
+            var details = new List<ADMIN_DIVISIONAL_REPS_PRESENTATION>();
+            try
+            {
+                    details = await (from a in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs select a).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.YEAR), StatusCode = ResponseCodes.Success };
+
+        }
+
+        [HttpGet("DIVISIONAL_SCHEDULE_BY_YEAR")]
+        public async Task<WebApiResponse> Get_Divisional_Schedule_By_Year(string year = null)
+        {
+
+            var details = new List<ADMIN_DIVISIONAL_REPS_PRESENTATION>();
+            try
+            {
+                    details = await (from a in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs where a.YEAR == year select a).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.YEAR), StatusCode = ResponseCodes.Success };
+
+        }
+
+        [HttpGet("GET_COMPANY_REP")]
         public async Task<WebApiResponse> Comprep(int Id)
         {
             var userRole = "Admin";
