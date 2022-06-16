@@ -6,7 +6,7 @@ using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PresentationScheduleController : ControllerBase
     {
@@ -23,8 +23,8 @@ namespace Backend_UMR_Work_Program.Controllers
             _configuration = configuration;
             helpersController = new HelpersController(_context, configuration, _httpContextAccessor);
         }
-        [HttpPost(Name = "PRESENTATION_SCRIBES")]
-        public async Task<WebApiResponse> scribe(int[] Id, string emailStatus = null, string year = null)
+        [HttpPost("PRESENTATION_SCRIBES")]
+        public async Task<WebApiResponse> Presentation_scribe(int[] Id, string emailStatus = null, string year = null)
 
         {
             var userRole = "Admin";
@@ -83,7 +83,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("SCRIBES_&_CHAIRMEN_YEARLIST")]
+        [HttpGet("SCRIBES_YEARLIST")]
         public async Task<object> Get_Scribes_And_Chairmen_Yearlist() {
             var yearlist = await (from a in _context.ADMIN_DATETIME_PRESENTATIONs where a.YEAR != "" orderby a.YEAR select a.YEAR).Distinct().ToListAsync();
             return yearlist;
@@ -190,7 +190,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return yearlist;
         }
 
-        [HttpPost(Name = "UPDATE_COMPANY_REP")]
+        [HttpPost("UPDATE_COMPANY_REP")]
         public async Task<WebApiResponse> UpdateRep(int Id, int UpdateId)
         {
             var userRole = "Admin";
@@ -220,7 +220,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "No data found", StatusCode = ResponseCodes.RecordNotFound };
         }
-        [HttpPost(Name = "ACTIVATE/DEACTIVATE_EMAIL")]
+        [HttpPost("ACTIVATE/DEACTIVATE_EMAIL")]
         public async Task<WebApiResponse> EmailStatus(int UpdateId, string emailStatus)
         {
             var userRole = "Admin";
