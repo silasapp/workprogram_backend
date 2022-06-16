@@ -23,7 +23,7 @@ namespace Backend_UMR_Work_Program.Controllers
             _configuration = configuration;
             helpersController = new HelpersController(_context, configuration, _httpContextAccessor);
         }
-        [HttpPut(Name = "PRESENTATION_SCRIBES")]
+        [HttpPost(Name = "PRESENTATION_SCRIBES")]
         public async Task<WebApiResponse> scribe(int[] Id, string emailStatus = null, string year = null)
 
         {
@@ -82,6 +82,13 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
+
+        [HttpGet("SCRIBES_&_CHAIRMEN_YEARLIST")]
+        public async Task<object> Get_Scribes_And_Chairmen_Yearlist() {
+            var yearlist = await (from a in _context.ADMIN_DATETIME_PRESENTATIONs where a.YEAR != "" orderby a.YEAR select a.YEAR).Distinct().ToListAsync();
+            return yearlist;
+        }
+
         [HttpGet(Name = "SCRIBES_&_CHAIRMEN")]
         public async Task<WebApiResponse> scribes(string year = null)
         {
@@ -138,7 +145,14 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "No data found", StatusCode = ResponseCodes.RecordNotFound };
         }
-        [HttpPut(Name = "UPDATE_COMPANY_REP")]
+
+        [HttpGet("DIVISIONAL_YEARLIST")]
+        public async Task<object> Get_Divisional_Yearlist() {
+            var yearlist = await (from a in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs where a.YEAR != "" orderby a.YEAR select a.YEAR).Distinct().ToListAsync();
+            return yearlist;
+        }
+
+        [HttpPost(Name = "UPDATE_COMPANY_REP")]
         public async Task<WebApiResponse> UpdateRep(int Id, int UpdateId)
         {
             var userRole = "Admin";
@@ -168,7 +182,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "No data found", StatusCode = ResponseCodes.RecordNotFound };
         }
-        [HttpPut(Name = "ACTIVATE/DEACTIVATE_EMAIL")]
+        [HttpPost(Name = "ACTIVATE/DEACTIVATE_EMAIL")]
         public async Task<WebApiResponse> EmailStatus(int UpdateId, string emailStatus)
         {
             var userRole = "Admin";
