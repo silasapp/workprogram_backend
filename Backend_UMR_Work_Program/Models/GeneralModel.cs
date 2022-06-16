@@ -9,7 +9,7 @@ namespace Backend_UMR_Work_Program.Models
     {
         public static string Company = "Company";
         public static string Admin = "Admin";
-        public static string SuperAdmin = "SuperAdmin";
+        public static string SuperAdmin = "Super Admin";
         public static string Presented = "Presented";
         public static string FailedToShow = "Failed to show up";
         public static string NotInvited = "Not invited";
@@ -1955,6 +1955,73 @@ public class DRILLING_EACH_WELL_COST_Model
             public object ApplicationPeriod { get; set; }
             public object DateSubmitted { get; set; }
 
+        }
+        public class UserModel
+        {
+            public List<ADMIN_COMPANY_INFORMATION> companiesList { get; set; }
+            public List<ADMIN_COMPANY_INFORMATION> staffList { get; set; }
+            public List<ROLES_> roles { get; set; }
+        }
+        public class parameterConfigModel
+        {
+            public List<ADMIN_CATEGORy> adminCategories { get; set; }
+            public List<Data_Type> dataTypes { get; set; }
+            public List<ADMIN_WELL_CATEGORy> wellCategories { get; set; }
+            public List<ADMIN_WP_START_END_DATE> startEndDate { get; set; }
+            public List<ADMIN_WP_START_END_DATE_DATA_UPLOAD> startEndDateUpload { get; set; }
+            public List<ADMIN_WP_PENALTy> penalties { get; set; }
+            public List<ADMIN_EMAIL_DAY> emailDays { get; set; }
+            public List<ROLES_SUPER_ADMIN> superAdmins { get; set; }
+            public List<ADMIN_PRESENTATION_CATEGORy> presentationCategories { get; set; }
+            public List<ADMIN_MEETING_ROOM> meetingRooms { get; set; }
+        }
+        public class ADMIN_COMPANY_INFORMATION_Model
+        {
+            public int? Id { get; set; }
+            public string? COMPANY_NAME { get; set; }
+            public string? EMAIL { get; set; }
+            public string? PASSWORDS { get; set; }
+            public string? STATUS_ { get; set; }
+            public string? FLAG_PASSWORD_CHANGE { get; set; }
+            public string? CATEGORY { get; set; }
+            public string? NAME { get; set; }
+            public string? DESIGNATION { get; set; }
+            public string? PHONE_NO { get; set; }
+            public string? COMPANY_ID { get; set; }
+            public string? DELETED_STATUS { get; set; }
+            public string? DELETED_BY { get; set; }
+            public string? DELETED_DATE { get; set; }
+            public string? FLAG1 { get; set; }
+            public string? FLAG2 { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+        }
+
+        public partial class ADMIN_CONCESSIONS_INFORMATION_Model
+        {
+            public int Consession_Id { get; set; }
+            public string? Company_ID { get; set; }
+            public string? CompanyName { get; set; }
+            public string? Equity_distribution { get; set; }
+            public string? Concession_Held { get; set; }
+            public string? Area { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Year_of_Grant_Award { get; set; }
+            public DateTime? Date_of_Expiration { get; set; }
+            public string? Geological_location { get; set; }
+            public string? Comment { get; set; }
+            public string? Status_ { get; set; }
+            public string? Flag1 { get; set; }
+            public string? Flag2 { get; set; }
+            public string? COMPANY_EMAIL { get; set; }
+            public string? Terrain { get; set; }
+            public string? Year { get; set; }
+            public string? submitted { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? Concession_Unique_ID { get; set; }
+            public string? OPEN_DATE { get; set; }
+            public string? CLOSE_DATE { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+            public int? CompanyNumber { get; set; }
         }
 
         public class WebApiResponse

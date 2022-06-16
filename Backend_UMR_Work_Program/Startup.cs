@@ -82,6 +82,7 @@ namespace Backend_UMR_Work_Program
             services.AddTransient<HelpersController>();
             services.AddTransient<Presentation>();
             services.AddTransient<WorkProgrammeController>();
+            services.AddTransient<AdminController>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorage")));

@@ -3,9 +3,12 @@ using Backend_UMR_Work_Program.Models;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using AutoMapper;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -252,7 +255,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             
         }
-
+        
         [HttpGet("CONCESSIONSINFORMATION")]
         public async Task<WebApiResponse> Get_ADMIN_CONCESSIONS_INFORMATION_BY_CURRENT_YEAR(string year)
         {
@@ -264,7 +267,7 @@ namespace Backend_UMR_Work_Program.Controllers
             if (WKPUserRole == GeneralModel.Admin)
             {
                 ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.DELETED_STATUS == null).ToList();
-            }
+            } 
             else
             {
                 ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.Company_ID == WKPUserId && c.DELETED_STATUS == null).ToList();
@@ -280,10 +283,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
+        [HttpGet("REPORTS_YEARLIST")]
+        public async Task<object> REPORTS_YEARLIST()
+        {
+            int portalDate =int.Parse( _configuration.GetSection("AppSettings").GetSection("portalDate").Value.ToString()); 
+            var yearList = from n in Enumerable.Range(0, (DateTime.Now.Year - portalDate) + 1)
+                             select DateTime.Now.Year -  n;
 
+            return yearList;
+        }
         [HttpGet("CONCESSIONSITUATION")]
         public async Task<WebApiResponse> Get_CONCESSION_SITUATION(string year )
         {
@@ -306,10 +317,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
         }
-
         
         [HttpGet("GEOPHYSICALACTIVITIES")]
         public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year )
@@ -332,7 +342,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
       
@@ -358,7 +368,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -369,14 +379,14 @@ namespace Backend_UMR_Work_Program.Controllers
 
             var DRILLING_OPERATIONS = new List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
-            {
-                DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year).ToList();
-            }
-            else
-            {
-                DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
-            }
+                if (WKPUserRole == GeneralModel.Admin)
+                {
+                    DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year).ToList();
+                }
+                else
+                {
+                    DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
+                }
 
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = DRILLING_OPERATIONS.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -384,7 +394,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -409,7 +419,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -434,7 +444,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -463,7 +473,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -492,7 +502,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -521,7 +531,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -550,7 +560,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -579,7 +589,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
@@ -608,7 +618,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -637,7 +647,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -666,7 +676,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -695,7 +705,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -725,7 +735,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -755,7 +765,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -785,7 +795,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -815,7 +825,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -845,7 +855,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -875,7 +885,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -905,7 +915,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -935,7 +945,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -965,7 +975,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -996,7 +1006,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1026,7 +1036,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1056,7 +1066,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1086,7 +1096,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1116,7 +1126,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1146,7 +1156,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
          
@@ -1176,7 +1186,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1206,7 +1216,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1236,7 +1246,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1266,7 +1276,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1296,7 +1306,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1326,7 +1336,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1356,7 +1366,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1386,7 +1396,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1416,7 +1426,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
           
@@ -1446,7 +1456,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
@@ -1476,7 +1486,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
