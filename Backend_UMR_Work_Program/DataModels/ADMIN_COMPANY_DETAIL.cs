@@ -21,5 +21,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Created_by { get; set; }
         public string? Date_Created { get; set; }
         public string? check_status { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

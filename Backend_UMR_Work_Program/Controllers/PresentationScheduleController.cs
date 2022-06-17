@@ -1,4 +1,5 @@
-﻿using Backend_UMR_Work_Program.Models;
+﻿using AutoMapper;
+using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,15 @@ namespace Backend_UMR_Work_Program.Controllers
         public IConfiguration _configuration;
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
 
-        public PresentationScheduleController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController)
+        public PresentationScheduleController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
-            helpersController = new HelpersController(_context, configuration, _httpContextAccessor);
+            _mapper = mapper;
+            helpersController = new HelpersController(_context, configuration, _httpContextAccessor, _mapper);
         }
         [HttpPost("PRESENTATION_SCRIBES")]
         public async Task<WebApiResponse> Presentation_scribe(int[] Id, string emailStatus = null, string year = null)

@@ -7,6 +7,12 @@ using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -15,15 +21,24 @@ namespace Backend_UMR_Work_Program.Controllers
         public IConfiguration _configuration;
         public WKP_DBContext _context;
         IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
-        public HelpersController(WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public HelpersController(WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
 
         }
-
+        private string? WKPUserId => "1";
+        private string? WKPUserName => "Name";
+        private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        private string? WKUserRole => "Admin";
+        // private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        //private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
         public List<AppMessage> SaveMessage(int AppID, int userID, string subject, string content, string userElpsID, string type)
         {
@@ -48,14 +63,11 @@ namespace Backend_UMR_Work_Program.Controllers
             return null;
         }
 
-
         public List<AppMessage> GetMessage(int msg_id, int seid)
         {
 
             return null;
         }
-
-
 
         public string SendEmailMessage(string email_to, string email_to_name, List<AppMessage> AppMessages, byte[] attach)
         {
@@ -143,8 +155,6 @@ namespace Backend_UMR_Work_Program.Controllers
             return clearText;
         }
 
-
-
         public string Decrypt(string cipherText)
         {
             string EncryptionKey = "MAKV2SPBNI99212";
@@ -183,8 +193,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             return id;
         }
-
-
         public int getSessionRoleID()
         {
             try
@@ -196,9 +204,6 @@ namespace Backend_UMR_Work_Program.Controllers
                 throw ex;
             }
         }
-
-
-
         public string getSessionEmail()
         {
             try
@@ -233,5 +238,60 @@ namespace Backend_UMR_Work_Program.Controllers
                 throw ex;
             }
         }
+        public UploadedDocument UploadDocument(IFormFile document, string folderToSave)
+        {
+            var document_uniqueFileName = "";
+            var document_FileExtension = "";
+            var document_newFileName = "";
+            var document_documentPath = "";
+            var document_fileName = "";
+            try
+            {
+                //For image cover
+                if (document != null)
+                {
+                    if (document.Length > 0)
+                    {
+
+                        var up = Path.Combine(Directory.GetCurrentDirectory(), folderToSave);
+                        string datetime = DateTime.Now.ToString("ddMMyyyy_HHmmss");
+
+                        //var docName = ContentDispositionHeaderValue.Parse(document.ContentDisposition).FileName.Trim();
+                        //FileExtension = Path.GetExtension(docName).ToString().Replace("\n", ''');
+
+                        var uploads = Path.Combine(up, folderToSave);
+                        document_fileName = document.FileName.Split(".")[0].Trim();
+                        document_uniqueFileName = Convert.ToString(Guid.NewGuid());
+                        document_FileExtension = document.FileName.Split(".")[1].Trim();
+                        //newFileName = uniqueFileName + FileExtension;
+                        document_newFileName = document_fileName +"_"+datetime+ "." + document_FileExtension;
+
+                        // store path of folder in database
+                        document_documentPath = "//Documents/" + folderToSave + "/" + document_newFileName;
+                        using (var s = new FileStream(Path.Combine(uploads, document_newFileName),
+                             FileMode.Create))
+                        {
+                            document.CopyTo(s);
+                        }
+
+                    }
+                    var uploadedDoc = new UploadedDocument()
+                    {
+                        fileName = document_fileName,
+                        filePath = document_documentPath
+                    };
+                    return uploadedDoc;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+
+            }
+        }
+
+
+
     }
 }

@@ -1,0 +1,6 @@
+C:\Users\admin\source\repos\Adeola_WorkProgram\WKP_Database\bin\Debug\WKP_Database.dacpac
+C:\Users\admin\source\repos\Adeola_WorkProgram\WKP_Database\bin\Debug\WKP_Database.dll
+C:\Users\admin\source\repos\Adeola_WorkProgram\WKP_Database\bin\Debug\WKP_Database.pdb
+C:\Users\admin\source\repos\Adeola_WorkProgram\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Users\admin\source\repos\Adeola_WorkProgram\WKP_Database\obj\Debug\WKP_Database.dll
+C:\Users\admin\source\repos\Adeola_WorkProgram\WKP_Database\obj\Debug\WKP_Database.pdb

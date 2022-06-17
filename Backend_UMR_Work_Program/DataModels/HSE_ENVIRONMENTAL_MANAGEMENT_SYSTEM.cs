@@ -23,5 +23,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? EMSFilename { get; set; }
         public string? AUDITFilename { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

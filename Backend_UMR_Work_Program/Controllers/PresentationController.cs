@@ -1,4 +1,5 @@
-﻿using Backend_UMR_Work_Program.Models;
+﻿using AutoMapper;
+using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,15 @@ namespace Backend_UMR_Work_Program.Controllers
         private HelpersController helpersController;
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
-        public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        private readonly IMapper _mapper;
+        public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _presentation = presentation;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _configuration = configuration;
-
-            helpersController = new HelpersController(_context, configuration, _httpContextAccessor);
+            _mapper = mapper;
+            helpersController = new HelpersController(_context, configuration, _httpContextAccessor, _mapper);
 
         }
 
