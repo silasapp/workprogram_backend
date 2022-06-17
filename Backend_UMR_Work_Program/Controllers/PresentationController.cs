@@ -12,13 +12,23 @@ namespace Backend_UMR_Work_Program.Controllers
     [Route("api/[controller]")]
     public class PresentationController : ControllerBase
     {
-        private Presentation _presentation; public WKP_DBContext _context;
-
-        public PresentationController(Presentation presentation, WKP_DBContext context)
+        private Presentation _presentation;
+        public WKP_DBContext _context;
+        public IConfiguration _configuration;
+        private HelpersController helpersController;
+        HelpersController _helpersController;
+        IHttpContextAccessor _httpContextAccessor;
+        public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _presentation = presentation;
+            _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _configuration = configuration;
+
+            helpersController = new HelpersController(_context, configuration, _httpContextAccessor);
+
         }
+
 
         private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
         private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
@@ -40,60 +50,159 @@ namespace Backend_UMR_Work_Program.Controllers
             _presentation.Insert_Company_Details_Contact_Person(myDetail.CompanyName, myDetail.CompanyEmail, myDetail.Address_of_Company, myDetail.Name_of_MD_CEO, myDetail.Phone_NO_of_MD_CEO, myDetail.Contact_Person, myDetail.Phone_No, myDetail.Email_Address);
             return Ok(myDetail);
         }
-        [HttpGet("PRESENTATION SCHEDULES")]
-        public async Task<WebApiResponse> PRESENTATION_SCHEDULES(string year)
+        [HttpPost("SCHEDULEPRESENTATION")]
+        public async Task<WebApiResponse> SCHEDULE_PRESENTATION_DATETIME(string time, DateTime date)
         {
-            try
-            {
-                var schedules = (from sch in _context.ADMIN_DATETIME_PRESENTATIONs select sch).ToList();
-                var viewYears = schedules.Select(x => x.YEAR).Distinct().ToList();
+            //var userRole = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionRoleName));
+            //var userEmail = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionEmail));
+            //var companyID = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionUserID));
 
-                if (year != null)
+            var userRole = "Admin";
+            var userName = "testname";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+            var CurrentYear = DateTime.Now.Year.ToString();
+            var checkCompanySchedule = _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.COMPANY_ID == companyID && c.YEAR == CurrentYear).FirstOrDefault();
+
+            if (checkCompanySchedule != null)
+            {
+                //schedule already exist for company
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "There is an existing presentation schedule for this year.", StatusCode = ResponseCodes.Failure };
+
+            }
+            else
+            {
+
+                //check if date has been scheduled by another company
+                string Date_Conversion = date.ToString("dddd , dd MMMM yyyy");
+
+                var checkSchedule = _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.wp_date == Date_Conversion && c.wp_time == time).FirstOrDefault();
+                if (checkSchedule != null)
                 {
-                    schedules = schedules.Where(x => x.YEAR == year).ToList();
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, date and time have already been selected. Kindly select another day and/or time.", StatusCode = ResponseCodes.Failure };
                 }
-                var presentationSchedules = new PresentationSchedules_Model()
+
+                var presentation = new ADMIN_DATETIME_PRESENTATION()
                 {
-                    presentationSchedules = schedules,
-                    Years = viewYears
+                    COMPANYNAME = userName,
+                    COMPANYEMAIL = userEmail,
+                    COMPANY_ID = companyID,
+                    YEAR = CurrentYear,
+                    CREATED_BY = userEmail,
+                    Submitted = "Not Yet",
+                    wp_date = Date_Conversion,
+                    DATE_TIME_TEXT = Date_Conversion,
+                    wp_time = time,
+                    Date_Created_BY_COMPANY = DateTime.Now.ToString(),
+                    Date_Created = DateTime.Now,
                 };
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = presentationSchedules, StatusCode = ResponseCodes.Success };
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                _context.ADMIN_DATETIME_PRESENTATIONs.Add(presentation);
 
-            }
-        }
-
-        [HttpGet("DIVISIONAL_PRESENTATIONS")]
-        public async Task<WebApiResponse> DIVISIONAL_PRESENTATIONS(string year)
-        {
-            try
-            {
-                var presentations = (from sch in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs select sch).ToList();
-                var viewYears = presentations.Select(x => x.YEAR).Distinct().ToList();
-
-                if (year != null)
+                if (_context.SaveChanges() > 0)
                 {
-                    presentations = presentations.Where(x => x.YEAR == year).ToList();
+                    var companyPresentations = _context.ADMIN_DATETIME_PRESENTATIONs.Where(x => x.COMPANY_ID == companyID).ToList();
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "A presentation schedule was created successfully.", Data = companyPresentations, StatusCode = ResponseCodes.Success };
                 }
-                var presentationDivision = new PresentationSchedules_Model()
+                else
                 {
-                    Divisionpresentations = presentations,
-                    Years = viewYears
-                };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to create this presentation schedule.", StatusCode = ResponseCodes.Failure };
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = presentationDivision, StatusCode = ResponseCodes.Success };
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
+                }
             }
         }
+        [HttpPost("UPLOADPRESENTATION")]
+        public async Task<WebApiResponse> UPLOAD_PRESENTATION_DOCUMENT(string year, IFormFile document)
+        {
+            //var userRole = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionRoleName));
+            //var userEmail = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionEmail));
+            //var companyID = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionUserID));
 
+            var userRole = "Admin";
+            var userName = "testname";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+            var CurrentYear = DateTime.Now.Year.ToString();
+            var checkCompanyPresentation = _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == companyID && c.Year_of_WP == year).FirstOrDefault();
+
+            if (checkCompanyPresentation != null)
+            {
+                //schedule already exist for company
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "You have already uploaded a presentation for the selected year, kindly delete an existing document to upload another.", StatusCode = ResponseCodes.Failure };
+            }
+            else
+            {
+
+                //check if date has been scheduled by another company
+                var system_date = DateTime.Now.ToString(); // 
+
+                var uniqueFileName = "";
+                var FileExtension = "";
+                var newFileName = "";
+                var documentPath = "";
+                var fileName = "";
+                //For image cover
+                if (document != null)
+                {
+                    if (document.Length > 0)
+                    {
+
+                        var up = Path.Combine(Directory.GetCurrentDirectory(), "Documents");
+                        //var docName = ContentDispositionHeaderValue.Parse(document.ContentDisposition).FileName.Trim();
+                        //FileExtension = Path.GetExtension(docName).ToString().Replace("\n", ''');
+
+                        var uploads = Path.Combine(up, "Presentations");
+                        fileName = document.FileName.Split(".")[0].Trim();
+                        uniqueFileName = Convert.ToString(Guid.NewGuid());
+                        FileExtension = document.FileName.Split(".")[1].Trim();
+                        //newFileName = uniqueFileName + FileExtension;
+                        newFileName = fileName + "." + FileExtension;
+
+                        // store path of folder in database
+                        documentPath = "//Documents/Presentations/" + newFileName;
+                        using (var s = new FileStream(Path.Combine(uploads, newFileName),
+                             FileMode.Create))
+                        {
+                            document.CopyTo(s);
+                        }
+
+                    }
+
+
+                    var presentation = new PRESENTATION_UPLOAD()
+                    {
+                        CompanyName = userName,
+                        Companyemail = userEmail,
+                        COMPANY_ID = companyID,
+                        Year_of_WP = CurrentYear,
+                        uploaded_presentation = newFileName,
+                        upload_extension = "." + FileExtension,
+                        original_filemane = fileName,
+                        Created_by = userEmail,
+                        Date_Created = DateTime.Now,
+                    };
+
+                    _context.PRESENTATION_UPLOADs.Add(presentation);
+
+                    if (_context.SaveChanges() > 0)
+                    {
+                        var companyPresentations = _context.PRESENTATION_UPLOADs.Where(x => x.COMPANY_ID == companyID /*&& x.Year_of_WP == CurrentYear*/).ToList();
+
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "File uploaded successfully.", Data = companyPresentations, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to create this presentation schedule.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, document is empty.", StatusCode = ResponseCodes.Failure };
+
+                }
+            }
+        }
 
     }
 }
