@@ -30,5 +30,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? DIV_REP_NAME { get; set; }
         public string? DIV_REP_DIV { get; set; }
         public string? DIV_REP_EMAIL { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

@@ -39,5 +39,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? DAYS_TO_GO { get; set; }
         public string? REPRESENTATIVE { get; set; }
         public string? REPRESENTATIVE_EMAIL { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

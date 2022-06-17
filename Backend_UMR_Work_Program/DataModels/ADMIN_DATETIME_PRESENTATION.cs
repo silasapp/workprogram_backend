@@ -38,5 +38,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? DAYS_TO_GO { get; set; }
         public DateTime? LAST_RUN_TIME { get; set; }
         public string? Date_Created_BY_COMPANY { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

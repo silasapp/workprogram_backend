@@ -27,5 +27,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? total_no_of_top_nigerian_management_staff { get; set; }
         public string? total_no_of_top_management_staff { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

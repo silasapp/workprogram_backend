@@ -23,5 +23,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? OrganogramrFilename { get; set; }
         public string? PromotionLetterFilename { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

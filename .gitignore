@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/WKP__Database/WKP__Database.dbmdl
+/WKP_Database/WKP_Database.dbmdl
+/WKP_Database/WKP_Database.dbmdl
+/WKP__Database/WKP__Database.jfm
+/WKP__Database/WKP__Database.jfm
+/WKP_Database/WKP_Database.jfm

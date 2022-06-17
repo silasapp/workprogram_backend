@@ -81,9 +81,11 @@ namespace Backend_UMR_Work_Program
             services.AddTransient<Connection>();
             services.AddTransient<HelpersController>();
             services.AddTransient<Presentation>();
+            services.AddTransient<WorkProgrammeController>();
+            services.AddTransient<AdminController>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorage")));
-            //services.AddDbContext<WKP_DBContext>(options => options.UseSqlServer(Configuration.GetSection("Data").GetSection("Wkpconnect").GetSection("ConnectionString").Value.ToString()));
 
             services.AddDbContext<WKP_DBContext>(options =>
                 options.UseSqlServer(Configuration["Data:Wkpconnect:ConnectionString"],
@@ -143,7 +145,7 @@ namespace Backend_UMR_Work_Program
             //);
 
 
-            
+
         }
     }
 

@@ -43,5 +43,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Consession_Type { get; set; }
         public string? QUATER { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }
