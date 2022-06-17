@@ -90,7 +90,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("SCRIBES_&_CHAIRMEN")]
-        public async Task<WebApiResponse> scribes(string year = null)
+        public async Task<WebApiResponse> scribes(string? year)
         {
             var userRole = "Admin";
             var userEmail = "test@mailinator.com";
@@ -103,11 +103,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (userRole == GeneralModel.Admin)
                 {
 
-                    details = _context.ADMIN_DATETIME_PRESENTATIONs.ToList();
+                    details = await _context.ADMIN_DATETIME_PRESENTATIONs.ToListAsync();
                 }
                 else
                 {
-                    details = _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.COMPANY_ID == companyID).ToList();
+                    details = await _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.COMPANY_ID == companyID).ToListAsync();
                 }
                 if (year != null)
                 {
