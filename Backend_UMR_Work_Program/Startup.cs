@@ -90,7 +90,7 @@ namespace Backend_UMR_Work_Program
             services.AddDbContext<WKP_DBContext>(options =>
                 options.UseSqlServer(Configuration["Data:Wkpconnect:ConnectionString"],
                 options => options.EnableRetryOnFailure(
-                    maxRetryCount: 3,
+                    maxRetryCount: 6,
                     maxRetryDelay: System.TimeSpan.FromSeconds(30),
                     errorNumbersToAdd: null)
                 ));
