@@ -78,5 +78,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? number_of_gas_wells_completed { get; set; }
         public string? number_of_gas_wells_tested { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

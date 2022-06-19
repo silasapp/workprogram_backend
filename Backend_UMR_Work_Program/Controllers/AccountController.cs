@@ -28,17 +28,6 @@ namespace Backend_UMR_Work_Program.Controllers
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
 
-        [HttpPost("Authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] Logine logine)
-        {
-            var tokenData = await _account.isAutheticate(logine.email, logine.password);
-            string JSONString = string.Empty;
-            JSONString = JsonConvert.SerializeObject(tokenData);
-            return Ok(tokenData);
-        }
-
-        
-
         [HttpGet("GetData")]
         public object GetData()
         {
@@ -48,7 +37,60 @@ namespace Backend_UMR_Work_Program.Controllers
             return JSONString;
         }
 
-        [HttpPost(Name = "ResetPassword")]
+        [HttpPost("Authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] Logine logine)
+        {
+            var tokenData = await _account.isAutheticate(logine.email, logine.password);
+            string JSONString = string.Empty;
+            JSONString = JsonConvert.SerializeObject(tokenData);
+            return Ok(tokenData);
+        }
+
+
+        [HttpGet("VerifyCompanyCode")]
+        public async Task<IActionResult> VerifyCompanyCode(string companyCode)
+        {
+            var isAvailable = await _account.VerifyCompanyCode(companyCode);
+            return Ok(isAvailable);
+        }
+
+
+        [HttpPost("CheckNewPinCode")]
+        public async Task<IActionResult> CheckNewPinCode(string oldCompanyCode, string email, string newCompanyCode)
+        {
+            var isAvailable = await _account.CheckNewPinCode(oldCompanyCode, email, newCompanyCode);
+            return Ok(isAvailable);
+        }
+
+        [HttpGet("GetCompanyResource")]
+        public async Task<IActionResult> GetCompanyResource(string companyCode)
+        {
+            var isAvailable = await _account.GetCompanyResource(companyCode);
+            return Ok(isAvailable);
+        }
+
+        [HttpPost("CreateCompanyResource")]
+        public async Task<IActionResult> CreateCompanyResource([FromBody] CreateUser user)
+        {
+            var isAvailable = await _account.CheckIfUserExistBeforeCreating(user.companyName, user.companyCode, user.name, user.designation, user.phone, user.email, user.password);
+            return Ok(isAvailable);
+        }
+
+        [HttpPost("DeleteCompanyResource")]
+        public async Task<IActionResult> DeleteCompanyResource(string id, string companyCode)
+        {
+            var isAvailable = await _account.DeleteUser(companyCode, id);
+            return Ok(isAvailable);
+        }
+
+        [HttpPost("ReturnPasswordInfo")]
+        public async Task<IActionResult> ReturnPasswordInfo(string email)
+        {
+            var isAvailable = await _account.ReturnPasswordInfo(email);
+            return Ok(isAvailable);
+        }
+
+        [HttpPost("ResetPassword")]
         public async Task<WebApiResponse> ResetPassword(string email, string currentPassword, string newPassword)
         {
             string encryptCP = _helpersController.Encrypt(currentPassword);
@@ -60,7 +102,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 getUser.UPDATED_BY = getUser.Id.ToString();
                 getUser.UPDATED_DATE = DateTime.Now.ToString();
 
-                if (_context.SaveChanges() > 0)
+                if (await _context.SaveChangesAsync() > 0)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Password updated successfully", StatusCode = ResponseCodes.Success };
                 }

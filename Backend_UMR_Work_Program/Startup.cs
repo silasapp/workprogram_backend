@@ -50,8 +50,8 @@ namespace Backend_UMR_Work_Program
             //}));
             services.AddAutoMapper(typeof(MappingProfiles));
 
-            services.AddMvc()
-                .AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
+            services.AddMvc();
+                //.AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
             services.AddControllers();
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -81,9 +81,11 @@ namespace Backend_UMR_Work_Program
             services.AddTransient<Connection>();
             services.AddTransient<HelpersController>();
             services.AddTransient<Presentation>();
+            services.AddTransient<WorkProgrammeController>();
+            services.AddTransient<AdminController>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorage")));
-            //services.AddDbContext<WKP_DBContext>(options => options.UseSqlServer(Configuration.GetSection("Data").GetSection("Wkpconnect").GetSection("ConnectionString").Value.ToString()));
 
             services.AddDbContext<WKP_DBContext>(options =>
                 options.UseSqlServer(Configuration["Data:Wkpconnect:ConnectionString"],

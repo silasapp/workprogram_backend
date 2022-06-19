@@ -34,5 +34,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? DELETED_STATUS { get; set; }
         public string? DELETED_BY { get; set; }
         public string? DELETED_DATE { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Backend_UMR_Work_Program.Models
     {
         public static string Company = "Company";
         public static string Admin = "Admin";
-        public static string SuperAdmin = "SuperAdmin";
+        public static string SuperAdmin = "Super Admin";
         public static string Presented = "Presented";
         public static string FailedToShow = "Failed to show up";
         public static string NotInvited = "Not invited";
@@ -34,11 +34,56 @@ namespace Backend_UMR_Work_Program.Models
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
         public static string EquipmentFailure = "EQUIPMENT_FAILURE";
-        public static string Insert = "Insert";
-        public static string Update = "Update";
-        public static string Delete = "Delete";
+        public static string Insert = "INSERT";
+        public static string Update = "UPDATE";
+        public static string Delete = "DELETE";
 
-        public class WorkProgramme_Model_1
+
+
+        public class WorkProgrammeReport_Model
+        {
+            public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
+            public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLY> E_and_P_companies_Model { get; set; }
+            public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY> WP_Presentations_Model { get; set; }
+            //public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY> WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION> WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model{ get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_PROCESSING> WP_GEOPHYSICAL_ACTIVITIES_PROCESSING_Model{ get; set; }
+            public List<WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL> WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model{ get; set; }
+            public List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL> WP_SUM_APPRAISAL_WELL_Model{ get; set; }
+            public List<WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION> WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION_Model{ get; set; }
+            public List<WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL> DRILLING_OPERATIONS_Appraisal_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Type> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_Contract_Type_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_Model { get; set; }
+            public List<WP_GAS_PRODUCTION_ACTIVITIES_Percentage> WP_GAS_PRODUCTION_ACTIVITY_Percentage_Model { get; set; }
+            public object PY_GAS_ACTIVITIES_Model { get; set; }
+            public object CY_GAS_ACTIVITIES_Model { get; set; }
+            public object GAS_ACTIVITIES_CONTRACTTYPES_Model { get; set; }
+            public List<WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type> WP_GAS_PRODUCTION_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_PreviousYearr_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_CurrentYearr_Model { get; set; }
+            public object WP_GAS_PRODUCTION_ACTIVITY_PREVIOUSYEAR_Model { get; set; }
+            public object WP_GAS_PRODUCTION_ACTIVITY_CURRENTYEAR_Model { get; set; }
+            public List<WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL> WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count> WP_GEOPHYSICAL_ACTIVITY_ACQUISITION_sum_and_count_Model { get; set; }
+            public List<HSE_OIL_SPILL_REPORTING_NEW> HSE_OIL_SPILL_REPORTING_NEW_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count> GEO_sum_and_count_Model { get; set; }
+            public string VOLUME_OF_OILSPILL { get; set; }
+            public List<WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED> WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED_Model { get; set; }
+            public object OILSPILL_REPORT_Model { get; set; }
+            public string TOTAL_PRODUCED_WATER_Model { get; set; }
+            public List<HSE_CAUSES_OF_SPILL> HSE_QUANTITY_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED_Model { get; set; }
+            //public List<WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
+            public List<WP_Gas_Production_Utilisation_And_Flaring_Forecast> WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model { get; set; }
+
+        }
+            public class WorkProgramme_Model_1
         {
             public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
             public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
@@ -76,18 +121,70 @@ namespace Backend_UMR_Work_Program.Models
             public GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
 
         }
-
-        public class WorkProgramme_Model_3
+        public class WorkProgramme_Model3
         {
             public string WorkProgramme_Year { get; set; }
-            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_PROCESSING_Model GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
-            public DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
-            public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
-            public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
+            public BUDGET_ACTUAL_EXPENDITURE_Model BUDGET_ACTUAL_EXPENDITURE { get; set; }
+            public BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT { get; set; }
+            public BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy { get; set; }
+            public BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy { get; set; }
+            public BUDGET_PERFORMANCE_PRODUCTION_COST_Model BUDGET_PERFORMANCE_PRODUCTION_COST { get; set; }
+            public BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT { get; set; }
+            public OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment { get; set; }
+            public OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT { get; set; }
+            public FACILITIES_PROJECT_PERFORMANCE_Model FACILITIES_PROJECT_PERFORMANCE { get; set; }
+            public BUDGET_CAPEX_OPEX_Model BUDGET_CAPEX_OPEX { get; set; }
+        }
+        public class WorkProgramme_Model4
+        {
+            public string WorkProgramme_Year { get; set; }
+            public NIGERIA_CONTENT_Training_Model NIGERIA_CONTENT_Training { get; set; }
+            public NIGERIA_CONTENT_Upload_Succession_Plan_Model NIGERIA_CONTENT_Upload_Succession_Plan { get; set; }
+            public NIGERIA_CONTENT_QUESTION_Model NIGERIA_CONTENT_QUESTION { get; set; }
+            public LEGAL_LITIGATION_Model LEGAL_LITIGATION { get; set; }
+            public LEGAL_ARBITRATION_Model LEGAL_ARBITRATION { get; set; }
+            public STRATEGIC_PLANS_ON_COMPANY_BASI_Model STRATEGIC_PLANS_ON_COMPANY_BASI { get; set; }
+        }
 
-
+        public class WorkProgramme_Model5
+        {
+            public string WorkProgramme_Year { get; set; }
+            public HSE_QUESTION_Model HSE_QUESTION { get; set; }
+            public HSE_FATALITy_Model HSE_FATALITy { get; set; }
+            public HSE_DESIGNS_SAFETY_Model HSE_DESIGNS_SAFETY { get; set; }
+            public HSE_SAFETY_STUDIES_NEW_Model HSE_SAFETY_STUDIES_NEW { get; set; }
+            public HSE_INSPECTION_AND_MAINTENANCE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_NEW { get; set; }
+            public HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW { get; set; }
+            public HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW { get; set; }
+            public HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set; }
+            public HSE_OIL_SPILL_REPORTING_NEW_Model HSE_OIL_SPILL_REPORTING_NEW { get; set; }
+            public HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set; }
+            public HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_NEW { get; set; }
+            public HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW { get; set; }
+            public HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW { get; set; }
+            public HSE_ENVIRONMENTAL_STUDIES_NEW_Model HSE_ENVIRONMENTAL_STUDIES_NEW { get; set; }
+            public HSE_WASTE_MANAGEMENT_NEW_Model HSE_WASTE_MANAGEMENT_NEW { get; set; }
+            public HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW { get; set; }
+            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW { get; set; }
+            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW { get; set; }
+            public HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW { get; set; }
+            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL { get; set; }
+            public HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED { get; set; }
+            public HSE_OSP_REGISTRATIONS_NEW_Model HSE_OSP_REGISTRATIONS_NEW { get; set; }
+            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED { get; set; }
+            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW { get; set; }
+            public HSE_CAUSES_OF_SPILL_Model HSE_CAUSES_OF_SPILL { get; set; }
+            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU { get; set; }
+            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME { get; set; }
+            public HSE_MANAGEMENT_POSITION_Model HSE_MANAGEMENT_POSITION { get; set; }
+            public HSE_QUALITY_CONTROL_Model HSE_QUALITY_CONTROL { get; set; }
+            public HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model HSE_CLIMATE_CHANGE_AND_AIR_QUALITY { get; set; }
+            public HSE_SAFETY_CULTURE_TRAINING_Model HSE_SAFETY_CULTURE_TRAINING { get; set; }
+            public HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model HSE_OCCUPATIONAL_HEALTH_MANAGEMENT { get; set; }
+            public HSE_WASTE_MANAGEMENT_SYSTEM_Model HSE_WASTE_MANAGEMENT_SYSTEM { get; set; }
+            public HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM { get; set; }
+            public PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT { get; set; }
         }
 
         #region FORM 1
@@ -765,21 +862,6 @@ public class DRILLING_EACH_WELL_COST_Model
         #endregion
 
         #region Form 3
-        public class WorkProgramme_Model3
-        {
-            public string WorkProgramme_Year { get; set; }
-            public BUDGET_ACTUAL_EXPENDITURE_Model BUDGET_ACTUAL_EXPENDITURE { get; set; }
-            public BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT { get; set; }
-            public BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy { get; set; }
-            public BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy { get; set;}
-            public BUDGET_PERFORMANCE_PRODUCTION_COST_Model BUDGET_PERFORMANCE_PRODUCTION_COST { get; set;}
-            public BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT { get; set;}
-            public OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE { get; set;}
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment { get; set;}
-            public OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT { get; set;}
-            public FACILITIES_PROJECT_PERFORMANCE_Model FACILITIES_PROJECT_PERFORMANCE { get; set;}
-            public BUDGET_CAPEX_OPEX_Model BUDGET_CAPEX_OPEX { get; set;}
-        }
         public  class BUDGET_ACTUAL_EXPENDITURE_Model
         {
             public string? OML_ID { get; set; }
@@ -1003,58 +1085,9 @@ public class DRILLING_EACH_WELL_COST_Model
         }
 
         #endregion
-        public class WorkProgramme_Model
-        {
-            public string WorkProgramme_Year { get; set; }
-            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_PROCESSING_Model GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
-            public DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
-            public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
-            public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
-
-            //For Form 2
-            public INITIAL_WELL_COMPLETION_JOB1 Initial_Well_Completion_Job { get; set; }
-            public WORKOVERS_RECOMPLETION_JOB1_Model WORKOVERS_RECOMPLETION_JOB1 { get; set; }
-            public FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
-
-            public FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
-
-            public FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
-
-            public RESERVES_UPDATES_LIFE_INDEX_Model RESERVES_UPDATES_LIFE_INDEX { get; set; }
-
-            public FIELD_DEVELOPMENT_PLAN_Model FIELD_DEVELOPMENT_PLAN { get; set; }
-
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
-            public GAS_PRODUCTION_ACTIVITy_Model GAS_PRODUCTION_ACTIVITy { get; set; }
-            public NDR_Model NDR { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity { get; set; }
-            public RESERVES_REPLACEMENT_RATIO_Model RESERVES_REPLACEMENT_RATIO { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED { get; set; }
-            public GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
-
-        }
 
         #region Form 4
 
-        public class WorkProgramme_Model4
-        {
-            public string WorkProgramme_Year { get; set; }
-            public NIGERIA_CONTENT_Training_Model NIGERIA_CONTENT_Training { get; set; }
-            public NIGERIA_CONTENT_Upload_Succession_Plan_Model NIGERIA_CONTENT_Upload_Succession_Plan { get; set; }
-            public NIGERIA_CONTENT_QUESTION_Model NIGERIA_CONTENT_QUESTION { get; set; }
-            public LEGAL_LITIGATION_Model LEGAL_LITIGATION { get; set; }
-            public LEGAL_ARBITRATION_Model LEGAL_ARBITRATION { get; set; }
-            public STRATEGIC_PLANS_ON_COMPANY_BASI_Model STRATEGIC_PLANS_ON_COMPANY_BASI { get; set; }
-           }
 
         public  class NIGERIA_CONTENT_Training_Model
         {
@@ -1182,45 +1215,6 @@ public class DRILLING_EACH_WELL_COST_Model
         #endregion
 
         #region Form 5
-        public class WorkProgramme_Model5
-        {
-            public string WorkProgramme_Year { get; set; }
-            public HSE_QUESTION_Model HSE_QUESTION{ get; set;}
-            public HSE_FATALITy_Model HSE_FATALITy { get; set;}
-            public HSE_DESIGNS_SAFETY_Model HSE_DESIGNS_SAFETY { get; set;}
-            public HSE_SAFETY_STUDIES_NEW_Model HSE_SAFETY_STUDIES_NEW { get; set;}
-            public HSE_INSPECTION_AND_MAINTENANCE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_NEW { get; set;}
-            public HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW { get; set;}
-            public HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW { get; set;}
-            public HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set;}
-            public HSE_OIL_SPILL_REPORTING_NEW_Model HSE_OIL_SPILL_REPORTING_NEW { get; set;}
-            public HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set;}
-            public HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_NEW { get; set;}
-            public HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW { get; set;}
-            public HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW { get; set;}
-            public HSE_ENVIRONMENTAL_STUDIES_NEW_Model HSE_ENVIRONMENTAL_STUDIES_NEW { get; set;}
-            public HSE_WASTE_MANAGEMENT_NEW_Model HSE_WASTE_MANAGEMENT_NEW { get; set;}
-            public HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW { get; set;}
-            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW { get; set;}
-            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW { get; set;}
-            public HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW { get; set;}
-            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL { get; set;}
-            public HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED { get; set;}
-            public HSE_OSP_REGISTRATIONS_NEW_Model HSE_OSP_REGISTRATIONS_NEW { get; set;}
-            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED { get; set;}
-            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW { get; set;}
-            public HSE_CAUSES_OF_SPILL_Model HSE_CAUSES_OF_SPILL { get; set;}
-            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU { get; set;}
-            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME { get; set;}
-            public HSE_MANAGEMENT_POSITION_Model HSE_MANAGEMENT_POSITION { get; set;}
-            public HSE_QUALITY_CONTROL_Model HSE_QUALITY_CONTROL { get; set;}
-            public HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model HSE_CLIMATE_CHANGE_AND_AIR_QUALITY { get; set;}
-            public HSE_SAFETY_CULTURE_TRAINING_Model HSE_SAFETY_CULTURE_TRAINING { get; set;}
-            public HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model HSE_OCCUPATIONAL_HEALTH_MANAGEMENT { get; set;}
-            public HSE_WASTE_MANAGEMENT_SYSTEM_Model HSE_WASTE_MANAGEMENT_SYSTEM { get; set;}
-            public HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM { get; set;}
-            public PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT { get; set;}
-        }
 
         #region
         public class HSE_QUESTION_Model
@@ -1910,6 +1904,7 @@ public class DRILLING_EACH_WELL_COST_Model
 
         #endregion
         #endregion
+
         public class UploadedDocument
         {
             public string filePath { get; set; }
@@ -1960,6 +1955,73 @@ public class DRILLING_EACH_WELL_COST_Model
             public object ApplicationPeriod { get; set; }
             public object DateSubmitted { get; set; }
 
+        }
+        public class UserModel
+        {
+            public List<ADMIN_COMPANY_INFORMATION> companiesList { get; set; }
+            public List<ADMIN_COMPANY_INFORMATION> staffList { get; set; }
+            public List<ROLES_> roles { get; set; }
+        }
+        public class parameterConfigModel
+        {
+            public List<ADMIN_CATEGORy> adminCategories { get; set; }
+            public List<Data_Type> dataTypes { get; set; }
+            public List<ADMIN_WELL_CATEGORy> wellCategories { get; set; }
+            public List<ADMIN_WP_START_END_DATE> startEndDate { get; set; }
+            public List<ADMIN_WP_START_END_DATE_DATA_UPLOAD> startEndDateUpload { get; set; }
+            public List<ADMIN_WP_PENALTy> penalties { get; set; }
+            public List<ADMIN_EMAIL_DAY> emailDays { get; set; }
+            public List<ROLES_SUPER_ADMIN> superAdmins { get; set; }
+            public List<ADMIN_PRESENTATION_CATEGORy> presentationCategories { get; set; }
+            public List<ADMIN_MEETING_ROOM> meetingRooms { get; set; }
+        }
+        public class ADMIN_COMPANY_INFORMATION_Model
+        {
+            public int? Id { get; set; }
+            public string? COMPANY_NAME { get; set; }
+            public string? EMAIL { get; set; }
+            public string? PASSWORDS { get; set; }
+            public string? STATUS_ { get; set; }
+            public string? FLAG_PASSWORD_CHANGE { get; set; }
+            public string? CATEGORY { get; set; }
+            public string? NAME { get; set; }
+            public string? DESIGNATION { get; set; }
+            public string? PHONE_NO { get; set; }
+            public string? COMPANY_ID { get; set; }
+            public string? DELETED_STATUS { get; set; }
+            public string? DELETED_BY { get; set; }
+            public string? DELETED_DATE { get; set; }
+            public string? FLAG1 { get; set; }
+            public string? FLAG2 { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+        }
+
+        public partial class ADMIN_CONCESSIONS_INFORMATION_Model
+        {
+            public int Consession_Id { get; set; }
+            public string? Company_ID { get; set; }
+            public string? CompanyName { get; set; }
+            public string? Equity_distribution { get; set; }
+            public string? Concession_Held { get; set; }
+            public string? Area { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Year_of_Grant_Award { get; set; }
+            public DateTime? Date_of_Expiration { get; set; }
+            public string? Geological_location { get; set; }
+            public string? Comment { get; set; }
+            public string? Status_ { get; set; }
+            public string? Flag1 { get; set; }
+            public string? Flag2 { get; set; }
+            public string? COMPANY_EMAIL { get; set; }
+            public string? Terrain { get; set; }
+            public string? Year { get; set; }
+            public string? submitted { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? Concession_Unique_ID { get; set; }
+            public string? OPEN_DATE { get; set; }
+            public string? CLOSE_DATE { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+            public int? CompanyNumber { get; set; }
         }
 
         public class WebApiResponse

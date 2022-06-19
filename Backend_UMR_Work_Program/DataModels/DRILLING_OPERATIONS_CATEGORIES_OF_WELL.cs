@@ -59,5 +59,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Cored { get; set; }
         public string? Actual_Proposed { get; set; }
         public string? WellName { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }
