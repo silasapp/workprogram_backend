@@ -75,7 +75,7 @@ namespace Backend_UMR_Work_Program.Models
             public string VOLUME_OF_OILSPILL { get; set; }
             public List<WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED> WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED_Model { get; set; }
             public object OILSPILL_REPORT_Model { get; set; }
-            public string TOTAL_PRODUCED_WATER_Model { get; set; }
+            public object TOTAL_PRODUCED_WATER_Model { get; set; }
             public List<HSE_CAUSES_OF_SPILL> HSE_QUANTITY_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED_Model { get; set; }
             //public List<WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
@@ -83,7 +83,51 @@ namespace Backend_UMR_Work_Program.Models
             public List<WP_Gas_Production_Utilisation_And_Flaring_Forecast> WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model { get; set; }
 
         }
-            public class WorkProgramme_Model_1
+        public class TOTAL_PRODUCED_WATER_Model { 
+          public int TOTAL_QUANTITY_SPILLED { get; set; } 
+          public string CompanyName  { get; set; } 
+          public string Year_of_WP { get; set; } 
+        }
+
+        public class WorkProgramme_Model
+        {
+            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
+            public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
+            public GEOPHYSICAL_ACTIVITIES_PROCESSING_Model GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
+            public DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
+            public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
+            public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
+
+            //For Form 2
+            public INITIAL_WELL_COMPLETION_JOB1 Initial_Well_Completion_Job { get; set; }
+            public WORKOVERS_RECOMPLETION_JOB1_Model WORKOVERS_RECOMPLETION_JOB1 { get; set; }
+            public FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
+
+            public FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
+
+            public FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
+
+            public RESERVES_UPDATES_LIFE_INDEX_Model RESERVES_UPDATES_LIFE_INDEX { get; set; }
+
+            public FIELD_DEVELOPMENT_PLAN_Model FIELD_DEVELOPMENT_PLAN { get; set; }
+
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
+            public GAS_PRODUCTION_ACTIVITy_Model GAS_PRODUCTION_ACTIVITy { get; set; }
+            public NDR_Model NDR { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity { get; set; }
+            public RESERVES_REPLACEMENT_RATIO_Model RESERVES_REPLACEMENT_RATIO { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED { get; set; }
+            public GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
+
+        }
+        public class WorkProgramme_Model_1
         {
             public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
             public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
@@ -227,134 +271,134 @@ namespace Backend_UMR_Work_Program.Models
     public string? area_in_square_meter_based_on_company_records { get; set; }
 }
 
-public class GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model
-{
-    public string? Geo_acquired_geophysical_data { get; set; }
-    public string? Geo_area_of_coverage { get; set; }
-    public string? Geo_method_of_acquisition { get; set; }
-    public string? Geo_type_of_data_acquired { get; set; }
-    public string? Geo_Record_Length_of_Data { get; set; }
-    public string? Geo_Completion_Status { get; set; }
-    public string? Quantum { get; set; }
-    public string? Quantum_carry_forward { get; set; }
-    public string? Geo_Activity_Timeline { get; set; }
-    public string? Remarks { get; set; }
-    public string? Actual_year_aquired_data { get; set; }
-    public string? proposed_year_data { get; set; }
-    public string? Budeget_Allocation { get; set; }
-    public string? Actual_year { get; set; }
-    public string? proposed_year { get; set; }
-    public string? OML_ID { get; set; }
-    public string? OML_Name { get; set; }
-    public string? Year_of_WP { get; set; }
-    public string? Budeget_Allocation_NGN { get; set; }
-    public string? Budeget_Allocation_USD { get; set; }
-    public string? Name_of_Contractor { get; set; }
-    public string? Quantum_Approved { get; set; }
-    public string? Contract_Type { get; set; }
-    public string? Terrain { get; set; }
-    public string? Consession_Type { get; set; }
-    public string? Quantum_Planned { get; set; }
-    public string? Gas_flare_Royalty_payment { get; set; }
-    public string? Gas_Sales_Royalty_Payment { get; set; }
-    public string? QUATER { get; set; }
-}
+        public class GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model
+        {
+            public string? Geo_acquired_geophysical_data { get; set; }
+            public string? Geo_area_of_coverage { get; set; }
+            public string? Geo_method_of_acquisition { get; set; }
+            public string? Geo_type_of_data_acquired { get; set; }
+            public string? Geo_Record_Length_of_Data { get; set; }
+            public string? Geo_Completion_Status { get; set; }
+            public string? Quantum { get; set; }
+            public string? Quantum_carry_forward { get; set; }
+            public string? Geo_Activity_Timeline { get; set; }
+            public string? Remarks { get; set; }
+            public string? Actual_year_aquired_data { get; set; }
+            public string? proposed_year_data { get; set; }
+            public string? Budeget_Allocation { get; set; }
+            public string? Actual_year { get; set; }
+            public string? proposed_year { get; set; }
+            public string? OML_ID { get; set; }
+            public string? OML_Name { get; set; }
+            public string? Year_of_WP { get; set; }
+            public string? Budeget_Allocation_NGN { get; set; }
+            public string? Budeget_Allocation_USD { get; set; }
+            public string? Name_of_Contractor { get; set; }
+            public string? Quantum_Approved { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Terrain { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? Quantum_Planned { get; set; }
+            public string? Gas_flare_Royalty_payment { get; set; }
+            public string? Gas_Sales_Royalty_Payment { get; set; }
+            public string? QUATER { get; set; }
+        }
 
-public class GEOPHYSICAL_ACTIVITIES_PROCESSING_Model
-{
-    public string? Geo_Any_Ongoing_Processing_Project { get; set; }
-    public string? Geo_Type_of_Data_being_Processed { get; set; }
-    public string? Geo_Quantum_of_Data { get; set; }
-    public string? Geo_Quantum_of_Data_carry_over { get; set; }
-    public string? Geo_Completion_Status { get; set; }
-    public string? Geo_Activity_Timeline { get; set; }
-    public string? Remarks { get; set; }
-    public string? Actual_year_aquired_data { get; set; }
-    public string? proposed_year_data { get; set; }
-    public string? Budeget_Allocation { get; set; }
-    public string? Actual_year { get; set; }
-    public string? proposed_year { get; set; }
-    public string? OML_ID { get; set; }
-    public string? OML_Name { get; set; }
-    public string? Year_of_WP { get; set; }
-    public string? Budeget_Allocation_USD { get; set; }
-    public string? Budeget_Allocation_NGN { get; set; }
-    public string? Processed_Actual { get; set; }
-    public string? Processed_Proposed { get; set; }
-    public string? Reprocessed_Actual { get; set; }
-    public string? Reprocessed_Proposed { get; set; }
-    public string? Interpreted_Actual { get; set; }
-    public string? Interpreted_Proposed { get; set; }
-    public string? Name_of_Contractor { get; set; }
-    public string? Quantum_Approved { get; set; }
-    public string? Contract_Type { get; set; }
-    public string? Terrain { get; set; }
-    public string? Quantum_Planned { get; set; }
-    public string? Consession_Type { get; set; }
-    public string? QUATER { get; set; }
-}
+        public class GEOPHYSICAL_ACTIVITIES_PROCESSING_Model
+        {
+            public string? Geo_Any_Ongoing_Processing_Project { get; set; }
+            public string? Geo_Type_of_Data_being_Processed { get; set; }
+            public string? Geo_Quantum_of_Data { get; set; }
+            public string? Geo_Quantum_of_Data_carry_over { get; set; }
+            public string? Geo_Completion_Status { get; set; }
+            public string? Geo_Activity_Timeline { get; set; }
+            public string? Remarks { get; set; }
+            public string? Actual_year_aquired_data { get; set; }
+            public string? proposed_year_data { get; set; }
+            public string? Budeget_Allocation { get; set; }
+            public string? Actual_year { get; set; }
+            public string? proposed_year { get; set; }
+            public string? OML_ID { get; set; }
+            public string? OML_Name { get; set; }
+            public string? Year_of_WP { get; set; }
+            public string? Budeget_Allocation_USD { get; set; }
+            public string? Budeget_Allocation_NGN { get; set; }
+            public string? Processed_Actual { get; set; }
+            public string? Processed_Proposed { get; set; }
+            public string? Reprocessed_Actual { get; set; }
+            public string? Reprocessed_Proposed { get; set; }
+            public string? Interpreted_Actual { get; set; }
+            public string? Interpreted_Proposed { get; set; }
+            public string? Name_of_Contractor { get; set; }
+            public string? Quantum_Approved { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Terrain { get; set; }
+            public string? Quantum_Planned { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? QUATER { get; set; }
+        }
 
-public class DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model
-{
-    public string? OML_ID { get; set; }
-    public string? OML_Name { get; set; }
-    public string? Year_of_WP { get; set; }
-    public string? Category { get; set; }
-    public string? Actual_No_Drilled_in_Current_Year { get; set; }
-    public string? Proposed_No_Drilled { get; set; }
-    public string? Processing_Fees_Paid { get; set; }
-    public string? Comments { get; set; }
-    public string? No_of_wells_cored { get; set; }
-    public string? Actual_year { get; set; }
-    public string? proposed_year { get; set; }
-    public string? well_type { get; set; }
-    public string? well_trajectory { get; set; }
-    public DateTime? spud_date { get; set; }
-    public string? well_cost { get; set; }
-    public string? Number_of_Days_to_Total_Depth { get; set; }
-    public string? Well_Status_and_Depth { get; set; }
-    public string? Contract_Type { get; set; }
-    public string? Terrain { get; set; }
-    public string? well_name { get; set; }
-    public string? Consession_Type { get; set; }
-    public string? QUATER { get; set; }
-    public string? Any_New_Discoveries { get; set; }
-    public string? Hydrocarbon_Counts { get; set; }
-    public string? State_the_field_where_Discovery_was_made { get; set; }
-    public string? Core_Cost_USD { get; set; }
-    public string? Core_Depth_Interval { get; set; }
-    public string? Propose_well_names { get; set; }
-    public string? Actual_wells_name { get; set; }
-    public string? Terrain_Drill { get; set; }
-    public string? Water_depth { get; set; }
-    public string? True_vertical_depth { get; set; }
-    public string? Depth_refrence { get; set; }
-    public string? Rig_type { get; set; }
-    public string? Rig_Name { get; set; }
-    public string? Target_reservoir { get; set; }
-    public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
-    public string? Location_name { get; set; }
-    public string? Proposed_cost_per_well { get; set; }
-    public string? Basin { get; set; }
-    public string? Measured_depth { get; set; }
-    public string? FieldDiscoveryUploadFilePath { get; set; }
-    public string? HydrocarbonCountUploadFilePath { get; set; }
-    public string? Cored { get; set; }
-    public string? Actual_Proposed { get; set; }
-    public string? WellName { get; set; }
-}
+        public class DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model
+        {
+            public string? OML_ID { get; set; }
+            public string? OML_Name { get; set; }
+            public string? Year_of_WP { get; set; }
+            public string? Category { get; set; }
+            public string? Actual_No_Drilled_in_Current_Year { get; set; }
+            public string? Proposed_No_Drilled { get; set; }
+            public string? Processing_Fees_Paid { get; set; }
+            public string? Comments { get; set; }
+            public string? No_of_wells_cored { get; set; }
+            public string? Actual_year { get; set; }
+            public string? proposed_year { get; set; }
+            public string? well_type { get; set; }
+            public string? well_trajectory { get; set; }
+            public DateTime? spud_date { get; set; }
+            public string? well_cost { get; set; }
+            public string? Number_of_Days_to_Total_Depth { get; set; }
+            public string? Well_Status_and_Depth { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Terrain { get; set; }
+            public string? well_name { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? QUATER { get; set; }
+            public string? Any_New_Discoveries { get; set; }
+            public string? Hydrocarbon_Counts { get; set; }
+            public string? State_the_field_where_Discovery_was_made { get; set; }
+            public string? Core_Cost_USD { get; set; }
+            public string? Core_Depth_Interval { get; set; }
+            public string? Propose_well_names { get; set; }
+            public string? Actual_wells_name { get; set; }
+            public string? Terrain_Drill { get; set; }
+            public string? Water_depth { get; set; }
+            public string? True_vertical_depth { get; set; }
+            public string? Depth_refrence { get; set; }
+            public string? Rig_type { get; set; }
+            public string? Rig_Name { get; set; }
+            public string? Target_reservoir { get; set; }
+            public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
+            public string? Location_name { get; set; }
+            public string? Proposed_cost_per_well { get; set; }
+            public string? Basin { get; set; }
+            public string? Measured_depth { get; set; }
+            public string? FieldDiscoveryUploadFilePath { get; set; }
+            public string? HydrocarbonCountUploadFilePath { get; set; }
+            public string? Cored { get; set; }
+            public string? Actual_Proposed { get; set; }
+            public string? WellName { get; set; }
+        }
 
-public class DRILLING_EACH_WELL_COST_Model
-{
-    public string? OML_ID { get; set; }
-    public string? OML_Name { get; set; }
-    public string? Year_of_WP { get; set; }
-    public string? well_name { get; set; }
-    public string? well_cost { get; set; }
-    public string? Consession_Type { get; set; }
-    public string? QUATER { get; set; }
-    public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
-}
+        public class DRILLING_EACH_WELL_COST_Model
+        {
+            public string? OML_ID { get; set; }
+            public string? OML_Name { get; set; }
+            public string? Year_of_WP { get; set; }
+            public string? well_name { get; set; }
+            public string? well_cost { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? QUATER { get; set; }
+            public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
+        }
 
         public class DRILLING_EACH_WELL_COST_PROPOSED_Model
         {

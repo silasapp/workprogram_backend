@@ -9,7 +9,7 @@ SELECT     H.CompanyName, H.Quantum_Acquired, H.Quantum_Approved, H.Unscaled_Sco
 FROM         (SELECT     E.CompanyName, E.Quantum_Acquired, E.Quantum_Approved, E.Unscaled_Score, E.Unscaled_Score_sum, E.Scaled_by_Reciprocal_GrandTotal_RGT, 
                                               F.Year_of_WP, F.MAX_RGT, F.MIN_RGT, F.MIN_RGT + (E.Scaled_by_Reciprocal_GrandTotal_RGT - F.MIN_RGT) / NULLIF ((F.MAX_RGT - F.MIN_RGT) 
                                               * (100 - 0), 0) AS Recalibrated_Scaled_Index, 'Acquisition Index' AS INDEX_TYPE, 'OPL' AS Consession_Type
-                       FROM          (SELECT     b.CompanyName, b.Year_of_WP, b.Quantum_Acquired, b.Quantum_Approved, b.Unscaled_Score, d.Unscaled_Score_sum, 
+                       FROM          (SELECT    b.CompanyName, b.Year_of_WP, b.Quantum_Acquired, b.Quantum_Approved, b.Unscaled_Score, d.Unscaled_Score_sum, 
                                                                      -- b.Unscaled_Score / CONVERT(decimal(18, 1), d.Unscaled_Score_sum) * 100 AS Scaled_by_Reciprocal_GrandTotal_RGT
 																	   ISNULL( b.Unscaled_Score / NULLIF(d.Unscaled_Score_sum, 0), 0)  * 100 AS Scaled_by_Reciprocal_GrandTotal_RGT
 
