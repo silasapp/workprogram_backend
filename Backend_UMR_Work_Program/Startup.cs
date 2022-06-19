@@ -22,7 +22,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Backend_UMR_Work_Program.Controllers;
 using AutoMapper;
-using Backend_UMR_Work_Program.Helper.AutoMapperSettings;
+using Backend_UMR_Work_Program.Helpers.AutoMapperSettings;
 
 namespace Backend_UMR_Work_Program
 {
