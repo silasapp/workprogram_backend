@@ -5,14 +5,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class WorkProgrammeController : ControllerBase
     {
-
 
         private Account _account;
         public WKP_DBContext _context;
@@ -26,22 +26,22 @@ namespace Backend_UMR_Work_Program.Controllers
             _context = context;
             _configuration = configuration;
             _mapper = mapper;
-            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor);
+            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
 
-        private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
-        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
-        private string? WKPRole => User.FindFirstValue(ClaimTypes.Role);
+        private string? WKPUserId => "1";
+        private string? WKPUserName => "Name";
+        private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        private string? WKPUserRole => "Admin";
+        //private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        //private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
         [HttpPost("POST_WORKPROGRAMME")]
         public async Task<WebApiResponse> Post_WORKPROGRAMME(WorkProgramme_Model wkp)
-        {
-            
-            var userName = "test";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        {   
             int save = 0;
             var ConcessionData = new CONCESSION_SITUATION();
             var GeophysicalActivitesData = new GEOPHYSICAL_ACTIVITIES_ACQUISITION();
@@ -53,18 +53,18 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 # region Saving Concession Situations
-                var getConcessionData = (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getConcessionData = (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 ConcessionData = getConcessionData != null ? getConcessionData : ConcessionData;
                 ConcessionData = _mapper.Map<CONCESSION_SITUATION>(wkp.CONCESSION_SITUATION);
 
-                ConcessionData.Companyemail = userEmail;
-                ConcessionData.CompanyName = userName;
-                ConcessionData.COMPANY_ID = companyID;
-                ConcessionData.Created_by = companyID;
+                ConcessionData.Companyemail = WKPUserEmail;
+                ConcessionData.CompanyName = WKPUserName;
+                ConcessionData.COMPANY_ID = WKPUserId;
+                ConcessionData.Created_by = WKPUserId;
                 ConcessionData.Date_Created = DateTime.Now;
                 ConcessionData.Date_Updated = DateTime.Now;
-                ConcessionData.Updated_by = companyID;
+                ConcessionData.Updated_by = WKPUserId;
                 ConcessionData.Year = DateTime.Now.Year.ToString();
                 if (getConcessionData == null)
                 {
@@ -75,18 +75,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Geophysical Activites
 
-                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 GeophysicalActivitesData = getGeophysicalActivitesData != null ? getGeophysicalActivitesData : GeophysicalActivitesData;
                 GeophysicalActivitesData = _mapper.Map<GEOPHYSICAL_ACTIVITIES_ACQUISITION>(wkp.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs);
 
-                GeophysicalActivitesData.Companyemail = userEmail;
-                GeophysicalActivitesData.CompanyName = userName;
-                GeophysicalActivitesData.COMPANY_ID = companyID;
-                GeophysicalActivitesData.Created_by = companyID;
+                GeophysicalActivitesData.Companyemail = WKPUserEmail;
+                GeophysicalActivitesData.CompanyName = WKPUserName;
+                GeophysicalActivitesData.COMPANY_ID = WKPUserId;
+                GeophysicalActivitesData.Created_by = WKPUserId;
                 GeophysicalActivitesData.Date_Created = DateTime.Now;
                 GeophysicalActivitesData.Date_Updated = DateTime.Now;
-                GeophysicalActivitesData.Updated_by = companyID;
+                GeophysicalActivitesData.Updated_by = WKPUserId;
                 GeophysicalActivitesData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (getGeophysicalActivitesData == null)
                 {
@@ -97,18 +97,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Geophysical Activites Processing
 
-                var getGeoActivitesProcessingData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getGeoActivitesProcessingData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 GeoActivitesProcessingData = getGeoActivitesProcessingData != null ? getGeoActivitesProcessingData : GeoActivitesProcessingData;
                 GeoActivitesProcessingData = _mapper.Map<GEOPHYSICAL_ACTIVITIES_PROCESSING>(wkp.GEOPHYSICAL_ACTIVITIES_PROCESSINGs);
 
-                GeoActivitesProcessingData.Companyemail = userEmail;
-                GeoActivitesProcessingData.CompanyName = userName;
-                GeoActivitesProcessingData.COMPANY_ID = companyID;
-                GeoActivitesProcessingData.Created_by = companyID;
+                GeoActivitesProcessingData.Companyemail = WKPUserEmail;
+                GeoActivitesProcessingData.CompanyName = WKPUserName;
+                GeoActivitesProcessingData.COMPANY_ID = WKPUserId;
+                GeoActivitesProcessingData.Created_by = WKPUserId;
                 GeoActivitesProcessingData.Date_Created = DateTime.Now;
                 GeoActivitesProcessingData.Date_Updated = DateTime.Now;
-                GeoActivitesProcessingData.Updated_by = companyID;
+                GeoActivitesProcessingData.Updated_by = WKPUserId;
                 GeoActivitesProcessingData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (getGeoActivitesProcessingData == null)
                 {
@@ -119,18 +119,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Drilling Operations
 
-                var getDrillingOperationsData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getDrillingOperationsData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 DrillingOperationsData = getDrillingOperationsData != null ? getDrillingOperationsData : DrillingOperationsData;
                 DrillingOperationsData = _mapper.Map<DRILLING_OPERATIONS_CATEGORIES_OF_WELL>(wkp.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs);
 
-                DrillingOperationsData.Companyemail = userEmail;
-                DrillingOperationsData.CompanyName = userName;
-                DrillingOperationsData.COMPANY_ID = companyID;
-                DrillingOperationsData.Created_by = companyID;
+                DrillingOperationsData.Companyemail = WKPUserEmail;
+                DrillingOperationsData.CompanyName = WKPUserName;
+                DrillingOperationsData.COMPANY_ID = WKPUserId;
+                DrillingOperationsData.Created_by = WKPUserId;
                 DrillingOperationsData.Date_Created = DateTime.Now;
                 DrillingOperationsData.Date_Updated = DateTime.Now;
-                DrillingOperationsData.Updated_by = companyID;
+                DrillingOperationsData.Updated_by = WKPUserId;
                 DrillingOperationsData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (DrillingOperationsData == null)
                 {
@@ -141,18 +141,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Drilling Well Costs
 
-                var getDrillingWellCostData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getDrillingWellCostData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 DrillingWellCostData = getDrillingWellCostData != null ? getDrillingWellCostData : DrillingWellCostData;
                 DrillingWellCostData = _mapper.Map<DRILLING_EACH_WELL_COST>(wkp.DRILLING_EACH_WELL_COSTs);
 
-                DrillingWellCostData.Companyemail = userEmail;
-                DrillingWellCostData.CompanyName = userName;
-                DrillingWellCostData.COMPANY_ID = companyID;
-                DrillingWellCostData.Created_by = companyID;
+                DrillingWellCostData.Companyemail = WKPUserEmail;
+                DrillingWellCostData.CompanyName = WKPUserName;
+                DrillingWellCostData.COMPANY_ID = WKPUserId;
+                DrillingWellCostData.Created_by = WKPUserId;
                 DrillingWellCostData.Date_Created = DateTime.Now;
                 DrillingWellCostData.Date_Updated = DateTime.Now;
-                DrillingWellCostData.Updated_by = companyID;
+                DrillingWellCostData.Updated_by = WKPUserId;
                 DrillingWellCostData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (DrillingWellCostData == null)
                 {
@@ -163,18 +163,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Drilling Well Proposed Costs
 
-                var getDrillingWellCostProposedData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getDrillingWellCostProposedData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 DrillingWellCostProposedData = getDrillingWellCostProposedData != null ? getDrillingWellCostProposedData : DrillingWellCostProposedData;
                 DrillingWellCostProposedData = _mapper.Map<DRILLING_EACH_WELL_COST_PROPOSED>(wkp.DRILLING_EACH_WELL_COST_PROPOSEDs);
 
-                DrillingWellCostProposedData.Companyemail = userEmail;
-                DrillingWellCostProposedData.CompanyName = userName;
-                DrillingWellCostProposedData.COMPANY_ID = companyID;
-                DrillingWellCostProposedData.Created_by = companyID;
+                DrillingWellCostProposedData.Companyemail = WKPUserEmail;
+                DrillingWellCostProposedData.CompanyName = WKPUserName;
+                DrillingWellCostProposedData.COMPANY_ID = WKPUserId;
+                DrillingWellCostProposedData.Created_by = WKPUserId;
                 DrillingWellCostProposedData.Date_Created = DateTime.Now;
                 DrillingWellCostProposedData.Date_Updated = DateTime.Now;
-                DrillingWellCostProposedData.Updated_by = companyID;
+                DrillingWellCostProposedData.Updated_by = WKPUserId;
                 DrillingWellCostProposedData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (DrillingWellCostProposedData == null)
                 {
@@ -186,7 +186,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save == 6)
                 {
                     string successMsg = "Work programme form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -203,30 +203,26 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         
         [HttpPost("POST_CONCESSION")]
-        public async Task<WebApiResponse> Post_CONCESSION_SITUATION(CONCESSION_SITUATION wkp)
-        {
-            
-            var userName = "test";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        public async Task<WebApiResponse> Post_CONCESSION_SITUATION(CONCESSION_SITUATION_Model wkp)
+        {   
             int save = 0;
             var ConcessionData = new CONCESSION_SITUATION();
            
             try
             {
                 # region Saving Concession Situations
-                var getConcessionData = (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getConcessionData = (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 ConcessionData = getConcessionData != null ? getConcessionData : ConcessionData;
                 ConcessionData = _mapper.Map<CONCESSION_SITUATION>(wkp);
 
-                ConcessionData.Companyemail = userEmail;
-                ConcessionData.CompanyName = userName;
-                ConcessionData.COMPANY_ID = companyID;
-                ConcessionData.Created_by = companyID;
+                ConcessionData.Companyemail = WKPUserEmail;
+                ConcessionData.CompanyName = WKPUserName;
+                ConcessionData.COMPANY_ID = WKPUserId;
+                ConcessionData.Created_by = WKPUserId;
                 ConcessionData.Date_Created = DateTime.Now;
                 ConcessionData.Date_Updated = DateTime.Now;
-                ConcessionData.Updated_by = companyID;
+                ConcessionData.Updated_by = WKPUserId;
                 ConcessionData.Year = DateTime.Now.Year.ToString();
                 if (getConcessionData == null)
                 {
@@ -239,7 +235,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -254,15 +250,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
 
         [HttpPost("POST_GEOPHYSICAL_ACQUISITION")]
-        public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_ACQUISITION(GEOPHYSICAL_ACTIVITIES_ACQUISITION wkp)
-        {
-            
-            var userName = "test";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_ACQUISITION(GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model wkp)
+        {   
             int save = 0;
             var GeophysicalActivitesData = new GEOPHYSICAL_ACTIVITIES_ACQUISITION();
            
@@ -271,18 +262,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Geophysical Activites
 
-                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 GeophysicalActivitesData = getGeophysicalActivitesData != null ? getGeophysicalActivitesData : GeophysicalActivitesData;
                 GeophysicalActivitesData = _mapper.Map<GEOPHYSICAL_ACTIVITIES_ACQUISITION>(wkp);
 
-                GeophysicalActivitesData.Companyemail = userEmail;
-                GeophysicalActivitesData.CompanyName = userName;
-                GeophysicalActivitesData.COMPANY_ID = companyID;
-                GeophysicalActivitesData.Created_by = companyID;
+                GeophysicalActivitesData.Companyemail = WKPUserEmail;
+                GeophysicalActivitesData.CompanyName = WKPUserName;
+                GeophysicalActivitesData.COMPANY_ID = WKPUserId;
+                GeophysicalActivitesData.Created_by = WKPUserId;
                 GeophysicalActivitesData.Date_Created = DateTime.Now;
                 GeophysicalActivitesData.Date_Updated = DateTime.Now;
-                GeophysicalActivitesData.Updated_by = companyID;
+                GeophysicalActivitesData.Updated_by = WKPUserId;
                 GeophysicalActivitesData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (getGeophysicalActivitesData == null)
                 {
@@ -294,7 +285,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -311,12 +302,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_GEOPHYSICAL_ACTIVITIES_PROCESSING")]
-        public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_PROCESSING(GEOPHYSICAL_ACTIVITIES_PROCESSING wkp)
-        {
-
-            var userName = "test";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_PROCESSING(GEOPHYSICAL_ACTIVITIES_PROCESSING_Model wkp)
+        {   
             int save = 0;
             var GeoActivitesProcessingData = new GEOPHYSICAL_ACTIVITIES_PROCESSING();
          
@@ -325,18 +312,18 @@ namespace Backend_UMR_Work_Program.Controllers
                
                 #region Saving Geophysical Activites Processing
 
-                var getGeoActivitesProcessingData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getGeoActivitesProcessingData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 GeoActivitesProcessingData = getGeoActivitesProcessingData != null ? getGeoActivitesProcessingData : GeoActivitesProcessingData;
                 GeoActivitesProcessingData = _mapper.Map<GEOPHYSICAL_ACTIVITIES_PROCESSING>(wkp);
 
-                GeoActivitesProcessingData.Companyemail = userEmail;
-                GeoActivitesProcessingData.CompanyName = userName;
-                GeoActivitesProcessingData.COMPANY_ID = companyID;
-                GeoActivitesProcessingData.Created_by = companyID;
+                GeoActivitesProcessingData.Companyemail = WKPUserEmail;
+                GeoActivitesProcessingData.CompanyName = WKPUserName;
+                GeoActivitesProcessingData.COMPANY_ID = WKPUserId;
+                GeoActivitesProcessingData.Created_by = WKPUserId;
                 GeoActivitesProcessingData.Date_Created = DateTime.Now;
                 GeoActivitesProcessingData.Date_Updated = DateTime.Now;
-                GeoActivitesProcessingData.Updated_by = companyID;
+                GeoActivitesProcessingData.Updated_by = WKPUserId;
                 GeoActivitesProcessingData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (getGeoActivitesProcessingData == null)
                 {
@@ -349,7 +336,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -366,12 +353,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
-        public async Task<WebApiResponse> Post_DRILLING_OPERATIONS(DRILLING_OPERATIONS_CATEGORIES_OF_WELL wkp)
-        {
-
-            var userName = "test";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        public async Task<WebApiResponse> Post_DRILLING_OPERATIONS(DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model wkp)
+        {   
             int save = 0;
             var DrillingOperationsData = new DRILLING_OPERATIONS_CATEGORIES_OF_WELL();
            
@@ -380,18 +363,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Drilling Operations
 
-                var getDrillingOperationsData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getDrillingOperationsData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 DrillingOperationsData = getDrillingOperationsData != null ? getDrillingOperationsData : DrillingOperationsData;
                 DrillingOperationsData = _mapper.Map<DRILLING_OPERATIONS_CATEGORIES_OF_WELL>(wkp);
 
-                DrillingOperationsData.Companyemail = userEmail;
-                DrillingOperationsData.CompanyName = userName;
-                DrillingOperationsData.COMPANY_ID = companyID;
-                DrillingOperationsData.Created_by = companyID;
+                DrillingOperationsData.Companyemail = WKPUserEmail;
+                DrillingOperationsData.CompanyName = WKPUserName;
+                DrillingOperationsData.COMPANY_ID = WKPUserId;
+                DrillingOperationsData.Created_by = WKPUserId;
                 DrillingOperationsData.Date_Created = DateTime.Now;
                 DrillingOperationsData.Date_Updated = DateTime.Now;
-                DrillingOperationsData.Updated_by = companyID;
+                DrillingOperationsData.Updated_by = WKPUserId;
                 DrillingOperationsData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (DrillingOperationsData == null)
                 {
@@ -404,7 +387,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -421,12 +404,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_DRILLING_EACH_WELL_COST")]
-        public async Task<WebApiResponse> Post_DRILLING_EACH_WELL_COST(DRILLING_EACH_WELL_COST wkp)
-        {
-
-            var userName = "test";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        public async Task<WebApiResponse> Post_DRILLING_EACH_WELL_COST(DRILLING_EACH_WELL_COST_Model wkp)
+        {   
             int save = 0;
             var DrillingWellCostData = new DRILLING_EACH_WELL_COST();
 
@@ -435,18 +414,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Drilling Well Costs
 
-                var getDrillingWellCostData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getDrillingWellCostData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 DrillingWellCostData = getDrillingWellCostData != null ? getDrillingWellCostData : DrillingWellCostData;
                 DrillingWellCostData = _mapper.Map<DRILLING_EACH_WELL_COST>(wkp);
 
-                DrillingWellCostData.Companyemail = userEmail;
-                DrillingWellCostData.CompanyName = userName;
-                DrillingWellCostData.COMPANY_ID = companyID;
-                DrillingWellCostData.Created_by = companyID;
+                DrillingWellCostData.Companyemail = WKPUserEmail;
+                DrillingWellCostData.CompanyName = WKPUserName;
+                DrillingWellCostData.COMPANY_ID = WKPUserId;
+                DrillingWellCostData.Created_by = WKPUserId;
                 DrillingWellCostData.Date_Created = DateTime.Now;
                 DrillingWellCostData.Date_Updated = DateTime.Now;
-                DrillingWellCostData.Updated_by = companyID;
+                DrillingWellCostData.Updated_by = WKPUserId;
                 DrillingWellCostData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (DrillingWellCostData == null)
                 {
@@ -459,7 +438,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -479,9 +458,6 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<WebApiResponse> Post_DRILLING_WELL_PROPOSED(WorkProgramme_Model wkp)
         {
 
-            var userName = "test";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
             int save = 0;
             var DrillingWellCostProposedData = new DRILLING_EACH_WELL_COST_PROPOSED();
 
@@ -490,18 +466,18 @@ namespace Backend_UMR_Work_Program.Controllers
             
                 #region Saving Drilling Well Proposed Costs
 
-                var getDrillingWellCostProposedData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == companyID select c).FirstOrDefault();
+                var getDrillingWellCostProposedData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
 
                 DrillingWellCostProposedData = getDrillingWellCostProposedData != null ? getDrillingWellCostProposedData : DrillingWellCostProposedData;
                 DrillingWellCostProposedData = _mapper.Map<DRILLING_EACH_WELL_COST_PROPOSED>(wkp.DRILLING_EACH_WELL_COST_PROPOSEDs);
 
-                DrillingWellCostProposedData.Companyemail = userEmail;
-                DrillingWellCostProposedData.CompanyName = userName;
-                DrillingWellCostProposedData.COMPANY_ID = companyID;
-                DrillingWellCostProposedData.Created_by = companyID;
+                DrillingWellCostProposedData.Companyemail = WKPUserEmail;
+                DrillingWellCostProposedData.CompanyName = WKPUserName;
+                DrillingWellCostProposedData.COMPANY_ID = WKPUserId;
+                DrillingWellCostProposedData.Created_by = WKPUserId;
                 DrillingWellCostProposedData.Date_Created = DateTime.Now;
                 DrillingWellCostProposedData.Date_Updated = DateTime.Now;
-                DrillingWellCostProposedData.Updated_by = companyID;
+                DrillingWellCostProposedData.Updated_by = WKPUserId;
                 DrillingWellCostProposedData.Year_of_WP = DateTime.Now.Year.ToString();
                 if (DrillingWellCostProposedData == null)
                 {
@@ -513,7 +489,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -531,9 +507,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpGet("PRESENTATION SCHEDULES")]
         public async Task<WebApiResponse> PRESENTATION_SCHEDULES(string year)
-        {
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        {   
             try
             {
                 var schedules = (from sch in _context.ADMIN_DATETIME_PRESENTATIONs select sch).ToList();
@@ -557,11 +531,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-         [HttpGet("DIVISIONAL_PRESENTATIONS")]
+        
+        [HttpGet("DIVISIONAL_PRESENTATIONS")]
         public async Task<WebApiResponse> DIVISIONAL_PRESENTATIONS(string year)
-        {
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        {   
             try
             {
                 var presentations = (from sch in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs select sch).ToList();
@@ -587,28 +560,20 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         #region work program admin     
-        [HttpGet("OPL-RECLIBRATED-SCALED")]
-        public async Task<WebApiResponse> opl_reclibrated(string year = null)
+        [HttpGet("OPL_RECALIBRATED_SCALED")]
+        public async Task<WebApiResponse> opl_recalibrated(string year)
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
-
             var details = new List<WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>();
             try
             {
-                if (userRole == GeneralModel.Admin)
+                if (WKPUserRole == GeneralModel.Admin)
                 {
 
-                    details = _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.ToList();
+                    details =await  _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c=> c.Year_of_WP == year).ToListAsync();
                 }
                 else
                 {
-                    //details = _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyID == companyID).ToList();
-                }
-                if (year != null)
-                {
-                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                    details =await  _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -617,32 +582,50 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
             }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
 
         }
-        [HttpGet("OPL-AGGREGATED-SCORE(%))")]
-        public async Task<WebApiResponse> opl_aggregated_score(string year = null)
-        {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+        [HttpGet("OPL_AGGREGATED_SCORE")]
+        public async Task<WebApiResponse> opl_aggregated_score(string year)
+        {   
             var presentYear = DateTime.Now.Year;
 
             var details = new List<WP_OPL_Aggregated_Score_ALL_COMPANy>();
             try
             {
-                if (userRole == GeneralModel.Admin)
+                if (WKPUserRole == GeneralModel.Admin)
                 {
+                    details =await  _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
 
-                    details = _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.ToList();
                 }
                 else
                 {
-                    //details = _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyID == companyID).ToList();
+                    details =await  _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
-                if (year != null)
+                
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("OML_RECALIBRATED_SCALED")]
+        public async Task<WebApiResponse> OML_RECALIBRATED_SCALE(string year)
+        {
+            var details = new List<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>();
+            try
+            {
+                if (WKPUserRole == GeneralModel.Admin)
+                {   
+                    details =await  _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c=> c.Year_of_WP == year).ToListAsync();
+                }
+                else
                 {
-                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                    details =await  _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -651,24 +634,38 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
             }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
 
         }
-        //[HttpGet(Name = "OML-RECLIBRATED-SCALED")]
-        //public async Task<WebApiResponse> oml_reclibrated(string year = null)
-        //{
-        //    try
-        //    {
-               
-        //    }
-        //    catch (Exception ex)
-        //    {
+        [HttpGet("OML_AGGREGATED_SCORE")]
+        public async Task<WebApiResponse> oml_aggregated_score(string year)
+        {   
+            var presentYear = DateTime.Now.Year;
 
-        //        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
-        //    }
+            var details = new List<WP_OML_Aggregated_Score_ALL_COMPANy>();
+            try
+            {
+                if (WKPUserRole == GeneralModel.Admin)
+                {
+                    details =await  _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
 
-        //}
+                }
+                else
+                {
+                    details =await  _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+                }
+                
+            }
+            catch (Exception ex)
+            {
 
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
+
+        }
+        
        
         #endregion
 
