@@ -329,7 +329,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             int portalDate =int.Parse( _configuration.GetSection("AppSettings").GetSection("portalDate").Value.ToString()); 
             var yearList = from n in Enumerable.Range(0, (DateTime.Now.Year - portalDate) + 1)
-                             select (DateTime.Now.Year -  n).ToString();
+                             select DateTime.Now.Year -  n;
 
             return yearList;
         }
@@ -782,38 +782,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
-
-        [HttpGet("CONCESSION_RESERVES_FOR_CURRENT_YEAR")]
-        public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_CURRENT_YEAR(string year)
-        {
-            var Concession = new List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE>();
-            try
-            {
-                if (WKPUserRole == GeneralModel.Admin)
-                {
-                    Concession = _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_CURRENT_RESERVE").ToList();
-                }
-
-                else
-                {
-                    Concession = _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_CURRENT_RESERVE" && c.COMPANY_ID == WKPUserId).ToList();
-                }
-
-                if (year != null)
-                {
-                    Concession = Concession.Where(c => c.Year_of_WP == year).ToList();
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = Concession.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
-            }
-
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError }; ;
-            }
-        }
-
-
+        
+        
         [HttpGet("RESERVES_OIL_CONDENSATE_PRODUCTION")]
         public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year )
         {
