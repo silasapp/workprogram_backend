@@ -257,7 +257,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         if (dateTimeId != null && option == optionB && dateTimeId.EMAIL_REMARK.ToLower() != inactive.ToLower())
                         {
-                            dateTimeId.EMAIL_REMARK = inactive;
+                            dateTimeId.EMAIL_REMARK = inactive.ToUpper();
 
                         }
                         save = _context.SaveChanges();
