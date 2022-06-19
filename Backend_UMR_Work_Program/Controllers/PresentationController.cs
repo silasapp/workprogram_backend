@@ -17,30 +17,28 @@ namespace Backend_UMR_Work_Program.Controllers
     public class PresentationController : ControllerBase
     {
         private Presentation _presentation;
-        private Account _account;
         public WKP_DBContext _context;
         public IConfiguration _configuration;
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
-        private readonly IMapper _mapper;
-
-        public PresentationController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper)
+        IMapper _mapper;
+        public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
-            _account = account;
             _context = context;
             _configuration = configuration;
             _mapper = mapper;
-            _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
+            _helpersController = new HelpersController(_context, configuration, _httpContextAccessor, _mapper);
+
         }
 
-        private string? WKPUserId => "1";
-        private string? WKPUserName => "Name";
-        private string? WKPUserEmail => "adeola.kween123@gmail.com";
-        private string? WKPUserRole => "Admin";
-        //private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        //private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
+        //private string? WKPUserId => "1";
+        //private string? WKPUserName => "Name";
+        //private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        //private string? WKPUserRole => "Admin";
+        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
 
@@ -203,7 +201,6 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<WebApiResponse> Presentation_scribe(int[] Id, string emailStatus, string year)
         {   
             int save = 0;
-            //var newAdminPresentation = new Admin_Date_Presentations();
             var details = await _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.YEAR == year).ToListAsync();
             if (details.Count > 0)
             {
@@ -383,7 +380,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "No data found", StatusCode = ResponseCodes.RecordNotFound };
         }
-        [HttpPost("ACTIVATE/DEACTIVATE_EMAIL")]
+        [HttpPost("ACTIVATE_DEACTIVATE_EMAIL")]
         public async Task<WebApiResponse> EmailStatus(int UpdateId, string emailStatus)
         {
             

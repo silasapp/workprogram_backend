@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -29,14 +29,14 @@ namespace Backend_UMR_Work_Program.Controllers
          _mapper = mapper;
         _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
     }
-        private string? WKPUserId => "1";
-        private string? WKPUserName => "Name";
-        private string? WKPUserEmail => "adeola.kween123@gmail.com";
-        private string? WKPUserRole => "Admin";
-        //private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        //private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
+        //private string? WKPUserId => "1";
+        //private string? WKPUserName => "Name";
+        //private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        //private string? WKPUserRole => "Admin";
+        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
 
@@ -54,7 +54,6 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (year != null)
                 {
                     var E_and_P_companies = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies.Where(x => x.YEAR == year).ToList();
-                    WKP_Report.Where(x => x.Id == 1).FirstOrDefault().Report_Content.Replace("NO_OF_EP_COMPANIES", E_and_P_companies.FirstOrDefault().TOTAL_COUNT_YEARLY.ToString());
 
                     var WP_COUNT = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year ).ToList();
                    
