@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class WorkProgrammeController : ControllerBase
     {
@@ -29,15 +29,19 @@ namespace Backend_UMR_Work_Program.Controllers
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
 
-        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private string? WKPUserId => "1";
+        private string? WKPUserName => "Name";
+        private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        private string? WKPUserRole => "Admin";
+        //private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        //private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
         [HttpPost("POST_WORKPROGRAMME")]
         public async Task<WebApiResponse> Post_WORKPROGRAMME(WorkProgramme_Model wkp)
-        {
+        {   
             int save = 0;
             var ConcessionData = new CONCESSION_SITUATION();
             var GeophysicalActivitesData = new GEOPHYSICAL_ACTIVITIES_ACQUISITION();
@@ -182,7 +186,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save == 6)
                 {
                     string successMsg = "Work programme form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -197,13 +201,13 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
+        
         [HttpPost("POST_CONCESSION")]
         public async Task<WebApiResponse> Post_CONCESSION_SITUATION(CONCESSION_SITUATION_Model wkp)
-        {
+        {   
             int save = 0;
             var ConcessionData = new CONCESSION_SITUATION();
-
+           
             try
             {
                 # region Saving Concession Situations
@@ -227,11 +231,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 save = _context.SaveChanges();
                 #endregion
 
-
+                
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -249,10 +253,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpPost("POST_GEOPHYSICAL_ACQUISITION")]
         public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_ACQUISITION(GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model wkp)
-        {
+        {   
             int save = 0;
             var GeophysicalActivitesData = new GEOPHYSICAL_ACTIVITIES_ACQUISITION();
-
+           
             try
             {
 
@@ -281,7 +285,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -299,13 +303,13 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpPost("POST_GEOPHYSICAL_ACTIVITIES_PROCESSING")]
         public async Task<WebApiResponse> Post_GEOPHYSICAL_ACTIVITIES_PROCESSING(GEOPHYSICAL_ACTIVITIES_PROCESSING_Model wkp)
-        {
+        {   
             int save = 0;
             var GeoActivitesProcessingData = new GEOPHYSICAL_ACTIVITIES_PROCESSING();
-
+         
             try
             {
-
+               
                 #region Saving Geophysical Activites Processing
 
                 var getGeoActivitesProcessingData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
@@ -332,7 +336,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -350,10 +354,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpPost("DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
         public async Task<WebApiResponse> Post_DRILLING_OPERATIONS(DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model wkp)
-        {
+        {   
             int save = 0;
             var DrillingOperationsData = new DRILLING_OPERATIONS_CATEGORIES_OF_WELL();
-
+           
             try
             {
 
@@ -379,11 +383,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 save = _context.SaveChanges();
                 #endregion
 
-
+                
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -401,7 +405,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpPost("POST_DRILLING_EACH_WELL_COST")]
         public async Task<WebApiResponse> Post_DRILLING_EACH_WELL_COST(DRILLING_EACH_WELL_COST_Model wkp)
-        {
+        {   
             int save = 0;
             var DrillingWellCostData = new DRILLING_EACH_WELL_COST();
 
@@ -434,7 +438,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -459,7 +463,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-
+            
                 #region Saving Drilling Well Proposed Costs
 
                 var getDrillingWellCostProposedData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPUserId select c).FirstOrDefault();
@@ -485,7 +489,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been submitted successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data =wkp, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -503,7 +507,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpGet("PRESENTATION SCHEDULES")]
         public async Task<WebApiResponse> PRESENTATION_SCHEDULES(string year)
-        {
+        {   
             try
             {
                 var schedules = (from sch in _context.ADMIN_DATETIME_PRESENTATIONs select sch).ToList();
@@ -518,19 +522,19 @@ namespace Backend_UMR_Work_Program.Controllers
                     presentationSchedules = schedules,
                     Years = viewYears
                 };
-
+                    
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = presentationSchedules, StatusCode = ResponseCodes.Success };
-            }
+            }            
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
 
             }
         }
-
+        
         [HttpGet("DIVISIONAL_PRESENTATIONS")]
         public async Task<WebApiResponse> DIVISIONAL_PRESENTATIONS(string year)
-        {
+        {   
             try
             {
                 var presentations = (from sch in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs select sch).ToList();
@@ -545,9 +549,9 @@ namespace Backend_UMR_Work_Program.Controllers
                     Divisionpresentations = presentations,
                     Years = viewYears
                 };
-
+                    
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = presentationDivision, StatusCode = ResponseCodes.Success };
-            }
+            }            
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
@@ -565,11 +569,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (WKPUserRole == GeneralModel.Admin)
                 {
 
-                    details = await _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
+                    details =await  _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c=> c.Year_of_WP == year).ToListAsync();
                 }
                 else
                 {
-                    details = await _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+                    details =await  _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -583,7 +587,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         [HttpGet("OPL_AGGREGATED_SCORE")]
         public async Task<WebApiResponse> opl_aggregated_score(string year)
-        {
+        {   
             var presentYear = DateTime.Now.Year;
 
             var details = new List<WP_OPL_Aggregated_Score_ALL_COMPANy>();
@@ -591,14 +595,14 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 if (WKPUserRole == GeneralModel.Admin)
                 {
-                    details = await _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
+                    details =await  _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
 
                 }
                 else
                 {
-                    details = await _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+                    details =await  _context.WP_OPL_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
-
+                
             }
             catch (Exception ex)
             {
@@ -616,12 +620,12 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 if (WKPUserRole == GeneralModel.Admin)
-                {
-                    details = await _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
+                {   
+                    details =await  _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c=> c.Year_of_WP == year).ToListAsync();
                 }
                 else
                 {
-                    details = await _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+                    details =await  _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -635,7 +639,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
         [HttpGet("OML_AGGREGATED_SCORE")]
         public async Task<WebApiResponse> oml_aggregated_score(string year)
-        {
+        {   
             var presentYear = DateTime.Now.Year;
 
             var details = new List<WP_OML_Aggregated_Score_ALL_COMPANy>();
@@ -643,14 +647,14 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 if (WKPUserRole == GeneralModel.Admin)
                 {
-                    details = await _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
+                    details =await  _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
 
                 }
                 else
                 {
-                    details = await _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+                    details =await  _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPUserName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
-
+                
             }
             catch (Exception ex)
             {
@@ -661,8 +665,8 @@ namespace Backend_UMR_Work_Program.Controllers
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
 
         }
-
-
+        
+       
         #endregion
 
     }
