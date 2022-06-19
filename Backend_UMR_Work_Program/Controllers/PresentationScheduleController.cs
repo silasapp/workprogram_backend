@@ -248,7 +248,7 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 try
                 {
-                    if(dateTimeId == null)
+                    if(dateTimeId != null)
                     {
                         if (dateTimeId != null && option == optionA && dateTimeId.EMAIL_REMARK.ToLower() != active.ToLower())
                         {
