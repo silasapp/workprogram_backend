@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -29,14 +29,14 @@ namespace Backend_UMR_Work_Program.Controllers
          _mapper = mapper;
         _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
     }
-        //private string? WKPUserId => "1";
-        //private string? WKPUserName => "Name";
-        //private string? WKPUserEmail => "adeola.kween123@gmail.com";
-        //private string? WKPUserRole => "Admin";
-        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private string? WKPUserId => "1";
+        private string? WKPUserName => "Name";
+        private string? WKPUserEmail => "adeola.kween123@gmail.com";
+        private string? WKPUserRole => "Admin";
+        //private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
+        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
+        //private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
 
@@ -45,6 +45,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
+                var ADMIN_WORK_PROGRAM_REPORTs_Model= new List<ADMIN_WORK_PROGRAM_REPORT>();
                 WorkProgrammeReport_Model WorkProgrammeReport = new WorkProgrammeReport_Model();
 
                 string previousYear = year !=null ? (int.Parse(year) - 1).ToString(): "";
@@ -53,9 +54,21 @@ namespace Backend_UMR_Work_Program.Controllers
               
                 if (year != null)
                 {
+                    var WP_COUNT = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year).ToList();
+
                     var E_and_P_companies = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies.Where(x => x.YEAR == year).ToList();
 
-                    var WP_COUNT = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year ).ToList();
+                    var get_ReportContent_1 = WKP_Report.Where(x => x.Id == 1).FirstOrDefault();
+                    if(get_ReportContent_1 != null)
+                    {
+                        string NO_OF_COMPANY_PRESENTED = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.Presented).Count().ToString();
+                        get_ReportContent_1.Report_Content = get_ReportContent_1.Report_Content.Replace("(NO_OF_COMPANY_PRESENTED)", NO_OF_COMPANY_PRESENTED)
+                            .Replace("NO_OF_EP_COMPANIES", E_and_P_companies.Count().ToString());
+                        ADMIN_WORK_PROGRAM_REPORTs_Model.Add(new ADMIN_WORK_PROGRAM_REPORT()
+                        {
+                            Report_Content = get_ReportContent_1.Report_Content,
+                        });
+                    }
                    
                     var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
                                                                       where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
@@ -249,7 +262,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     var FLARINGFORECAST = _context.WP_Gas_Production_Utilisation_And_Flaring_Forecasts.Where(x => x.Year_of_WP == year).ToList();
 
 
-                    WorkProgrammeReport.ADMIN_WORK_PROGRAM_REPORT_Model = WKP_Report;
+                    WorkProgrammeReport.ADMIN_WORK_PROGRAM_REPORT_Model = ADMIN_WORK_PROGRAM_REPORTs_Model;
                     WorkProgrammeReport.E_and_P_companies_Model = E_and_P_companies;
                     WorkProgrammeReport.WP_Presentations_Model = WP_COUNT;
                     WorkProgrammeReport.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model = WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION;
