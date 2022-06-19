@@ -32,6 +32,10 @@ namespace Backend_UMR_Work_Program.Services
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     
+                    //var getProducedWater =
+
+
+                    //Company Number section
 
                     var companyInformation = (from c in _context.ADMIN_COMPANY_INFORMATIONs
                                               //where c.EMAIL == "Simon.njoku@shell.com"

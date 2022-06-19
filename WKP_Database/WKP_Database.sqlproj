@@ -495,5 +495,7 @@
     <Build Include="dbo\Stored Procedures\sp_helpdiagrams.sql" />
     <Build Include="dbo\Stored Procedures\sp_renamediagram.sql" />
     <Build Include="dbo\Stored Procedures\sp_upgraddiagrams.sql" />
+    <Build Include="dbo\Views\WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIES.sql" />
+    <Build Include="dbo\Views\WP_OML_Aggregated_Score_ALL_COMPANIES.sql" />
   </ItemGroup>
 </Project>
