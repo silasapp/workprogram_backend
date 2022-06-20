@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Backend_UMR_Work_Program.Models
+{
+    public partial class WP_OML_Aggregated_Score_ALL_COMPANy
+    {
+        public string? CompanyName { get; set; }
+        public string? Consession_Type { get; set; }
+        public string? Year_of_WP { get; set; }
+        public string? INDEX_TYPE { get; set; }
+        public decimal? Recalibrated_Scaled_Index_SUM { get; set; }
+        public int? Weight_SUM { get; set; }
+        public decimal? Weighted_Score_SUM { get; set; }
+        public decimal? OML_Aggregated_Score { get; set; }
+    }
+}
+
