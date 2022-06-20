@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
-namespace Backend_UMR_Work_Program.Helper.AutoMapperSettings
+namespace Backend_UMR_Work_Program.Helpers.AutoMapperSettings
 {
     public class MappingProfiles : Profile
     {

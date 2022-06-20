@@ -55,5 +55,12 @@
             public string? email { get; set; }
             public string? password { get; set; }
         }
+        public class Admin_Reps
+        {
+            public DateTime? Date_Updated { get; set; }
+            public string? REPRESENTATIVE { get; set; }
+            public string? REPRESENTATIVE_EMAIL { get; set; }
+          
+        }
     }
 }
