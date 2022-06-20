@@ -22,7 +22,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Backend_UMR_Work_Program.Controllers;
 using AutoMapper;
-using Backend_UMR_Work_Program.Helper.AutoMapperSettings;
+using Backend_UMR_Work_Program.Helpers.AutoMapperSettings;
 
 namespace Backend_UMR_Work_Program
 {
@@ -90,7 +90,7 @@ namespace Backend_UMR_Work_Program
             services.AddDbContext<WKP_DBContext>(options =>
                 options.UseSqlServer(Configuration["Data:Wkpconnect:ConnectionString"],
                 options => options.EnableRetryOnFailure(
-                    maxRetryCount: 3,
+                    maxRetryCount: 6,
                     maxRetryDelay: System.TimeSpan.FromSeconds(30),
                     errorNumbersToAdd: null)
                 ));
