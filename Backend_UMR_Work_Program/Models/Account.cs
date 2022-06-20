@@ -151,29 +151,32 @@ namespace Backend_UMR_Work_Program.Models
         public object GetData()
         {
             var code = "1295";
-            using (SqlConnection con = new SqlConnection(this.mycon.Myconnection))
-            {
-                SqlCommand cmd = new SqlCommand();
-                cmd = new SqlCommand("Select * from ADMIN_DATETIME_PRESENTATION where COMPANY_ID = '" + code + "'", con);
+            var data = _context.ADMIN_DATETIME_PRESENTATIONs.FromSqlRaw("Select * from ADMIN_DATETIME_PRESENTATION where COMPANY_ID = '" + code + "'").FirstOrDefault();
+            //var data = (from c in _context.ADMIN_DATETIME_PRESENTATIONs where c.COMPANY_ID == code select c).FirstOrDefault();
+            // using (SqlConnection con = new SqlConnection(this.mycon.Myconnection))
+            // {
+            //     SqlCommand cmd = new SqlCommand();
+            //     cmd = new SqlCommand("Select * from ADMIN_DATETIME_PRESENTATION where COMPANY_ID = '" + code + "'", con);
 
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection = con;
-                con.Open();
+            //     cmd.CommandType = CommandType.Text;
+            //     cmd.Connection = con;
+            //     con.Open();
 
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
-                DataSet ds = new DataSet();
-                da.Fill(ds, "ADMIN_COMPANY_INFORMATION");
+            //     SqlDataAdapter da = new SqlDataAdapter();
+            //     da.SelectCommand = cmd;
+            //     DataSet ds = new DataSet();
+            //     da.Fill(ds, "ADMIN_COMPANY_INFORMATION");
 
-                DataTable dt = ds.Tables[0];
-                int rowCount = dt.Rows.Count;
-                //SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION where COMPANY_ID = '" + code + "'", con);
-                //   SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION where id = 117 ", con);
-                //DataTable result = new DataTable();
+            //     DataTable dt = ds.Tables[0];
+            //     int rowCount = dt.Rows.Count;
+            //     //SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION where COMPANY_ID = '" + code + "'", con);
+            //     //   SqlDataAdapter da = new SqlDataAdapter("Select * from ADMIN_DATETIME_PRESENTATION where id = 117 ", con);
+            //     //DataTable result = new DataTable();
 
-                //da.Fill(result);
-                return dt;
-            }
+            //     //da.Fill(result);
+            //     return dt;
+            // }
+            return data;
 
         }
 

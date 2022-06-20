@@ -2,9 +2,14 @@
 using Backend_UMR_Work_Program.Models;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -25,6 +30,11 @@ namespace Backend_UMR_Work_Program.Controllers
         _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor);
         //_helpersController = new HelpersController(_context, _configuration);
     }
+
+    private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKPRole => User.FindFirstValue(ClaimTypes.Role);
 
 
         [HttpGet("WORKPROGRAMME_REPORT")]
@@ -296,9 +306,9 @@ namespace Backend_UMR_Work_Program.Controllers
             //var userEmail = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionEmail));
             //var companyID = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionUserID));
 
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+            var userRole = WKPRole;
+            var userEmail = WKPCompanyEmail;
+            var companyID = WKPCompanyId;
 
             try { 
             var dateYear = DateTime.Now.AddYears(0).ToString("yyyy");
@@ -358,13 +368,19 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpGet("GEOPHYSICALACTIVITIESYEARLIST")]
+        public async Task<object> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Yearlist() {
+            var yearlist = await (from a in _context.CONCESSION_SITUATIONs orderby a.Year select a.Year).Distinct().ToListAsync();
+            return yearlist;
+        }
+
         
         [HttpGet("GEOPHYSICALACTIVITIES")]
         public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year = null )
         {
-            var userRole = "Admin";
-            var userEmail = "test@mailinator.com";
-            var companyID = "NND/001";
+            var userRole = WKPRole;
+            var userEmail = WKPCompanyEmail;
+            var companyID = WKPCompanyId;
 
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_ACQUISITION>();
             try
@@ -1682,9 +1698,646 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
             }
         }
-        
 
+        #region
+        
+        [HttpGet("UPLOADED_PRESENTATIONS")]
+        public async Task<WebApiResponse> UPLOADED_PRESENTATION(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var uploaded_presentations = new List<PRESENTATION_UPLOAD>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    uploaded_presentations = _context.PRESENTATION_UPLOADs.ToList();
+                }
+                else
+                {
+                    uploaded_presentations = _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    uploaded_presentations = uploaded_presentations.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = uploaded_presentations.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
 
         }
 
+        [HttpGet("UPLOADED_COMMUNITY_DEVELOPMENT_PROJECTS")]
+        public async Task<WebApiResponse> UPLOADED_COMMUNITY(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var community_proj = new List<PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    community_proj = _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.ToList();
+                }
+                else
+                {
+                    community_proj = _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    community_proj = community_proj.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = community_proj.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_SKILL ACQUISITION")]
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var hse_sus = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    hse_sus = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.ToList();
+                }
+                else
+                {
+                    hse_sus = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    hse_sus = hse_sus.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = hse_sus.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_NEW_Scholarships")]
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var newScholarship = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    newScholarship = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.ToList();
+                }
+                else
+                {
+                    newScholarship = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    newScholarship = newScholarship.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = newScholarship.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW")]
+        public WebApiResponse HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var newProgram = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    newProgram = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.ToList();
+                }
+                else
+                {
+                    newProgram = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    newProgram = newProgram.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = newProgram.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("CSR_PROJECT_DETAILS")]
+        public WebApiResponse PROJECT_DETAILS(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("PLANNED_&_ACTUAL_PROJECTS")]
+        public async Task<WebApiResponse> PLANNEDACTUALPROJECTS(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("WATER_MANAGEMENT_ZONE")]
+        public async Task<WebApiResponse> ZONE(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_PRODUCED_WATER_MANAGEMENT_NEW>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+
+        [HttpGet("WATER_MANAGEMENT")]
+        public async Task<WebApiResponse> WATER_MANAGEMENT(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("WASTE_MANAGEMENT_UPLOAD")]
+        public async Task<WebApiResponse> WASTE_MANAGEMENT_UPLOAD(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_WASTE_MANAGEMENT_SYSTEM>();
+
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_WASTE_MANAGEMENT_SYSTEMs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> ENVIRONMENTAL_MANAGEMENT(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+
+        [HttpGet("WASTE_MANAGEMENT")]
+        public async Task<WebApiResponse> WASTE_MANAGEMENT(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("OSP_REGISTRATION")]
+        public async Task<WebApiResponse> REGISTRATION(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_OSP_REGISTRATIONS_NEW>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_OSP_REGISTRATIONS_NEWs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_OSP_REGISTRATIONS_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+
+        [HttpGet("INCIDENT_REPORTING")]
+        public async Task<WebApiResponse> INCIDENT_REPORTING(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("CAUSES_OF_OIL_SPILL")]
+        public async Task<WebApiResponse> OIL_SPILL(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_CAUSES_OF_SPILL>();
+            try
+            {
+
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_CAUSES_OF_SPILLs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_CAUSES_OF_SPILLs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+
+        [HttpGet("OIL_SPILL_REPORTING")]
+        public async Task<WebApiResponse> OIL_SPILL_REP(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_OIL_SPILL_REPORTING_NEW>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_OIL_SPILL_REPORTING_NEWs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_OIL_SPILL_REPORTING_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("RBI")]
+        public async Task<WebApiResponse> RBI(string? year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        [HttpGet("PRESCRIPTION_STRAGTEGY")]
+        public async Task<WebApiResponse> PRESCRIPTION_STRAGTEGY(string year = null)
+        {
+            var userRole = "Admin";
+            var userEmail = "test@mailinator.com";
+            var companyID = "NND/001";
+
+            var details = new List<HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW>();
+            try
+            {
+                if (userRole == GeneralModel.Admin)
+                {
+
+                    details = _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.ToList();
+                }
+                else
+                {
+                    details = _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Where(c => c.COMPANY_ID == companyID).ToList();
+                }
+
+                if (year != null)
+                {
+                    details = details.Where(c => c.Year_of_WP == year).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+            }
+
+
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+        }
+        #endregion
+
     }
+
+}
