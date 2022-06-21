@@ -46,30 +46,20 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var ADMIN_WORK_PROGRAM_REPORTs_Model= new List<ADMIN_WORK_PROGRAM_REPORT>();
-                WorkProgrammeReport_Model WorkProgrammeReport = new WorkProgrammeReport_Model();
+                WorkProgrammeReport_Model  GeneralReport = new WorkProgrammeReport_Model();
+                WorkProgrammeReport1_Model WorkProgrammeReport = new WorkProgrammeReport1_Model();
+                WorkProgrammeReport2_Model WorkProgrammeReport2 = new WorkProgrammeReport2_Model();
 
                 string previousYear = year !=null ? (int.Parse(year) - 1).ToString(): "";
 
                 var WKP_Report = _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id <= 5).ToList();
-              
+                var Seismic_Data_Acquisition_Activities = WKP_Report.Where(x => x.Id == 2).FirstOrDefault();
                 if (year != null)
                 {
                     var WP_COUNT = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year).ToList();
-
                     var E_and_P_companies = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies.Where(x => x.YEAR == year).ToList();
 
-                    var get_ReportContent_1 = WKP_Report.Where(x => x.Id == 1).FirstOrDefault();
-                    if(get_ReportContent_1 != null)
-                    {
-                        string NO_OF_COMPANY_PRESENTED = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.Presented).Count().ToString();
-                        get_ReportContent_1.Report_Content = get_ReportContent_1.Report_Content.Replace("(NO_OF_COMPANY_PRESENTED)", NO_OF_COMPANY_PRESENTED)
-                            .Replace("NO_OF_EP_COMPANIES", E_and_P_companies.Count().ToString());
-                        ADMIN_WORK_PROGRAM_REPORTs_Model.Add(new ADMIN_WORK_PROGRAM_REPORT()
-                        {
-                            Report_Content = get_ReportContent_1.Report_Content,
-                        });
-                    }
-                   
+                    
                     var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
                                                                       where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
                                                                       group o by new
@@ -85,8 +75,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                                                       }).ToList();
 
+                    
+                    var WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING = _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(x => x.Year_of_WP == year && (x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD || x.Geo_Type_of_Data_being_Processed == GeneralModel.TwoD)).ToList();
 
-                    var WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING_3D = _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(x => x.Year_of_WP == year && (x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD || x.Geo_Type_of_Data_being_Processed == GeneralModel.TwoD)).ToList();
 
                     var WP_COUNT_WELLS = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && (x.Category == GeneralModel.Exploration || x.Category == GeneralModel.Development)).ToList();
 
@@ -109,23 +100,24 @@ namespace Backend_UMR_Work_Program.Controllers
                     var WP_SUM_WORKOVERS_RECOMPLETION = _context.WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETIONs.Where(x => x.Year_of_WP_I == year).ToList();
 
                     var WP_COUNT_Appraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.Contains(GeneralModel.Appraisal)).ToList();
-                    //var WP_COUNT_FirstAppraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.FirstAppraisal).ToList();
-                    //var WP_COUNT_SecondAppraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.SecondAppraisal).ToList();
-                    //var WP_COUNT_Appraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Appraisal).ToList();
-                    //var WP_COUNT_OrdinaryAppraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Appraisal).ToList();
+
+                    var WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES =  (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oils
+                                                                    where u.Year_of_WP == year
+                                                                    select u).ToList();
 
                     var WP_JV_Contract_Type =  (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types
-                                               where u.Year_of_WP == year && u.Contract_Type == GeneralModel.JV
+                                               where u.Year_of_WP == previousYear /*&& u.Contract_Type == GeneralModel.JV*/
                                                select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToList();
 
-                    //var WP_JV_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.JV).ToList();
-                    //string JV_Total_Reconciled_National_Crude_Oil_Production = WP_JV_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
-                    //var WP_MF_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.MF).ToList();
-                    //string MF_Total_Reconciled_National_Crude_Oil_Production = WP_MF_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
-                    //var WP_PSC_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.PSC).ToList();
-                    //string PSC_Total_Reconciled_National_Crude_Oil_Production = WP_PSC_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
-                    //var WP_SR_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.SR).ToList();
-                    //string SR_Total_Reconciled_National_Crude_Oil_Production = WP_SR_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
+                    var WP_GAS_PRODUCTION_ACTIVITIES_Percentages =  (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages
+                                                                     where u.Year_of_WP == previousYear select u).ToList();
+                    var WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY =  (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages
+                                                                     where u.Year_of_WP == year select u).ToList();
+                    
+                    var WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type =  (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types
+                                                                       where u.Year_of_WP == previousYear select u).ToList();
+
+
 
                     var WP_CRUDE_OIL = (from u in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where u.Year_of_WP == previousYear || u.Year_of_WP == year
                                         group u by new{ u.Year_of_WP } into g select new {
@@ -168,7 +160,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     #endregion
 
                     var OIL_CONDENSATE_MMBBL = _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(x => x.Year_of_WP == year).ToList();
-                   
+
                     #region HSE Accident
                     var HSE_ACCIDENT_Consequences = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequences.Where(x => x.Year_of_WP == year && x.Consequence == GeneralModel.Fatality).ToList();
                     //string Sum_accident = HSE_ACCIDENT_Consequences.sum_accident.ToString();
@@ -186,8 +178,6 @@ namespace Backend_UMR_Work_Program.Controllers
                                         }).GroupBy(x => x.Cause).Select(x => x.FirstOrDefault()).ToList();
 
                     #endregion
-
-
                     var GEO_ACTIVITIES = (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
                                           where u.Year_of_WP == year
                                           select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToList();
@@ -213,6 +203,98 @@ namespace Backend_UMR_Work_Program.Controllers
                                                 CompanyName = g.Key,
                                                 Year_of_WP = g.FirstOrDefault().Year_of_WP,
                                             }).OrderBy(x => x.Frequency).Take(5).ToList();
+                    
+                    #region GENERAL REPORT DATA POPULATION
+                    var get_ReportContent_1 = WKP_Report.Where(x => x.Id == 1)?.FirstOrDefault();
+                    var get_ReportContent_2 = WKP_Report.Where(x => x.Id == 2)?.FirstOrDefault();
+                    if (get_ReportContent_1 != null)
+                    {
+                        string NO_OF_COMPANY_PRESENTED = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.Presented).Count().ToString();
+                        string SHOWED_UP = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.ShowedButNoPresentation).Count().ToString();
+                        string FAIL_TO_SHOW_UP = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.FailedToShow).Count().ToString();
+                        string NOT_INVITED = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.NotInvited).Count().ToString();
+
+
+                        get_ReportContent_1.Report_Content = get_ReportContent_1.Report_Content.Replace("(NO_OF_COMPANY_PRESENTED)", NO_OF_COMPANY_PRESENTED)
+                            .Replace("(NO_OF_EP_COMPANIES)", E_and_P_companies.Count().ToString())
+                            .Replace("(N)", year)
+                            .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
+                            .Replace("(N - 1)", previousYear)
+                            .Replace("(SHOWED_UP)", SHOWED_UP).Replace("(FAIL_TO_SHOW_UP)", SHOWED_UP).Replace("(NOT_INVITED)", NOT_INVITED)
+                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(PROCESSED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Processed_Actual.ToString())
+                            .Replace("(REPROCESSED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Reprocessed_Actual.ToString())
+                            .Replace("(PROPOSED_ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Geo_type_of_data_acquired.ToString())
+                            .Replace("(PROPOSED_PROCESS_2D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.TwoD)?.FirstOrDefault()?.Processed_Proposed.ToString())
+                            .Replace("(PROPOSED_PROCESS_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Processed_Proposed.ToString())
+                            .Replace("(PROPOSED_REPROCESSED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Reprocessed_Proposed.ToString())
+                            .Replace("(NO_EXPLORATION_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Exploration)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_EXPLORATION_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Exploration)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_FIRST_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.FirstAppraisal)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_FIRST_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.FirstAppraisal)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_SECOND_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.SecondAppraisal)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_SECOND_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.SecondAppraisal)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_ORDINARY_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.OrdinaryAppraisal)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_ORDINARY_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.OrdinaryAppraisal)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_DEVELOPMENT_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Development)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_DEVELOPMENT_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Development)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_COMPLETION_WORKOVER)", WP_SUM_WORKOVERS_RECOMPLETION.Where(x => x.Year_of_WP_I == year)?.FirstOrDefault()?.Actual_Year.ToString())
+                            .Replace("(NO_PROPOSED_COMPLETION_WORKOVER)", WP_SUM_WORKOVERS_RECOMPLETION.Where(x => x.Year_of_WP_I == year)?.FirstOrDefault()?.Proposed_Year.ToString())
+                            .Replace("(PREVIOUS_NO_TOTAL_RECONCILED_NATIONAL_CRUDE)", WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_JV)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_PSC)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_SR)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_MF)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_YEAR_TO_DATE)", WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Actual_Total_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Utilized_Gas_Produced.ToString())
+                            .Replace("(PERCENTAGE_TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Percentage_Utilized.ToString())
+                            .Replace("(NO_TOTAL_GAS_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_JV)", WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_PSC)", WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_MFIO)", WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_YEAR_TO_DATE)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Actual_Total_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_YEAR_TO_DATE_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Utilized_Gas_Produced.ToString())
+                            .Replace("(PERCENTAGE_TOTAL_GAS_PRODUCED_YEAR_TO_DATE_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Percentage_Utilized.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_YEAR_TO_DATE_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_NIGERIA_OIL_RESERVES)", OIL_CONDENSATE_MMBBL?.FirstOrDefault()?.Reserves_as_at_MMbbl.ToString())
+                            .Replace("(NO_NIGERIA_OIL_CONDENSATE)", OIL_CONDENSATE_MMBBL?.FirstOrDefault()?.Reserves_as_at_MMbbl_condensate.ToString())
+                            .Replace("(NO_NIGERIA_OIL_RESERVE_GAS)", OIL_CONDENSATE_MMBBL?.FirstOrDefault()?.Reserves_as_at_MMbbl_gas.ToString())
+                            .Replace("(NO_OF_ACCIDENTS)", HSE_ACCIDENT_Total?.FirstOrDefault()?.Sum_accident.ToString())
+                            .Replace("(NO_OF_FATALITIES)", HSE_ACCIDENT_Consequences?.FirstOrDefault()?.sum_accident.ToString())
+                            .Replace("(NO_OF_SPILLS)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.Sabotage)?.FirstOrDefault()?.sum_accident.ToString())
+                            .Replace("(NO_OF_RELEASE)", HSE_VOLUME_OF_OILSPILL.ToString())
+                            .Replace("(PERCENTAGE_OF_SABOTAGE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.Sabotage)?.FirstOrDefault()?.Percentage_Spill.ToString())
+                            .Replace("(PERCENTAGE_OF_EQUIPMENT_FAILURE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.EquipmentFailure)?.FirstOrDefault()?.Percentage_Spill.ToString())
+                            .Replace("(PERCENTAGE_OF_HUMAN_ERROR)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.HumanError)?.FirstOrDefault()?.Percentage_Spill.ToString())
+                            .Replace("(PERCENTAGE_OF_MYSTERY_SPILLS)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.MysterySpills)?.FirstOrDefault()?.Percentage_Spill.ToString())
+                        ;
+
+                        get_ReportContent_2.Report_Content = get_ReportContent_2.Report_Content
+                            .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(N)", year)
+                            .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
+                            .Replace("(N - 1)", previousYear)
+                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            ;
+
+                        ADMIN_WORK_PROGRAM_REPORTs_Model.Add(new ADMIN_WORK_PROGRAM_REPORT()
+                        {
+                            Report_Content = get_ReportContent_1.Report_Content,
+                        });
+                        ADMIN_WORK_PROGRAM_REPORTs_Model.Add(new ADMIN_WORK_PROGRAM_REPORT()
+                        {
+                            Report_Content = get_ReportContent_2.Report_Content,
+                        });
+                    }
+                    #endregion
 
                     //TOTAL_PRODUCED_WATER
                     int number;
@@ -243,7 +325,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                                 {
                                                     TOTAL_QUANTITY_SPILLED =  g.Sum(x =>Convert.ToInt64(x.TOTAL_QUANTITY_SPILLED)),
                                                     CompanyName = g.Key,
-                                                    Year_of_WP = g.FirstOrDefault().Year_of_WP
+                                                    Year_of_WP = g?.FirstOrDefault().Year_of_WP
                                                 }).ToList();
 
                     var HSE_QUANTITY  = (from o in _context.HSE_CAUSES_OF_SPILLs
@@ -266,7 +348,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     WorkProgrammeReport.E_and_P_companies_Model = E_and_P_companies;
                     WorkProgrammeReport.WP_Presentations_Model = WP_COUNT;
                     WorkProgrammeReport.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model = WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION;
-                    WorkProgrammeReport.WP_GEOPHYSICAL_ACTIVITIES_PROCESSING_Model = WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING_3D;
+                    WorkProgrammeReport.WP_GEOPHYSICAL_ACTIVITIES_PROCESSING_Model = WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING;
                     WorkProgrammeReport.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model =  WP_COUNT_WELLS;
                     WorkProgrammeReport.WP_SUM_APPRAISAL_WELL_Model = WP_SUM_APPRAISAL_WELLS;
                     WorkProgrammeReport.WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION_Model = WP_SUM_WORKOVERS_RECOMPLETION;
@@ -291,7 +373,18 @@ namespace Backend_UMR_Work_Program.Controllers
                     WorkProgrammeReport.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model = PLANNED_TERRAIN;
                     WorkProgrammeReport.WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model = FLARINGFORECAST;
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = WorkProgrammeReport, StatusCode = ResponseCodes.Success };
+
+                    #region new report data section
+                    var Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION = _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x=> x.Year_of_WP == year &&  x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToList();
+                    //var Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION = _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x=> x.Year_of_WP == year &&  x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToList();
+                    //SqlCommand cmd = new SqlCommand(" SELECT CompanyName, OML_Name, Terrain, Name_of_Contractor, SUM(CAST(Quantum_Approved AS float)) AS Quantum_Approved, SUM(CAST(Quantum_PLANNED AS float))  AS Quantum_PLANNED, Year_of_WP, Geo_type_of_data_acquired FROM dbo.GEOPHYSICAL_ACTIVITIES_ACQUISITION WHERE Year_of_WP = '" + DropDownList1.SelectedItem.Text + "' AND Geo_type_of_data_acquired = '3D' GROUP BY Year_of_WP, Geo_type_of_data_acquired, CompanyName, OML_Name, Terrain, Name_of_Contractor", con);
+
+                    #endregion
+                    WorkProgrammeReport2.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs_Model = Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION;
+
+                    GeneralReport.WorkProgrammeReport1_Model = WorkProgrammeReport;
+                    GeneralReport.WorkProgrammeReport2_Model = WorkProgrammeReport2;
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = GeneralReport, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {

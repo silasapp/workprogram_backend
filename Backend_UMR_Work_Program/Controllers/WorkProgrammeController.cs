@@ -50,7 +50,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (wkp.CONCESSION_SITUATION != null)
                 {
                     numberofTablesDataToSave++;
-                    Task<WebApiResponse> ConcessionData = CONCESSION_SITUATION(wkp.CONCESSION_SITUATION, wkp.WorkProgramme_Year);
+                    Task<WebApiResponse> ConcessionData = POST_CONCESSION_SITUATION(wkp.CONCESSION_SITUATION, wkp.WorkProgramme_Year);
                     if (ConcessionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
@@ -847,8 +847,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
         #region database tables actions
 
-        [HttpPost]
-        public async Task<WebApiResponse> CONCESSION_SITUATION(CONCESSION_SITUATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
+        [HttpPost("POST_CONCESSION_SITUATION")]
+        public async Task<WebApiResponse> POST_CONCESSION_SITUATION(CONCESSION_SITUATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
             int save = 0;

@@ -40,7 +40,18 @@ namespace Backend_UMR_Work_Program.Models
 
 
 
+        public class ADMIN_WORK_PROGRAM_REPORTs_Model
+        {
+            public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
+
+        }
+        
         public class WorkProgrammeReport_Model
+        {
+          public WorkProgrammeReport1_Model WorkProgrammeReport1_Model { get; set; }
+          public WorkProgrammeReport2_Model WorkProgrammeReport2_Model { get; set; }
+        }
+        public class WorkProgrammeReport1_Model
         {
             public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
             public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLY> E_and_P_companies_Model { get; set; }
@@ -81,6 +92,11 @@ namespace Backend_UMR_Work_Program.Models
             //public List<WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
             public List<WP_Gas_Production_Utilisation_And_Flaring_Forecast> WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model { get; set; }
+
+        }
+        public class WorkProgrammeReport2_Model
+        {
+          public List<Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION> Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs_Model { get; set; }
 
         }
         public class TOTAL_PRODUCED_WATER_Model { 
