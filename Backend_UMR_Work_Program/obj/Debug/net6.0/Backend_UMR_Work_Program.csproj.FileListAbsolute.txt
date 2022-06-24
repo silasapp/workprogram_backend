@@ -424,3 +424,4 @@ C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debu
 C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\Humanizer.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debug\net6.0\YamlDotNet.dll
