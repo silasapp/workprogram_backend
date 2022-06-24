@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -199,12 +200,12 @@ namespace Backend_UMR_Work_Program.Models
         }
         public class WorkProgramme_Model_1
         {
-            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
-            public GEOPHYSICAL_ACTIVITIES_PROCESSING_Model GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
-            public DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
-            public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
-            public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
+            public List<CONCESSION_SITUATION_Model> CONCESSION_SITUATION { get; set; }
+            public List<GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model> GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
+            public List<GEOPHYSICAL_ACTIVITIES_PROCESSING_Model> GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
+            public List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model> DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
+            public List<DRILLING_EACH_WELL_COST_Model> DRILLING_EACH_WELL_COSTs { get; set; }
+            public List<DRILLING_EACH_WELL_COST_PROPOSED_Model> DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
 
             public string WorkProgramme_Year { get; set; }
          
@@ -212,27 +213,27 @@ namespace Backend_UMR_Work_Program.Models
         public class WorkProgramme_Model_2
         {
             public string WorkProgramme_Year { get; set; }
-            public INITIAL_WELL_COMPLETION_JOB1_Model Initial_Well_Completion_Job { get; set; }
-            public WORKOVERS_RECOMPLETION_JOB1_Model WORKOVERS_RECOMPLETION_JOB1 { get; set; }
-            public FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
-            public FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
-            public FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
-            public RESERVES_UPDATES_LIFE_INDEX_Model RESERVES_UPDATES_LIFE_INDEX { get; set; }
-            public FIELD_DEVELOPMENT_PLAN_Model FIELD_DEVELOPMENT_PLAN { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
-            public GAS_PRODUCTION_ACTIVITy_Model GAS_PRODUCTION_ACTIVITy { get; set; }
-            public NDR_Model NDR { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE { get; set; }
-            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity { get; set; }
-            public RESERVES_REPLACEMENT_RATIO_Model RESERVES_REPLACEMENT_RATIO { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED { get; set; }
-            public GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
+            public List<INITIAL_WELL_COMPLETION_JOB1_Model> Initial_Well_Completion_Job { get; set; }
+            public List<WORKOVERS_RECOMPLETION_JOB1_Model> WORKOVERS_RECOMPLETION_JOB1 { get; set; }
+            public List<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model> FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
+            public List<FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model> FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
+            public List<FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model> FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
+            public List<RESERVES_UPDATES_LIFE_INDEX_Model> RESERVES_UPDATES_LIFE_INDEX { get; set; }
+            public List<FIELD_DEVELOPMENT_PLAN_Model> FIELD_DEVELOPMENT_PLAN { get; set; }
+            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
+            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
+            public List<GAS_PRODUCTION_ACTIVITy_Model> GAS_PRODUCTION_ACTIVITy { get; set; }
+            public List<NDR_Model> NDR { get; set; }
+            public List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model> RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE { get; set; }
+            public List<RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model> RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection { get; set; }
+            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION { get; set; }
+            public List<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION { get; set; }
+            public List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model> RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE { get; set; }
+            public List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model> RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition { get; set; }
+            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity { get; set; }
+            public List<RESERVES_REPLACEMENT_RATIO_Model> RESERVES_REPLACEMENT_RATIO { get; set; }
+            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED { get; set; }
+            public List<GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
 
         }
         public class WorkProgramme_Model3
@@ -303,44 +304,46 @@ namespace Backend_UMR_Work_Program.Models
 
         #region FORM 1
 
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class CONCESSION_SITUATION_Model
-{
-    public string? OML_ID { get; set; }
-    public string? OML_Name { get; set; }
-    public string? CompanyName { get; set; }
-    public string? Companyemail { get; set; }
-    public string? Year { get; set; }
-    public string? Concession_Held { get; set; }
-    public string? Area { get; set; }
-    public string? No_of_discovered_field { get; set; }
-    public string? No_of_field_producing { get; set; }
-    public string? Name_of_Company { get; set; }
-    public string? Equity_distribution { get; set; }
-    public string? Contract_Type { get; set; }
-    public string? Geological_location { get; set; }
-    public string? Has_Signature_Bonus_been_paid { get; set; }
-    public string? If_No_why_sig { get; set; }
-    public string? Has_the_Concession_Rentals_been_paid { get; set; }
-    public string? If_No_why_concession { get; set; }
-    public string? Is_there_an_application_for_renewal { get; set; }
-    public string? If_No_why_renewal { get; set; }
-    public string? Budget_actual_for_license_or_lease { get; set; }
-    public string? proposed_budget_for_each_license_lease { get; set; }
-    public string? Five_year_proposal { get; set; }
-    public string? Did_you_meet_the_minimum_work_programme { get; set; }
-    public string? Comment { get; set; }
-    public DateTime? Date_of_Grant_Expiration { get; set; }
-    public string? Terrain { get; set; }
-    public string? Consession_Type { get; set; }
-    public DateTime? Date_of_Expiration { get; set; }
-    public string? How_Much_Signature_Bonus_have_been_paid_USD { get; set; }
-    public string? How_Much_Concession_Rental_have_been_paid_USD { get; set; }
-    public string? How_Much_Renewal_Bonus_have_been_paid_USD { get; set; }
-    public string? Has_Assignment_of_Interest_Fee_been_paid { get; set; }
-    public string? relinquishment_retention { get; set; }
-    public string? area_in_square_meter_based_on_company_records { get; set; }
-}
-
+        {
+            public string? OML_ID { get; set; }
+            public string? OML_Name { get; set; }
+            public string? CompanyName { get; set; }
+            public string? Companyemail { get; set; }
+            public string? Year { get; set; }
+            public string? Concession_Held { get; set; }
+            public string? Area { get; set; }
+            public string? No_of_discovered_field { get; set; }
+            public string? No_of_field_producing { get; set; }
+            public string? Name_of_Company { get; set; }
+            public string? Equity_distribution { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Geological_location { get; set; }
+            public string? Has_Signature_Bonus_been_paid { get; set; }
+            public string? If_No_why_sig { get; set; }
+            public string? Has_the_Concession_Rentals_been_paid { get; set; }
+            public string? If_No_why_concession { get; set; }
+            public string? Is_there_an_application_for_renewal { get; set; }
+            public string? If_No_why_renewal { get; set; }
+            public string? Budget_actual_for_license_or_lease { get; set; }
+            public string? proposed_budget_for_each_license_lease { get; set; }
+            public string? Five_year_proposal { get; set; }
+            public string? Did_you_meet_the_minimum_work_programme { get; set; }
+            public string? Comment { get; set; }
+            public DateTime? Date_of_Grant_Expiration { get; set; }
+            public string? Terrain { get; set; }
+            public string? Consession_Type { get; set; }
+            public DateTime? Date_of_Expiration { get; set; }
+            public string? How_Much_Signature_Bonus_have_been_paid_USD { get; set; }
+            public string? How_Much_Concession_Rental_have_been_paid_USD { get; set; }
+            public string? How_Much_Renewal_Bonus_have_been_paid_USD { get; set; }
+            public string? Has_Assignment_of_Interest_Fee_been_paid { get; set; }
+            public string? relinquishment_retention { get; set; }
+            public string? area_in_square_meter_based_on_company_records { get; set; }
+        }
+        
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model
         {
             public string? Geo_acquired_geophysical_data { get; set; }
@@ -374,6 +377,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? QUATER { get; set; }
         }
 
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class GEOPHYSICAL_ACTIVITIES_PROCESSING_Model
         {
             public string? Geo_Any_Ongoing_Processing_Project { get; set; }
@@ -408,6 +412,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? QUATER { get; set; }
         }
 
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model
         {
             public string? OML_ID { get; set; }
@@ -458,6 +463,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? WellName { get; set; }
         }
 
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class DRILLING_EACH_WELL_COST_Model
         {
             public string? OML_ID { get; set; }
@@ -470,6 +476,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
         }
 
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class DRILLING_EACH_WELL_COST_PROPOSED_Model
         {
             public string? OML_ID { get; set; }
@@ -484,6 +491,7 @@ namespace Backend_UMR_Work_Program.Models
         #endregion
 
         #region FORM 2
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class INITIAL_WELL_COMPLETION_JOB1_Model
         {
             public string? OML_ID { get; set; }
@@ -507,6 +515,8 @@ namespace Backend_UMR_Work_Program.Models
             public DateTime? Actual_Completion_Date { get; set; }
             public DateTime? Proposed_Completion_Date { get; set; }
         }
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class WORKOVERS_RECOMPLETION_JOB1_Model
         {
             public string? OML_ID { get; set; }
@@ -528,7 +538,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? QUATER { get; set; }
             public string? oil_or_gas_wells { get; set; }
         }
-        public  class FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -542,7 +554,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Condensate { get; set; }
             public string? Consession_Type { get; set; }
         }
-        public  class FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -553,7 +567,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Development_Plan_Status { get; set; }
             public string? Consession_Type { get; set; }
         }
-        public  class FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -562,7 +578,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Development_Plan_Status { get; set; }
             public string? Consession_Type { get; set; }
         }
-        public  class RESERVES_UPDATES_LIFE_INDEX_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class RESERVES_UPDATES_LIFE_INDEX_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -575,7 +593,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? AG { get; set; }
             public string? Consession_Type { get; set; }
         }
-        public  class FIELD_DEVELOPMENT_PLAN_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class FIELD_DEVELOPMENT_PLAN_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -599,7 +619,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Are_they_oil_or_gas_wells { get; set; }
             public string? FDPDocumentFilename { get; set; }
         }
-        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -654,7 +676,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Gas_AG { get; set; }
             public string? Gas_NAG { get; set; }
         }
-        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -709,7 +733,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? PUAUploadFilename { get; set; }
             public string? UUOAUploadFilename { get; set; }
         }
-        public  class GAS_PRODUCTION_ACTIVITy_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class GAS_PRODUCTION_ACTIVITy_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -777,7 +803,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? number_of_gas_wells_completed { get; set; }
             public string? number_of_gas_wells_tested { get; set; }
         }
-        public  class NDR_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class NDR_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -791,7 +819,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
             public string? Consession_Type { get; set; }
         }
-        public  class RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -812,7 +842,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Company_Reserves_AnnualGasAGProduction { get; set; }
             public string? Company_Reserves_AnnualGasNAGProduction { get; set; }
         }
-        public  class RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -826,7 +858,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
             public string? Consession_Type { get; set; }
         }
-        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -876,7 +910,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? ProductionOilCondensateAGNAGUploadFilePath { get; set; }
             public string? ProductionOilCondensateAGNAGUFilename { get; set; }
         }
-        public  class RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -890,7 +926,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
             public string? Consession_Type { get; set; }
         }
-        public  class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -905,7 +943,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
             public string? Contract_Type { get; set; }
         }
-        public  class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -921,7 +961,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
             public string? Terrain { get; set; }
         }
-        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -936,7 +978,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Gas_AG { get; set; }
             public string? Gas_NAG { get; set; }
         }
-        public  class RESERVES_REPLACEMENT_RATIO_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class RESERVES_REPLACEMENT_RATIO_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -947,6 +991,8 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
             public string? Trend_Year { get; set; }
         }
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model
         {
             public string? OML_ID { get; set; }
@@ -962,7 +1008,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Gas_AG { get; set; }
             public string? Gas_NAG { get; set; }
         }
-        public  class GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model
+
+        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
+        public class GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
