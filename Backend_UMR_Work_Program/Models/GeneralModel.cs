@@ -30,6 +30,7 @@ namespace Backend_UMR_Work_Program.Models
         public static string DeepOffshore = "Deep Offshore";
         public static string Onshore = "Onshore";
         public static string Fatality = "FATALITY";
+        public static string Fatalities = "Fatalities";
         public static string Sabotage = "SABOTAGE";
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
@@ -92,12 +93,65 @@ namespace Backend_UMR_Work_Program.Models
             //public List<WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
             public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
             public List<WP_Gas_Production_Utilisation_And_Flaring_Forecast> WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model { get; set; }
+            public string Error { get; set; }
 
         }
         public class WorkProgrammeReport2_Model
         {
-          public List<Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION> Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs_Model { get; set; }
-
+          public List<Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION> Seismic_Data_Approved_and_Acquired { get; set; }
+          public object Seismic_Data_Approved_and_Acquired_PREVIOUS { get; set; }
+          public object Seismic_Data_Approved_and_Acquired_PLANNED { get; set; }
+          public object Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 { get; set; }
+          public object Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT { get; set; }
+          public object Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED { get; set; }
+          public object Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS { get; set; }
+          public object Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO { get; set; }
+          public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration { get; set; }
+          public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal { get; set; }
+          public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development { get; set; }
+          public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration_PY { get; set; }
+          public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal_PY { get; set; }
+          public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development_PY { get; set; }
+          public object RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_Pivotted { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoted { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain  { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year { get; set; }
+          public object GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared { get; set; }
+          public object GAS_PRODUCTION_ACTIVITIES_contract_type_basis { get; set; }
+          public object GAS_PRODUCTION_ACTIVITIES_terrain_pivotted { get; set; }
+          public object GAS_PRODUCTION_ACTIVITIES_contract_type_pivoted { get; set; }
+          public object GAS_PRODUCTION_ACTIVITIES_penalty_payment { get; set; }
+          public object FATALITIES_accident_statistic_table { get; set; }
+          public object OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS { get; set; }
+          public object NIGERIA_CONTENT_Training { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities { get; set; }
+          public object NIGERIA_CONTENT_Upload_Succession_Plan { get; set; }
+          public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW { get; set; }
+          public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships { get; set; }
+          public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition { get; set; }
+          public object BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIES { get; set; }
+          public object BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIES { get; set; }
+          public object BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT { get; set; }
+          public object BUDGET_PERFORMANCE_PRODUCTION_COST { get; set; }
+          public object OML_Aggregated_Score_ALL_COMPANIES { get; set; }
+          public object RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED { get; set; }
+          public object STRATEGIC_PLANS_ON_COMPANY_BASIS { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_C_TYPE_PROPOSED { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSED { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED { get; set; }
+          public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_PRODUCTION_BRKDWN_PLANNED { get; set; }
+          public object GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNED { get; set; }
+          public object GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNED { get; set; }
+          public object RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED { get; set; }
+          public object HSE_CAUSES_OF_SPILL { get; set; }
+          public string Error { get; set; }
+         
         }
         public class TOTAL_PRODUCED_WATER_Model { 
           public int TOTAL_QUANTITY_SPILLED { get; set; } 
