@@ -7,14 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="DataModels\WP_OML_Aggregated_Score_ALL_COMPANy" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="DataModels\WP_OML_Aggregated_Score_ALL_COMPANy" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
