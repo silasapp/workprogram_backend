@@ -17,5 +17,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? NoApplicationRenewalReason { get; set; }
         public string? ActualBudgetCurrentYr { get; set; }
         public string? FiveYrsProposal { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 using Backend_UMR_Work_Program;
+using Backend_UMR_Work_Program.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,7 @@ startup.ConfigureServices(builder.Services);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHostedService<DatabaseService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,

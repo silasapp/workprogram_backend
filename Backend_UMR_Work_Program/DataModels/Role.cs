@@ -13,6 +13,7 @@ namespace Backend_UMR_Work_Program.Models
         public int id { get; set; }
         public string RoleId { get; set; } = null!;
         public string? Description { get; set; }
+        public string? RoleName { get; set; }
 
         public virtual ICollection<Functionality> Funcs { get; set; }
     }
