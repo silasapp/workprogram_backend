@@ -24,7 +24,8 @@
           "Swashbuckle.AspNetCore": "6.2.3",
           "System.Data.OracleClient": "1.0.8",
           "System.Data.SqlClient": "4.8.3",
-          "System.Net.Security": "4.3.2"
+          "System.Net.Security": "4.3.2",
+          "YamlDotNet": "11.2.1"
         },
         "runtime": {
           "Backend_UMR_Work_Program.dll": {}
@@ -1229,6 +1230,14 @@
             "fileVersion": "4.700.19.56404"
           }
         }
+      },
+      "YamlDotNet/11.2.1": {
+        "runtime": {
+          "lib/netstandard2.1/YamlDotNet.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.2.1.0"
+          }
+        }
       }
     }
   },
@@ -2189,6 +2198,13 @@
       "sha512": "sha512-CeWTdRNfRaSh0pm2gDTJFwVaXfTq6Xwv/sA887iwPTneW7oMtMlpvDIO+U60+3GWTB7Aom6oQwv5VZVUhQRdPQ==",
       "path": "system.windows.extensions/4.7.0",
       "hashPath": "system.windows.extensions.4.7.0.nupkg.sha512"
+    },
+    "YamlDotNet/11.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tBt8K+korVfrjH9wyDEhiLKxbs8qoLCLIFwvYgkSUuMC9//w3z0cFQ8LQAI/5MCKq+BMil0cfRTRvPeE7eXhQw==",
+      "path": "yamldotnet/11.2.1",
+      "hashPath": "yamldotnet.11.2.1.nupkg.sha512"
     }
   }
 }

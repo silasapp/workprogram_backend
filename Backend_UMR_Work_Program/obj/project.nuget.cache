@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Ar6+CWf7CfoC96GwHJrtEMot1IoNlcuqxKlbIiWLbZd0PlfoleKnnt8nGftHd1YekZytxfvXwT99Y+O8gCsI9Q==",
+  "dgSpecHash": "ycy+A6lbELIyvY3l1smXA4tE3yw1ygImeHD7jVSD45R6m0rAJn5gjdEdaMWI4r6Qg6LQ7an/sCGlqMw7L2fwPg==",
   "success": true,
   "projectFilePath": "C:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
   "expectedPackageFiles": [
@@ -139,7 +139,8 @@
     "C:\\Users\\prisc\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\system.threading.threadpool\\4.3.0\\system.threading.threadpool.4.3.0.nupkg.sha512",
-    "C:\\Users\\prisc\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+    "C:\\Users\\prisc\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
+    "C:\\Users\\prisc\\.nuget\\packages\\yamldotnet\\11.2.1\\yamldotnet.11.2.1.nupkg.sha512"
   ],
   "logs": []
 }
