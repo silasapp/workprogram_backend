@@ -19,4 +19,3 @@ namespace Backend_UMR_Work_Program.Models
         public string? Consession_Type { get; set; }
     }
 }
-

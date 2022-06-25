@@ -424,6 +424,8 @@ C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debu
 C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\Humanizer.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+<<<<<<< HEAD
+<<<<<<< HEAD
 C:\Users\mereu\Desktop\Brand\Work_Program2\WORKPROGRAMV2\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\mereu\Desktop\Brand\Work_Program2\WORKPROGRAMV2\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.json
 C:\Users\mereu\Desktop\Brand\Work_Program2\WORKPROGRAMV2\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.exe
@@ -511,3 +513,9 @@ C:\Users\mereu\Desktop\Brand\Work_Program2\WORKPROGRAMV2\Backend_UMR_Work_Progra
 C:\Users\mereu\Desktop\Brand\Work_Program2\WORKPROGRAMV2\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
 C:\Users\mereu\Desktop\Brand\Work_Program2\WORKPROGRAMV2\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Users\mereu\Desktop\Brand\Work_Program2\WORKPROGRAMV2\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
+=======
+C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debug\net6.0\YamlDotNet.dll
+>>>>>>> Modification of Work Programme Form Step 1& 2
+=======
+C:\Users\admin\source\repos\Adeola_WorkProgram\Backend_UMR_Work_Program\bin\Debug\net6.0\YamlDotNet.dll
+>>>>>>> 138c82dbdc05e368253a3742ff52a2fe32698033
