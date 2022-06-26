@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
+
     public class AdminController : Controller
     {
         private Account _account;
@@ -1473,12 +1478,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         #endregion
-        [HttpPost("GETCONCESSIONDATA")]
-        public object return_ADMIN_COMPANY_INFORMATION_into_dll(string mycompanyId, string myyear)
-        {
-            var data =  (from a in _context.ADMIN_CONCESSIONS_INFORMATIONs where a.Company_ID == mycompanyId && a.Year == myyear select a).Distinct().ToList();
-            return data;
-        }
+        
     }
 
 
