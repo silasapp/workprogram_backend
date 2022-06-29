@@ -118,5 +118,12 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
 
+         [HttpPost("Decrypt")]
+        public string Decrypt(string text)
+        {
+            var data =  _account.Decrypt(text);
+            return data;
+        }
+
     }
 }
