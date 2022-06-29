@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xjn5X0XC8QAT1nz4cuBLVk96QATQ7SBhph0n549ynJWkSNPes8sqQOY4wsobJzfCL8hbSUMBMwRQ+nAnBtdXkQ==",
+  "dgSpecHash": "aH7+5J73FyHyUF0UpGK6g9AGy0r/USkCYVsshLzmiN9kdERmUEyg8HO6ywHb9XvrWv6m0ISLaPa3imR7eJCFcQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\admin\\source\\repos\\Adeola_WorkProgram\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+  "projectFilePath": "C:\\Users\\admin\\source\\repos\\A_WorkProgram\\WKP_BackEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\automapper\\11.0.1\\automapper.11.0.1.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",

@@ -407,7 +407,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANIES_OLD> WP_OPL_Aggregated_Score_ALL_COMPANIES_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPE> WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANy> WP_OPL_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
-        public virtual DbSet<WP_OML_Aggregated_Score_ALL_COMPANy> WP_OML_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
+     //   public virtual DbSet<WP_OML_Aggregated_Score_ALL_COMPANy> WP_OML_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_COMPLIANCE_INDEX_CALCULATION> WP_OPL_COMPLIANCE_INDEX_CALCULATIONs { get; set; } = null!;
         public virtual DbSet<WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE> WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR> WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEARs { get; set; } = null!;
@@ -18051,32 +18051,32 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
-            modelBuilder.Entity<WP_OML_Aggregated_Score_ALL_COMPANy>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<WP_OML_Aggregated_Score_ALL_COMPANy>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.ToView("WP_OML_Aggregated_Score_ALL_COMPANIES");
+            //    entity.ToView("WP_OML_Aggregated_Score_ALL_COMPANIES");
 
-                entity.Property(e => e.CompanyName)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
+            //    entity.Property(e => e.CompanyName)
+            //        .HasMaxLength(500)
+            //        .IsUnicode(false);
 
-                entity.Property(e => e.Consession_Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+            //    entity.Property(e => e.Consession_Type)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
 
-                entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
+            //    entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
 
-                entity.Property(e => e.OML_Aggregated_Score).HasColumnType("numeric(38, 6)");
+            //    entity.Property(e => e.OML_Aggregated_Score).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.Recalibrated_Scaled_Index_SUM).HasColumnType("numeric(38, 2)");
+            //    entity.Property(e => e.Recalibrated_Scaled_Index_SUM).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.Weighted_Score_SUM).HasColumnType("numeric(38, 2)");
+            //    entity.Property(e => e.Weighted_Score_SUM).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.Year_of_WP)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
+            //    entity.Property(e => e.Year_of_WP)
+            //        .HasMaxLength(100)
+            //        .IsUnicode(false);
+            //});
 
             modelBuilder.Entity<WP_OPL_COMPLIANCE_INDEX_CALCULATION>(entity =>
             {

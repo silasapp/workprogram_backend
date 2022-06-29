@@ -5677,34 +5677,34 @@ namespace Backend_UMR_Work_Program.Controllers
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
 
         }
-        [HttpGet("OML_AGGREGATED_SCORE")]
-        public async Task<WebApiResponse> oml_aggregated_score(string year)
-        {
-            var presentYear = DateTime.Now.Year;
+        //[HttpGet("OML_AGGREGATED_SCORE")]
+        //public async Task<WebApiResponse> oml_aggregated_score(string year)
+        //{
+        //    var presentYear = DateTime.Now.Year;
 
-            var details = new List<WP_OML_Aggregated_Score_ALL_COMPANy>();
-            try
-            {
-                if (WKUserRole == GeneralModel.Admin)
-                {
-                    details = await _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
+        //    var details = new List<WP_OML_Aggregated_Score_ALL_COMPANy>();
+        //    try
+        //    {
+        //        if (WKUserRole == GeneralModel.Admin)
+        //        {
+        //            details = await _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
 
-                }
-                else
-                {
-                    details = await _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPCompanyName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
-                }
+        //        }
+        //        else
+        //        {
+        //            details = await _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPCompanyName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+        //        }
 
-            }
-            catch (Exception ex)
-            {
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.Success };
-            }
+        //        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.Success };
+        //    }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
+        //    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
 
-        }
+        //}
 
 
         #endregion
