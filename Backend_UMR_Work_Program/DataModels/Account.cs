@@ -58,7 +58,7 @@ namespace Backend_UMR_Work_Program.Models
 
 
 
-        private string Decrypt(string cipherText)
+        public string Decrypt(string cipherText)
         {
             string EncryptionKey = "MAKV2SPBNI99212";
             byte[] cipherBytes = Convert.FromBase64String(cipherText);

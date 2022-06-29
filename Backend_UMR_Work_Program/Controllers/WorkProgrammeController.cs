@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]/[action]")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
     public class WorkProgrammeController : ControllerBase
     {
         private Account _account;
@@ -39,6 +39,8 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
         private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
         private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+
+
 
         #region Form 1
         [HttpPost("POST_WORKPROGRAMME_1")]
@@ -2536,7 +2538,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("BUDGET_ACTUAL_EXPENDITURE")]
         public async Task<WebApiResponse> BUDGET_ACTUAL_EXPENDITURE(BUDGET_ACTUAL_EXPENDITURE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2590,7 +2592,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
         public async Task<WebApiResponse> BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2646,7 +2648,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy")]
         public async Task<WebApiResponse> BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2702,7 +2704,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy")]
         public async Task<WebApiResponse> BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2758,7 +2760,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("BUDGET_PERFORMANCE_PRODUCTION_COST")]
         public async Task<WebApiResponse> BUDGET_PERFORMANCE_PRODUCTION_COST(BUDGET_PERFORMANCE_PRODUCTION_COST_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2814,7 +2816,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
         public async Task<WebApiResponse> BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2870,7 +2872,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE")]
         public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2926,7 +2928,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment")]
         public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -2982,7 +2984,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
         public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3037,7 +3039,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("FACILITIES_PROJECT_PERFORMANCE")]
         public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(FACILITIES_PROJECT_PERFORMANCE_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3092,7 +3094,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("BUDGET_CAPEX_OPEX")]
         public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(BUDGET_CAPEX_OPEX_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3147,7 +3149,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("NIGERIA_CONTENT_Training")]
         public async Task<WebApiResponse> NIGERIA_CONTENT_Training(NIGERIA_CONTENT_Training_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3202,7 +3204,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("NIGERIA_CONTENT_Upload_Succession_Plan")]
         public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(NIGERIA_CONTENT_Upload_Succession_Plan_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3257,7 +3259,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("NIGERIA_CONTENT_QUESTION")]
         public async Task<WebApiResponse> NIGERIA_CONTENT_QUESTION(NIGERIA_CONTENT_QUESTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3312,7 +3314,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("LEGAL_LITIGATION")]
         public async Task<WebApiResponse> LEGAL_LITIGATION(LEGAL_LITIGATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3367,7 +3369,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("LEGAL_ARBITRATION")]
         public async Task<WebApiResponse> LEGAL_ARBITRATION(LEGAL_ARBITRATION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3423,7 +3425,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("STRATEGIC_PLANS_ON_COMPANY_BASI")]
         public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASI(STRATEGIC_PLANS_ON_COMPANY_BASI_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3479,7 +3481,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_QUESTION")]
         public async Task<WebApiResponse> HSE_QUESTION(HSE_QUESTION_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3534,7 +3536,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_FATALITy")]
         public async Task<WebApiResponse> HSE_FATALITy(HSE_FATALITy_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3589,7 +3591,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_DESIGNS_SAFETY")]
         public async Task<WebApiResponse> HSE_DESIGNS_SAFETY(HSE_DESIGNS_SAFETY_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3644,7 +3646,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_SAFETY_STUDIES_NEW")]
         public async Task<WebApiResponse> HSE_SAFETY_STUDIES_NEW(HSE_SAFETY_STUDIES_NEW_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -3712,7 +3714,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_INSPECTION_AND_MAINTENANCE_NEW")]
         public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_NEW(HSE_INSPECTION_AND_MAINTENANCE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3766,7 +3768,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
         public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3820,7 +3822,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
         public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3875,7 +3877,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
         public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3928,7 +3930,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_OIL_SPILL_REPORTING_NEW")]
         public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING_NEW(HSE_OIL_SPILL_REPORTING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -3980,7 +3982,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
         public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4033,7 +4035,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
         public async Task<WebApiResponse> HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4085,7 +4087,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW")]
         public async Task<WebApiResponse> HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4137,7 +4139,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW")]
         public async Task<WebApiResponse> HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4189,7 +4191,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ENVIRONMENTAL_STUDIES_NEW")]
         public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_NEW(HSE_ENVIRONMENTAL_STUDIES_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4242,7 +4244,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_WASTE_MANAGEMENT_NEW")]
         public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_NEW(HSE_WASTE_MANAGEMENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4294,7 +4296,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
         public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4346,7 +4348,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
         public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW(HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4399,7 +4401,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
         public async Task<WebApiResponse> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4452,7 +4454,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
         public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4505,7 +4507,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
         public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4558,7 +4560,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
         public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4610,7 +4612,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_OSP_REGISTRATIONS_NEW")]
         public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW(HSE_OSP_REGISTRATIONS_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4663,7 +4665,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
         public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4715,7 +4717,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
         public async Task<WebApiResponse> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4766,7 +4768,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_CAUSES_OF_SPILL")]
         public async Task<WebApiResponse> HSE_CAUSES_OF_SPILL(HSE_CAUSES_OF_SPILL_Model wkp, string WorkProgramme_Year, string ActionToDo = null)
         {
 
@@ -4818,7 +4820,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU")]
         public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -4885,7 +4887,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME")]
         public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -4952,7 +4954,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_MANAGEMENT_POSITION")]
         public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(HSE_MANAGEMENT_POSITION_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5030,7 +5032,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_QUALITY_CONTROL")]
         public async Task<WebApiResponse> HSE_QUALITY_CONTROL(HSE_QUALITY_CONTROL_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5098,7 +5100,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
         public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5165,7 +5167,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_SAFETY_CULTURE_TRAINING")]
         public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(HSE_SAFETY_CULTURE_TRAINING_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5244,7 +5246,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
         public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5322,7 +5324,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_WASTE_MANAGEMENT_SYSTEM")]
         public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_SYSTEM(HSE_WASTE_MANAGEMENT_SYSTEM_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5399,7 +5401,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
         public async Task<WebApiResponse> HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5477,7 +5479,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost]
+        [HttpPost("PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT")]
         public async Task<WebApiResponse> PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model wkp, string WorkProgramme_Year, List<IFormFile> files, string ActionToDo = null)
         {
 
@@ -5706,6 +5708,34 @@ namespace Backend_UMR_Work_Program.Controllers
 
         //}
 
+
+        [HttpGet("GET_CONCESSION_HELD")]
+        public async Task<object> Get_Concession_Held(string mycompanyId, string myyear)
+        {
+            return await (from a in _context.ADMIN_CONCESSIONS_INFORMATIONs where a.Company_ID == mycompanyId && a.Year == myyear && a.DELETED_STATUS == null select a.Concession_Held).Distinct().ToListAsync();
+        }
+
+
+        [HttpGet("GET_FORM_ONE")]
+        public async Task<object> GET_FORM_ONE(string omlName, string myyear)
+        {   
+            var concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.Year == myyear && d.DELETED_STATUS == null select d).ToListAsync();
+            var drillEachCost = await (from d in _context.DRILLING_EACH_WELL_COSTs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var drillEachCostProposed = await (from d in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var drillOperationCategoriesWell = await (from d in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
+            var concessionSituation1stJanuary = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear orderby d.Year select d).ToListAsync();
+            return new {concessionInfo = concessionInfo, drillEachCost = drillEachCost, drillEachCostProposed = drillEachCostProposed, drillOperationCategoriesWell = drillOperationCategoriesWell,
+             geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing, concessionSituation = concessionSituation, concessionSituation1stJanuary = concessionSituation1stJanuary};
+        }
+
+        [HttpGet("GET_WPYEAR_LIST")]
+        public async Task<object> Get_WPYear_List()
+        {
+            return await (from a in _context.ADMIN_CONCESSIONS_INFORMATIONs select a.Year).Distinct().ToListAsync();
+        }
 
         #endregion
 

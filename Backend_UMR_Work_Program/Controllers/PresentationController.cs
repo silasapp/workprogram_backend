@@ -24,6 +24,7 @@ namespace Backend_UMR_Work_Program.Controllers
         IMapper _mapper;
         public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
+            _presentation = presentation;
             _context = context;
             _configuration = configuration;
             _mapper = mapper;
@@ -350,6 +351,11 @@ namespace Backend_UMR_Work_Program.Controllers
             return yearlist;
         }
 
+        [HttpGet("COMPANY_REPS")]
+        public async Task<object> Get_Company_Replist()
+        {
+            return await _context.ADMIN_DIVISION_REP_LISTs.ToListAsync();
+        }
         [HttpPost("UPDATE_COMPANY_REP")]
         public async Task<WebApiResponse> UpdateRep(int Id, int UpdateId)
         {
@@ -381,37 +387,52 @@ namespace Backend_UMR_Work_Program.Controllers
             return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "No data found", StatusCode = ResponseCodes.RecordNotFound };
         }
         [HttpPost("ACTIVATE_DEACTIVATE_EMAIL")]
-        public async Task<WebApiResponse> EmailStatus(int UpdateId, string emailStatus)
+        public async Task<WebApiResponse> UpdateEmailStatus(int compId, string option)
         {
-            
-            var active = "Successful";
+            string optionA = "Active";
+            string optionB = "Inactive";
+            string active = "Successful";
             string inactive = "Inactive";
             int save = 0;
-            var compId = _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs.FirstOrDefault(n => n.Id == UpdateId);
+            var dateTimeId = _context.ADMIN_DATETIME_PRESENTATIONs.FirstOrDefault(x => x.Id == compId);
+            if (dateTimeId.EMAIL_REMARK == null)
+            {
+                dateTimeId.EMAIL_REMARK = inactive;
+            }
             if (WKPUserRole == GeneralModel.Admin)
             {
-                if (compId != null)
+                try
                 {
-                    try
+                    if (dateTimeId != null)
                     {
-                        if (emailStatus == "Active" && compId.EMAIL_REMARK != "Successful" || emailStatus == "Active" && compId.EMAIL_REMARK != null)
-                            compId.EMAIL_REMARK = active;
-                        else if (emailStatus == "Inactive" && compId.EMAIL_REMARK == active || emailStatus == "Inactive" && compId.EMAIL_REMARK == null)
-                            compId.EMAIL_REMARK = inactive.ToUpper();
-                        save = await _context.SaveChangesAsync();
+                        if (dateTimeId != null && option == optionA && dateTimeId.EMAIL_REMARK.ToLower() != active.ToLower())
+                        {
+                            dateTimeId.EMAIL_REMARK = active;
+
+                        }
+                        if (dateTimeId != null && option == optionB && dateTimeId.EMAIL_REMARK.ToLower() != inactive.ToLower())
+                        {
+                            dateTimeId.EMAIL_REMARK = inactive.ToUpper();
+
+                        }
+                        save = _context.SaveChanges();
                         if (save > 0)
                         {
                             string message = "Company admin representative updated sucessfully";
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = message, Data = compId, StatusCode = ResponseCodes.Success };
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = ex.Message, StatusCode = ResponseCodes.Failure };
-                    }
                 }
+                catch (Exception)
+                {
+
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "Error Occured", StatusCode = ResponseCodes.RecordNotFound };
+
+                }
+
             }
-            return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "No data found", StatusCode = ResponseCodes.RecordNotFound };
+            return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "Not Successful", StatusCode = ResponseCodes.RecordNotFound };
+
         }
     }
 }
