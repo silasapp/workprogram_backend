@@ -854,7 +854,7 @@ namespace Backend_UMR_Work_Program.Controllers
         #region database tables actions
 
         [HttpPost("POST_CONCESSION_SITUATION")]
-        public async Task<WebApiResponse> POST_CONCESSION_SITUATION([FromBody] CONCESSION_SITUATION concession_situation_model, string year, string omlName, string actionToDo = null)
+        public async Task<WebApiResponse> POST_CONCESSION_SITUATION([FromBody] dynamic concession_situation_model, string year, string omlName, string actionToDo = null)
         {
 
             int save = 0;
