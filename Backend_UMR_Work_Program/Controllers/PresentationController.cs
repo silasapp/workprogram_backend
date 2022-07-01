@@ -433,5 +433,82 @@ namespace Backend_UMR_Work_Program.Controllers
             return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "Not Successful", StatusCode = ResponseCodes.RecordNotFound };
 
         }
+
+
+        [HttpPost("UPLOAD_MOM")]
+        public async Task<WebApiResponse> UPLOADMOM(int compId, IFormFile document)
+        {
+            //var userRole = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionRoleName));
+            //var userEmail = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionEmail));
+            //var companyID = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionUserID));
+
+            var userRole = WKPUserRole;
+            var userName = WKPUserName;
+            var userEmail = WKPUserEmail;
+            var companyID = WKPUserId;
+            var CurrentYear = DateTime.Now.Year.ToString();
+            string folderToSave = "";
+            var checkUploadedMom = _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.Id == compId).FirstOrDefault();
+
+            if (checkUploadedMom.MOM_UPLOAD_DATE != null)
+            {
+                //schedule already exist for company
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "You have already uploaded minutes for the selected year, kindly delete an existing document to upload another.", StatusCode = ResponseCodes.Failure };
+            }
+            else
+            {
+                //check if date has been scheduled by another company
+                var system_date = DateTime.Now.ToString(); // 
+
+                var uniqueFileName = "";
+                var FileExtension = "";
+                var newFileName = "";
+                var documentPath = "";
+                var fileName = "";
+                var save = 0;
+                //For image cover
+                if (document != null)
+                {
+                    if (document.Length > 0)
+                    {
+                        var up = Path.Combine(Directory.GetCurrentDirectory(), "Documents");
+                        var uploads = Path.Combine(up, "UploadMOMs");
+                        fileName = document.FileName.Split(".")[0].Trim();
+                        uniqueFileName = Convert.ToString(Guid.NewGuid());
+                        FileExtension = document.FileName.Split(".")[1].Trim();
+
+                        newFileName = fileName + "." + FileExtension;
+
+
+                        documentPath = "//Documents/UploadMOMs/" + newFileName;
+                        using (var s = new FileStream(Path.Combine(uploads, newFileName),
+                             FileMode.Create))
+                        {
+                            document.CopyTo(s);
+                        }
+                    }
+                    checkUploadedMom.MOM = documentPath;
+                    checkUploadedMom.MOM_UPLOADED_BY = userEmail;
+                    checkUploadedMom.MOM_UPLOAD_DATE = DateTime.Now;
+                    save = _context.SaveChanges();
+                    if (save > 0)
+                    {
+                        var companyUploadedmom = _context.ADMIN_DATETIME_PRESENTATIONs.Where(x => x.Id == compId).ToList();
+
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "File uploaded successfully.", Data = companyUploadedmom, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to upload this minutes.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, document is empty.", StatusCode = ResponseCodes.Failure };
+
+                }
+            }
+        }
     }
 }
