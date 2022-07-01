@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class WorkProgrammeController : ControllerBase
     {
@@ -56,7 +56,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (wkp.CONCESSION_SITUATION != null)
                 {
                     numberofTablesDataToSave++;
-                    Task<WebApiResponse> ConcessionData = POST_CONCESSION_SITUATION(wkp.CONCESSION_SITUATION, wkp.WorkProgramme_Year);
+                    Task<WebApiResponse> ConcessionData = POST_CONCESSION_SITUATION(wkp.CONCESSION_SITUATION, wkp.WorkProgramme_Year, "OML 21");
                     if (ConcessionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
@@ -854,56 +854,61 @@ namespace Backend_UMR_Work_Program.Controllers
         #region database tables actions
 
         [HttpPost("POST_CONCESSION_SITUATION")]
-        public async Task<WebApiResponse> POST_CONCESSION_SITUATION(List<CONCESSION_SITUATION_Model> CONCESSION_SITUATION_Model, string WorkProgramme_Year, string ActionToDo = null)
+        public async Task<WebApiResponse> POST_CONCESSION_SITUATION([FromBody] dynamic concession_situation_model, string year, string omlName, string actionToDo = null)
         {
 
             int save = 0;
             var ConcessionCONCESSION_SITUATION_Model = new CONCESSION_SITUATION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
 
             try
             {
-                # region Saving Concession Situations
-                if (CONCESSION_SITUATION_Model.Count() > 0)
+                #region Saving Concession Situations
+
+
+                var concessionDbData = (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year == year select c).FirstOrDefault();
+                ConcessionCONCESSION_SITUATION_Model = _mapper.Map<CONCESSION_SITUATION>(concession_situation_model);
+
+                ConcessionCONCESSION_SITUATION_Model.Companyemail = WKPCompanyEmail;
+                ConcessionCONCESSION_SITUATION_Model.CompanyName = WKPCompanyName;
+                ConcessionCONCESSION_SITUATION_Model.COMPANY_ID = WKPCompanyId;
+                ConcessionCONCESSION_SITUATION_Model.Date_Updated = DateTime.Now;
+                ConcessionCONCESSION_SITUATION_Model.Updated_by = WKPCompanyId;
+                ConcessionCONCESSION_SITUATION_Model.Year = year;
+                if (action == GeneralModel.Insert)
                 {
-                    foreach (var wkp in CONCESSION_SITUATION_Model) { 
-                    
-                        var getConcessionCONCESSION_SITUATION_Model = (from c in _context.CONCESSION_SITUATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year == WorkProgramme_Year select c).FirstOrDefault();
-                        ConcessionCONCESSION_SITUATION_Model = getConcessionCONCESSION_SITUATION_Model != null ? getConcessionCONCESSION_SITUATION_Model : ConcessionCONCESSION_SITUATION_Model;
-                        ConcessionCONCESSION_SITUATION_Model = _mapper.Map<CONCESSION_SITUATION>(wkp);
-
-                        ConcessionCONCESSION_SITUATION_Model.Companyemail = WKPCompanyEmail;
-                        ConcessionCONCESSION_SITUATION_Model.CompanyName = WKPCompanyName;
-                        ConcessionCONCESSION_SITUATION_Model.COMPANY_ID = WKPCompanyId;
-                        ConcessionCONCESSION_SITUATION_Model.Date_Updated = DateTime.Now;
-                        ConcessionCONCESSION_SITUATION_Model.Updated_by = WKPCompanyId;
-                        ConcessionCONCESSION_SITUATION_Model.Year = WorkProgramme_Year;
-                        if (getConcessionCONCESSION_SITUATION_Model == null)
-                        {
-                            ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
-                            ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
-                            await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.CONCESSION_SITUATIONs.Remove(ConcessionCONCESSION_SITUATION_Model);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        #endregion
-
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
+                    if (concessionDbData == null)
+                    {
+                        ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
+                        ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
+                        await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
+                    }
+                    else
+                    {
+                        _context.CONCESSION_SITUATIONs.Remove(concessionDbData);
+                        ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
+                        ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
+                        await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
                     }
                 }
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No CONCESSION_SITUATION_Model was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                else if (action == GeneralModel.Delete)
+                {
+                    _context.CONCESSION_SITUATIONs.Remove(concessionDbData);
+                }
+                save += await _context.SaveChangesAsync();
+                #endregion
+
+                if (save > 0)
+                {
+                    string successMsg = "Form has been " + action + "D successfully.";
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No CONCESSION_SITUATION_Model was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
             }
             catch (Exception e)
             {
@@ -5727,8 +5732,8 @@ namespace Backend_UMR_Work_Program.Controllers
             var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
             var concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
             var concessionSituation1stJanuary = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear orderby d.Year select d).ToListAsync();
-            return new {concessionInfo = concessionInfo, drillEachCost = drillEachCost, drillEachCostProposed = drillEachCostProposed, drillOperationCategoriesWell = drillOperationCategoriesWell,
-             geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing, concessionSituation = concessionSituation, concessionSituation1stJanuary = concessionSituation1stJanuary};
+            return new {concessionSituation = concessionSituation, concessionInfo = concessionInfo, drillEachCost = drillEachCost, drillEachCostProposed = drillEachCostProposed, drillOperationCategoriesWell = drillOperationCategoriesWell,
+             geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing, concessionSituation1stJanuary = concessionSituation1stJanuary};
         }
 
         [HttpGet("GET_WPYEAR_LIST")]
