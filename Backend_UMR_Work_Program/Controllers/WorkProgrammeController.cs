@@ -56,7 +56,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (wkp.CONCESSION_SITUATION != null)
                 {
                     numberofTablesDataToSave++;
-                    Task<WebApiResponse> ConcessionData = POST_CONCESSION_SITUATION(wkp.CONCESSION_SITUATION, wkp.WorkProgramme_Year, "OML 21");
+                    Task<WebApiResponse> ConcessionData = POST_CONCESSION_SITUATION(wkp.CONCESSION_SITUATION);
                     if (ConcessionData.Result.ToString() == AppResponseCodes.Success)
                     {
                         save++;
@@ -854,7 +854,7 @@ namespace Backend_UMR_Work_Program.Controllers
         #region database tables actions
 
         [HttpPost("POST_CONCESSION_SITUATION")]
-        public async Task<WebApiResponse> POST_CONCESSION_SITUATION([FromBody] dynamic concession_situation_model, string year, string omlName, string actionToDo = null)
+        public async Task<WebApiResponse> POST_CONCESSION_SITUATION([FromBody] CONCESSION_SITUATION_Model concession_situation_model, string actionToDo = null)
         {
 
             int save = 0;
@@ -863,56 +863,57 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                #region Saving Concession Situations
+               #region Saving Concession Situations
 
 
-                var concessionDbData = (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year == year select c).FirstOrDefault();
-                ConcessionCONCESSION_SITUATION_Model = _mapper.Map<CONCESSION_SITUATION>(concession_situation_model);
+               var concessionDbData = (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == concession_situation_model.Concession_Held && c.Year == concession_situation_model.Year select c).FirstOrDefault();
+               var dell = _mapper.Map<CONCESSION_SITUATION_Model>(concession_situation_model);
 
-                ConcessionCONCESSION_SITUATION_Model.Companyemail = WKPCompanyEmail;
-                ConcessionCONCESSION_SITUATION_Model.CompanyName = WKPCompanyName;
-                ConcessionCONCESSION_SITUATION_Model.COMPANY_ID = WKPCompanyId;
-                ConcessionCONCESSION_SITUATION_Model.Date_Updated = DateTime.Now;
-                ConcessionCONCESSION_SITUATION_Model.Updated_by = WKPCompanyId;
-                ConcessionCONCESSION_SITUATION_Model.Year = year;
-                if (action == GeneralModel.Insert)
-                {
-                    if (concessionDbData == null)
-                    {
-                        ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
-                        ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
-                        await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
-                    }
-                    else
-                    {
-                        _context.CONCESSION_SITUATIONs.Remove(concessionDbData);
-                        ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
-                        ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
-                        await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
-                    }
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.CONCESSION_SITUATIONs.Remove(concessionDbData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
 
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+               ConcessionCONCESSION_SITUATION_Model.Companyemail = WKPCompanyEmail;
+               ConcessionCONCESSION_SITUATION_Model.CompanyName = WKPCompanyName;
+               ConcessionCONCESSION_SITUATION_Model.COMPANY_ID = WKPCompanyId;
+               ConcessionCONCESSION_SITUATION_Model.Date_Updated = DateTime.Now;
+               ConcessionCONCESSION_SITUATION_Model.Updated_by = WKPCompanyId;
+               //ConcessionCONCESSION_SITUATION_Model.Year = year;
+               if (action == GeneralModel.Insert)
+               {
+                   if (concessionDbData == null)
+                   {
+                       ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
+                       ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
+                       await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
+                   }
+                   else
+                   {
+                       _context.CONCESSION_SITUATIONs.Remove(concessionDbData);
+                       ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
+                       ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
+                       await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
+                   }
+               }
+               else if (action == GeneralModel.Delete)
+               {
+                   _context.CONCESSION_SITUATIONs.Remove(concessionDbData);
+               }
+               save += await _context.SaveChangesAsync();
+               #endregion
 
-                }
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No CONCESSION_SITUATION_Model was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+               if (save > 0)
+               {
+                   string successMsg = "Form has been " + action + "D successfully.";
+                   return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+               }
+               else
+               {
+                   return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+               }
+               return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No CONCESSION_SITUATION_Model was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+               return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
         }
