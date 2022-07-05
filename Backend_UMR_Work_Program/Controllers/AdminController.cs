@@ -115,7 +115,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         {
                             getCode.CompanyName = CompanyName.ToUpper().Trim();
                             getCode.Email = CompanyEmail.ToLower().Trim();
-                            getCode.UserNumber = company.Id;
+                            getCode.CompanyNumber = company.Id;
                             getCode.CompanyCode = CompanyCode.Trim();
                             getCode.IsActive = "YES";
                             await _context.ADMIN_COMPANY_CODEs.AddAsync(getCode);
