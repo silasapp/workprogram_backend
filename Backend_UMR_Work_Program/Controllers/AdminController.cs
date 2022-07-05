@@ -1,9 +1,13 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Mvc;
 using Backend_UMR_Work_Program.Models;
+using static Backend_UMR_Work_Program.Models.GeneralModel;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using static Backend_UMR_Work_Program.Models.GeneralModel;
+using System.Security.Claims;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -26,15 +30,10 @@ namespace Backend_UMR_Work_Program.Controllers
             _mapper = mapper;
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
-
-        private string? WKPUserId => "1";
-        private string? WKPUserName => "Name";
-        private string? WKPUserEmail => "adeola.kween123@gmail.com";
-        private string? WKUserRole => "Admin";
-        // private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        //private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
         #region Company Codes
 
@@ -170,6 +169,25 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
+        }      
+        
+        [HttpGet("GET_COMPANIES")]
+        public async Task<WebApiResponse> Get_Companies()
+        {
+            try
+            {
+                var companyInformation = (from c in _context.ADMIN_COMPANY_INFORMATIONs
+                                          where c.COMPANY_NAME != GeneralModel.Admin && c.DELETED_STATUS == null
+                                          select c).ToList();
+             
+                    
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = companyInformation, StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
         }
         
         [HttpPost("CREATE_USER")]
@@ -202,7 +220,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
                     data.STATUS_ = "Activated";
                     data.Date_Created = DateTime.Now;
-                    data.Created_by = WKPUserEmail;
+                    data.Created_by = WKPCompanyEmail;
                     await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(data);
                     int save = await _context.SaveChangesAsync();
                     if (save > 0)
@@ -267,7 +285,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
                     data.STATUS_ = "Activated";
                     data.UPDATED_DATE = DateTime.Now.ToString();
-                    data.UPDATED_BY = WKPUserEmail;
+                    data.UPDATED_BY = WKPCompanyEmail;
                     int save = await _context.SaveChangesAsync();
                     if (save > 0)
                     {
@@ -302,7 +320,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     checkUser.DELETED_STATUS = "DELETED";
                     checkUser.DELETED_DATE = DateTime.Now.ToString();
-                    checkUser.DELETED_BY = WKPUserEmail;
+                    checkUser.DELETED_BY = WKPCompanyEmail;
                     int save = await _context.SaveChangesAsync();
                     if (save > 0)
                     {
@@ -409,7 +427,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         var data = _mapper.Map<ADMIN_CONCESSIONS_INFORMATION>(concessionModel);
                         data.CompanyNumber = company.Id;
                         data.Date_Created = DateTime.Now;
-                        data.Created_by = WKPUserEmail;
+                        data.Created_by = WKPCompanyEmail;
                         await _context.ADMIN_CONCESSIONS_INFORMATIONs.AddAsync(data);
                         int save = await _context.SaveChangesAsync();
                         if (save > 0)
@@ -478,7 +496,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     var data = _mapper.Map<ADMIN_COMPANY_INFORMATION>(concessionModel);
                     data.EMAIL = concessionModel.COMPANY_EMAIL.ToLower();
                     data.UPDATED_DATE = DateTime.Now.ToString();
-                    data.UPDATED_BY = WKPUserEmail;
+                    data.UPDATED_BY = WKPCompanyEmail;
                     int save = await _context.SaveChangesAsync();
                     if (save > 0)
                     {
@@ -513,7 +531,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     checkConcession.DELETED_STATUS = "DELETED";
                     checkConcession.DELETED_DATE = DateTime.Now.ToString();
-                    checkConcession.DELETED_BY = WKPUserEmail;
+                    checkConcession.DELETED_BY = WKPCompanyEmail;
                     int save = await _context.SaveChangesAsync();
                     if (save > 0)
                     {
@@ -620,7 +638,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         {
                             checkReport.Report_Content = x.Report_Content;
                             checkReport.Date_Updated = DateTime.Now;
-                            checkReport.Updated_by = WKPUserEmail;
+                            checkReport.Updated_by = WKPCompanyEmail;
                             int save = await _context.SaveChangesAsync();
                             if (save > 0)
                             {
@@ -709,7 +727,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     categories = model.categories,
                                     categories_Desc = model.categories_Desc,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_CATEGORIEs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -730,7 +748,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.categories = model.categories;
                                     checkdata.categories_Desc = model.categories_Desc;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -786,7 +804,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                 {
                                     DataType = model.DataType, 
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.Data_Types.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -861,7 +879,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     welltype = model.welltype,
                                     categories_Desc = model.categories_Desc,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_WELL_CATEGORIEs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -882,7 +900,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.welltype = model.welltype;
                                     checkdata.categories_Desc = model.categories_Desc;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -940,7 +958,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     end_date = model.end_date,
                                     categories_Desc = model.categories_Desc,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_WP_START_END_DATEs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -962,7 +980,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.end_date = model.end_date;
                                     checkdata.categories_Desc = model.categories_Desc;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -1020,7 +1038,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     end_date = model.end_date,
                                     categories_Desc = model.categories_Desc,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_WP_START_END_DATEs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -1042,7 +1060,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.end_date = model.end_date;
                                     checkdata.categories_Desc = model.categories_Desc;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -1100,7 +1118,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     NO_SUBMISSION = model.NO_SUBMISSION,
                                     categories_Desc = model.categories_Desc,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_WP_PENALTIEs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -1122,7 +1140,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.NO_SUBMISSION = model.NO_SUBMISSION;
                                     checkdata.categories_Desc = model.categories_Desc;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -1180,7 +1198,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     DAYS_ = model.DAYS_.Trim(),
                                     Description = model.Description,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_EMAIL_DAYs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -1202,7 +1220,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.DAYS_ = model.DAYS_.Trim();
                                     checkdata.Description = model.Description;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -1261,7 +1279,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     Role_ = GeneralModel.SuperAdmin,
                                     Description = model.Description,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ROLES_SUPER_ADMINs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -1283,7 +1301,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.Role_ = model.Role_.Trim();
                                     checkdata.Description = model.Description;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -1341,7 +1359,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     categories = model.categories,
                                     categories_Desc = model.categories_Desc,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_PRESENTATION_CATEGORIEs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -1362,7 +1380,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.categories = model.categories;
                                     checkdata.categories_Desc = model.categories_Desc;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
@@ -1420,7 +1438,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     MEETING_ROOM = model.MEETING_ROOM.Trim().ToUpper(),
                                     categories_Desc = model.categories_Desc,
                                     Date_Created = DateTime.Now,
-                                    Created_by = WKPUserEmail
+                                    Created_by = WKPCompanyEmail
                                 };
                                 await _context.ADMIN_MEETING_ROOMs.AddAsync(data);
                                 save = await _context.SaveChangesAsync();
@@ -1441,7 +1459,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.MEETING_ROOM = model.MEETING_ROOM;
                                     checkdata.categories_Desc = model.categories_Desc;
                                     checkdata.Date_Updated = DateTime.Now;
-                                    checkdata.Updated_by = WKPUserEmail;
+                                    checkdata.Updated_by = WKPCompanyEmail;
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {

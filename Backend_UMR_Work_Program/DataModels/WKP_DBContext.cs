@@ -103,6 +103,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<BUDGET_PERFORMANCE_PRODUCTION_COST> BUDGET_PERFORMANCE_PRODUCTION_COSTs { get; set; } = null!;
         public virtual DbSet<BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT> BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs { get; set; } = null!;
         public virtual DbSet<BudgetProposal> BudgetProposals { get; set; } = null!;
+        public virtual DbSet<COMPANY_CONCESSIONS_FIELD> COMPANY_CONCESSIONS_FIELDs { get; set; } = null!;
         public virtual DbSet<CONCESSION_SITUATION> CONCESSION_SITUATIONs { get; set; } = null!;
         public virtual DbSet<CSR> CSRs { get; set; } = null!;
         public virtual DbSet<Class_Table> Class_Tables { get; set; } = null!;
@@ -341,6 +342,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE> WP_OML_ACQUSITION_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD> WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD2021> WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD2021s { get; set; } = null!;
+        public virtual DbSet<WP_OML_Aggregated_Score_ALL_COMPANy> WP_OML_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OML_COMPLIANCE_INDEX_CALCULATION> WP_OML_COMPLIANCE_INDEX_CALCULATIONs { get; set; } = null!;
         public virtual DbSet<WP_OML_COMPLIANCE_INDEX_WEIGHTED_SCORE> WP_OML_COMPLIANCE_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OML_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE> WP_OML_CONCESSION_RENTALS_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
@@ -400,6 +402,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE> WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD> WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD2021> WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD2021s { get; set; } = null!;
+        public virtual DbSet<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy> WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR> WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEARs { get; set; } = null!;
         public virtual DbSet<WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLD> WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCORE> WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
@@ -407,7 +410,6 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANIES_OLD> WP_OPL_Aggregated_Score_ALL_COMPANIES_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPE> WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANy> WP_OPL_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
-     //   public virtual DbSet<WP_OML_Aggregated_Score_ALL_COMPANy> WP_OML_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_COMPLIANCE_INDEX_CALCULATION> WP_OPL_COMPLIANCE_INDEX_CALCULATIONs { get; set; } = null!;
         public virtual DbSet<WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE> WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR> WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEARs { get; set; } = null!;
@@ -422,7 +424,6 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OPL_OML_Cost_Efficiency_Metric_INDEX_WEIGHTED_SCORE> WP_OPL_OML_Cost_Efficiency_Metric_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OPL_OML_Cost_Efficiency_Metric_INDEX_WEIGHTED_SCORE_OLD> WP_OPL_OML_Cost_Efficiency_Metric_INDEX_WEIGHTED_SCORE_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy> WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs { get; set; } = null!;
-        public virtual DbSet<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy> WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED> WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTEDs { get; set; } = null!;
         public virtual DbSet<WP_RESERVES_REPLACEMENT_RATIO_VALUE_TO_BE_PIVOTTED> WP_RESERVES_REPLACEMENT_RATIO_VALUE_TO_BE_PIVOTTEDs { get; set; } = null!;
         public virtual DbSet<WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL> WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs { get; set; } = null!;
@@ -606,6 +607,9 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
             {
+                entity.HasKey(e => e.Id)
+                    .HasName("PK_companycodeid")
+                    .IsClustered(false);
 
                 entity.ToTable("ADMIN_COMPANY_CODE");
 
@@ -632,8 +636,6 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.GUID)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.IsActive)
                     .HasMaxLength(20)
@@ -987,7 +989,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_CONCESSIONS_INFORMATION>(entity =>
             {
-                entity.HasKey(e => e.Consession_Id);
+                entity.HasNoKey();
 
                 entity.ToTable("ADMIN_CONCESSIONS_INFORMATION");
 
@@ -1022,6 +1024,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Concession_Unique_ID)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Consession_Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Consession_Type)
                     .HasMaxLength(50)
@@ -3846,6 +3850,21 @@ namespace Backend_UMR_Work_Program.Models
                 entity.ToTable("BudgetProposal");
 
                 entity.Property(e => e.Oil_Gas_Facility_Maintenance).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<COMPANY_CONCESSIONS_FIELD>(entity =>
+            {
+                entity.ToTable("COMPANY_CONCESSIONS_FIELDS");
+
+                entity.Property(e => e.Concession_Name)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created_On).HasColumnType("datetime");
+
+                entity.Property(e => e.Field_Name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CONCESSION_SITUATION>(entity =>
@@ -16380,6 +16399,33 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<WP_OML_Aggregated_Score_ALL_COMPANy>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("WP_OML_Aggregated_Score_ALL_COMPANIES");
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Consession_Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
+
+                entity.Property(e => e.OML_Aggregated_Score).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Recalibrated_Scaled_Index_SUM).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.Weighted_Score_SUM).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<WP_OML_COMPLIANCE_INDEX_CALCULATION>(entity =>
             {
                 entity.HasNoKey();
@@ -17869,6 +17915,43 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIES");
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Consession_Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
+
+                entity.Property(e => e.MAX_RGT).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.MIN_RGT).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Recalibrated_Scaled_Index).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Scaled_by_Reciprocal_GrandTotal_RGT).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Unscaled_Score).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Unscaled_Score_sum).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Weight).IsUnicode(false);
+
+                entity.Property(e => e.Weighted_Score).HasColumnType("numeric(38, 6)");
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR>(entity =>
             {
                 entity.HasNoKey();
@@ -18051,32 +18134,6 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
-            //modelBuilder.Entity<WP_OML_Aggregated_Score_ALL_COMPANy>(entity =>
-            //{
-            //    entity.HasNoKey();
-
-            //    entity.ToView("WP_OML_Aggregated_Score_ALL_COMPANIES");
-
-            //    entity.Property(e => e.CompanyName)
-            //        .HasMaxLength(500)
-            //        .IsUnicode(false);
-
-            //    entity.Property(e => e.Consession_Type)
-            //        .HasMaxLength(50)
-            //        .IsUnicode(false);
-
-            //    entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
-
-            //    entity.Property(e => e.OML_Aggregated_Score).HasColumnType("numeric(38, 6)");
-
-            //    entity.Property(e => e.Recalibrated_Scaled_Index_SUM).HasColumnType("numeric(38, 2)");
-
-            //    entity.Property(e => e.Weighted_Score_SUM).HasColumnType("numeric(38, 2)");
-
-            //    entity.Property(e => e.Year_of_WP)
-            //        .HasMaxLength(100)
-            //        .IsUnicode(false);
-            //});
 
             modelBuilder.Entity<WP_OPL_COMPLIANCE_INDEX_CALCULATION>(entity =>
             {
@@ -18416,40 +18473,6 @@ namespace Backend_UMR_Work_Program.Models
                 entity.HasNoKey();
 
                 entity.ToView("WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIES");
-
-                entity.Property(e => e.CompanyName)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Consession_Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
-
-                entity.Property(e => e.MAX_RGT).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.MIN_RGT).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Recalibrated_Scaled_Index).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Scaled_by_Reciprocal_GrandTotal_RGT).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Unscaled_Score).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Weight).IsUnicode(false);
-
-                entity.Property(e => e.Weighted_Score).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Year_of_WP)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
-            modelBuilder.Entity<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIES");
 
                 entity.Property(e => e.CompanyName)
                     .HasMaxLength(500)
