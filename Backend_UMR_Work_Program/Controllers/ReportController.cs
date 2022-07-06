@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -30,15 +30,15 @@ namespace Backend_UMR_Work_Program.Controllers
          _mapper = mapper;
         _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
     }
-        //private string? WKPCompanyId => "1";
-        //private string? WKPCompanyName => "Name";
-        //private string? WKPCompanyEmail => "adeola.kween123@gmail.com";
-        //private string? WKUserRole => "Admin";
+        private string? WKPCompanyId => "221";
+        private string? WKPCompanyName => "Name";
+        private string? WKPCompanyEmail => "adeola.kween123@gmail.com";
+        private string? WKUserRole => "Admin";
 
-        private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
-        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
-        private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+        //private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
+        //private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
+        //private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
         #region General Report Section
@@ -627,7 +627,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 //WKP_Report2.OML_WEIGHTED_SCORE_UNION_COMPANIES_BY_CONTRACT_TYPE__JV = _context.WP_OML_WEIGHTED_SCORE_UNION_ALL_COMPANIES_by_Contract_Type_news.Where(x=>x.Year_of_WP == year &&  x.Contract_Type == GeneralModel.SR).ToList();
                 //WKP_Report2.OML_WEIGHTED_SCORE_UNION_COMPANIES_BY_CONTRACT_TYPE__JV = _context.WP_OML_WEIGHTED_SCORE_UNION_ALL_COMPANIES_by_Contract_Type_news.Where(x=>x.Year_of_WP == year &&  x.Contract_Type == GeneralModel.MF).ToList();
                  
-                 WKP_Report2.OML_Aggregated_Score_ALL_COMPANIES = _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(x => x.Year_of_WP == year).ToList().OrderByDescending(x => x.OML_Aggregated_Score);
+                 //err WKP_Report2.OML_Aggregated_Score_ALL_COMPANIES = _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(x => x.Year_of_WP == year).ToList().OrderByDescending(x => x.OML_Aggregated_Score);
                
                  WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED = _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x => x.Fiveyear_Projection_Year == proposedYear).ToList();
 

@@ -24,6 +24,7 @@ namespace Backend_UMR_Work_Program.Controllers
         IMapper _mapper;
         public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
+            _presentation = presentation;
             _context = context;
             _configuration = configuration;
             _mapper = mapper;

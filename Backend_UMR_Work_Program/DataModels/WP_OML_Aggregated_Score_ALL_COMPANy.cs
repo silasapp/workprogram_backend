@@ -15,4 +15,3 @@ namespace Backend_UMR_Work_Program.Models
         public decimal? OML_Aggregated_Score { get; set; }
     }
 }
-
