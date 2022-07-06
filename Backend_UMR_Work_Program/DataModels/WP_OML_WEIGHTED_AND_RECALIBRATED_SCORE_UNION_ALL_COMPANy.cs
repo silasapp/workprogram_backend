@@ -8,7 +8,7 @@ namespace Backend_UMR_Work_Program.Models
         public string? CompanyName { get; set; }
         public string? INDEX_TYPE { get; set; }
         public decimal? Unscaled_Score { get; set; }
-        public int? Unscaled_Score_sum { get; set; }
+        public decimal? Unscaled_Score_sum { get; set; }
         public decimal? Scaled_by_Reciprocal_GrandTotal_RGT { get; set; }
         public decimal? MAX_RGT { get; set; }
         public decimal? MIN_RGT { get; set; }
