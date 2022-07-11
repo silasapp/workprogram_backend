@@ -200,7 +200,7 @@ namespace Backend_UMR_Work_Program.Models
         }
         public class WorkProgramme_Model_1
         {
-            public List<CONCESSION_SITUATION_Model> CONCESSION_SITUATION { get; set; }
+            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
             public List<GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model> GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
             public List<GEOPHYSICAL_ACTIVITIES_PROCESSING_Model> GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
             public List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model> DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
