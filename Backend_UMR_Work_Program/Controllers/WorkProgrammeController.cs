@@ -40,6 +40,291 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         #region database tables actions
+        [HttpGet("GET_FORM_ONE_CONCESSION")]
+        public async Task<object> GET_FORM_ONE_CONCESSION(string omlName, string myyear)
+        {
+            var concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.Year == myyear && d.DELETED_STATUS == null select d).ToListAsync();
+            var concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
+            return new { concessionSituation = concessionSituation, concessionInfo = concessionInfo };
+        }
+
+        [HttpGet("GET_FORM_ONE_GEOPHYSICAL")]
+        public async Task<object> GET_FORM_ONE_GEOPHYSICAL(string omlName, string myyear)
+        {
+            var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
+        }
+        [HttpGet("GET_FORM_ONE_DRILLING")]
+        public async Task<object> GET_FORM_ONE_DRILLING(string omlName, string myyear)
+        {
+            var drillEachCost = await (from d in _context.DRILLING_EACH_WELL_COSTs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var drillEachCostProposed = await (from d in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            var drillOperationCategoriesWell = await (from d in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+            return new { drillEachCost = drillEachCost, drillEachCostProposed = drillEachCostProposed, drillOperationCategoriesWell = drillOperationCategoriesWell };
+        }
+        
+        [HttpGet("GET_FORM_TWO_INITIAL_WELL_COMPLETION_JOB")]
+        public async Task<object> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName)
+        {
+
+            try
+            {
+                var InitialWellCompletion = (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new { InitialWellCompletion = InitialWellCompletion };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpGet("GET_FORM_TWO_WORKOVERS_RECOMPLETION_JOB")]
+        public async Task<object> GET_WORKOVERS_RECOMPLETION_JOB(string year, string omlName)
+        {
+
+            try
+            {
+                var WorkoverRecompletion = (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new { WorkoverRecompletion = WorkoverRecompletion };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpGet("GET_FORM_TWO_FDP_UNITISATION")]
+        public async Task<object> GET_FORM_ONE_FDP_UNITISATION(string omlName, string year)
+        {
+            var FDP = (from c in _context.FIELD_DEVELOPMENT_PLANs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var FDPExcessiveReserves = (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var FieldsToSubmitFDP = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var FDPFieldsAndStatus = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var Unitization = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new { FDP = FDP, FDPExcessiveReserves = FDPExcessiveReserves, FieldsToSubmitFDP = FieldsToSubmitFDP, FDPFieldsAndStatus = FDPFieldsAndStatus, Unitization = Unitization };
+        }
+        [HttpGet("GET_FORM_TWO_RESERVES")]
+        public async Task<object> GET_FORM_TWO_RESERVES(string omlName, string year)
+        {
+            var ReservesUpdate = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var StatusOfReserves = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var FiveYearProjection = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var CompanyAnnualProduction = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var ReservesDecline = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var ReservesReplacementRatio = (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var OilCondensateFiveYears = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new
+            {
+                ReservesUpdate = ReservesUpdate,
+                StatusOfReserves = StatusOfReserves,
+                FiveYearProjection = FiveYearProjection,
+                CompanyAnnualProduction = CompanyAnnualProduction,
+                ReservesDecline = ReservesDecline,
+                ReservesReplacementRatio = ReservesReplacementRatio,
+                OilCondensateFiveYears = OilCondensateFiveYears
+            };
+        }
+        [HttpGet("GET_FORM_TWO_OIL_PRODUCTION")]
+        public async Task<object> GET_FORM_TWO_OIL_PRODUCTION(string omlName, string year)
+        {
+            var OilCondensateProduction = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var NDR = (from c in _context.NDRs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var OilCondensateProductionMonthly = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var OilCondensateProductionMonthlyProposed = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var OilCondensateFiveYears = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            
+            return new
+            {
+                OilCondensateProduction = OilCondensateProduction,
+                NDR = NDR,
+                OilCondensateProductionMonthly = OilCondensateProductionMonthly,
+                OilCondensateProductionMonthlyProposed = OilCondensateProductionMonthlyProposed,
+                OilCondensateFiveYears = OilCondensateFiveYears
+            };
+        }
+        [HttpGet("GET_FORM_TWO_GAS_PRODUCTION")]
+        public async Task<object> GET_FORM_TWO_GAS_PRODUCTION(string omlName, string year)
+        {
+            var GasProduction = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var GasProductionDomestic = (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            return new
+            {
+                GasProductionActivity = GasProduction,
+                GasProductionDomestic = GasProductionDomestic
+            };
+        }
+        [HttpGet("GET_FORM_THREE_BUDGET_PERFORMANCE")]
+        public async Task<object> GET_FORM_THREE_BUDGET_PERFORMANCE(string omlName, string year)
+        {
+            var BudgetActualExpenditure = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var BudgetPerformanceExploratory = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var BudgetPerformanceDevelopment = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var BudgetPerformanceProductionCost = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var BudgetPerformanceFacilityDevProjects = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            return new
+            {
+                BudgetActualExpenditure = BudgetActualExpenditure,
+                BudgetPerformanceExploratory = BudgetPerformanceExploratory,
+                BudgetPerformanceDevelopment = BudgetPerformanceDevelopment,
+                BudgetPerformanceProductionCost = BudgetPerformanceProductionCost,
+                BudgetPerformanceFacilityDevProjects = BudgetPerformanceFacilityDevProjects
+            };
+        }
+
+        [HttpGet("GET_FORM_THREE_BUDGET_PROPOSAL_IN_NAIRA_DOLLAR")]
+        public async Task<object> GET_FORM_THREE_BUDGET_PROPOSAL_IN_NAIRA_DOLLAR(string omlName, string year)
+        {
+            var BudgetProposalComponents = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var BudgetCapexOpex = (from c in _context.BUDGET_CAPEX_OPices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new
+            {
+                BudgetProposalComponents = BudgetProposalComponents,
+                BudgetCapexOpex = BudgetCapexOpex
+            };
+        }
+
+        [HttpGet("GET_FORM_THREE_OIL_GAS_FACILITY_MAINTENANCE")]
+        public async Task<object> GET_FORM_THREE_OIL_GAS_FACILITY_MAINTENANCE(string omlName, string year)
+        {
+            var OilAndGasExpenditure = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var OilCondensateTechnologyAssessment = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var OilAndGasProjects = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var FacilitiesProjetPerformance = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new
+            {
+                OilAndGasExpenditure = OilAndGasExpenditure,
+                OilCondensateTechnologyAssessment = OilCondensateTechnologyAssessment,
+                OilAndGasProjects = OilAndGasProjects,
+                FacilitiesProjetPerformance = FacilitiesProjetPerformance,
+            };
+
+        }
+
+        [HttpGet("GET_FORM_FOUR_NIGERIA_CONTENT")]
+        public async Task<object> GET_FORM_FOUR_NIGERIA_CONTENT(string omlName, string year)
+        {
+            var NigeriaContent = (from c in _context.NIGERIA_CONTENT_Trainings where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var NigeriaContentUploadSuccession = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var NigeriaContentQuestion = (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new
+            {
+                NigeriaContent = NigeriaContent,
+                NigeriaContentUploadSuccession = NigeriaContentUploadSuccession,
+                NigeriaContentQuestion = NigeriaContentQuestion
+            };
+        }
+
+        [HttpGet("GET_FORM_FOUR_STRATEGIC_PLANS")]
+        public async Task<object> GET_FORM_FOUR_STRATEGIC_PLANS(string omlName, string year)
+        {
+            var StrategicPlans = (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            
+            return new
+            {
+                StrategicPlans = StrategicPlans
+            };
+        }
+
+        [HttpGet("GET_FORM_FOUR_LEGAL_PROCEEDINGS")]
+        public async Task<object> GET_FORM_FOUR_LEGAL_PROCEEDINGS(string omlName, string year)
+        {
+            var LegalLitigation = (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var LegalArbitration = (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new
+            {
+                LegalLitigation = LegalLitigation,
+                LegalArbitration =  LegalArbitration
+            };
+        }
+
+        [HttpGet("GET_FORM_FIVE_HSE")]
+        public async Task<object> GET_FORM_FIVE_HSE(string omlName, string year)
+        {
+            var HSEQuestion = (from c in _context.HSE_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEFatality = (from c in _context.HSE_FATALITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEDesignSafety = (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEInspectionMaintenance = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEAssetRegister = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEOilSpill = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEAssetRegisterRBI = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEAccidentIncidence = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEAccidentIncidenceType = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSECommunityDisturbance = (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEEnvironmentalStudies = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEWasteManagement = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEWasteManagementType = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEProducedWaterMgt = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEEnvironmentalCompliance = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+
+            var HSEEnvironmentalFiveYears = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainableDev = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEEnvironmentalStudiesUpdated = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEOSPRegistrations = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEProducedWaterMgtUpdated = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEEnvironmentalComplianceChemical = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSECausesOfSpill = (from c in _context.HSE_CAUSES_OF_SPILLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainableDevMOU = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainableDevScheme = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEManagementPosition = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEQualityControl = (from c in _context.HSE_QUALITY_CONTROLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEClimateChange = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESafetyCulture = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEOccupationalHealth = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEWasteManagementSystems = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSEEnvironmentalManagementSystems = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+            var PictureUpload = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new
+            {
+                HSEQuestion = HSEQuestion,
+                HSEFatality = HSEFatality,
+                HSEDesignSafety = HSEDesignSafety,
+                HSEInspectionMaintenance = HSEInspectionMaintenance,
+                HSEInspectionMaintenanceFacility = HSEInspectionMaintenanceFacility,
+                HSETechnicalSafety = HSETechnicalSafety,
+                HSEAssetRegister = HSEAssetRegister,
+                HSEOilSpill = HSEOilSpill,
+                HSEAssetRegisterRBI = HSEAssetRegisterRBI,
+                HSEAccidentIncidence = HSEAccidentIncidence,
+                HSEAccidentIncidenceType = HSEAccidentIncidenceType,
+                HSECommunityDisturbance = HSECommunityDisturbance,
+                HSEEnvironmentalStudies = HSEEnvironmentalStudies,
+                HSEWasteManagement = HSEWasteManagement,
+                HSEWasteManagementType = HSEWasteManagementType,
+                HSEProducedWaterMgt = HSEProducedWaterMgt,
+                HSEEnvironmentalCompliance = HSEEnvironmentalCompliance,
+                HSEEnvironmentalFiveYears = HSEEnvironmentalFiveYears,
+                HSESustainableDev = HSESustainableDev,
+                HSEEnvironmentalStudiesUpdated = HSEEnvironmentalStudiesUpdated,
+                HSEOSPRegistrations = HSEOSPRegistrations,
+                HSEProducedWaterMgtUpdated = HSEProducedWaterMgtUpdated,
+                HSEEnvironmentalComplianceChemical = HSEEnvironmentalComplianceChemical,
+                HSECausesOfSpill = HSECausesOfSpill,
+                HSESustainableDevMOU = HSESustainableDevMOU,
+                HSESustainableDevScheme = HSESustainableDevScheme,
+                HSEManagementPosition = HSEManagementPosition,
+                HSEQualityControl = HSEQualityControl,
+                HSEClimateChange = HSEClimateChange,
+                HSESafetyCulture = HSESafetyCulture,
+                HSEOccupationalHealth = HSEOccupationalHealth,
+                HSEWasteManagementSystems = HSEWasteManagementSystems,
+                HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
+                PictureUpload = PictureUpload            };
+        }
 
         [HttpPost("POST_CONCESSION_SITUATION")]
         public async Task<WebApiResponse> POST_CONCESSION_SITUATION([FromBody] CONCESSION_SITUATION concession_situation_model, string year, string omlName, string actionToDo = null)
@@ -99,25 +384,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 }
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No CONCESSION_SITUATION_Model was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-       
-        
-        [HttpGet("GET_GEOPHYSICAL_ACTIVITIES_ACQUISITION")]
-        public async Task<WebApiResponse> GET_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year, string omlName, string quarter)
-        {
-
-            try
-            {
-                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
-                
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getGeophysicalActivitesData, StatusCode = ResponseCodes.Success };
-
             }
             catch (Exception e)
             {
@@ -198,24 +464,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-
-        [HttpGet("GET_GEOPHYSICAL_ACTIVITIES_PROCESSING")]
-        public async Task<WebApiResponse> GET_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year, string omlName, string quarter)
-        {
-
-            try
-            {
-                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getGeophysicalActivitesData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_GEOPHYSICAL_ACTIVITIES_PROCESSING")]
         public async Task<WebApiResponse> POST_GEOPHYSICAL_ACTIVITIES_PROCESSING([FromBody] GEOPHYSICAL_ACTIVITIES_PROCESSING geophysical_activities_processing_model, string omlName, string year, string ActionToDo = null)
         {
@@ -288,23 +536,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
-        public async Task<WebApiResponse> GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELL(string year, string omlName, string quarter)
-        {
-
-            try
-            {
-                var getData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
         public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromBody] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
         {
@@ -401,25 +632,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        
-        [HttpGet("GET_DRILLING_EACH_WELL_COST")]
-        public async Task<WebApiResponse> GET_DRILLING_EACH_WELL_COST(string year, string omlName, string quarter)
-        {
-
-            try
-            {
-                var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
         [HttpPost("POST_DRILLING_EACH_WELL_COST")]
         public async Task<WebApiResponse> POST_DRILLING_EACH_WELL_COST([FromBody] DRILLING_EACH_WELL_COST drilling_each_well_cost_model, string omlName, string year, string ActionToDo = null)
         {
@@ -483,24 +695,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
                 #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpGet("GET_DRILLING_EACH_WELL_COST_PROPOSED")]
-        public async Task<WebApiResponse> GET_DRILLING_EACH_WELL_COST_PROPOSED(string year, string omlName, string quarter)
-        {
-
-            try
-            {
-                var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
 
             }
             catch (Exception e)
@@ -582,23 +776,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_FIELD_DEVELOPMENT_PLAN")]
-        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_PLAN(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.FIELD_DEVELOPMENT_PLANs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_FIELD_DEVELOPMENT_PLAN")]
         public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_PLAN([FromBody] FIELD_DEVELOPMENT_PLAN field_development_plan_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
         {
@@ -685,24 +862,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
-        [HttpGet("GET_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE")]
-        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
+        
         [HttpPost("POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE")]
         public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE([FromBody] FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf field_development_plan_model, string omlName, string year, string ActionToDo = null)
         {
@@ -774,25 +934,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
-
-        [HttpGet("GET_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP")]
-        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
+        
         [HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP")]
         public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP([FromBody] FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP field_development_plan_model, string omlName, string year, string ActionToDo = null)
         {
@@ -865,23 +1007,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_FIELD_DEVELOPMENT_FIELDS_AND_STATUS")]
-        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS")]
         public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS([FromBody] FIELD_DEVELOPMENT_FIELDS_AND_STATUS field_development_plan_model, string omlName, string year, string ActionToDo = null)
         {
@@ -954,23 +1079,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_INITIAL_WELL_COMPLETION_JOB")]
-        public async Task<WebApiResponse> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_INITIAL_WELL_COMPLETION_JOB")]
         public async Task<WebApiResponse> POST_INITIAL_WELL_COMPLETION_JOB([FromBody] INITIAL_WELL_COMPLETION_JOB1 initial_well_completion_model, string omlName, string year, string ActionToDo = null)
         {
@@ -1043,23 +1151,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_WORKOVERS_RECOMPLETION_JOB")]
-        public async Task<WebApiResponse> GET_WORKOVERS_RECOMPLETION_JOB(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_WORKOVERS_RECOMPLETION_JOB")]
         public async Task<WebApiResponse> POST_WORKOVERS_RECOMPLETION_JOB([FromBody] WORKOVERS_RECOMPLETION_JOB1 workovers_recompletion_model, string omlName, string year, string ActionToDo = null)
         {
@@ -1131,24 +1222,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
-        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITY")]
-        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITY(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
+       
         [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITY")]
         public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITY([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITy oil_condensate_activity_model, string omlName, string year, string ActionToDo = null)
         {
@@ -1221,23 +1295,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION")]
-        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION")]
         public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION oil_condensate_unitisation_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
         {
@@ -1336,23 +1393,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_GAS_PRODUCTION_ACTIVITY")]
-        public async Task<WebApiResponse> GET_GAS_PRODUCTION_ACTIVITY(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_GAS_PRODUCTION_ACTIVITY")]
         public async Task<WebApiResponse> POST_GAS_PRODUCTION_ACTIVITY([FromBody] GAS_PRODUCTION_ACTIVITy gas_production_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
         {
@@ -1441,23 +1481,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_NDR")]
-        public async Task<WebApiResponse> GET_NDR(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.NDRs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_NDR")]
         public async Task<WebApiResponse> POST_NDR([FromBody] NDR ndr_model, string omlName, string year, string ActionToDo = null)
         {
@@ -1538,24 +1561,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-
-        [HttpGet("GET_RESERVES_UPDATES_LIFE_INDEX")]
-        public async Task<WebApiResponse> GET_RESERVES_UPDATES_LIFE_INDEX(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_RESERVES_UPDATES_LIFE_INDEX")]
         public async Task<WebApiResponse> POST_RESERVES_UPDATES_LIFE_INDEX([FromBody] RESERVES_UPDATES_LIFE_INDEX reserves_life_index_model, string omlName, string year, string ActionToDo = null)
         {
@@ -1627,23 +1632,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE")]
-        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE")]
         public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE reserves_condensate_status_model, string omlName, string year, string ActionToDo = null)
         {
@@ -1715,25 +1703,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection")]
-        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection")]
-        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection reserves_condensate_status_model, string omlName, string year, string ActionToDo = null)
+        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION")]
+        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection reserves_condensate_status_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -1891,24 +1862,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION")]
-        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION")]
+        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_COMPANY_ANNUAL_PRODUCTION")]
         public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION reserves_update_production_model, string omlName, string year, string ActionToDo = null)
         {
 
@@ -1979,25 +1933,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE")]
-        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE")]
-        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE reserves_update_decline_model, string omlName, string year, string ActionToDo = null)
+        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_DECLINE")]
+        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_DECLINE([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE reserves_update_decline_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2066,26 +2003,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
-        [HttpGet("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity")]
-        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity oil_condensate_reserves_model, string omlName, string year, string ActionToDo = null)
+        
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITY")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITY([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity oil_condensate_reserves_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2155,23 +2075,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_RESERVES_REPLACEMENT_RATIO")]
-        public async Task<WebApiResponse> GET_RESERVES_REPLACEMENT_RATIO(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_RESERVES_REPLACEMENT_RATIO")]
         public async Task<WebApiResponse> POST_RESERVES_REPLACEMENT_RATIO([FromBody] RESERVES_REPLACEMENT_RATIO reserves_replacement_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2242,26 +2145,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
-        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED")]
-        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED")]
-        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED oil_condensate_monthly_model, string omlName, string year, string ActionToDo = null)
+        
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITIES_PROPOSED")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITIES_PROPOSED([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED oil_condensate_monthly_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -2331,23 +2217,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
-        public async Task<WebApiResponse> GET_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
         public async Task<WebApiResponse> POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY([FromBody] GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY oil_gas_domestic_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2419,23 +2288,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_BUDGET_ACTUAL_EXPENDITURE")]
-        public async Task<WebApiResponse> GET_BUDGET_ACTUAL_EXPENDITURE(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_BUDGET_ACTUAL_EXPENDITURE")]
         public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2507,23 +2359,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
-        public async Task<WebApiResponse> GET_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
         public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2595,23 +2430,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITY")]
-        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITY")]
         public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy([FromBody] BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy budget_exploratory_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2683,24 +2501,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-
-        [HttpGet("GET_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITY")]
-        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITY")]
         public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy([FromBody] BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy budget_proposal_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2772,25 +2572,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        
-        
-        [HttpGet("GET_BUDGET_PERFORMANCE_PRODUCTION_COST")]
-        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_PRODUCTION_COST(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_BUDGET_PERFORMANCE_PRODUCTION_COST")]
         public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_PRODUCTION_COST([FromBody] BUDGET_PERFORMANCE_PRODUCTION_COST budget_performance_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2862,23 +2643,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
-        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
         public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT([FromBody] BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT budget_facilities_model, string omlName, string year, string ActionToDo = null)
         {
@@ -2949,24 +2713,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
-        [HttpGet("GET_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE")]
-        public async Task<WebApiResponse> GET_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
+        
         [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE")]
         public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE oil_gas_facility_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3038,23 +2785,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT")]
-        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT")]
         public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment oil_condensate_assessment_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3126,23 +2856,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
-        public async Task<WebApiResponse> GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
         public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3214,23 +2927,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_FACILITIES_PROJECT_PERFORMANCE")]
-        public async Task<WebApiResponse> GET_FACILITIES_PROJECT_PERFORMANCE(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
         public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3302,23 +2998,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_BUDGET_CAPEX_OPEX")]
-        public async Task<WebApiResponse> GET_BUDGET_CAPEX_OPEX(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.BUDGET_CAPEX_OPices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_BUDGET_CAPEX_OPEX")]
         public async Task<WebApiResponse> POST_BUDGET_CAPEX_OPEX([FromBody] BUDGET_CAPEX_OPEX budget_capex_opex_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3390,79 +3069,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost("BUDGET_CAPEX_OPEX")]
-        public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(BUDGET_CAPEX_OPEX_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var BudgetCapexOpexData = new BUDGET_CAPEX_OPEX();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Budget Capex Opex
-
-                var getBudgetCapexOpexData = (from c in _context.BUDGET_CAPEX_OPices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                BudgetCapexOpexData = getBudgetCapexOpexData != null ? getBudgetCapexOpexData : BudgetCapexOpexData;
-                BudgetCapexOpexData = _mapper.Map<BUDGET_CAPEX_OPEX>(wkp);
-
-                BudgetCapexOpexData.Companyemail = WKPCompanyEmail;
-                BudgetCapexOpexData.CompanyName = WKPCompanyName;
-                BudgetCapexOpexData.COMPANY_ID = WKPCompanyId;
-                BudgetCapexOpexData.Date_Updated = DateTime.Now;
-                BudgetCapexOpexData.Updated_by = WKPCompanyId;
-                BudgetCapexOpexData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getBudgetCapexOpexData == null)
-                {
-                    BudgetCapexOpexData.Created_by = WKPCompanyId;
-                    BudgetCapexOpexData.Date_Created = DateTime.Now;
-                    await _context.BUDGET_CAPEX_OPices.AddAsync(BudgetCapexOpexData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.BUDGET_CAPEX_OPices.Remove(BudgetCapexOpexData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpGet("GET_NIGERIA_CONTENT_TRAINING")]
-        public async Task<WebApiResponse> GET_NIGERIA_CONTENT_Training(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.NIGERIA_CONTENT_Trainings where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_NIGERIA_CONTENT_TRAINING")]
         public async Task<WebApiResponse> POST_NIGERIA_CONTENT_Training([FromBody] NIGERIA_CONTENT_Training nigeria_content_training_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3534,23 +3140,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN")]
-        public async Task<WebApiResponse> GET_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN")]
         public async Task<WebApiResponse> POST_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN([FromBody] NIGERIA_CONTENT_Upload_Succession_Plan nigeria_content_succession_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3622,23 +3211,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_NIGERIA_CONTENT_QUESTION")]
-        public async Task<WebApiResponse> GET_NIGERIA_CONTENT_QUESTION(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_NIGERIA_CONTENT_QUESTION")]
         public async Task<WebApiResponse> POST_NIGERIA_CONTENT_QUESTION([FromBody] NIGERIA_CONTENT_QUESTION nigeria_content_question_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3710,23 +3282,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_LEGAL_LITIGATION")]
-        public async Task<WebApiResponse> GET_LEGAL_LITIGATION(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_LEGAL_LITIGATION")]
         public async Task<WebApiResponse> POST_LEGAL_LITIGATION([FromBody] LEGAL_LITIGATION legal_litigation_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3798,23 +3353,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_LEGAL_ARBITRATION")]
-        public async Task<WebApiResponse> GET_LEGAL_ARBITRATION(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_LEGAL_ARBITRATION")]
         public async Task<WebApiResponse> POST_LEGAL_ARBITRATION([FromBody] LEGAL_ARBITRATION legal_arbitration_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3886,23 +3424,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_STRATEGIC_PLANS_ON_COMPANY_BASES")]
-        public async Task<WebApiResponse> GET_STRATEGIC_PLANS_ON_COMPANY_BASES(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_STRATEGIC_PLANS_ON_COMPANY_BASES")]
         public async Task<WebApiResponse> POST_STRATEGIC_PLANS_ON_COMPANY_BASI([FromBody] STRATEGIC_PLANS_ON_COMPANY_BASI strategic_plans_model, string omlName, string year, string ActionToDo = null)
         {
@@ -3974,23 +3495,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_QUESTION")]
-        public async Task<WebApiResponse> GET_HSE_QUESTION(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_QUESTION")]
         public async Task<WebApiResponse> POST_HSE_QUESTION([FromBody] HSE_QUESTION hse_question_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4062,23 +3566,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_FATALITY")]
-        public async Task<WebApiResponse> GET_HSE_FATALITY(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_FATALITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_FATALITY")]
         public async Task<WebApiResponse> POST_HSE_FATALITY([FromBody] HSE_FATALITy hse_fatality_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4150,23 +3637,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_DESIGNS_SAFETY")]
-        public async Task<WebApiResponse> GET_HSE_DESIGNS_SAFETY(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_DESIGNS_SAFETY")]
         public async Task<WebApiResponse> POST_HSE_DESIGNS_SAFETY([FromBody] HSE_DESIGNS_SAFETY hse_designs_safety_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4238,23 +3708,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_INSPECTION_AND_MAINTENANCE_NEW")]
-        public async Task<WebApiResponse> GET_HSE_INSPECTION_AND_MAINTENANCE_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_INSPECTION_AND_MAINTENANCE_NEW")]
         public async Task<WebApiResponse> POST_HSE_INSPECTION_AND_MAINTENANCE_NEW([FromBody] HSE_INSPECTION_AND_MAINTENANCE_NEW hse_IM_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4326,23 +3779,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
-        public async Task<WebApiResponse> GET_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
         public async Task<WebApiResponse> POST_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW([FromBody] HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW hse_IM_facility_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4414,23 +3850,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
-        public async Task<WebApiResponse> GET_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
         public async Task<WebApiResponse> POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW([FromBody] HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW hse_technical_safety_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4502,23 +3921,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
         public async Task<WebApiResponse> POST_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW([FromBody] HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW hse_asset_register_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4590,23 +3992,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_OIL_SPILL_REPORTING_NEW")]
-        public async Task<WebApiResponse> GET_HSE_OIL_SPILL_REPORTING_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_OIL_SPILL_REPORTING_NEW")]
         public async Task<WebApiResponse> POST_HSE_OIL_SPILL_REPORTING_NEW([FromBody] HSE_OIL_SPILL_REPORTING_NEW hse_oil_spill_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4678,23 +4063,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
         public async Task<WebApiResponse> POST_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW([FromBody] HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW hse_asset_register_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4766,23 +4134,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
         public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_NEW hse_accident_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4854,23 +4205,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW")]
         public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW hse_accident_reporting_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4942,23 +4276,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW")]
-        public async Task<WebApiResponse> GET_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW")]
         public async Task<WebApiResponse> POST_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW([FromBody] HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW hse_community_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5030,23 +4347,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ENVIRONMENTAL_STUDIES_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_STUDIES_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_NEW")]
         public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_STUDIES_NEW([FromBody] HSE_ENVIRONMENTAL_STUDIES_NEW hse_environmental_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5118,23 +4418,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_WASTE_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> GET_HSE_WASTE_MANAGEMENT_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_WASTE_MANAGEMENT_NEW")]
         public async Task<WebApiResponse> POST_HSE_WASTE_MANAGEMENT_NEW([FromBody] HSE_WASTE_MANAGEMENT_NEW hse_waste_management_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5206,23 +4489,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
-        public async Task<WebApiResponse> GET_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
         public async Task<WebApiResponse> POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW([FromBody] HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW hse_waste_management_facility_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5294,23 +4560,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
         public async Task<WebApiResponse> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW hse_produced_water_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5382,23 +4631,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
         public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW hse_compliance_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5469,24 +4701,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
-        [HttpGet("GET_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
+        
         [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
         public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW([FromBody] HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW hse_environmental_studies_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5558,23 +4773,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
-        public async Task<WebApiResponse> GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
         public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5646,23 +4844,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
-        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
         public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED([FromBody] HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED hse_environmental_studies_new_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5734,23 +4915,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_OSP_REGISTRATIONS_NEW")]
-        public async Task<WebApiResponse> GET_HSE_OSP_REGISTRATIONS_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_OSP_REGISTRATIONS_NEW")]
         public async Task<WebApiResponse> POST_HSE_OSP_REGISTRATIONS_NEW([FromBody] HSE_OSP_REGISTRATIONS_NEW hse_osp_registrations_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5822,23 +4986,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
-        public async Task<WebApiResponse> GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
         public async Task<WebApiResponse> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED hse_produced_water_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5910,23 +5057,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
-        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
         public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW hse_chemical_usage_model, string omlName, string year, string ActionToDo = null)
         {
@@ -5998,23 +5128,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_CAUSES_OF_SPILL")]
-        public async Task<WebApiResponse> GET_HSE_CAUSES_OF_SPILL(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_CAUSES_OF_SPILL")]
         public async Task<WebApiResponse> POST_HSE_CAUSES_OF_SPILL([FromBody] HSE_CAUSES_OF_SPILL hse_causes_of_spill_model, string omlName, string year, string ActionToDo = null)
         {
@@ -6086,23 +5199,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU")]
-        public async Task<WebApiResponse> GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU")]
         public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU hse_MOU_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6190,23 +5286,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME")]
-        public async Task<WebApiResponse> GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME")]
         public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME hse_scholarship_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6293,23 +5372,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_MANAGEMENT_POSITION")]
-        public async Task<WebApiResponse> GET_HSE_MANAGEMENT_POSITION(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_MANAGEMENT_POSITION")]
         public async Task<WebApiResponse> POST_HSE_MANAGEMENT_POSITION([FromBody] HSE_MANAGEMENT_POSITION hse_management_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6408,23 +5470,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_QUALITY_CONTROL")]
-        public async Task<WebApiResponse> GET_HSE_QUALITY_CONTROL(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_QUALITY_CONTROLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_QUALITY_CONTROL")]
         public async Task<WebApiResponse> POST_HSE_QUALITY_CONTROL([FromBody] HSE_QUALITY_CONTROL hse_quality_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6513,23 +5558,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
-        public async Task<WebApiResponse> GET_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
         public async Task<WebApiResponse> POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY([FromBody] HSE_CLIMATE_CHANGE_AND_AIR_QUALITY hse_climate_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6617,23 +5645,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_SAFETY_CULTURE_TRAINING")]
-        public async Task<WebApiResponse> GET_HSE_SAFETY_CULTURE_TRAINING(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_SAFETY_CULTURE_TRAINING")]
         public async Task<WebApiResponse> POST_HSE_SAFETY_CULTURE_TRAINING([FromBody] HSE_SAFETY_CULTURE_TRAINING hse_safety_culture_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6734,23 +5745,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
-        public async Task<WebApiResponse> GET_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
         public async Task<WebApiResponse> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromBody] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6849,23 +5843,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_WASTE_MANAGEMENT_SYSTEM")]
-        public async Task<WebApiResponse> GET_HSE_WASTE_MANAGEMENT_SYSTEM(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_WASTE_MANAGEMENT_SYSTEM")]
         public async Task<WebApiResponse> POST_HSE_WASTE_MANAGEMENT_SYSTEM([FromBody] HSE_WASTE_MANAGEMENT_SYSTEM hse_waste_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -6964,23 +5941,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
-        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
         public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM([FromBody] HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM hse_EMS_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -7078,23 +6038,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("GET_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT")]
-        public async Task<WebApiResponse> GET_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(string year, string omlName)
-        {
-
-            try
-            {
-                var getData = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT")]
         public async Task<WebApiResponse> POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT([FromBody] PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT picture_upload_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -7350,37 +6293,7 @@ namespace Backend_UMR_Work_Program.Controllers
             var con = await (from a in _context.ADMIN_CONCESSIONS_INFORMATIONs where a.Company_ID == mycompanyId && a.Year == myyear && a.DELETED_STATUS == null select a.Concession_Held).Distinct().ToListAsync();
             return con;
         }
-
-
-        [HttpGet("GET_FORM_ONE_CONCESSION")]
-        public async Task<object> GET_FORM_ONE_CONCESSION(string omlName, string myyear)
-        {   
-            var concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.Year == myyear && d.DELETED_STATUS == null select d).ToListAsync();
-            //var drillEachCost = await (from d in _context.DRILLING_EACH_WELL_COSTs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            //var drillEachCostProposed = await (from d in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            //var drillOperationCategoriesWell = await (from d in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            //var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            //var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            var concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
-            //var concessionSituation1stJanuary = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear orderby d.Year select d).ToListAsync();
-            return new {concessionSituation = concessionSituation, concessionInfo = concessionInfo};
-        }
-
-        [HttpGet("GET_FORM_ONE_GEOPHYSICAL")]
-        public async Task<object> GET_FORM_ONE_GEOPHYSICAL(string omlName, string myyear)
-        {   
-            //var concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.Year == myyear && d.DELETED_STATUS == null select d).ToListAsync();
-            //var drillEachCost = await (from d in _context.DRILLING_EACH_WELL_COSTs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            //var drillEachCostProposed = await (from d in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            //var drillOperationCategoriesWell = await (from d in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-            //var concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
-            //var concessionSituation1stJanuary = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear orderby d.Year select d).ToListAsync();
-            return new {geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing};
-        }
-
-
+        
         [HttpGet("GET_WPYEAR_LIST")]
         public async Task<object> Get_WPYear_List()
         {

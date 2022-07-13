@@ -1,0 +1,10 @@
+﻿
+CREATE VIEW [dbo].[WP_Gas_Production_Utilisation_And_Flaring_Forecast]
+AS
+SELECT     Year_of_WP, Current_Actual_Year, Utilized, Flared, CONVERT(decimal(18, 2), Flared) / Current_Actual_Year * 100 AS Percentage_flared, CONVERT(decimal(18, 2), 
+                      Utilized) / Current_Actual_Year * 100 AS Percentage_Utilized
+FROM         (SELECT     Year_of_WP, SUM(CAST(CAST(proposed_production AS decimal)AS int)) AS Current_Actual_Year,
+									 SUM(CAST(CAST(proposed_utilization AS decimal) AS int)) AS Utilized, 
+                                     SUM(CAST(CAST(proposed_flaring AS decimal )AS int)) AS Flared
+                       FROM          dbo.GAS_PRODUCTION_ACTIVITIES
+                       GROUP BY Year_of_WP) AS SUB
