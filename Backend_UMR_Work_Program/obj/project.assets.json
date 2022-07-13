@@ -6418,11 +6418,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+      "projectUniqueName": "C:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
       "projectName": "Backend_UMR_Work_Program",
-      "projectPath": "c:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+      "projectPath": "C:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
       "packagesPath": "C:\\Users\\prisc\\.nuget\\packages\\",
-      "outputPath": "c:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\obj\\",
+      "outputPath": "C:\\Workcode\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\prisc\\AppData\\Roaming\\NuGet\\NuGet.Config",

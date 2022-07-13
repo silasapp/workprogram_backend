@@ -267,8 +267,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_GeophysicalActivitesData = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_GeophysicalActivitesData, StatusCode = ResponseCodes.Success };
+                        var All_Data = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
                     {
@@ -305,9 +305,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
         [HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
-        public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromBody] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string year, string ActionToDo = null)
+        public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromBody] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
@@ -316,10 +315,10 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving Geophysical Activites
+                #region Saving drilling data
                 if (drilling_operations_categories_of_well_model != null)
                 {
-                    var getDrillingData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
 
                     drilling_operations_categories_of_well_model.Companyemail = WKPCompanyEmail;
                     drilling_operations_categories_of_well_model.CompanyName = WKPCompanyName;
@@ -329,10 +328,34 @@ namespace Backend_UMR_Work_Program.Controllers
                     drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
                     drilling_operations_categories_of_well_model.Year_of_WP = year;
                     drilling_operations_categories_of_well_model.OML_Name = drilling_operations_categories_of_well_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument FieldDiscoveryUploadFile_File = null;
+                    UploadedDocument HydrocarbonCountUploadFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "Field Discovery";
+                        FieldDiscoveryUploadFile_File = _helpersController.UploadDocument(files[0], "FieldDiscoveryDocuments");
+                        if (FieldDiscoveryUploadFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    if (files[1] != null)
+                    {
+                        string docName = "Hydrocarbon Count";
+                        HydrocarbonCountUploadFile_File = _helpersController.UploadDocument(files[1], "HydrocarbonCountDocuments");
+                        if (HydrocarbonCountUploadFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+
+                    drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = files[0] != null ? FieldDiscoveryUploadFile_File.filePath : null;
+                    drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = files[1] != null ? HydrocarbonCountUploadFile_File.filePath : null;
 
                     if (action == GeneralModel.Insert)
                     {
-                        if (getDrillingData == null)
+                        if (getData == null)
                         {
                             drilling_operations_categories_of_well_model.Date_Created = DateTime.Now;
                             drilling_operations_categories_of_well_model.Created_by = WKPCompanyId;
@@ -340,8 +363,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            drilling_operations_categories_of_well_model.Date_Created = getDrillingData.Date_Created;
-                            drilling_operations_categories_of_well_model.Created_by = getDrillingData.Created_by;
+                            drilling_operations_categories_of_well_model.Date_Created = getData.Date_Created;
+                            drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
                             drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
                             drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
                             await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
@@ -357,8 +380,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_GeophysicalActivitesData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_GeophysicalActivitesData, StatusCode = ResponseCodes.Success };
+                        var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
                     {
@@ -380,7 +403,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         
         [HttpGet("GET_DRILLING_EACH_WELL_COST")]
-        public async Task<WebApiResponse> DRILLING_EACH_WELL_COST(string year, string omlName, string quarter)
+        public async Task<WebApiResponse> GET_DRILLING_EACH_WELL_COST(string year, string omlName, string quarter)
         {
 
             try
@@ -407,10 +430,10 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving Geophysical Activites
+                #region Saving drilling data
                 if (drilling_each_well_cost_model != null)
                 {
-                    var getDrillingData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
 
                     drilling_each_well_cost_model.Companyemail = WKPCompanyEmail;
                     drilling_each_well_cost_model.CompanyName = WKPCompanyName;
@@ -423,7 +446,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (action == GeneralModel.Insert)
                     {
-                        if (getDrillingData == null)
+                        if (getData == null)
                         {
                             drilling_each_well_cost_model.Date_Created = DateTime.Now;
                             drilling_each_well_cost_model.Created_by = WKPCompanyId;
@@ -431,8 +454,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            drilling_each_well_cost_model.Date_Created = getDrillingData.Date_Created;
-                            drilling_each_well_cost_model.Created_by = getDrillingData.Created_by;
+                            drilling_each_well_cost_model.Date_Created = getData.Date_Created;
+                            drilling_each_well_cost_model.Created_by = getData.Created_by;
                             drilling_each_well_cost_model.Date_Updated = DateTime.Now;
                             drilling_each_well_cost_model.Updated_by = WKPCompanyId;
                             await _context.DRILLING_EACH_WELL_COSTs.AddAsync(drilling_each_well_cost_model);
@@ -448,8 +471,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_GeophysicalActivitesData = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_GeophysicalActivitesData, StatusCode = ResponseCodes.Success };
+                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
                     {
@@ -470,7 +493,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("GET_DRILLING_EACH_WELL_COST_PROPOSED")]
-        public async Task<WebApiResponse> DRILLING_EACH_WELL_COST_PROPOSED(string year, string omlName, string quarter)
+        public async Task<WebApiResponse> GET_DRILLING_EACH_WELL_COST_PROPOSED(string year, string omlName, string quarter)
         {
 
             try
@@ -497,10 +520,10 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving Geophysical Activites
+                #region Saving drilling data
                 if (drilling_each_well_cost_proposed_model != null)
                 {
-                    var getDrillingData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
 
                     drilling_each_well_cost_proposed_model.Companyemail = WKPCompanyEmail;
                     drilling_each_well_cost_proposed_model.CompanyName = WKPCompanyName;
@@ -513,7 +536,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (action == GeneralModel.Insert)
                     {
-                        if (getDrillingData == null)
+                        if (getData == null)
                         {
                             drilling_each_well_cost_proposed_model.Date_Created = DateTime.Now;
                             drilling_each_well_cost_proposed_model.Created_by = WKPCompanyId;
@@ -521,8 +544,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            drilling_each_well_cost_proposed_model.Date_Created = getDrillingData.Date_Created;
-                            drilling_each_well_cost_proposed_model.Created_by = getDrillingData.Created_by;
+                            drilling_each_well_cost_proposed_model.Date_Created = getData.Date_Created;
+                            drilling_each_well_cost_proposed_model.Created_by = getData.Created_by;
                             drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
                             drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
                             await _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(drilling_each_well_cost_proposed_model);
@@ -538,8 +561,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_GeophysicalActivitesData = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_GeophysicalActivitesData, StatusCode = ResponseCodes.Success };
+                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
                     {
@@ -559,60 +582,15 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-
-        [HttpPost("INITIAL_WELL_COMPLETION_JOB1")]
-        public async Task<WebApiResponse> INITIAL_WELL_COMPLETION_JOB1(List<INITIAL_WELL_COMPLETION_JOB1_Model> data, string year, string ActionToDo = null)
+        [HttpGet("GET_FIELD_DEVELOPMENT_PLAN")]
+        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_PLAN(string year, string omlName)
         {
-
-            int save = 0;
-            var Well_Completion_JobData = new INITIAL_WELL_COMPLETION_JOB1();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving Well_Completion_JobData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
+                var getData = (from c in _context.FIELD_DEVELOPMENT_PLANs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
 
-                        var getWell_Completion_JobData = (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Well_Completion_JobData = getWell_Completion_JobData != null ? getWell_Completion_JobData : Well_Completion_JobData;
-                        Well_Completion_JobData = _mapper.Map<INITIAL_WELL_COMPLETION_JOB1>(wkp);
-
-                        Well_Completion_JobData.Companyemail = WKPCompanyEmail;
-                        Well_Completion_JobData.CompanyName = WKPCompanyName;
-                        Well_Completion_JobData.COMPANY_ID = WKPCompanyId;
-                        Well_Completion_JobData.Date_Updated = DateTime.Now;
-                        Well_Completion_JobData.Updated_by = WKPCompanyId;
-                        Well_Completion_JobData.Year_of_WP = year;
-                        if (getWell_Completion_JobData == null)
-                        {
-                            Well_Completion_JobData.Created_by = WKPCompanyId;
-                            Well_Completion_JobData.Date_Created = DateTime.Now;
-                            await _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(Well_Completion_JobData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(Well_Completion_JobData);
-                        }
-
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
-                    }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
 
             }
             catch (Exception e)
@@ -621,668 +599,2260 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-       
-        [HttpPost("WORKOVERS_RECOMPLETION_JOB1")]
-        public async Task<WebApiResponse> WORKOVERS_RECOMPLETION_JOB1(List<WORKOVERS_RECOMPLETION_JOB1_Model> data, string year, string ActionToDo = null)
+        [HttpPost("POST_FIELD_DEVELOPMENT_PLAN")]
+        public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_PLAN([FromBody] FIELD_DEVELOPMENT_PLAN field_development_plan_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var Workover_JobData = new WORKOVERS_RECOMPLETION_JOB1();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving Workover JobData
-                if (data != null)
+
+                #region Saving FDP data
+                if (field_development_plan_model != null)
                 {
-                    foreach (var wkp in data)
+                    var getData = (from c in _context.FIELD_DEVELOPMENT_PLANs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    field_development_plan_model.Companyemail = WKPCompanyEmail;
+                    field_development_plan_model.CompanyName = WKPCompanyName;
+                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
+                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.Date_Updated = DateTime.Now;
+                    field_development_plan_model.Updated_by = WKPCompanyId;
+                    field_development_plan_model.Year_of_WP = year;
+                    field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument approved_FDP_Document = null;
+
+                    if (files[0] != null)
                     {
-             
-                        var getWorkover_JobData = (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
+                        string docName = "Approved FDP";
+                        approved_FDP_Document = _helpersController.UploadDocument(files[0], "FDPDocuments");
+                        if (approved_FDP_Document == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 
-                        Workover_JobData = getWorkover_JobData != null ? getWorkover_JobData : Workover_JobData;
-                        Workover_JobData = _mapper.Map<WORKOVERS_RECOMPLETION_JOB1>(wkp);
+                    }
+                    #endregion
 
-                        Workover_JobData.Companyemail = WKPCompanyEmail;
-                        Workover_JobData.CompanyName = WKPCompanyName;
-                        Workover_JobData.COMPANY_ID = WKPCompanyId;
-                        Workover_JobData.Date_Updated = DateTime.Now;
-                        Workover_JobData.Updated_by = WKPCompanyId;
-                        Workover_JobData.Year_of_WP = year;
-                        if (getWorkover_JobData == null)
+                    field_development_plan_model.Uploaded_approved_FDP_Document = files[0] != null ? approved_FDP_Document.filePath : null;
+                    field_development_plan_model.FDPDocumentFilename = files[0] != null ? approved_FDP_Document.fileName : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
                         {
-                            Workover_JobData.Created_by = WKPCompanyId;
-                            Workover_JobData.Date_Created = DateTime.Now;
-                            await _context.WORKOVERS_RECOMPLETION_JOBs1.AddAsync(Workover_JobData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(Workover_JobData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            field_development_plan_model.Date_Created = DateTime.Now;
+                            field_development_plan_model.Created_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            field_development_plan_model.Date_Created = getData.Date_Created;
+                            field_development_plan_model.Created_by = getData.Created_by;
+                            field_development_plan_model.Date_Updated = DateTime.Now;
+                            field_development_plan_model.Updated_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
                         }
                     }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE")]
-        public async Task<WebApiResponse> FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE(List<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model> data, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var FDP_ExcessReserveData = new FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Well_Completion_JobData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
+                    else if (action == GeneralModel.Delete)
                     {
-
-                        var getFDP_ExcessReserveData = (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        FDP_ExcessReserveData = getFDP_ExcessReserveData != null ? getFDP_ExcessReserveData : FDP_ExcessReserveData;
-                        FDP_ExcessReserveData = _mapper.Map<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>(wkp);
-
-                        FDP_ExcessReserveData.Companyemail = WKPCompanyEmail;
-                        FDP_ExcessReserveData.CompanyName = WKPCompanyName;
-                        FDP_ExcessReserveData.COMPANY_ID = WKPCompanyId;
-                        FDP_ExcessReserveData.Date_Updated = DateTime.Now;
-                        FDP_ExcessReserveData.Updated_by = WKPCompanyId;
-                        FDP_ExcessReserveData.Year_of_WP = year;
-                        if (getFDP_ExcessReserveData == null)
-                        {
-                            FDP_ExcessReserveData.Created_by = WKPCompanyId;
-                            FDP_ExcessReserveData.Date_Created = DateTime.Now;
-                            await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(FDP_ExcessReserveData);
-                        }
-
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(FDP_ExcessReserveData);
-                        }
-
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
+                        _context.FIELD_DEVELOPMENT_PLANs.Remove(field_development_plan_model);
                     }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                    save += await _context.SaveChangesAsync();
 
-            }
-        }
-        [HttpPost("FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP")]
-        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP(List<FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model> data, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var FDP_ToSubmitData = new FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving FDP_ToSubmitData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-                                var getFDP_ToSubmitData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                                FDP_ToSubmitData = getFDP_ToSubmitData != null ? getFDP_ToSubmitData : FDP_ToSubmitData;
-                                FDP_ToSubmitData = _mapper.Map<FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP>(wkp);
-
-                                FDP_ToSubmitData.Companyemail = WKPCompanyEmail;
-                                FDP_ToSubmitData.CompanyName = WKPCompanyName;
-                                FDP_ToSubmitData.COMPANY_ID = WKPCompanyId;
-                                FDP_ToSubmitData.Date_Updated = DateTime.Now;
-                                FDP_ToSubmitData.Updated_by = WKPCompanyId;
-                                FDP_ToSubmitData.Year_of_WP = year;
-                                if (getFDP_ToSubmitData == null)
-                                {
-                                    FDP_ToSubmitData.Created_by = WKPCompanyId;
-                                    FDP_ToSubmitData.Date_Created = DateTime.Now;
-                                    await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(FDP_ToSubmitData);
-                                }
-                                else if (action == GeneralModel.Delete)
-                                {
-                                    _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(FDP_ToSubmitData);
-                                }
-                                save = await _context.SaveChangesAsync();
-
-                                if (save > 0)
-                                {
-                                    string successMsg = "Form has been " + action + "D successfully.";
-                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                                }
-                                else
-                                {
-                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                                }
-                            }
-                         }
-                        #endregion
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-
-                    }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        
-        [HttpPost("FIELD_DEVELOPMENT_FIELDS_AND_STATUS")]
-        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(List<FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model> data, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var FDP_StatusData = new FIELD_DEVELOPMENT_FIELDS_AND_STATUS();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving FDP_StatusData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-                        var getFDP_StatusData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        FDP_StatusData = getFDP_StatusData != null ? getFDP_StatusData : FDP_StatusData;
-                        FDP_StatusData = _mapper.Map<FIELD_DEVELOPMENT_FIELDS_AND_STATUS>(wkp);
-
-                        FDP_StatusData.Companyemail = WKPCompanyEmail;
-                        FDP_StatusData.CompanyName = WKPCompanyName;
-                        FDP_StatusData.COMPANY_ID = WKPCompanyId;
-                        FDP_StatusData.Date_Updated = DateTime.Now;
-                        FDP_StatusData.Updated_by = WKPCompanyId;
-                        FDP_StatusData.Year_of_WP = year;
-                        if (getFDP_StatusData == null)
-                        {
-                            FDP_StatusData.Created_by = WKPCompanyId;
-                            FDP_StatusData.Date_Created = DateTime.Now;
-                            await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(FDP_StatusData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(FDP_StatusData);
-                        }
-                        save += await _context.SaveChangesAsync();
-
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
-                    }
-                }
-                        #endregion
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure};
-
-             }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("RESERVES_UPDATES_LIFE_INDEX")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(List<RESERVES_UPDATES_LIFE_INDEX_Model> data, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var Reserve_UpdateData = new RESERVES_UPDATES_LIFE_INDEX();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Reserve_UpdateData              
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-                         var getReserve_UpdateData = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Reserve_UpdateData = getReserve_UpdateData != null ? getReserve_UpdateData : Reserve_UpdateData;
-                        Reserve_UpdateData = _mapper.Map<RESERVES_UPDATES_LIFE_INDEX>(wkp);
-
-                        Reserve_UpdateData.Companyemail = WKPCompanyEmail;
-                        Reserve_UpdateData.CompanyName = WKPCompanyName;
-                        Reserve_UpdateData.COMPANY_ID = WKPCompanyId;
-                        Reserve_UpdateData.Date_Updated = DateTime.Now;
-                        Reserve_UpdateData.Updated_by = WKPCompanyId;
-                        Reserve_UpdateData.Year_of_WP = year;
-                        if (getReserve_UpdateData == null)
-                        {
-                            Reserve_UpdateData.Created_by = WKPCompanyId;
-                            Reserve_UpdateData.Date_Created = DateTime.Now;
-                            await _context.RESERVES_UPDATES_LIFE_INDices.AddAsync(Reserve_UpdateData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.RESERVES_UPDATES_LIFE_INDices.Remove(Reserve_UpdateData);
-                        }
-
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
-                    }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        
-        [HttpPost("FIELD_DEVELOPMENT_PLAN")]
-        public async Task<WebApiResponse> FIELD_DEVELOPMENT_PLAN(List<FIELD_DEVELOPMENT_PLAN_Model> data, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var FDP_Data = new FIELD_DEVELOPMENT_PLAN();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving FDP_Data
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-              
-                        var getFDP_Data = (from c in _context.FIELD_DEVELOPMENT_PLANs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        FDP_Data = getFDP_Data != null ? getFDP_Data : FDP_Data;
-                        FDP_Data = _mapper.Map<FIELD_DEVELOPMENT_PLAN>(wkp);
-
-                        #region file section
-                        UploadedDocument approved_FDP_Document = null;
-
-                        if (files[0] != null)
-                        {
-                            string docName = "Approved FDP";
-                            approved_FDP_Document = _helpersController.UploadDocument(files[0], "FDPDocuments");
-                            if (approved_FDP_Document == null)
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                        }
-                        #endregion
-
-                        FDP_Data.Uploaded_approved_FDP_Document = files[0] != null ? approved_FDP_Document.filePath : null;
-                        FDP_Data.FDPDocumentFilename = files[0] != null ? approved_FDP_Document.fileName : null;
-                        FDP_Data.Companyemail = WKPCompanyEmail;
-                        FDP_Data.CompanyName = WKPCompanyName;
-                        FDP_Data.COMPANY_ID = WKPCompanyId;
-                        FDP_Data.Date_Updated = DateTime.Now;
-                        FDP_Data.Updated_by = WKPCompanyId;
-                        FDP_Data.Year_of_WP = year;
-                        if (getFDP_Data == null)
-                        {
-                            FDP_Data.Created_by = WKPCompanyId;
-                            FDP_Data.Date_Created = DateTime.Now;
-                            await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(FDP_Data);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.FIELD_DEVELOPMENT_PLANs.Remove(FDP_Data);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
-                    }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure};
-
-            }
-             catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        
-        [HttpPost("OIL_CONDENSATE_PRODUCTION_ACTIVITy")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITy(List<OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model> data, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var Oil_ProductionData = new OIL_CONDENSATE_PRODUCTION_ACTIVITy();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Oil_ProductionData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-                            var getOil_ProductionData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                            Oil_ProductionData = getOil_ProductionData != null ? getOil_ProductionData : Oil_ProductionData;
-                            Oil_ProductionData = _mapper.Map<OIL_CONDENSATE_PRODUCTION_ACTIVITy>(wkp);
-
-                            Oil_ProductionData.Companyemail = WKPCompanyEmail;
-                            Oil_ProductionData.CompanyName = WKPCompanyName;
-                            Oil_ProductionData.COMPANY_ID = WKPCompanyId;
-                            Oil_ProductionData.Date_Updated = DateTime.Now;
-                            Oil_ProductionData.Updated_by = WKPCompanyId;
-                            Oil_ProductionData.Year_of_WP = DateTime.Now.Year.ToString();
-                            if (getOil_ProductionData == null)
-                            {
-                                Oil_ProductionData.Created_by = WKPCompanyId;
-                                Oil_ProductionData.Date_Created = DateTime.Now;
-                                await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(Oil_ProductionData);
-                            }
-                            else if (action == GeneralModel.Delete)
-                            {
-                                _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(Oil_ProductionData);
-                            }
-
-                            save += await _context.SaveChangesAsync();
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                  }
                 }
-            #endregion
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
 
-             }
-             catch (Exception e)
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
             {
-               return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
             }
         }
+
+        [HttpGet("GET_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE")]
+        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE")]
+        public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE([FromBody] FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf field_development_plan_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving FDP data
+                if (field_development_plan_model != null)
+                {
+                    var getData = (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    field_development_plan_model.Companyemail = WKPCompanyEmail;
+                    field_development_plan_model.CompanyName = WKPCompanyName;
+                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
+                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.Date_Updated = DateTime.Now;
+                    field_development_plan_model.Updated_by = WKPCompanyId;
+                    field_development_plan_model.Year_of_WP = year;
+                    field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
+                   
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            field_development_plan_model.Date_Created = DateTime.Now;
+                            field_development_plan_model.Created_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(field_development_plan_model);
+                        }
+                        else
+                        {
+                            field_development_plan_model.Date_Created = getData.Date_Created;
+                            field_development_plan_model.Created_by = getData.Created_by;
+                            field_development_plan_model.Date_Updated = DateTime.Now;
+                            field_development_plan_model.Updated_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(field_development_plan_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(field_development_plan_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+
+        [HttpGet("GET_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP")]
+        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP")]
+        public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP([FromBody] FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP field_development_plan_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving FDP data
+                if (field_development_plan_model != null)
+                {
+                    var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    field_development_plan_model.Companyemail = WKPCompanyEmail;
+                    field_development_plan_model.CompanyName = WKPCompanyName;
+                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
+                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.Date_Updated = DateTime.Now;
+                    field_development_plan_model.Updated_by = WKPCompanyId;
+                    field_development_plan_model.Year_of_WP = year;
+                    field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            field_development_plan_model.Date_Created = DateTime.Now;
+                            field_development_plan_model.Created_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(field_development_plan_model);
+                        }
+                        else
+                        {
+                            field_development_plan_model.Date_Created = getData.Date_Created;
+                            field_development_plan_model.Created_by = getData.Created_by;
+                            field_development_plan_model.Date_Updated = DateTime.Now;
+                            field_development_plan_model.Updated_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(field_development_plan_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(field_development_plan_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_FIELD_DEVELOPMENT_FIELDS_AND_STATUS")]
+        public async Task<WebApiResponse> GET_FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS")]
+        public async Task<WebApiResponse> POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS([FromBody] FIELD_DEVELOPMENT_FIELDS_AND_STATUS field_development_plan_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving FDP data
+                if (field_development_plan_model != null)
+                {
+                    var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    field_development_plan_model.Companyemail = WKPCompanyEmail;
+                    field_development_plan_model.CompanyName = WKPCompanyName;
+                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
+                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.Date_Updated = DateTime.Now;
+                    field_development_plan_model.Updated_by = WKPCompanyId;
+                    field_development_plan_model.Year_of_WP = year;
+                    field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            field_development_plan_model.Date_Created = DateTime.Now;
+                            field_development_plan_model.Created_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(field_development_plan_model);
+                        }
+                        else
+                        {
+                            field_development_plan_model.Date_Created = getData.Date_Created;
+                            field_development_plan_model.Created_by = getData.Created_by;
+                            field_development_plan_model.Date_Updated = DateTime.Now;
+                            field_development_plan_model.Updated_by = WKPCompanyId;
+                            await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(field_development_plan_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(field_development_plan_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_INITIAL_WELL_COMPLETION_JOB")]
+        public async Task<WebApiResponse> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_INITIAL_WELL_COMPLETION_JOB")]
+        public async Task<WebApiResponse> POST_INITIAL_WELL_COMPLETION_JOB([FromBody] INITIAL_WELL_COMPLETION_JOB1 initial_well_completion_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving FDP data
+                if (initial_well_completion_model != null)
+                {
+                    var getData = (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    initial_well_completion_model.Companyemail = WKPCompanyEmail;
+                    initial_well_completion_model.CompanyName = WKPCompanyName;
+                    initial_well_completion_model.COMPANY_ID = WKPCompanyId;
+                    initial_well_completion_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    initial_well_completion_model.Date_Updated = DateTime.Now;
+                    initial_well_completion_model.Updated_by = WKPCompanyId;
+                    initial_well_completion_model.Year_of_WP = year;
+                    initial_well_completion_model.OML_Name = initial_well_completion_model.OML_Name.ToUpper();
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            initial_well_completion_model.Date_Created = DateTime.Now;
+                            initial_well_completion_model.Created_by = WKPCompanyId;
+                            await _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(initial_well_completion_model);
+                        }
+                        else
+                        {
+                            initial_well_completion_model.Date_Created = getData.Date_Created;
+                            initial_well_completion_model.Created_by = getData.Created_by;
+                            initial_well_completion_model.Date_Updated = DateTime.Now;
+                            initial_well_completion_model.Updated_by = WKPCompanyId;
+                            await _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(initial_well_completion_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(initial_well_completion_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_WORKOVERS_RECOMPLETION_JOB")]
+        public async Task<WebApiResponse> GET_WORKOVERS_RECOMPLETION_JOB(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_WORKOVERS_RECOMPLETION_JOB")]
+        public async Task<WebApiResponse> POST_WORKOVERS_RECOMPLETION_JOB([FromBody] WORKOVERS_RECOMPLETION_JOB1 workovers_recompletion_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving FDP data
+                if (workovers_recompletion_model != null)
+                {
+                    var getData = (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    workovers_recompletion_model.Companyemail = WKPCompanyEmail;
+                    workovers_recompletion_model.CompanyName = WKPCompanyName;
+                    workovers_recompletion_model.COMPANY_ID = WKPCompanyId;
+                    workovers_recompletion_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    workovers_recompletion_model.Date_Updated = DateTime.Now;
+                    workovers_recompletion_model.Updated_by = WKPCompanyId;
+                    workovers_recompletion_model.Year_of_WP = year;
+                    workovers_recompletion_model.OML_Name = workovers_recompletion_model.OML_Name.ToUpper();
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            workovers_recompletion_model.Date_Created = DateTime.Now;
+                            workovers_recompletion_model.Created_by = WKPCompanyId;
+                            await _context.WORKOVERS_RECOMPLETION_JOBs1.AddAsync(workovers_recompletion_model);
+                        }
+                        else
+                        {
+                            workovers_recompletion_model.Date_Created = getData.Date_Created;
+                            workovers_recompletion_model.Created_by = getData.Created_by;
+                            workovers_recompletion_model.Date_Updated = DateTime.Now;
+                            workovers_recompletion_model.Updated_by = WKPCompanyId;
+                            await _context.WORKOVERS_RECOMPLETION_JOBs1.AddAsync(workovers_recompletion_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(workovers_recompletion_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITY")]
+        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITY(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITY")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITY([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITy oil_condensate_activity_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving Oil Condensate data
+                if (oil_condensate_activity_model != null)
+                {
+                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_condensate_activity_model.Companyemail = WKPCompanyEmail;
+                    oil_condensate_activity_model.CompanyName = WKPCompanyName;
+                    oil_condensate_activity_model.COMPANY_ID = WKPCompanyId;
+                    oil_condensate_activity_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_activity_model.Date_Updated = DateTime.Now;
+                    oil_condensate_activity_model.Updated_by = WKPCompanyId;
+                    oil_condensate_activity_model.Year_of_WP = year;
+                    oil_condensate_activity_model.OML_Name = oil_condensate_activity_model.OML_Name.ToUpper();
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            oil_condensate_activity_model.Date_Created = DateTime.Now;
+                            oil_condensate_activity_model.Created_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(oil_condensate_activity_model);
+                        }
+                        else
+                        {
+                            oil_condensate_activity_model.Date_Created = getData.Date_Created;
+                            oil_condensate_activity_model.Created_by = getData.Created_by;
+                            oil_condensate_activity_model.Date_Updated = DateTime.Now;
+                            oil_condensate_activity_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(oil_condensate_activity_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(oil_condensate_activity_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION")]
+        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION oil_condensate_unitisation_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving Oil Condensate data
+                if (oil_condensate_unitisation_model != null)
+                {
+                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_condensate_unitisation_model.Companyemail = WKPCompanyEmail;
+                    oil_condensate_unitisation_model.CompanyName = WKPCompanyName;
+                    oil_condensate_unitisation_model.COMPANY_ID = WKPCompanyId;
+                    oil_condensate_unitisation_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_unitisation_model.Date_Updated = DateTime.Now;
+                    oil_condensate_unitisation_model.Updated_by = WKPCompanyId;
+                    oil_condensate_unitisation_model.Year_of_WP = year;
+                    oil_condensate_unitisation_model.OML_Name = oil_condensate_unitisation_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument PUAUploadFile = null;
+                    UploadedDocument UUOAUploadFile = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "PUA";
+                        PUAUploadFile = _helpersController.UploadDocument(files[0], "PUADocuments");
+                        if (PUAUploadFile == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    if (files[1] != null)
+                    {
+                        string docName = "UUOA";
+                        UUOAUploadFile = _helpersController.UploadDocument(files[1], "UUOADocuments");
+                        if (UUOAUploadFile == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+
+                    oil_condensate_unitisation_model.PUAUploadFilePath = files[0] != null ? PUAUploadFile.filePath : null;
+                    oil_condensate_unitisation_model.PUAUploadFilename = files[0] != null ? PUAUploadFile.fileName : null;
+                    oil_condensate_unitisation_model.UUOAUploadFilePath = files[1] != null ? UUOAUploadFile.filePath : null;
+                    oil_condensate_unitisation_model.UUOAUploadFilename = files[1] != null ? UUOAUploadFile.fileName : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            oil_condensate_unitisation_model.Date_Created = DateTime.Now;
+                            oil_condensate_unitisation_model.Created_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.AddAsync(oil_condensate_unitisation_model);
+                        }
+                        else
+                        {
+                            oil_condensate_unitisation_model.Date_Created = getData.Date_Created;
+                            oil_condensate_unitisation_model.Created_by = getData.Created_by;
+                            oil_condensate_unitisation_model.Date_Updated = DateTime.Now;
+                            oil_condensate_unitisation_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.AddAsync(oil_condensate_unitisation_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Remove(oil_condensate_unitisation_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_GAS_PRODUCTION_ACTIVITY")]
+        public async Task<WebApiResponse> GET_GAS_PRODUCTION_ACTIVITY(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_GAS_PRODUCTION_ACTIVITY")]
+        public async Task<WebApiResponse> POST_GAS_PRODUCTION_ACTIVITY([FromBody] GAS_PRODUCTION_ACTIVITy gas_production_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving Oil Condensate data
+                if (gas_production_model != null)
+                {
+                    var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    gas_production_model.Companyemail = WKPCompanyEmail;
+                    gas_production_model.CompanyName = WKPCompanyName;
+                    gas_production_model.COMPANY_ID = WKPCompanyId;
+                    gas_production_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    gas_production_model.Date_Updated = DateTime.Now;
+                    gas_production_model.Updated_by = WKPCompanyId;
+                    gas_production_model.Year_of_WP = year;
+                    gas_production_model.OML_Name = gas_production_model.OML_Name.ToUpper();
+
+                    #region file section
+                    UploadedDocument Upload_NDR_payment_receipt_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "NDR Payment Receipt";
+                        Upload_NDR_payment_receipt_File = _helpersController.UploadDocument(files[0], "NDRPaymentReceipt");
+                        if (Upload_NDR_payment_receipt_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+
+
+                    gas_production_model.Upload_NDR_payment_receipt = files[0] != null ? Upload_NDR_payment_receipt_File.filePath : null;
+                    gas_production_model.NDRFilename = files[0] != null ? Upload_NDR_payment_receipt_File.fileName : null;
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            gas_production_model.Date_Created = DateTime.Now;
+                            gas_production_model.Created_by = WKPCompanyId;
+                            await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(gas_production_model);
+                        }
+                        else
+                        {
+                            gas_production_model.Date_Created = getData.Date_Created;
+                            gas_production_model.Created_by = getData.Created_by;
+                            gas_production_model.Date_Updated = DateTime.Now;
+                            gas_production_model.Updated_by = WKPCompanyId;
+                            await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(gas_production_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.GAS_PRODUCTION_ACTIVITIEs.Remove(gas_production_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_NDR")]
+        public async Task<WebApiResponse> GET_NDR(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.NDRs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_NDR")]
+        public async Task<WebApiResponse> POST_NDR([FromBody] NDR ndr_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving NDR data
+                if (ndr_model != null)
+                {
+                    var getData = (from c in _context.NDRs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    ndr_model.Companyemail = WKPCompanyEmail;
+                    ndr_model.CompanyName = WKPCompanyName;
+                    ndr_model.COMPANY_ID = WKPCompanyId;
+                    ndr_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    ndr_model.Date_Updated = DateTime.Now;
+                    ndr_model.Updated_by = WKPCompanyId;
+                    ndr_model.Year_of_WP = year;
+                    ndr_model.OML_Name = ndr_model.OML_Name.ToUpper();
+
+                    var getGas_ProductionData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    if (getGas_ProductionData != null)
+                    {
+                        ndr_model.Upload_NDR_payment_receipt = getGas_ProductionData != null ? getGas_ProductionData.Upload_NDR_payment_receipt : null;
+                        ndr_model.NDRFilename = getGas_ProductionData != null ? getGas_ProductionData.NDRFilename : null;
+
+                    }
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            ndr_model.Date_Created = DateTime.Now;
+                            ndr_model.Created_by = WKPCompanyId;
+                            await _context.NDRs.AddAsync(ndr_model);
+                        }
+                        else
+                        {
+                            ndr_model.Date_Created = getData.Date_Created;
+                            ndr_model.Created_by = getData.Created_by;
+                            ndr_model.Date_Updated = DateTime.Now;
+                            ndr_model.Updated_by = WKPCompanyId;
+                            await _context.NDRs.AddAsync(ndr_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.NDRs.Remove(ndr_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.NDRs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+
+        [HttpGet("GET_RESERVES_UPDATES_LIFE_INDEX")]
+        public async Task<WebApiResponse> GET_RESERVES_UPDATES_LIFE_INDEX(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_RESERVES_UPDATES_LIFE_INDEX")]
+        public async Task<WebApiResponse> POST_RESERVES_UPDATES_LIFE_INDEX([FromBody] RESERVES_UPDATES_LIFE_INDEX reserves_life_index_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving RESERVES_UPDATES_LIFE_INDEX data
+                if (reserves_life_index_model != null)
+                {
+                    var getData = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    reserves_life_index_model.Companyemail = WKPCompanyEmail;
+                    reserves_life_index_model.CompanyName = WKPCompanyName;
+                    reserves_life_index_model.COMPANY_ID = WKPCompanyId;
+                    reserves_life_index_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_life_index_model.Date_Updated = DateTime.Now;
+                    reserves_life_index_model.Updated_by = WKPCompanyId;
+                    reserves_life_index_model.Year_of_WP = year;
+                    reserves_life_index_model.OML_Name = reserves_life_index_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            reserves_life_index_model.Date_Created = DateTime.Now;
+                            reserves_life_index_model.Created_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_LIFE_INDices.AddAsync(reserves_life_index_model);
+                        }
+                        else
+                        {
+                            reserves_life_index_model.Date_Created = getData.Date_Created;
+                            reserves_life_index_model.Created_by = getData.Created_by;
+                            reserves_life_index_model.Date_Updated = DateTime.Now;
+                            reserves_life_index_model.Updated_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_LIFE_INDices.AddAsync(reserves_life_index_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.RESERVES_UPDATES_LIFE_INDices.Remove(reserves_life_index_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE")]
+        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE")]
+        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE reserves_condensate_status_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
+                if (reserves_condensate_status_model != null)
+                {
+                    var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
+                    reserves_condensate_status_model.CompanyName = WKPCompanyName;
+                    reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
+                    reserves_condensate_status_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_condensate_status_model.Date_Updated = DateTime.Now;
+                    reserves_condensate_status_model.Updated_by = WKPCompanyId;
+                    reserves_condensate_status_model.Year_of_WP = year;
+                    reserves_condensate_status_model.OML_Name = reserves_condensate_status_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            reserves_condensate_status_model.Date_Created = DateTime.Now;
+                            reserves_condensate_status_model.Created_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(reserves_condensate_status_model);
+                        }
+                        else
+                        {
+                            reserves_condensate_status_model.Date_Created = getData.Date_Created;
+                            reserves_condensate_status_model.Created_by = getData.Created_by;
+                            reserves_condensate_status_model.Date_Updated = DateTime.Now;
+                            reserves_condensate_status_model.Updated_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(reserves_condensate_status_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(reserves_condensate_status_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection")]
+        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection")]
+        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection reserves_condensate_status_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection data
+                if (reserves_condensate_status_model != null)
+                {
+                    var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
+                    reserves_condensate_status_model.CompanyName = WKPCompanyName;
+                    reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
+                    reserves_condensate_status_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_condensate_status_model.Date_Updated = DateTime.Now;
+                    reserves_condensate_status_model.Updated_by = WKPCompanyId;
+                    reserves_condensate_status_model.Year_of_WP = year;
+                    reserves_condensate_status_model.OML_Name = reserves_condensate_status_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            reserves_condensate_status_model.Date_Created = DateTime.Now;
+                            reserves_condensate_status_model.Created_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.AddAsync(reserves_condensate_status_model);
+                        }
+                        else
+                        {
+                            reserves_condensate_status_model.Date_Created = getData.Date_Created;
+                            reserves_condensate_status_model.Created_by = getData.Created_by;
+                            reserves_condensate_status_model.Date_Updated = DateTime.Now;
+                            reserves_condensate_status_model.Updated_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.AddAsync(reserves_condensate_status_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.Remove(reserves_condensate_status_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION")]
+        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION oil_condensate_fiveyears_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION data
+                if (oil_condensate_fiveyears_model != null)
+                {
+                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_condensate_fiveyears_model.Companyemail = WKPCompanyEmail;
+                    oil_condensate_fiveyears_model.CompanyName = WKPCompanyName;
+                    oil_condensate_fiveyears_model.COMPANY_ID = WKPCompanyId;
+                    oil_condensate_fiveyears_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_fiveyears_model.Date_Updated = DateTime.Now;
+                    oil_condensate_fiveyears_model.Updated_by = WKPCompanyId;
+                    oil_condensate_fiveyears_model.Year_of_WP = year;
+                    oil_condensate_fiveyears_model.OML_Name = oil_condensate_fiveyears_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            oil_condensate_fiveyears_model.Date_Created = DateTime.Now;
+                            oil_condensate_fiveyears_model.Created_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(oil_condensate_fiveyears_model);
+                        }
+                        else
+                        {
+                            oil_condensate_fiveyears_model.Date_Created = getData.Date_Created;
+                            oil_condensate_fiveyears_model.Created_by = getData.Created_by;
+                            oil_condensate_fiveyears_model.Date_Updated = DateTime.Now;
+                            oil_condensate_fiveyears_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(oil_condensate_fiveyears_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(oil_condensate_fiveyears_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION")]
+        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION")]
+        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION reserves_update_production_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION data
+                if (reserves_update_production_model != null)
+                {
+                    var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    reserves_update_production_model.Companyemail = WKPCompanyEmail;
+                    reserves_update_production_model.CompanyName = WKPCompanyName;
+                    reserves_update_production_model.COMPANY_ID = WKPCompanyId;
+                    reserves_update_production_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_update_production_model.Date_Updated = DateTime.Now;
+                    reserves_update_production_model.Updated_by = WKPCompanyId;
+                    reserves_update_production_model.Year_of_WP = year;
+                    reserves_update_production_model.OML_Name = reserves_update_production_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            reserves_update_production_model.Date_Created = DateTime.Now;
+                            reserves_update_production_model.Created_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.AddAsync(reserves_update_production_model);
+                        }
+                        else
+                        {
+                            reserves_update_production_model.Date_Created = getData.Date_Created;
+                            reserves_update_production_model.Created_by = getData.Created_by;
+                            reserves_update_production_model.Date_Updated = DateTime.Now;
+                            reserves_update_production_model.Updated_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.AddAsync(reserves_update_production_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Remove(reserves_update_production_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE")]
+        public async Task<WebApiResponse> GET_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE")]
+        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE reserves_update_decline_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE data
+                if (reserves_update_decline_model != null)
+                {
+                    var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    reserves_update_decline_model.Companyemail = WKPCompanyEmail;
+                    reserves_update_decline_model.CompanyName = WKPCompanyName;
+                    reserves_update_decline_model.COMPANY_ID = WKPCompanyId;
+                    reserves_update_decline_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_update_decline_model.Date_Updated = DateTime.Now;
+                    reserves_update_decline_model.Updated_by = WKPCompanyId;
+                    reserves_update_decline_model.Year_of_WP = year;
+                    reserves_update_decline_model.OML_Name = reserves_update_decline_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            reserves_update_decline_model.Date_Created = DateTime.Now;
+                            reserves_update_decline_model.Created_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.AddAsync(reserves_update_decline_model);
+                        }
+                        else
+                        {
+                            reserves_update_decline_model.Date_Created = getData.Date_Created;
+                            reserves_update_decline_model.Created_by = getData.Created_by;
+                            reserves_update_decline_model.Date_Updated = DateTime.Now;
+                            reserves_update_decline_model.Updated_by = WKPCompanyId;
+                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.AddAsync(reserves_update_decline_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Remove(reserves_update_decline_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity")]
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity oil_condensate_reserves_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity data
+                if (oil_condensate_reserves_model != null)
+                {
+                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_condensate_reserves_model.Companyemail = WKPCompanyEmail;
+                    oil_condensate_reserves_model.CompanyName = WKPCompanyName;
+                    oil_condensate_reserves_model.COMPANY_ID = WKPCompanyId;
+                    oil_condensate_reserves_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_reserves_model.Date_Updated = DateTime.Now;
+                    oil_condensate_reserves_model.Updated_by = WKPCompanyId;
+                    oil_condensate_reserves_model.Year_of_WP = year;
+                    oil_condensate_reserves_model.OML_Name = oil_condensate_reserves_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            oil_condensate_reserves_model.Date_Created = DateTime.Now;
+                            oil_condensate_reserves_model.Created_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.AddAsync(oil_condensate_reserves_model);
+                        }
+                        else
+                        {
+                            oil_condensate_reserves_model.Date_Created = getData.Date_Created;
+                            oil_condensate_reserves_model.Created_by = getData.Created_by;
+                            oil_condensate_reserves_model.Date_Updated = DateTime.Now;
+                            oil_condensate_reserves_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.AddAsync(oil_condensate_reserves_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Remove(oil_condensate_reserves_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_RESERVES_REPLACEMENT_RATIO")]
+        public async Task<WebApiResponse> GET_RESERVES_REPLACEMENT_RATIO(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_RESERVES_REPLACEMENT_RATIO")]
+        public async Task<WebApiResponse> POST_RESERVES_REPLACEMENT_RATIO([FromBody] RESERVES_REPLACEMENT_RATIO reserves_replacement_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving RESERVES_REPLACEMENT_RATIO data
+                if (reserves_replacement_model != null)
+                {
+                    var getData = (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    reserves_replacement_model.Companyemail = WKPCompanyEmail;
+                    reserves_replacement_model.CompanyName = WKPCompanyName;
+                    reserves_replacement_model.COMPANY_ID = WKPCompanyId;
+                    reserves_replacement_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_replacement_model.Date_Updated = DateTime.Now;
+                    reserves_replacement_model.Updated_by = WKPCompanyId;
+                    reserves_replacement_model.Year_of_WP = year;
+                    reserves_replacement_model.OML_Name = reserves_replacement_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            reserves_replacement_model.Date_Created = DateTime.Now;
+                            reserves_replacement_model.Created_by = WKPCompanyId;
+                            await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(reserves_replacement_model);
+                        }
+                        else
+                        {
+                            reserves_replacement_model.Date_Created = getData.Date_Created;
+                            reserves_replacement_model.Created_by = getData.Created_by;
+                            reserves_replacement_model.Date_Updated = DateTime.Now;
+                            reserves_replacement_model.Updated_by = WKPCompanyId;
+                            await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(reserves_replacement_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.RESERVES_REPLACEMENT_RATIOs.Remove(reserves_replacement_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED")]
+        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED oil_condensate_monthly_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED data
+                if (oil_condensate_monthly_model != null)
+                {
+                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_condensate_monthly_model.Companyemail = WKPCompanyEmail;
+                    oil_condensate_monthly_model.CompanyName = WKPCompanyName;
+                    oil_condensate_monthly_model.COMPANY_ID = WKPCompanyId;
+                    oil_condensate_monthly_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_monthly_model.Date_Updated = DateTime.Now;
+                    oil_condensate_monthly_model.Updated_by = WKPCompanyId;
+                    oil_condensate_monthly_model.Year_of_WP = year;
+                    oil_condensate_monthly_model.OML_Name = oil_condensate_monthly_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            oil_condensate_monthly_model.Date_Created = DateTime.Now;
+                            oil_condensate_monthly_model.Created_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(oil_condensate_monthly_model);
+                        }
+                        else
+                        {
+                            oil_condensate_monthly_model.Date_Created = getData.Date_Created;
+                            oil_condensate_monthly_model.Created_by = getData.Created_by;
+                            oil_condensate_monthly_model.Date_Updated = DateTime.Now;
+                            oil_condensate_monthly_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(oil_condensate_monthly_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(oil_condensate_monthly_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
+        public async Task<WebApiResponse> GET_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
+        public async Task<WebApiResponse> POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY([FromBody] GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY oil_gas_domestic_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY data
+                if (oil_gas_domestic_model != null)
+                {
+                    var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_gas_domestic_model.Companyemail = WKPCompanyEmail;
+                    oil_gas_domestic_model.CompanyName = WKPCompanyName;
+                    oil_gas_domestic_model.COMPANY_ID = WKPCompanyId;
+                    oil_gas_domestic_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_gas_domestic_model.Date_Updated = DateTime.Now;
+                    oil_gas_domestic_model.Updated_by = WKPCompanyId;
+                    oil_gas_domestic_model.Year_of_WP = year;
+                    oil_gas_domestic_model.OML_Name = oil_gas_domestic_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            oil_gas_domestic_model.Date_Created = DateTime.Now;
+                            oil_gas_domestic_model.Created_by = WKPCompanyId;
+                            await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(oil_gas_domestic_model);
+                        }
+                        else
+                        {
+                            oil_gas_domestic_model.Date_Created = getData.Date_Created;
+                            oil_gas_domestic_model.Created_by = getData.Created_by;
+                            oil_gas_domestic_model.Date_Updated = DateTime.Now;
+                            oil_gas_domestic_model.Updated_by = WKPCompanyId;
+                            await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(oil_gas_domestic_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(oil_gas_domestic_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_BUDGET_ACTUAL_EXPENDITURE")]
+        public async Task<WebApiResponse> GET_BUDGET_ACTUAL_EXPENDITURE(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_BUDGET_ACTUAL_EXPENDITURE")]
+        public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving BUDGET_ACTUAL_EXPENDITURE data
+                if (budget_actual_model != null)
+                {
+                    var getData = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    budget_actual_model.Companyemail = WKPCompanyEmail;
+                    budget_actual_model.CompanyName = WKPCompanyName;
+                    budget_actual_model.COMPANY_ID = WKPCompanyId;
+                    budget_actual_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_actual_model.Date_Updated = DateTime.Now;
+                    budget_actual_model.Updated_by = WKPCompanyId;
+                    budget_actual_model.Year_of_WP = year;
+                    budget_actual_model.OML_Name = budget_actual_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            budget_actual_model.Date_Created = DateTime.Now;
+                            budget_actual_model.Created_by = WKPCompanyId;
+                            await _context.BUDGET_ACTUAL_EXPENDITUREs.AddAsync(budget_actual_model);
+                        }
+                        else
+                        {
+                            budget_actual_model.Date_Created = getData.Date_Created;
+                            budget_actual_model.Created_by = getData.Created_by;
+                            budget_actual_model.Date_Updated = DateTime.Now;
+                            budget_actual_model.Updated_by = WKPCompanyId;
+                            await _context.BUDGET_ACTUAL_EXPENDITUREs.AddAsync(budget_actual_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(budget_actual_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
+        public async Task<WebApiResponse> GET_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
+        public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT data
+                if (budget_proposal_model != null)
+                {
+                    var getData = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    budget_proposal_model.Companyemail = WKPCompanyEmail;
+                    budget_proposal_model.CompanyName = WKPCompanyName;
+                    budget_proposal_model.COMPANY_ID = WKPCompanyId;
+                    budget_proposal_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_proposal_model.Date_Updated = DateTime.Now;
+                    budget_proposal_model.Updated_by = WKPCompanyId;
+                    budget_proposal_model.Year_of_WP = year;
+                    budget_proposal_model.OML_Name = budget_proposal_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            budget_proposal_model.Date_Created = DateTime.Now;
+                            budget_proposal_model.Created_by = WKPCompanyId;
+                            await _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.AddAsync(budget_proposal_model);
+                        }
+                        else
+                        {
+                            budget_proposal_model.Date_Created = getData.Date_Created;
+                            budget_proposal_model.Created_by = getData.Created_by;
+                            budget_proposal_model.Date_Updated = DateTime.Now;
+                            budget_proposal_model.Updated_by = WKPCompanyId;
+                            await _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.AddAsync(budget_proposal_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(budget_proposal_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITY")]
+        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITY")]
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy([FromBody] BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy budget_exploratory_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy data
+                if (budget_exploratory_model != null)
+                {
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    budget_exploratory_model.Companyemail = WKPCompanyEmail;
+                    budget_exploratory_model.CompanyName = WKPCompanyName;
+                    budget_exploratory_model.COMPANY_ID = WKPCompanyId;
+                    budget_exploratory_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_exploratory_model.Date_Updated = DateTime.Now;
+                    budget_exploratory_model.Updated_by = WKPCompanyId;
+                    budget_exploratory_model.Year_of_WP = year;
+                    budget_exploratory_model.OML_Name = budget_exploratory_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            budget_exploratory_model.Date_Created = DateTime.Now;
+                            budget_exploratory_model.Created_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
+                        }
+                        else
+                        {
+                            budget_exploratory_model.Date_Created = getData.Date_Created;
+                            budget_exploratory_model.Created_by = getData.Created_by;
+                            budget_exploratory_model.Date_Updated = DateTime.Now;
+                            budget_exploratory_model.Updated_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(budget_exploratory_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+
+        [HttpGet("GET_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITY")]
+        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITY")]
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy([FromBody] BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy budget_proposal_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy data
+                if (budget_proposal_model != null)
+                {
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    budget_proposal_model.Companyemail = WKPCompanyEmail;
+                    budget_proposal_model.CompanyName = WKPCompanyName;
+                    budget_proposal_model.COMPANY_ID = WKPCompanyId;
+                    budget_proposal_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_proposal_model.Date_Updated = DateTime.Now;
+                    budget_proposal_model.Updated_by = WKPCompanyId;
+                    budget_proposal_model.Year_of_WP = year;
+                    budget_proposal_model.OML_Name = budget_proposal_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            budget_proposal_model.Date_Created = DateTime.Now;
+                            budget_proposal_model.Created_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.AddAsync(budget_proposal_model);
+                        }
+                        else
+                        {
+                            budget_proposal_model.Date_Created = getData.Date_Created;
+                            budget_proposal_model.Created_by = getData.Created_by;
+                            budget_proposal_model.Date_Updated = DateTime.Now;
+                            budget_proposal_model.Updated_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.AddAsync(budget_proposal_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(budget_proposal_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
         
-        [HttpPost("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model> data, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var Oil_UnitizationData = new OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Oil_Unitization Data
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-                        var getOil_UnitizationData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Oil_UnitizationData = getOil_UnitizationData != null ? getOil_UnitizationData : Oil_UnitizationData;
-                        Oil_UnitizationData = _mapper.Map<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION>(wkp);
-                        #region file section
-                        UploadedDocument PUAUploadFile = null;
-                        UploadedDocument UUOAUploadFile = null;
-
-                        if (files[0] != null)
-                        {
-                            string docName = "PUA";
-                            PUAUploadFile = _helpersController.UploadDocument(files[0], "PUADocuments");
-                            if (PUAUploadFile == null)
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                        }
-                        if (files[1] != null)
-                        {
-                            string docName = "UUOA";
-                            UUOAUploadFile = _helpersController.UploadDocument(files[1], "UUOADocuments");
-                            if (UUOAUploadFile == null)
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                        }
-                        #endregion
-
-                        Oil_UnitizationData.PUAUploadFilePath = files[0] != null ? PUAUploadFile.filePath : null;
-                        Oil_UnitizationData.PUAUploadFilename = files[0] != null ? PUAUploadFile.fileName : null;
-                        Oil_UnitizationData.UUOAUploadFilePath = files[1] != null ? UUOAUploadFile.filePath : null;
-                        Oil_UnitizationData.UUOAUploadFilename = files[1] != null ? UUOAUploadFile.fileName : null;
-                        Oil_UnitizationData.Companyemail = WKPCompanyEmail;
-                        Oil_UnitizationData.CompanyName = WKPCompanyName;
-                        Oil_UnitizationData.COMPANY_ID = WKPCompanyId;
-                        Oil_UnitizationData.Date_Updated = DateTime.Now;
-                        Oil_UnitizationData.Updated_by = WKPCompanyId;
-                        Oil_UnitizationData.Year_of_WP = year;
-                        if (getOil_UnitizationData == null)
-                        {
-                            Oil_UnitizationData.Created_by = WKPCompanyId;
-                            Oil_UnitizationData.Date_Created = DateTime.Now;
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.AddAsync(Oil_UnitizationData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Remove(Oil_UnitizationData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
-                     }
-                    }
-                 #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-       
-        [HttpPost("GAS_PRODUCTION_ACTIVITy")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITy(List<GAS_PRODUCTION_ACTIVITy_Model> data, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var Gas_ProductionData = new GAS_PRODUCTION_ACTIVITy();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Gas_ProductionData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-                       var getGas_ProductionData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Gas_ProductionData = getGas_ProductionData != null ? getGas_ProductionData : Gas_ProductionData;
-                        Gas_ProductionData = _mapper.Map<GAS_PRODUCTION_ACTIVITy>(wkp);
-
-                        #region file section
-                        UploadedDocument Upload_NDR_payment_receipt_File = null;
-
-                        if (files[0] != null)
-                        {
-                            string docName = "NDR Payment Receipt";
-                            Upload_NDR_payment_receipt_File = _helpersController.UploadDocument(files[0], "NDRPaymentReceipt");
-                            if (Upload_NDR_payment_receipt_File == null)
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                        }
-                        #endregion
-
-
-                        Gas_ProductionData.Upload_NDR_payment_receipt = files[0] != null ? Upload_NDR_payment_receipt_File.filePath : null;
-                        Gas_ProductionData.NDRFilename = files[0] != null ? Upload_NDR_payment_receipt_File.fileName : null;
-                        Gas_ProductionData.Companyemail = WKPCompanyEmail;
-                        Gas_ProductionData.CompanyName = WKPCompanyName;
-                        Gas_ProductionData.COMPANY_ID = WKPCompanyId;
-                        Gas_ProductionData.Date_Updated = DateTime.Now;
-                        Gas_ProductionData.Updated_by = WKPCompanyId;
-                        Gas_ProductionData.Year_of_WP = year;
-                        if (getGas_ProductionData == null)
-                        {
-                            Gas_ProductionData.Created_by = WKPCompanyId;
-                            Gas_ProductionData.Date_Created = DateTime.Now;
-                            await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(Gas_ProductionData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.GAS_PRODUCTION_ACTIVITIEs.Remove(Gas_ProductionData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
-                    }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-
-             }
-            catch (Exception e)
-            {
-             return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         
-        [HttpPost("NDR")]
-        public async Task<WebApiResponse> NDR(List<NDR_Model> data, string year, List<IFormFile> files, string ActionToDo = null)
+        [HttpGet("GET_BUDGET_PERFORMANCE_PRODUCTION_COST")]
+        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_PRODUCTION_COST(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_BUDGET_PERFORMANCE_PRODUCTION_COST")]
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_PRODUCTION_COST([FromBody] BUDGET_PERFORMANCE_PRODUCTION_COST budget_performance_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var NDRData = new NDR();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving NDRData
-                if (data != null)
+
+                #region Saving BUDGET_PERFORMANCE_PRODUCTION_COST data
+                if (budget_performance_model != null)
                 {
-                    foreach (var wkp in data)
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    budget_performance_model.Companyemail = WKPCompanyEmail;
+                    budget_performance_model.CompanyName = WKPCompanyName;
+                    budget_performance_model.COMPANY_ID = WKPCompanyId;
+                    budget_performance_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_performance_model.Date_Updated = DateTime.Now;
+                    budget_performance_model.Updated_by = WKPCompanyId;
+                    budget_performance_model.Year_of_WP = year;
+                    budget_performance_model.OML_Name = budget_performance_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
                     {
-                        var getGas_ProductionData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        var getNDRData = (from c in _context.NDRs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        NDRData = getNDRData != null ? getNDRData : NDRData;
-                        NDRData = _mapper.Map<NDR>(wkp);
-                        if (getGas_ProductionData != null)
+                        if (getData == null)
                         {
-                            NDRData.Upload_NDR_payment_receipt = getGas_ProductionData != null ? getGas_ProductionData.Upload_NDR_payment_receipt : null;
-                            NDRData.NDRFilename = getGas_ProductionData != null ? getGas_ProductionData.NDRFilename : null;
-
-                        }
-                        NDRData.Companyemail = WKPCompanyEmail;
-                        NDRData.CompanyName = WKPCompanyName;
-                        NDRData.COMPANY_ID = WKPCompanyId;
-                        NDRData.Date_Updated = DateTime.Now;
-                        NDRData.Updated_by = WKPCompanyId;
-                        NDRData.Year_of_WP = year;
-                        if (getNDRData == null)
-                        {
-                            NDRData.Created_by = WKPCompanyId;
-                            NDRData.Date_Created = DateTime.Now;
-                            await _context.NDRs.AddAsync(NDRData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.NDRs.Remove(NDRData);
-                        }
-
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            budget_performance_model.Date_Created = DateTime.Now;
+                            budget_performance_model.Created_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.AddAsync(budget_performance_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            budget_performance_model.Date_Created = getData.Date_Created;
+                            budget_performance_model.Created_by = getData.Created_by;
+                            budget_performance_model.Date_Updated = DateTime.Now;
+                            budget_performance_model.Updated_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.AddAsync(budget_performance_model);
                         }
                     }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(budget_performance_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
-                #endregion
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
 
             }
             catch (Exception e)
@@ -1292,57 +2862,85 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost("RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE(List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model> data, string year, string ActionToDo = null)
+        [HttpGet("GET_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
+        public async Task<WebApiResponse> GET_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT([FromBody] BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT budget_facilities_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var Oil_Condensate_ReserveStatusData = new RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving Oil_Condensate_ReserveStatusData
-                if (data != null)
+
+                #region Saving BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT data
+                if (budget_facilities_model != null)
                 {
-                    foreach (var wkp in data)
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    budget_facilities_model.Companyemail = WKPCompanyEmail;
+                    budget_facilities_model.CompanyName = WKPCompanyName;
+                    budget_facilities_model.COMPANY_ID = WKPCompanyId;
+                    budget_facilities_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_facilities_model.Date_Updated = DateTime.Now;
+                    budget_facilities_model.Updated_by = WKPCompanyId;
+                    budget_facilities_model.Year_of_WP = year;
+                    budget_facilities_model.OML_Name = budget_facilities_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
                     {
-                        var getOil_Condensate_ReserveStatusData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Oil_Condensate_ReserveStatusData = getOil_Condensate_ReserveStatusData != null ? getOil_Condensate_ReserveStatusData : Oil_Condensate_ReserveStatusData;
-                        Oil_Condensate_ReserveStatusData = _mapper.Map<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE>(wkp);
-
-                        Oil_Condensate_ReserveStatusData.Companyemail = WKPCompanyEmail;
-                        Oil_Condensate_ReserveStatusData.CompanyName = WKPCompanyName;
-                        Oil_Condensate_ReserveStatusData.COMPANY_ID = WKPCompanyId;
-                        Oil_Condensate_ReserveStatusData.Date_Updated = DateTime.Now;
-                        Oil_Condensate_ReserveStatusData.Updated_by = WKPCompanyId;
-                        Oil_Condensate_ReserveStatusData.Year_of_WP = year;
-                        if (getOil_Condensate_ReserveStatusData == null)
+                        if (getData == null)
                         {
-                            Oil_Condensate_ReserveStatusData.Created_by = WKPCompanyId;
-                            Oil_Condensate_ReserveStatusData.Date_Created = DateTime.Now;
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(Oil_Condensate_ReserveStatusData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(Oil_Condensate_ReserveStatusData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            budget_facilities_model.Date_Created = DateTime.Now;
+                            budget_facilities_model.Created_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.AddAsync(budget_facilities_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            budget_facilities_model.Date_Created = getData.Date_Created;
+                            budget_facilities_model.Created_by = getData.Created_by;
+                            budget_facilities_model.Date_Updated = DateTime.Now;
+                            budget_facilities_model.Updated_by = WKPCompanyId;
+                            await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.AddAsync(budget_facilities_model);
                         }
                     }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(budget_facilities_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
-                #endregion
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
 
             }
             catch (Exception e)
@@ -1352,57 +2950,85 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost("RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection(List<RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model> data, string year, string ActionToDo = null)
+        [HttpGet("GET_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE")]
+        public async Task<WebApiResponse> GET_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE")]
+        public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE oil_gas_facility_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var Oil_Condensate_ReserveProjectionData = new RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                        #region Saving Oil_Condensate_ReserveProjectionData
-                        if (data != null)
-                        {
-                            foreach (var wkp in data)
-                            {
-                        var getOil_Condensate_ReserveProjectionData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
 
-                        Oil_Condensate_ReserveProjectionData = getOil_Condensate_ReserveProjectionData != null ? getOil_Condensate_ReserveProjectionData : Oil_Condensate_ReserveProjectionData;
-                        Oil_Condensate_ReserveProjectionData = _mapper.Map<RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection>(wkp);
+                #region Saving OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE data
+                if (oil_gas_facility_model != null)
+                {
+                    var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
 
-                        Oil_Condensate_ReserveProjectionData.Companyemail = WKPCompanyEmail;
-                        Oil_Condensate_ReserveProjectionData.CompanyName = WKPCompanyName;
-                        Oil_Condensate_ReserveProjectionData.COMPANY_ID = WKPCompanyId;
-                        Oil_Condensate_ReserveProjectionData.Date_Updated = DateTime.Now;
-                        Oil_Condensate_ReserveProjectionData.Updated_by = WKPCompanyId;
-                        Oil_Condensate_ReserveProjectionData.Year_of_WP = year;
-                        if (getOil_Condensate_ReserveProjectionData == null)
+                    oil_gas_facility_model.Companyemail = WKPCompanyEmail;
+                    oil_gas_facility_model.CompanyName = WKPCompanyName;
+                    oil_gas_facility_model.COMPANY_ID = WKPCompanyId;
+                    oil_gas_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_gas_facility_model.Date_Updated = DateTime.Now;
+                    oil_gas_facility_model.Updated_by = WKPCompanyId;
+                    oil_gas_facility_model.Year_of_WP = year;
+                    oil_gas_facility_model.OML_Name = oil_gas_facility_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
                         {
-                            Oil_Condensate_ReserveProjectionData.Created_by = WKPCompanyId;
-                            Oil_Condensate_ReserveProjectionData.Date_Created = DateTime.Now;
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.AddAsync(Oil_Condensate_ReserveProjectionData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.Remove(Oil_Condensate_ReserveProjectionData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            oil_gas_facility_model.Date_Created = DateTime.Now;
+                            oil_gas_facility_model.Created_by = WKPCompanyId;
+                            await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.AddAsync(oil_gas_facility_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            oil_gas_facility_model.Date_Created = getData.Date_Created;
+                            oil_gas_facility_model.Created_by = getData.Created_by;
+                            oil_gas_facility_model.Date_Updated = DateTime.Now;
+                            oil_gas_facility_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.AddAsync(oil_gas_facility_model);
                         }
                     }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(oil_gas_facility_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
-                #endregion
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
 
             }
             catch (Exception e)
@@ -1411,73 +3037,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
-        [HttpPost("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model> data, string year, List<IFormFile> files, string ActionToDo = null)
-        {
 
-            int save = 0;
-            var Oil_Condensate_ProjectionData = new OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+        [HttpGet("GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT")]
+        public async Task<WebApiResponse> GET_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year, string omlName)
+        {
 
             try
             {
-                #region Saving Oil_Condensate_ProjectionData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
-                    {
-                            var getOil_Condensate_ProjectionData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
+                var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
 
-                            Oil_Condensate_ProjectionData = getOil_Condensate_ProjectionData != null ? getOil_Condensate_ProjectionData : Oil_Condensate_ProjectionData;
-                            Oil_Condensate_ProjectionData = _mapper.Map<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION>(wkp);
-
-                            #region file section
-                            UploadedDocument ProductionOilCondensateAGNAGFile_File = null;
-
-                            if (files[0] != null)
-                            {
-                                string docName = "ProductionOilCondensateAGNAG";
-                                ProductionOilCondensateAGNAGFile_File = _helpersController.UploadDocument(files[0], "ProductionOilCondensateAGNAGDocument");
-                                if (ProductionOilCondensateAGNAGFile_File == null)
-                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                            }
-                            #endregion
-
-                            Oil_Condensate_ProjectionData.ProductionOilCondensateAGNAGUFilename = files[0] != null ? ProductionOilCondensateAGNAGFile_File.fileName : null;
-                            Oil_Condensate_ProjectionData.ProductionOilCondensateAGNAGUploadFilePath = files[0] != null ? ProductionOilCondensateAGNAGFile_File.filePath : null;
-                            Oil_Condensate_ProjectionData.Companyemail = WKPCompanyEmail;
-                            Oil_Condensate_ProjectionData.CompanyName = WKPCompanyName;
-                            Oil_Condensate_ProjectionData.COMPANY_ID = WKPCompanyId;
-                            Oil_Condensate_ProjectionData.Date_Updated = DateTime.Now;
-                            Oil_Condensate_ProjectionData.Updated_by = WKPCompanyId;
-                            Oil_Condensate_ProjectionData.Year_of_WP = DateTime.Now.Year.ToString();
-                            if (getOil_Condensate_ProjectionData == null)
-                            {
-                                Oil_Condensate_ProjectionData.Created_by = WKPCompanyId;
-                                Oil_Condensate_ProjectionData.Date_Created = DateTime.Now;
-                                await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(Oil_Condensate_ProjectionData);
-                            }
-                            else if (action == GeneralModel.Delete)
-                            {
-                                _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(Oil_Condensate_ProjectionData);
-                            }
-                            save += await _context.SaveChangesAsync();
-                            if (save > 0)
-                            {
-                                string successMsg = "Form has been " + action + "D successfully.";
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                            }
-                            else
-                            {
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                            }
-                    }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
 
             }
             catch (Exception e)
@@ -1486,58 +3055,68 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-     
-        [HttpPost("RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(List<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model> data, string year, string ActionToDo = null)
+        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT")]
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment oil_condensate_assessment_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var Oil_Condensate_AnnualData = new RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving Oil_Condensate_AnnualData
-                if (data != null)
+
+                #region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments data
+                if (oil_condensate_assessment_model != null)
                 {
-                    foreach (var wkp in data)
+                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_condensate_assessment_model.Companyemail = WKPCompanyEmail;
+                    oil_condensate_assessment_model.CompanyName = WKPCompanyName;
+                    oil_condensate_assessment_model.COMPANY_ID = WKPCompanyId;
+                    oil_condensate_assessment_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_assessment_model.Date_Updated = DateTime.Now;
+                    oil_condensate_assessment_model.Updated_by = WKPCompanyId;
+                    oil_condensate_assessment_model.Year_of_WP = year;
+                    oil_condensate_assessment_model.OML_Name = oil_condensate_assessment_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
                     {
-                        var getOil_Condensate_AnnualData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Oil_Condensate_AnnualData = getOil_Condensate_AnnualData != null ? getOil_Condensate_AnnualData : Oil_Condensate_AnnualData;
-                        Oil_Condensate_AnnualData = _mapper.Map<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION>(wkp);
-
-                        Oil_Condensate_AnnualData.Companyemail = WKPCompanyEmail;
-                        Oil_Condensate_AnnualData.CompanyName = WKPCompanyName;
-                        Oil_Condensate_AnnualData.COMPANY_ID = WKPCompanyId;
-                        Oil_Condensate_AnnualData.Date_Updated = DateTime.Now;
-                        Oil_Condensate_AnnualData.Updated_by = WKPCompanyId;
-                        Oil_Condensate_AnnualData.Year_of_WP = DateTime.Now.Year.ToString();
-                        if (getOil_Condensate_AnnualData == null)
+                        if (getData == null)
                         {
-                            Oil_Condensate_AnnualData.Created_by = WKPCompanyId;
-                            Oil_Condensate_AnnualData.Date_Created = DateTime.Now;
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.AddAsync(Oil_Condensate_AnnualData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Remove(Oil_Condensate_AnnualData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            oil_condensate_assessment_model.Date_Created = DateTime.Now;
+                            oil_condensate_assessment_model.Created_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(oil_condensate_assessment_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            oil_condensate_assessment_model.Date_Created = getData.Date_Created;
+                            oil_condensate_assessment_model.Created_by = getData.Created_by;
+                            oil_condensate_assessment_model.Date_Updated = DateTime.Now;
+                            oil_condensate_assessment_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(oil_condensate_assessment_model);
                         }
                     }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(oil_condensate_assessment_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
-                #endregion
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
 
             }
             catch (Exception e)
@@ -1547,58 +3126,85 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost("RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE(List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model> data, string year, string ActionToDo = null)
+        [HttpGet("GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
+        public async Task<WebApiResponse> GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
+        public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var Oil_Condensate_DeclineData = new RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving Oil_Condensate_DeclineData
-                if (data != null)
+
+                #region Saving OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs data
+                if (oil_gas_facility_model != null)
                 {
-                    foreach (var wkp in data)
+                    var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    oil_gas_facility_model.Companyemail = WKPCompanyEmail;
+                    oil_gas_facility_model.CompanyName = WKPCompanyName;
+                    oil_gas_facility_model.COMPANY_ID = WKPCompanyId;
+                    oil_gas_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_gas_facility_model.Date_Updated = DateTime.Now;
+                    oil_gas_facility_model.Updated_by = WKPCompanyId;
+                    oil_gas_facility_model.Year_of_WP = year;
+                    oil_gas_facility_model.OML_Name = oil_gas_facility_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
                     {
-                        
-                        var getOil_Condensate_DeclineData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Oil_Condensate_DeclineData = getOil_Condensate_DeclineData != null ? getOil_Condensate_DeclineData : Oil_Condensate_DeclineData;
-                        Oil_Condensate_DeclineData = _mapper.Map<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE>(wkp);
-
-                        Oil_Condensate_DeclineData.Companyemail = WKPCompanyEmail;
-                        Oil_Condensate_DeclineData.CompanyName = WKPCompanyName;
-                        Oil_Condensate_DeclineData.COMPANY_ID = WKPCompanyId;
-                        Oil_Condensate_DeclineData.Date_Updated = DateTime.Now;
-                        Oil_Condensate_DeclineData.Updated_by = WKPCompanyId;
-                        Oil_Condensate_DeclineData.Year_of_WP = DateTime.Now.Year.ToString();
-                        if (getOil_Condensate_DeclineData == null)
+                        if (getData == null)
                         {
-                            Oil_Condensate_DeclineData.Created_by = WKPCompanyId;
-                            Oil_Condensate_DeclineData.Date_Created = DateTime.Now;
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.AddAsync(Oil_Condensate_DeclineData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Remove(Oil_Condensate_DeclineData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            oil_gas_facility_model.Date_Created = DateTime.Now;
+                            oil_gas_facility_model.Created_by = WKPCompanyId;
+                            await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            oil_gas_facility_model.Date_Created = getData.Date_Created;
+                            oil_gas_facility_model.Created_by = getData.Created_by;
+                            oil_gas_facility_model.Date_Updated = DateTime.Now;
+                            oil_gas_facility_model.Updated_by = WKPCompanyId;
+                            await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
                         }
                     }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(oil_gas_facility_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
-                #endregion
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
 
             }
             catch (Exception e)
@@ -1607,58 +3213,86 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
-        [HttpPost("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity(List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model> data, string year, string ActionToDo = null)
+
+        [HttpGet("GET_FACILITIES_PROJECT_PERFORMANCE")]
+        public async Task<WebApiResponse> GET_FACILITIES_PROJECT_PERFORMANCE(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
+        public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var Oil_Condensate_ProductionData = new OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving Oil_Condensate_ProductionData
-                if (data != null)
+
+                #region Saving FACILITIES_PROJECT_PERFORMANCEs data
+                if (facilities_project_model != null)
                 {
-                    foreach (var wkp in data)
+                    var getData = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    facilities_project_model.Companyemail = WKPCompanyEmail;
+                    facilities_project_model.CompanyName = WKPCompanyName;
+                    facilities_project_model.COMPANY_ID = WKPCompanyId;
+                    facilities_project_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    facilities_project_model.Date_Updated = DateTime.Now;
+                    facilities_project_model.Updated_by = WKPCompanyId;
+                    facilities_project_model.Year_of_WP = year;
+                    facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
                     {
-                         var getOil_Condensate_ProductionData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Oil_Condensate_ProductionData = getOil_Condensate_ProductionData != null ? getOil_Condensate_ProductionData : Oil_Condensate_ProductionData;
-                        Oil_Condensate_ProductionData = _mapper.Map<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity>(wkp);
-
-                        Oil_Condensate_ProductionData.Companyemail = WKPCompanyEmail;
-                        Oil_Condensate_ProductionData.CompanyName = WKPCompanyName;
-                        Oil_Condensate_ProductionData.COMPANY_ID = WKPCompanyId;
-                        Oil_Condensate_ProductionData.Date_Updated = DateTime.Now;
-                        Oil_Condensate_ProductionData.Updated_by = WKPCompanyId;
-                        Oil_Condensate_ProductionData.Year_of_WP = DateTime.Now.Year.ToString();
-                        if (getOil_Condensate_ProductionData == null)
+                        if (getData == null)
                         {
-                            Oil_Condensate_ProductionData.Created_by = WKPCompanyId;
-                            Oil_Condensate_ProductionData.Date_Created = DateTime.Now;
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.AddAsync(Oil_Condensate_ProductionData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Remove(Oil_Condensate_ProductionData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            facilities_project_model.Date_Created = DateTime.Now;
+                            facilities_project_model.Created_by = WKPCompanyId;
+                            await _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(facilities_project_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            facilities_project_model.Date_Created = getData.Date_Created;
+                            facilities_project_model.Created_by = getData.Created_by;
+                            facilities_project_model.Date_Updated = DateTime.Now;
+                            facilities_project_model.Updated_by = WKPCompanyId;
+                            await _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(facilities_project_model);
                         }
                     }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(facilities_project_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
-                #endregion
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
 
             }
             catch (Exception e)
@@ -1667,235 +3301,87 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
-        [HttpPost("RESERVES_REPLACEMENT_RATIO")]
-        public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(List<RESERVES_REPLACEMENT_RATIO_Model> data, string year, string ActionToDo = null)
+
+        [HttpGet("GET_BUDGET_CAPEX_OPEX")]
+        public async Task<WebApiResponse> GET_BUDGET_CAPEX_OPEX(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.BUDGET_CAPEX_OPices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_BUDGET_CAPEX_OPEX")]
+        public async Task<WebApiResponse> POST_BUDGET_CAPEX_OPEX([FromBody] BUDGET_CAPEX_OPEX budget_capex_opex_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var Reserve_ReplacementData = new RESERVES_REPLACEMENT_RATIO();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-                #region Saving Reserve_ReplacementData
-                if (data != null)
+
+                #region Saving BUDGET_CAPEX_OPEXs data
+                if (budget_capex_opex_model != null)
                 {
-                    foreach (var wkp in data)
+                    var getData = (from c in _context.BUDGET_CAPEX_OPices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    budget_capex_opex_model.Companyemail = WKPCompanyEmail;
+                    budget_capex_opex_model.CompanyName = WKPCompanyName;
+                    budget_capex_opex_model.COMPANY_ID = WKPCompanyId;
+                    budget_capex_opex_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_capex_opex_model.Date_Updated = DateTime.Now;
+                    budget_capex_opex_model.Updated_by = WKPCompanyId;
+                    budget_capex_opex_model.Year_of_WP = year;
+                    budget_capex_opex_model.OML_Name = budget_capex_opex_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
                     {
-                        var getReserve_ReplacementData = (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Reserve_ReplacementData = getReserve_ReplacementData != null ? getReserve_ReplacementData : Reserve_ReplacementData;
-                        Reserve_ReplacementData = _mapper.Map<RESERVES_REPLACEMENT_RATIO>(wkp);
-
-                        Reserve_ReplacementData.Companyemail = WKPCompanyEmail;
-                        Reserve_ReplacementData.CompanyName = WKPCompanyName;
-                        Reserve_ReplacementData.COMPANY_ID = WKPCompanyId;
-                        Reserve_ReplacementData.Date_Updated = DateTime.Now;
-                        Reserve_ReplacementData.Updated_by = WKPCompanyId;
-                        Reserve_ReplacementData.Year_of_WP = DateTime.Now.Year.ToString();
-                        if (getReserve_ReplacementData == null)
+                        if (getData == null)
                         {
-                            Reserve_ReplacementData.Created_by = WKPCompanyId;
-                            Reserve_ReplacementData.Date_Created = DateTime.Now;
-                            await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(Reserve_ReplacementData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.RESERVES_REPLACEMENT_RATIOs.Remove(Reserve_ReplacementData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
+                            budget_capex_opex_model.Date_Created = DateTime.Now;
+                            budget_capex_opex_model.Created_by = WKPCompanyId;
+                            await _context.BUDGET_CAPEX_OPices.AddAsync(budget_capex_opex_model);
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
+                            budget_capex_opex_model.Date_Created = getData.Date_Created;
+                            budget_capex_opex_model.Created_by = getData.Created_by;
+                            budget_capex_opex_model.Date_Updated = DateTime.Now;
+                            budget_capex_opex_model.Updated_by = WKPCompanyId;
+                            await _context.BUDGET_CAPEX_OPices.AddAsync(budget_capex_opex_model);
                         }
                     }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        
-        [HttpPost("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model> data, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var Oil_MonthlyData = new OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Oil_MonthlyData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
+                    else if (action == GeneralModel.Delete)
                     {
-                        var getOil_MonthlyData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                        Oil_MonthlyData = getOil_MonthlyData != null ? getOil_MonthlyData : Oil_MonthlyData;
-                        Oil_MonthlyData = _mapper.Map<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED>(wkp);
-
-                        Oil_MonthlyData.Companyemail = WKPCompanyEmail;
-                        Oil_MonthlyData.CompanyName = WKPCompanyName;
-                        Oil_MonthlyData.COMPANY_ID = WKPCompanyId;
-                        Oil_MonthlyData.Date_Updated = DateTime.Now;
-                        Oil_MonthlyData.Updated_by = WKPCompanyId;
-                        Oil_MonthlyData.Year_of_WP = DateTime.Now.Year.ToString();
-                        if (getOil_MonthlyData == null)
-                        {
-                            Oil_MonthlyData.Created_by = WKPCompanyId;
-                            Oil_MonthlyData.Date_Created = DateTime.Now;
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(Oil_MonthlyData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(Oil_MonthlyData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
+                        _context.BUDGET_CAPEX_OPices.Remove(budget_capex_opex_model);
                     }
-                }
-                #endregion
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                    save += await _context.SaveChangesAsync();
 
-            }
-        }
-
-        [HttpPost("GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(List<GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model> data, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var Gas_ActivitiesData = new GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Gas_ActivitiesData
-                if (data != null)
-                {
-                    foreach (var wkp in data)
+                    if (save > 0)
                     {
-                        var getGas_ActivitiesData = (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.BUDGET_CAPEX_OPices where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
-                        Gas_ActivitiesData = getGas_ActivitiesData != null ? getGas_ActivitiesData : Gas_ActivitiesData;
-                        Gas_ActivitiesData = _mapper.Map<GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY>(wkp);
-
-                        Gas_ActivitiesData.Companyemail = WKPCompanyEmail;
-                        Gas_ActivitiesData.CompanyName = WKPCompanyName;
-                        Gas_ActivitiesData.COMPANY_ID = WKPCompanyId;
-                        Gas_ActivitiesData.Date_Updated = DateTime.Now;
-                        Gas_ActivitiesData.Updated_by = WKPCompanyId;
-                        Gas_ActivitiesData.Year_of_WP = DateTime.Now.Year.ToString();
-                        if (getGas_ActivitiesData == null)
-                        {
-                            Gas_ActivitiesData.Created_by = WKPCompanyId;
-                            Gas_ActivitiesData.Date_Created = DateTime.Now;
-                            await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(Gas_ActivitiesData);
-                        }
-                        else if (action == GeneralModel.Delete)
-                        {
-                            _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(Gas_ActivitiesData);
-                        }
-                        save += await _context.SaveChangesAsync();
-                        if (save > 0)
-                        {
-                            string successMsg = "Form has been " + action + "D successfully.";
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                        }
-                        else
-                        {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                        }
                     }
                 }
-                #endregion
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-
-        [HttpPost("BUDGET_ACTUAL_EXPENDITURE")]
-        public async Task<WebApiResponse> BUDGET_ACTUAL_EXPENDITURE(BUDGET_ACTUAL_EXPENDITURE_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var BudgetActualExData = new BUDGET_ACTUAL_EXPENDITURE();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Gas_ActivitiesData
-                var getBudgetActualExData = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                BudgetActualExData = getBudgetActualExData != null ? getBudgetActualExData : BudgetActualExData;
-                BudgetActualExData = _mapper.Map<BUDGET_ACTUAL_EXPENDITURE>(wkp);
-
-                BudgetActualExData.Companyemail = WKPCompanyEmail;
-                BudgetActualExData.CompanyName = WKPCompanyName;
-                BudgetActualExData.COMPANY_ID = WKPCompanyId;
-                BudgetActualExData.Date_Updated = DateTime.Now;
-                BudgetActualExData.Updated_by = WKPCompanyId;
-                BudgetActualExData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getBudgetActualExData == null)
-                {
-                    BudgetActualExData.Created_by = WKPCompanyId;
-                    BudgetActualExData.Date_Created = DateTime.Now;
-                    await _context.BUDGET_ACTUAL_EXPENDITUREs.AddAsync(BudgetActualExData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(BudgetActualExData);
-                }
-                save += await _context.SaveChangesAsync();
                 #endregion
 
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
             }
             catch (Exception e)
             {
@@ -1903,508 +3389,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost("BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
-        public async Task<WebApiResponse> BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT(BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model wkp, string year, string ActionToDo = null)
-        {
 
-            int save = 0;
-            var BudgetProposalData = new BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Budget Proposal
-
-                var getBudgetProposalData = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                BudgetProposalData = getBudgetProposalData != null ? getBudgetProposalData : BudgetProposalData;
-                BudgetProposalData = _mapper.Map<BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT>(wkp);
-
-                BudgetProposalData.Companyemail = WKPCompanyEmail;
-                BudgetProposalData.CompanyName = WKPCompanyName;
-                BudgetProposalData.COMPANY_ID = WKPCompanyId;
-                BudgetProposalData.Date_Updated = DateTime.Now;
-                BudgetProposalData.Updated_by = WKPCompanyId;
-                BudgetProposalData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getBudgetProposalData == null)
-                {
-                    BudgetProposalData.Created_by = WKPCompanyId;
-                    BudgetProposalData.Date_Created = DateTime.Now;
-
-                    await _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.AddAsync(BudgetProposalData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(BudgetProposalData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy")]
-        public async Task<WebApiResponse> BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy(BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var BudgetPerformanceExpData = new BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Budget Performance Exploratory
-
-                var getBudgetPerformanceExpData = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                BudgetPerformanceExpData = getBudgetPerformanceExpData != null ? getBudgetPerformanceExpData : BudgetPerformanceExpData;
-                BudgetPerformanceExpData = _mapper.Map<BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy>(wkp);
-
-                BudgetPerformanceExpData.Companyemail = WKPCompanyEmail;
-                BudgetPerformanceExpData.CompanyName = WKPCompanyName;
-                BudgetPerformanceExpData.COMPANY_ID = WKPCompanyId;
-                BudgetPerformanceExpData.Date_Updated = DateTime.Now;
-                BudgetPerformanceExpData.Updated_by = WKPCompanyId;
-                BudgetPerformanceExpData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getBudgetPerformanceExpData == null)
-                {
-                    BudgetPerformanceExpData.Created_by = WKPCompanyId;
-                    BudgetPerformanceExpData.Date_Created = DateTime.Now;
-                    await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(BudgetPerformanceExpData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(BudgetPerformanceExpData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy")]
-        public async Task<WebApiResponse> BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy(BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var BudgetPerformanceDevData = new BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Budget Performance Development
-
-                var getBudgetPerformanceDevData = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                BudgetPerformanceDevData = getBudgetPerformanceDevData != null ? getBudgetPerformanceDevData : BudgetPerformanceDevData;
-                BudgetPerformanceDevData = _mapper.Map<BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy>(wkp);
-
-                BudgetPerformanceDevData.Companyemail = WKPCompanyEmail;
-                BudgetPerformanceDevData.CompanyName = WKPCompanyName;
-                BudgetPerformanceDevData.COMPANY_ID = WKPCompanyId;
-                BudgetPerformanceDevData.Date_Updated = DateTime.Now;
-                BudgetPerformanceDevData.Updated_by = WKPCompanyId;
-                BudgetPerformanceDevData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getBudgetPerformanceDevData == null)
-                {
-                    BudgetPerformanceDevData.Created_by = WKPCompanyId;
-                    BudgetPerformanceDevData.Date_Created = DateTime.Now;
-                    await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.AddAsync(BudgetPerformanceDevData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(BudgetPerformanceDevData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("BUDGET_PERFORMANCE_PRODUCTION_COST")]
-        public async Task<WebApiResponse> BUDGET_PERFORMANCE_PRODUCTION_COST(BUDGET_PERFORMANCE_PRODUCTION_COST_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var BudgetPerformanceProdData = new BUDGET_PERFORMANCE_PRODUCTION_COST();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Budget Performance Production
-
-                var getBudgetPerformanceProdData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                BudgetPerformanceProdData = getBudgetPerformanceProdData != null ? getBudgetPerformanceProdData : BudgetPerformanceProdData;
-                BudgetPerformanceProdData = _mapper.Map<BUDGET_PERFORMANCE_PRODUCTION_COST>(wkp);
-
-                BudgetPerformanceProdData.Companyemail = WKPCompanyEmail;
-                BudgetPerformanceProdData.CompanyName = WKPCompanyName;
-                BudgetPerformanceProdData.COMPANY_ID = WKPCompanyId;
-                BudgetPerformanceProdData.Date_Updated = DateTime.Now;
-                BudgetPerformanceProdData.Updated_by = WKPCompanyId;
-                BudgetPerformanceProdData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getBudgetPerformanceProdData == null)
-                {
-                    BudgetPerformanceProdData.Created_by = WKPCompanyId;
-                    BudgetPerformanceProdData.Date_Created = DateTime.Now;
-                    await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.AddAsync(BudgetPerformanceProdData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(BudgetPerformanceProdData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
-        public async Task<WebApiResponse> BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT(BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var BudgetPerformanceFacData = new BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Budget Performance Facility
-
-                var getBudgetPerformanceFacData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                BudgetPerformanceFacData = getBudgetPerformanceFacData != null ? getBudgetPerformanceFacData : BudgetPerformanceFacData;
-                BudgetPerformanceFacData = _mapper.Map<BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT>(wkp);
-
-                BudgetPerformanceFacData.Companyemail = WKPCompanyEmail;
-                BudgetPerformanceFacData.CompanyName = WKPCompanyName;
-                BudgetPerformanceFacData.COMPANY_ID = WKPCompanyId;
-                BudgetPerformanceFacData.Date_Updated = DateTime.Now;
-                BudgetPerformanceFacData.Updated_by = WKPCompanyId;
-                BudgetPerformanceFacData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getBudgetPerformanceFacData == null)
-                {
-                    BudgetPerformanceFacData.Created_by = WKPCompanyId;
-                    BudgetPerformanceFacData.Date_Created = DateTime.Now;
-                    await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.AddAsync(BudgetPerformanceFacData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(BudgetPerformanceFacData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE")]
-        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE(OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var OilGasFacData = new OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Oil & Gas Facility
-
-                var getOilGasFacData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                OilGasFacData = getOilGasFacData != null ? getOilGasFacData : OilGasFacData;
-                OilGasFacData = _mapper.Map<OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE>(wkp);
-
-                OilGasFacData.Companyemail = WKPCompanyEmail;
-                OilGasFacData.CompanyName = WKPCompanyName;
-                OilGasFacData.COMPANY_ID = WKPCompanyId;
-                OilGasFacData.Date_Updated = DateTime.Now;
-                OilGasFacData.Updated_by = WKPCompanyId;
-                OilGasFacData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getOilGasFacData == null)
-                {
-                    OilGasFacData.Created_by = WKPCompanyId;
-                    OilGasFacData.Date_Created = DateTime.Now;
-                    await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.AddAsync(OilGasFacData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(OilGasFacData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var OilGasProdData = new OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Oil & Gas Production
-
-                var getOilGasProdData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                OilGasProdData = getOilGasProdData != null ? getOilGasProdData : OilGasProdData;
-                OilGasProdData = _mapper.Map<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment>(wkp);
-
-                OilGasProdData.Companyemail = WKPCompanyEmail;
-                OilGasProdData.CompanyName = WKPCompanyName;
-                OilGasProdData.COMPANY_ID = WKPCompanyId;
-                OilGasProdData.Date_Updated = DateTime.Now;
-                OilGasProdData.Updated_by = WKPCompanyId;
-                OilGasProdData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getOilGasProdData == null)
-                {
-                    OilGasProdData.Created_by = WKPCompanyId;
-                    OilGasProdData.Date_Created = DateTime.Now;
-                    await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(OilGasProdData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(OilGasProdData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
-        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT(OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var OilGasFacProjectData = new OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Oil Gas Facility Project
-
-                var getOilGasFacProjectData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                OilGasFacProjectData = getOilGasFacProjectData != null ? getOilGasFacProjectData : OilGasFacProjectData;
-                OilGasFacProjectData = _mapper.Map<OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT>(wkp);
-
-                OilGasFacProjectData.Companyemail = WKPCompanyEmail;
-                OilGasFacProjectData.CompanyName = WKPCompanyName;
-                OilGasFacProjectData.COMPANY_ID = WKPCompanyId;
-                OilGasFacProjectData.Date_Updated = DateTime.Now;
-                OilGasFacProjectData.Updated_by = WKPCompanyId;
-                OilGasFacProjectData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getOilGasFacProjectData == null)
-                {
-                    OilGasFacProjectData.Created_by = WKPCompanyId;
-                    OilGasFacProjectData.Date_Created = DateTime.Now;
-                    await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(OilGasFacProjectData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(OilGasFacProjectData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("FACILITIES_PROJECT_PERFORMANCE")]
-        public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(FACILITIES_PROJECT_PERFORMANCE_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var FacProjectData = new FACILITIES_PROJECT_PERFORMANCE();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Facility Project
-
-                var getFacProjectData = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                FacProjectData = getFacProjectData != null ? getFacProjectData : FacProjectData;
-                FacProjectData = _mapper.Map<FACILITIES_PROJECT_PERFORMANCE>(wkp);
-
-                FacProjectData.Companyemail = WKPCompanyEmail;
-                FacProjectData.CompanyName = WKPCompanyName;
-                FacProjectData.COMPANY_ID = WKPCompanyId;
-                FacProjectData.Date_Updated = DateTime.Now;
-                FacProjectData.Updated_by = WKPCompanyId;
-                FacProjectData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getFacProjectData == null)
-                {
-                    FacProjectData.Created_by = WKPCompanyId;
-                    FacProjectData.Date_Created = DateTime.Now;
-                    await _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(FacProjectData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(FacProjectData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
         [HttpPost("BUDGET_CAPEX_OPEX")]
         public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(BUDGET_CAPEX_OPEX_Model wkp, string year, string ActionToDo = null)
         {
@@ -2460,53 +3445,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost("NIGERIA_CONTENT_Training")]
-        public async Task<WebApiResponse> NIGERIA_CONTENT_Training(NIGERIA_CONTENT_Training_Model wkp, string year, string ActionToDo = null)
-        {
 
-            int save = 0;
-            var NigeriaTrainingData = new NIGERIA_CONTENT_Training();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+        [HttpGet("GET_NIGERIA_CONTENT_TRAINING")]
+        public async Task<WebApiResponse> GET_NIGERIA_CONTENT_Training(string year, string omlName)
+        {
 
             try
             {
+                var getData = (from c in _context.NIGERIA_CONTENT_Trainings where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
 
-                #region Nigeria Training
-                var getNigeriaTrainingData = (from c in _context.NIGERIA_CONTENT_Trainings where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                NigeriaTrainingData = getNigeriaTrainingData != null ? getNigeriaTrainingData : NigeriaTrainingData;
-                NigeriaTrainingData = _mapper.Map<NIGERIA_CONTENT_Training>(wkp);
-
-                NigeriaTrainingData.Companyemail = WKPCompanyEmail;
-                NigeriaTrainingData.CompanyName = WKPCompanyName;
-                NigeriaTrainingData.COMPANY_ID = WKPCompanyId;
-                NigeriaTrainingData.Date_Updated = DateTime.Now;
-                NigeriaTrainingData.Updated_by = WKPCompanyId;
-                NigeriaTrainingData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getNigeriaTrainingData == null)
-                {
-                    NigeriaTrainingData.Created_by = WKPCompanyId;
-                    NigeriaTrainingData.Date_Created = DateTime.Now;
-                    await _context.NIGERIA_CONTENT_Trainings.AddAsync(NigeriaTrainingData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.NIGERIA_CONTENT_Trainings.Remove(NigeriaTrainingData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
 
             }
             catch (Exception e)
@@ -2515,2337 +3463,68 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost("NIGERIA_CONTENT_Upload_Succession_Plan")]
-        public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(NIGERIA_CONTENT_Upload_Succession_Plan_Model wkp, string year, string ActionToDo = null)
+        [HttpPost("POST_NIGERIA_CONTENT_TRAINING")]
+        public async Task<WebApiResponse> POST_NIGERIA_CONTENT_Training([FromBody] NIGERIA_CONTENT_Training nigeria_content_training_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
-            var NigeriaUploadData = new NIGERIA_CONTENT_Upload_Succession_Plan();
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
 
-                #region Saving Nigeria Upload
-
-                var getNigeriaUploadData = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                NigeriaUploadData = getNigeriaUploadData != null ? getNigeriaUploadData : NigeriaUploadData;
-                NigeriaUploadData = _mapper.Map<NIGERIA_CONTENT_Upload_Succession_Plan>(wkp);
-
-                NigeriaUploadData.Companyemail = WKPCompanyEmail;
-                NigeriaUploadData.CompanyName = WKPCompanyName;
-                NigeriaUploadData.COMPANY_ID = WKPCompanyId;
-                NigeriaUploadData.Date_Updated = DateTime.Now;
-                NigeriaUploadData.Updated_by = WKPCompanyId;
-                NigeriaUploadData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getNigeriaUploadData == null)
+                #region Saving NIGERIA_CONTENT_Trainings data
+                if (nigeria_content_training_model != null)
                 {
-                    NigeriaUploadData.Created_by = WKPCompanyId;
-                    NigeriaUploadData.Date_Created = DateTime.Now;
-                    await _context.NIGERIA_CONTENT_Upload_Succession_Plans.AddAsync(NigeriaUploadData);
+                    var getData = (from c in _context.NIGERIA_CONTENT_Trainings where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    nigeria_content_training_model.Companyemail = WKPCompanyEmail;
+                    nigeria_content_training_model.CompanyName = WKPCompanyName;
+                    nigeria_content_training_model.COMPANY_ID = WKPCompanyId;
+                    nigeria_content_training_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    nigeria_content_training_model.Date_Updated = DateTime.Now;
+                    nigeria_content_training_model.Updated_by = WKPCompanyId;
+                    nigeria_content_training_model.Year_of_WP = year;
+                    nigeria_content_training_model.OML_Name = nigeria_content_training_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            nigeria_content_training_model.Date_Created = DateTime.Now;
+                            nigeria_content_training_model.Created_by = WKPCompanyId;
+                            await _context.NIGERIA_CONTENT_Trainings.AddAsync(nigeria_content_training_model);
+                        }
+                        else
+                        {
+                            nigeria_content_training_model.Date_Created = getData.Date_Created;
+                            nigeria_content_training_model.Created_by = getData.Created_by;
+                            nigeria_content_training_model.Date_Updated = DateTime.Now;
+                            nigeria_content_training_model.Updated_by = WKPCompanyId;
+                            await _context.NIGERIA_CONTENT_Trainings.AddAsync(nigeria_content_training_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.NIGERIA_CONTENT_Trainings.Remove(nigeria_content_training_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.NIGERIA_CONTENT_Trainings where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.NIGERIA_CONTENT_Upload_Succession_Plans.Remove(NigeriaUploadData);
-                }
-                save += await _context.SaveChangesAsync();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
                 #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("NIGERIA_CONTENT_QUESTION")]
-        public async Task<WebApiResponse> NIGERIA_CONTENT_QUESTION(NIGERIA_CONTENT_QUESTION_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var NigeriaQuestionData = new NIGERIA_CONTENT_QUESTION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Nigeria Question
-
-                var getNigeriaQuestionData = (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                NigeriaQuestionData = getNigeriaQuestionData != null ? getNigeriaQuestionData : NigeriaQuestionData;
-                NigeriaQuestionData = _mapper.Map<NIGERIA_CONTENT_QUESTION>(wkp);
-
-                NigeriaQuestionData.Companyemail = WKPCompanyEmail;
-                NigeriaQuestionData.CompanyName = WKPCompanyName;
-                NigeriaQuestionData.COMPANY_ID = WKPCompanyId;
-                NigeriaQuestionData.Date_Updated = DateTime.Now;
-                NigeriaQuestionData.Updated_by = WKPCompanyId;
-                NigeriaQuestionData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getNigeriaQuestionData == null)
-                {
-                    NigeriaQuestionData.Created_by = WKPCompanyId;
-                    NigeriaQuestionData.Date_Created = DateTime.Now;
-                    await _context.NIGERIA_CONTENT_QUESTIONs.AddAsync(NigeriaQuestionData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.NIGERIA_CONTENT_QUESTIONs.Remove(NigeriaQuestionData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("LEGAL_LITIGATION")]
-        public async Task<WebApiResponse> LEGAL_LITIGATION(LEGAL_LITIGATION_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var LegalLitigationData = new LEGAL_LITIGATION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Legal Litigation
-
-                var getLegalLitigationData = (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                LegalLitigationData = getLegalLitigationData != null ? getLegalLitigationData : LegalLitigationData;
-                LegalLitigationData = _mapper.Map<LEGAL_LITIGATION>(wkp);
-
-                LegalLitigationData.Companyemail = WKPCompanyEmail;
-                LegalLitigationData.CompanyName = WKPCompanyName;
-                LegalLitigationData.COMPANY_ID = WKPCompanyId;
-                LegalLitigationData.Date_Updated = DateTime.Now;
-                LegalLitigationData.Updated_by = WKPCompanyId;
-                LegalLitigationData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getLegalLitigationData == null)
-                {
-                    LegalLitigationData.Created_by = WKPCompanyId;
-                    LegalLitigationData.Date_Created = DateTime.Now;
-                    await _context.LEGAL_LITIGATIONs.AddAsync(LegalLitigationData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.LEGAL_LITIGATIONs.Remove(LegalLitigationData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("LEGAL_ARBITRATION")]
-        public async Task<WebApiResponse> LEGAL_ARBITRATION(LEGAL_ARBITRATION_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var LegalArbitrationData = new LEGAL_ARBITRATION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Legal Arbitration
-
-                var getLegalArbitrationData = (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                LegalArbitrationData = getLegalArbitrationData != null ? getLegalArbitrationData : LegalArbitrationData;
-                LegalArbitrationData = _mapper.Map<LEGAL_ARBITRATION>(wkp);
-
-                LegalArbitrationData.Companyemail = WKPCompanyEmail;
-                LegalArbitrationData.CompanyName = WKPCompanyName;
-                LegalArbitrationData.COMPANY_ID = WKPCompanyId;
-                LegalArbitrationData.Date_Updated = DateTime.Now;
-                LegalArbitrationData.Updated_by = WKPCompanyId;
-                LegalArbitrationData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getLegalArbitrationData == null)
-                {
-                    LegalArbitrationData.Created_by = WKPCompanyId;
-                    LegalArbitrationData.Date_Created = DateTime.Now;
-                    await _context.LEGAL_ARBITRATIONs.AddAsync(LegalArbitrationData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.LEGAL_ARBITRATIONs.Remove(LegalArbitrationData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("STRATEGIC_PLANS_ON_COMPANY_BASI")]
-        public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASI(STRATEGIC_PLANS_ON_COMPANY_BASI_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var StrategicPlansData = new STRATEGIC_PLANS_ON_COMPANY_BASI();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Strategic Plans
-
-                var getStrategicPlansData = (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                StrategicPlansData = getStrategicPlansData != null ? getStrategicPlansData : StrategicPlansData;
-                StrategicPlansData = _mapper.Map<STRATEGIC_PLANS_ON_COMPANY_BASI>(wkp);
-
-                StrategicPlansData.Companyemail = WKPCompanyEmail;
-                StrategicPlansData.CompanyName = WKPCompanyName;
-                StrategicPlansData.COMPANY_ID = WKPCompanyId;
-                StrategicPlansData.Date_Updated = DateTime.Now;
-                StrategicPlansData.Updated_by = WKPCompanyId;
-                StrategicPlansData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getStrategicPlansData == null)
-                {
-                    StrategicPlansData.Created_by = WKPCompanyId;
-                    StrategicPlansData.Date_Created = DateTime.Now;
-                    await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.AddAsync(StrategicPlansData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Remove(StrategicPlansData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_QUESTION")]
-        public async Task<WebApiResponse> HSE_QUESTION(HSE_QUESTION_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseQuestionData = new HSE_QUESTION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Question
-                var getHseQuestionData = (from c in _context.HSE_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseQuestionData = getHseQuestionData != null ? getHseQuestionData : HseQuestionData;
-                HseQuestionData = _mapper.Map<HSE_QUESTION>(wkp);
-
-                HseQuestionData.Companyemail = WKPCompanyEmail;
-                HseQuestionData.CompanyName = WKPCompanyName;
-                HseQuestionData.COMPANY_ID = WKPCompanyId;
-                HseQuestionData.Date_Updated = DateTime.Now;
-                HseQuestionData.Updated_by = WKPCompanyId;
-                HseQuestionData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseQuestionData == null)
-                {
-                    HseQuestionData.Created_by = WKPCompanyId;
-                    HseQuestionData.Date_Created = DateTime.Now;
-                    await _context.HSE_QUESTIONs.AddAsync(getHseQuestionData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_QUESTIONs.Remove(getHseQuestionData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_FATALITy")]
-        public async Task<WebApiResponse> HSE_FATALITy(HSE_FATALITy_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseFatalityData = new HSE_FATALITy();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Fatality
-                var getHseFatalityData = (from c in _context.HSE_FATALITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseFatalityData = getHseFatalityData != null ? getHseFatalityData : HseFatalityData;
-                HseFatalityData = _mapper.Map<HSE_FATALITy>(wkp);
-
-                HseFatalityData.Companyemail = WKPCompanyEmail;
-                HseFatalityData.CompanyName = WKPCompanyName;
-                HseFatalityData.COMPANY_ID = WKPCompanyId;
-                HseFatalityData.Date_Updated = DateTime.Now;
-                HseFatalityData.Updated_by = WKPCompanyId;
-                HseFatalityData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseFatalityData == null)
-                {
-                    HseFatalityData.Created_by = WKPCompanyId;
-                    HseFatalityData.Date_Created = DateTime.Now;
-                    await _context.HSE_FATALITIEs.AddAsync(getHseFatalityData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_FATALITIEs.Remove(getHseFatalityData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_DESIGNS_SAFETY")]
-        public async Task<WebApiResponse> HSE_DESIGNS_SAFETY(HSE_DESIGNS_SAFETY_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseDesignData = new HSE_DESIGNS_SAFETY();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Design Safety
-                var getHseDesignData = (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseDesignData = getHseDesignData != null ? getHseDesignData : HseDesignData;
-                HseDesignData = _mapper.Map<HSE_DESIGNS_SAFETY>(wkp);
-
-                HseDesignData.Companyemail = WKPCompanyEmail;
-                HseDesignData.CompanyName = WKPCompanyName;
-                HseDesignData.COMPANY_ID = WKPCompanyId;
-                HseDesignData.Date_Updated = DateTime.Now;
-                HseDesignData.Updated_by = WKPCompanyId;
-                HseDesignData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseDesignData == null)
-                {
-                    HseDesignData.Created_by = WKPCompanyId;
-                    HseDesignData.Date_Created = DateTime.Now;
-                    await _context.HSE_DESIGNS_SAFETies.AddAsync(getHseDesignData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_DESIGNS_SAFETies.Remove(getHseDesignData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_SAFETY_STUDIES_NEW")]
-        public async Task<WebApiResponse> HSE_SAFETY_STUDIES_NEW(HSE_SAFETY_STUDIES_NEW_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseSafetyData = new HSE_SAFETY_STUDIES_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Safety Studies
-                var getHseSafetyData = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseSafetyData = getHseSafetyData != null ? getHseSafetyData : HseSafetyData;
-                HseSafetyData = _mapper.Map<HSE_SAFETY_STUDIES_NEW>(wkp);
-
-                #region file section
-                UploadedDocument SMSFileUploadPath_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "SMS File";
-                    SMSFileUploadPath_File = _helpersController.UploadDocument(files[0], "SMSDocuments");
-                    if (SMSFileUploadPath_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                #endregion
-
-                HseSafetyData.SMSFileUploadPath = SMSFileUploadPath_File != null ? SMSFileUploadPath_File.filePath : null;
-                HseSafetyData.Companyemail = WKPCompanyEmail;
-                HseSafetyData.CompanyName = WKPCompanyName;
-                HseSafetyData.COMPANY_ID = WKPCompanyId;
-                HseSafetyData.Date_Updated = DateTime.Now;
-                HseSafetyData.Updated_by = WKPCompanyId;
-                HseSafetyData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseSafetyData == null)
-                {
-                    HseSafetyData.Created_by = WKPCompanyId;
-                    HseSafetyData.Date_Created = DateTime.Now;
-                    await _context.HSE_SAFETY_STUDIES_NEWs.AddAsync(getHseSafetyData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_SAFETY_STUDIES_NEWs.Remove(getHseSafetyData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_INSPECTION_AND_MAINTENANCE_NEW")]
-        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_NEW(HSE_INSPECTION_AND_MAINTENANCE_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseInspectionMaintenanceData = new HSE_INSPECTION_AND_MAINTENANCE_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Inspection Maintenance
-                var getHseInspectionMaintenanceData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseInspectionMaintenanceData = getHseInspectionMaintenanceData != null ? getHseInspectionMaintenanceData : HseInspectionMaintenanceData;
-                HseInspectionMaintenanceData = _mapper.Map<HSE_INSPECTION_AND_MAINTENANCE_NEW>(wkp);
-
-                HseInspectionMaintenanceData.Companyemail = WKPCompanyEmail;
-                HseInspectionMaintenanceData.CompanyName = WKPCompanyName;
-                HseInspectionMaintenanceData.COMPANY_ID = WKPCompanyId;
-                HseInspectionMaintenanceData.Date_Updated = DateTime.Now;
-                HseInspectionMaintenanceData.Updated_by = WKPCompanyId;
-                HseInspectionMaintenanceData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseInspectionMaintenanceData == null)
-                {
-                    HseInspectionMaintenanceData.Created_by = WKPCompanyId;
-                    HseInspectionMaintenanceData.Date_Created = DateTime.Now;
-                    await _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.AddAsync(getHseInspectionMaintenanceData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.Remove(getHseInspectionMaintenanceData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
-        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseInspectionMaintenanceFacData = new HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Inspection Maintenance and Facility
-                var getHseInspectionMaintenanceFacData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseInspectionMaintenanceFacData = getHseInspectionMaintenanceFacData != null ? getHseInspectionMaintenanceFacData : HseInspectionMaintenanceFacData;
-                HseInspectionMaintenanceFacData = _mapper.Map<HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW>(wkp);
-
-                HseInspectionMaintenanceFacData.Companyemail = WKPCompanyEmail;
-                HseInspectionMaintenanceFacData.CompanyName = WKPCompanyName;
-                HseInspectionMaintenanceFacData.COMPANY_ID = WKPCompanyId;
-                HseInspectionMaintenanceFacData.Date_Updated = DateTime.Now;
-                HseInspectionMaintenanceFacData.Updated_by = WKPCompanyId;
-                HseInspectionMaintenanceFacData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseInspectionMaintenanceFacData == null)
-                {
-                    HseInspectionMaintenanceFacData.Created_by = WKPCompanyId;
-                    HseInspectionMaintenanceFacData.Date_Created = DateTime.Now;
-                    await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.AddAsync(getHseInspectionMaintenanceFacData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(getHseInspectionMaintenanceFacData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
-        public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseTechnicalData = new HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Technical Safety
-                var getHseTechnicalData = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseTechnicalData = getHseTechnicalData != null ? getHseTechnicalData : HseTechnicalData;
-                HseTechnicalData = _mapper.Map<HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW>(wkp);
-
-                HseTechnicalData.Companyemail = WKPCompanyEmail;
-                HseTechnicalData.CompanyName = WKPCompanyName;
-                HseTechnicalData.COMPANY_ID = WKPCompanyId;
-                HseTechnicalData.Date_Updated = DateTime.Now;
-                HseTechnicalData.Updated_by = WKPCompanyId;
-                HseTechnicalData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseTechnicalData == null)
-                {
-                    HseTechnicalData.Created_by = WKPCompanyId;
-                    HseTechnicalData.Date_Created = DateTime.Now;
-                    await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(getHseTechnicalData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(getHseTechnicalData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
-        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseAssetData = new HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Asset Register
-                var getHseAssetData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseAssetData = getHseAssetData != null ? getHseAssetData : HseAssetData;
-                HseAssetData = _mapper.Map<HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW>(wkp);
-
-                HseAssetData.Companyemail = WKPCompanyEmail;
-                HseAssetData.CompanyName = WKPCompanyName;
-                HseAssetData.COMPANY_ID = WKPCompanyId;
-                HseAssetData.Date_Updated = DateTime.Now;
-                HseAssetData.Updated_by = WKPCompanyId;
-                HseAssetData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseAssetData == null)
-                {
-                    HseAssetData.Created_by = WKPCompanyId;
-                    HseAssetData.Date_Created = DateTime.Now;
-                    await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(getHseAssetData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getHseAssetData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_OIL_SPILL_REPORTING_NEW")]
-        public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING_NEW(HSE_OIL_SPILL_REPORTING_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseOilData = new HSE_OIL_SPILL_REPORTING_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Oil Spill
-                var getHseOilData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseOilData = getHseOilData != null ? getHseOilData : HseOilData;
-                HseOilData = _mapper.Map<HSE_OIL_SPILL_REPORTING_NEW>(wkp);
-
-                HseOilData.Companyemail = WKPCompanyEmail;
-                HseOilData.CompanyName = WKPCompanyName;
-                HseOilData.COMPANY_ID = WKPCompanyId;
-                HseOilData.Date_Updated = DateTime.Now;
-                HseOilData.Updated_by = WKPCompanyId;
-                HseOilData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseOilData == null)
-                {
-                    HseOilData.Created_by = WKPCompanyId;
-                    HseOilData.Date_Created = DateTime.Now;
-                    await _context.HSE_OIL_SPILL_REPORTING_NEWs.AddAsync(getHseOilData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(getHseOilData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
-        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseAssetRegisterData = new HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Asset Register RBI
-                var getHseAssetRegisterData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseAssetRegisterData = getHseAssetRegisterData != null ? getHseAssetRegisterData : HseAssetRegisterData;
-                HseAssetRegisterData = _mapper.Map<HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW>(wkp);
-
-                HseAssetRegisterData.Companyemail = WKPCompanyEmail;
-                HseAssetRegisterData.CompanyName = WKPCompanyName;
-                HseAssetRegisterData.COMPANY_ID = WKPCompanyId;
-                HseAssetRegisterData.Date_Updated = DateTime.Now;
-                HseAssetRegisterData.Updated_by = WKPCompanyId;
-                HseAssetRegisterData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseAssetRegisterData == null)
-                {
-                    HseAssetRegisterData.Created_by = WKPCompanyId;
-                    HseAssetRegisterData.Date_Created = DateTime.Now;
-                    await _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(getHseAssetRegisterData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getHseAssetRegisterData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
-        public async Task<WebApiResponse> HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseAccidentData = new HSE_ACCIDENT_INCIDENCE_REPORTING_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Incidence Reporting
-                var getHseAccidentData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseAccidentData = getHseAccidentData != null ? getHseAccidentData : HseAccidentData;
-                HseAccidentData = _mapper.Map<HSE_ACCIDENT_INCIDENCE_REPORTING_NEW>(wkp);
-
-                HseAccidentData.Companyemail = WKPCompanyEmail;
-                HseAccidentData.CompanyName = WKPCompanyName;
-                HseAccidentData.COMPANY_ID = WKPCompanyId;
-                HseAccidentData.Date_Updated = DateTime.Now;
-                HseAccidentData.Updated_by = WKPCompanyId;
-                HseAccidentData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseAccidentData == null)
-                {
-                    HseAccidentData.Created_by = WKPCompanyId;
-                    HseAccidentData.Date_Created = DateTime.Now;
-                    await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(getHseAccidentData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(getHseAccidentData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW")]
-        public async Task<WebApiResponse> HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseAccidentIncidenceData = new HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Incidence Reporting Type
-                var getHseAccidentIncidenceData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseAccidentIncidenceData = getHseAccidentIncidenceData != null ? getHseAccidentIncidenceData : HseAccidentIncidenceData;
-                HseAccidentIncidenceData = _mapper.Map<HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW>(wkp);
-
-                HseAccidentIncidenceData.Companyemail = WKPCompanyEmail;
-                HseAccidentIncidenceData.CompanyName = WKPCompanyName;
-                HseAccidentIncidenceData.COMPANY_ID = WKPCompanyId;
-                HseAccidentIncidenceData.Date_Updated = DateTime.Now;
-                HseAccidentIncidenceData.Updated_by = WKPCompanyId;
-                HseAccidentIncidenceData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseAccidentIncidenceData == null)
-                {
-                    HseAccidentIncidenceData.Created_by = WKPCompanyId;
-                    HseAccidentIncidenceData.Date_Created = DateTime.Now;
-                    await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(getHseAccidentIncidenceData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(getHseAccidentIncidenceData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW")]
-        public async Task<WebApiResponse> HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseCommunityDisturbancesData = new HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Community Disturbances
-                var getHseCommunityDisturbancesData = (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseCommunityDisturbancesData = getHseCommunityDisturbancesData != null ? getHseCommunityDisturbancesData : HseCommunityDisturbancesData;
-                HseCommunityDisturbancesData = _mapper.Map<HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW>(wkp);
-
-                HseCommunityDisturbancesData.Companyemail = WKPCompanyEmail;
-                HseCommunityDisturbancesData.CompanyName = WKPCompanyName;
-                HseCommunityDisturbancesData.COMPANY_ID = WKPCompanyId;
-                HseCommunityDisturbancesData.Date_Updated = DateTime.Now;
-                HseCommunityDisturbancesData.Updated_by = WKPCompanyId;
-                HseCommunityDisturbancesData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseCommunityDisturbancesData == null)
-                {
-                    HseCommunityDisturbancesData.Created_by = WKPCompanyId;
-                    HseCommunityDisturbancesData.Date_Created = DateTime.Now;
-                    await _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.AddAsync(getHseCommunityDisturbancesData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.Remove(getHseCommunityDisturbancesData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ENVIRONMENTAL_STUDIES_NEW")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_NEW(HSE_ENVIRONMENTAL_STUDIES_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseEnvironmentalData = new HSE_ENVIRONMENTAL_STUDIES_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Environmental Studies
-                var getHseEnvironmentalData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseEnvironmentalData = getHseEnvironmentalData != null ? getHseEnvironmentalData : HseEnvironmentalData;
-                HseEnvironmentalData = _mapper.Map<HSE_ENVIRONMENTAL_STUDIES_NEW>(wkp);
-
-                HseEnvironmentalData.Companyemail = WKPCompanyEmail;
-                HseEnvironmentalData.CompanyName = WKPCompanyName;
-                HseEnvironmentalData.COMPANY_ID = WKPCompanyId;
-                HseEnvironmentalData.Date_Updated = DateTime.Now;
-                HseEnvironmentalData.Updated_by = WKPCompanyId;
-                HseEnvironmentalData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseEnvironmentalData == null)
-                {
-                    HseEnvironmentalData.Created_by = WKPCompanyId;
-                    HseEnvironmentalData.Date_Created = DateTime.Now;
-                    await _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.AddAsync(getHseEnvironmentalData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.Remove(getHseEnvironmentalData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_WASTE_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_NEW(HSE_WASTE_MANAGEMENT_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseWasteData = new HSE_WASTE_MANAGEMENT_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Waste Management
-                var getHseWasteData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseWasteData = getHseWasteData != null ? getHseWasteData : HseWasteData;
-                HseWasteData = _mapper.Map<HSE_WASTE_MANAGEMENT_NEW>(wkp);
-
-                HseWasteData.Companyemail = WKPCompanyEmail;
-                HseWasteData.CompanyName = WKPCompanyName;
-                HseWasteData.COMPANY_ID = WKPCompanyId;
-                HseWasteData.Date_Updated = DateTime.Now;
-                HseWasteData.Updated_by = WKPCompanyId;
-                HseWasteData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseWasteData == null)
-                {
-                    HseWasteData.Created_by = WKPCompanyId;
-                    HseWasteData.Date_Created = DateTime.Now;
-                    await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(getHseWasteData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getHseWasteData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
-        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseWasteMgtData = new HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Waste Management Facility
-                var getHseWasteMgtData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseWasteMgtData = getHseWasteMgtData != null ? getHseWasteMgtData : HseWasteMgtData;
-                HseWasteMgtData = _mapper.Map<HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW>(wkp);
-
-                HseWasteMgtData.Companyemail = WKPCompanyEmail;
-                HseWasteMgtData.CompanyName = WKPCompanyName;
-                HseWasteMgtData.COMPANY_ID = WKPCompanyId;
-                HseWasteMgtData.Date_Updated = DateTime.Now;
-                HseWasteMgtData.Updated_by = WKPCompanyId;
-                HseWasteMgtData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseWasteMgtData == null)
-                {
-                    HseWasteMgtData.Created_by = WKPCompanyId;
-                    HseWasteMgtData.Date_Created = DateTime.Now;
-                    await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(getHseWasteMgtData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getHseWasteMgtData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW(HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseWaterMgtData = new HSE_PRODUCED_WATER_MANAGEMENT_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Produced Water
-                var getHseWaterMgtData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseWaterMgtData = getHseWaterMgtData != null ? getHseWaterMgtData : HseWaterMgtData;
-                HseWaterMgtData = _mapper.Map<HSE_PRODUCED_WATER_MANAGEMENT_NEW>(wkp);
-
-                HseWaterMgtData.Companyemail = WKPCompanyEmail;
-                HseWaterMgtData.CompanyName = WKPCompanyName;
-                HseWaterMgtData.COMPANY_ID = WKPCompanyId;
-                HseWaterMgtData.Date_Updated = DateTime.Now;
-                HseWaterMgtData.Updated_by = WKPCompanyId;
-                HseWaterMgtData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseWaterMgtData == null)
-                {
-                    HseWaterMgtData.Created_by = WKPCompanyId;
-                    HseWaterMgtData.Date_Created = DateTime.Now;
-                    await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(getHseWaterMgtData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getHseWaterMgtData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseEnvironmentalComplianceData = new HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Environmental Compliance
-                var getHseEnvironmentalComplianceData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseEnvironmentalComplianceData = getHseEnvironmentalComplianceData != null ? getHseEnvironmentalComplianceData : HseEnvironmentalComplianceData;
-                HseEnvironmentalComplianceData = _mapper.Map<HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW>(wkp);
-
-                HseEnvironmentalComplianceData.Companyemail = WKPCompanyEmail;
-                HseEnvironmentalComplianceData.CompanyName = WKPCompanyName;
-                HseEnvironmentalComplianceData.COMPANY_ID = WKPCompanyId;
-                HseEnvironmentalComplianceData.Date_Updated = DateTime.Now;
-                HseEnvironmentalComplianceData.Updated_by = WKPCompanyId;
-                HseEnvironmentalComplianceData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseEnvironmentalComplianceData == null)
-                {
-                    HseEnvironmentalComplianceData.Created_by = WKPCompanyId;
-                    HseEnvironmentalComplianceData.Date_Created = DateTime.Now;
-                    await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(getHseEnvironmentalComplianceData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getHseEnvironmentalComplianceData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseEnvironmentalStudiesData = new HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Environmental Studies Five
-                var getHseEnvironmentalStudiesData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseEnvironmentalStudiesData = getHseEnvironmentalStudiesData != null ? getHseEnvironmentalStudiesData : HseEnvironmentalStudiesData;
-                HseEnvironmentalStudiesData = _mapper.Map<HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW>(wkp);
-
-                HseEnvironmentalStudiesData.Companyemail = WKPCompanyEmail;
-                HseEnvironmentalStudiesData.CompanyName = WKPCompanyName;
-                HseEnvironmentalStudiesData.COMPANY_ID = WKPCompanyId;
-                HseEnvironmentalStudiesData.Date_Updated = DateTime.Now;
-                HseEnvironmentalStudiesData.Updated_by = WKPCompanyId;
-                HseEnvironmentalStudiesData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseEnvironmentalStudiesData == null)
-                {
-                    HseEnvironmentalStudiesData.Created_by = WKPCompanyId;
-                    HseEnvironmentalStudiesData.Date_Created = DateTime.Now;
-                    await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(getHseEnvironmentalStudiesData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getHseEnvironmentalStudiesData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
-        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseSustainableData = new HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Sustainable Development
-                var getHseSustainableData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseSustainableData = getHseSustainableData != null ? getHseSustainableData : HseSustainableData;
-                HseSustainableData = _mapper.Map<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL>(wkp);
-
-                HseSustainableData.Companyemail = WKPCompanyEmail;
-                HseSustainableData.CompanyName = WKPCompanyName;
-                HseSustainableData.COMPANY_ID = WKPCompanyId;
-                HseSustainableData.Date_Updated = DateTime.Now;
-                HseSustainableData.Updated_by = WKPCompanyId;
-                HseSustainableData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseSustainableData == null)
-                {
-                    HseSustainableData.Created_by = WKPCompanyId;
-                    HseSustainableData.Date_Created = DateTime.Now;
-                    await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(HseSustainableData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(HseSustainableData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseEnvironmentalStudiesUpdatedData = new HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Environmental Studies
-                var getHseEnvironmentalStudiesUpdatedData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseEnvironmentalStudiesUpdatedData = getHseEnvironmentalStudiesUpdatedData != null ? getHseEnvironmentalStudiesUpdatedData : HseEnvironmentalStudiesUpdatedData;
-                HseEnvironmentalStudiesUpdatedData = _mapper.Map<HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED>(wkp);
-
-                HseEnvironmentalStudiesUpdatedData.Companyemail = WKPCompanyEmail;
-                HseEnvironmentalStudiesUpdatedData.CompanyName = WKPCompanyName;
-                HseEnvironmentalStudiesUpdatedData.COMPANY_ID = WKPCompanyId;
-                HseEnvironmentalStudiesUpdatedData.Date_Updated = DateTime.Now;
-                HseEnvironmentalStudiesUpdatedData.Updated_by = WKPCompanyId;
-                HseEnvironmentalStudiesUpdatedData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseEnvironmentalStudiesUpdatedData == null)
-                {
-                    HseEnvironmentalStudiesUpdatedData.Created_by = WKPCompanyId;
-                    HseEnvironmentalStudiesUpdatedData.Date_Created = DateTime.Now;
-                    await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(getHseEnvironmentalStudiesUpdatedData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getHseEnvironmentalStudiesUpdatedData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_OSP_REGISTRATIONS_NEW")]
-        public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW(HSE_OSP_REGISTRATIONS_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseOSPData = new HSE_OSP_REGISTRATIONS_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse OSP Registrations
-                var getHseOSPData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseOSPData = getHseOSPData != null ? getHseOSPData : HseOSPData;
-                HseOSPData = _mapper.Map<HSE_OSP_REGISTRATIONS_NEW>(wkp);
-
-                HseOSPData.Companyemail = WKPCompanyEmail;
-                HseOSPData.CompanyName = WKPCompanyName;
-                HseOSPData.COMPANY_ID = WKPCompanyId;
-                HseOSPData.Date_Updated = DateTime.Now;
-                HseOSPData.Updated_by = WKPCompanyId;
-                HseOSPData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseOSPData == null)
-                {
-                    HseOSPData.Created_by = WKPCompanyId;
-                    HseOSPData.Date_Created = DateTime.Now;
-                    await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(getHseOSPData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getHseOSPData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
-        public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseProducedWaterData = new HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Produced Water
-                var getHseProducedWaterData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseProducedWaterData = getHseProducedWaterData != null ? getHseProducedWaterData : HseProducedWaterData;
-                HseProducedWaterData = _mapper.Map<HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED>(wkp);
-
-                HseProducedWaterData.Companyemail = WKPCompanyEmail;
-                HseProducedWaterData.CompanyName = WKPCompanyName;
-                HseProducedWaterData.COMPANY_ID = WKPCompanyId;
-                HseProducedWaterData.Date_Updated = DateTime.Now;
-                HseProducedWaterData.Updated_by = WKPCompanyId;
-                HseProducedWaterData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseProducedWaterData == null)
-                {
-                    HseProducedWaterData.Created_by = WKPCompanyId;
-                    HseProducedWaterData.Date_Created = DateTime.Now;
-                    await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(getHseProducedWaterData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getHseProducedWaterData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseEnvironmentalMonitoringData = new HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Environmental Monitoring 
-                var getHseEnvironmentalMonitoringData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseEnvironmentalMonitoringData = getHseEnvironmentalMonitoringData != null ? getHseEnvironmentalMonitoringData : HseEnvironmentalMonitoringData;
-                HseEnvironmentalMonitoringData = _mapper.Map<HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW>(wkp);
-
-                HseEnvironmentalMonitoringData.Companyemail = WKPCompanyEmail;
-                HseEnvironmentalMonitoringData.CompanyName = WKPCompanyName;
-                HseEnvironmentalMonitoringData.COMPANY_ID = WKPCompanyId;
-                HseEnvironmentalMonitoringData.Date_Updated = DateTime.Now;
-                HseEnvironmentalMonitoringData.Updated_by = WKPCompanyId;
-                HseEnvironmentalMonitoringData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseEnvironmentalMonitoringData == null)
-                {
-                    HseEnvironmentalMonitoringData.Created_by = WKPCompanyId;
-                    HseEnvironmentalMonitoringData.Date_Created = DateTime.Now;
-                    await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(getHseEnvironmentalMonitoringData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getHseEnvironmentalMonitoringData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_CAUSES_OF_SPILL")]
-        public async Task<WebApiResponse> HSE_CAUSES_OF_SPILL(HSE_CAUSES_OF_SPILL_Model wkp, string year, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseCausesData = new HSE_CAUSES_OF_SPILL();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Causes of Spill
-                var getHseCausesData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseCausesData = getHseCausesData != null ? getHseCausesData : HseCausesData;
-                HseCausesData = _mapper.Map<HSE_CAUSES_OF_SPILL>(wkp);
-
-                HseCausesData.Companyemail = WKPCompanyEmail;
-                HseCausesData.CompanyName = WKPCompanyName;
-                HseCausesData.COMPANY_ID = WKPCompanyId;
-                HseCausesData.Date_Updated = DateTime.Now;
-                HseCausesData.Updated_by = WKPCompanyId;
-                HseCausesData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseCausesData == null)
-                {
-                    HseCausesData.Created_by = WKPCompanyId;
-                    HseCausesData.Date_Created = DateTime.Now;
-                    await _context.HSE_CAUSES_OF_SPILLs.AddAsync(getHseCausesData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_CAUSES_OF_SPILLs.Remove(getHseCausesData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU")]
-        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseSustainableDevData = new HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Sustainable Dev Community
-                var getHseSustainableDevData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseSustainableDevData = getHseSustainableDevData != null ? getHseSustainableDevData : HseSustainableDevData;
-                HseSustainableDevData = _mapper.Map<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU>(wkp);
-                #region file section
-                UploadedDocument MOUUploadFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "MOUU";
-                    MOUUploadFile_File = _helpersController.UploadDocument(files[0], "MOUDocuments");
-                    if (MOUUploadFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                #endregion
-
-                HseSustainableDevData.MOUUploadFilePath = files[0] != null ? MOUUploadFile_File.filePath : null; ;
-                HseSustainableDevData.MOUUploadFilename = files[0] != null ? MOUUploadFile_File.fileName : null; ;
-                HseSustainableDevData.Companyemail = WKPCompanyEmail;
-                HseSustainableDevData.CompanyName = WKPCompanyName;
-                HseSustainableDevData.COMPANY_ID = WKPCompanyId;
-                HseSustainableDevData.Date_Updated = DateTime.Now;
-                HseSustainableDevData.Updated_by = WKPCompanyId;
-                HseSustainableDevData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseSustainableDevData == null)
-                {
-                    HseSustainableDevData.Created_by = WKPCompanyId;
-                    HseSustainableDevData.Date_Created = DateTime.Now;
-                    await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(getHseSustainableDevData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getHseSustainableDevData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME")]
-        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseSustainableComData = new HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-
-                #region Saving Hse Sustainable Dev Schemes
-                var getHseSustainableComData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseSustainableComData = getHseSustainableComData != null ? getHseSustainableComData : HseSustainableComData;
-                HseSustainableComData = _mapper.Map<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME>(wkp);
-                #region file section
-                UploadedDocument SSUploadFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "SS";
-                    SSUploadFile_File = _helpersController.UploadDocument(files[0], "SSDocuments");
-                    if (SSUploadFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                #endregion
-                HseSustainableComData.SSUploadFilePath = files[0] != null ? SSUploadFile_File.filePath : null;
-                HseSustainableComData.SSUploadFilename = files[0] != null ? SSUploadFile_File.fileName : null;
-                HseSustainableComData.Companyemail = WKPCompanyEmail;
-                HseSustainableComData.CompanyName = WKPCompanyName;
-                HseSustainableComData.COMPANY_ID = WKPCompanyId;
-                HseSustainableComData.Date_Updated = DateTime.Now;
-                HseSustainableComData.Updated_by = WKPCompanyId;
-                HseSustainableComData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseSustainableComData == null)
-                {
-                    HseSustainableComData.Created_by = WKPCompanyId;
-                    HseSustainableComData.Date_Created = DateTime.Now;
-                    await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(getHseSustainableComData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getHseSustainableComData);
-                }
-
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_MANAGEMENT_POSITION")]
-        public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(HSE_MANAGEMENT_POSITION_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseManagmentData = new HSE_MANAGEMENT_POSITION();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Management position
-                var getHseManagmentData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseManagmentData = getHseManagmentData != null ? getHseManagmentData : HseManagmentData;
-                HseManagmentData = _mapper.Map<HSE_MANAGEMENT_POSITION>(wkp);
-                #region file section
-                UploadedDocument PromotionLetterFile_File = null;
-                UploadedDocument OrganogramFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "Promotion Letter";
-                    PromotionLetterFile_File = _helpersController.UploadDocument(files[0], "HRDocuments");
-                    if (PromotionLetterFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                if (files[1] != null)
-                {
-                    string docName = "Organogram";
-                    OrganogramFile_File = _helpersController.UploadDocument(files[1], "OGDocuments");
-                    if (OrganogramFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                #endregion
-
-                HseManagmentData.PromotionLetterFilePath = files[0] != null ? PromotionLetterFile_File.filePath : null;
-                HseManagmentData.PromotionLetterFilename = files[0] != null ? PromotionLetterFile_File.fileName : null;
-                HseManagmentData.OrganogramrFilePath = files[1] != null ? OrganogramFile_File.filePath : null;
-                HseManagmentData.OrganogramrFilename = files[1] != null ? OrganogramFile_File.fileName : null;
-                HseManagmentData.Companyemail = WKPCompanyEmail;
-                HseManagmentData.CompanyName = WKPCompanyName;
-                HseManagmentData.COMPANY_ID = WKPCompanyId;
-                HseManagmentData.Date_Updated = DateTime.Now;
-                HseManagmentData.Updated_by = WKPCompanyId;
-                HseManagmentData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseManagmentData == null)
-                {
-                    HseManagmentData.Created_by = WKPCompanyId;
-                    HseManagmentData.Date_Created = DateTime.Now;
-                    await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(getHseManagmentData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_MANAGEMENT_POSITIONs.Remove(getHseManagmentData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_QUALITY_CONTROL")]
-        public async Task<WebApiResponse> HSE_QUALITY_CONTROL(HSE_QUALITY_CONTROL_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseQualityData = new HSE_QUALITY_CONTROL();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Quality
-                var getHseQualityData = (from c in _context.HSE_QUALITY_CONTROLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-
-                HseQualityData = getHseQualityData != null ? getHseQualityData : HseQualityData;
-                HseQualityData = _mapper.Map<HSE_QUALITY_CONTROL>(wkp);
-                #region file section
-                UploadedDocument QualityControlFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "Quality Control";
-                    QualityControlFile_File = _helpersController.UploadDocument(files[0], "COSDocuments");
-                    if (QualityControlFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-
-                #endregion
-
-                HseQualityData.QualityControlFilename = files[0] != null ? QualityControlFile_File.fileName : null;
-                HseQualityData.QualityControlFilePath = files[0] != null ? QualityControlFile_File.filePath : null;
-                HseQualityData.Companyemail = WKPCompanyEmail;
-                HseQualityData.CompanyName = WKPCompanyName;
-                HseQualityData.COMPANY_ID = WKPCompanyId;
-                HseQualityData.Date_Updated = DateTime.Now;
-                HseQualityData.Updated_by = WKPCompanyId;
-                HseQualityData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (HseQualityData == null)
-                {
-                    HseQualityData.Created_by = WKPCompanyId;
-                    HseQualityData.Date_Created = DateTime.Now;
-                    await _context.HSE_QUALITY_CONTROLs.AddAsync(getHseQualityData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_QUALITY_CONTROLs.Remove(getHseQualityData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
-        public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseClimateData = new HSE_CLIMATE_CHANGE_AND_AIR_QUALITY();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Climate
-                var getHseClimateData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseClimateData = getHseClimateData != null ? getHseClimateData : HseClimateData;
-                HseClimateData = _mapper.Map<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>(wkp);
-                #region file section
-                UploadedDocument GHGFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "GHG";
-                    GHGFile_File = _helpersController.UploadDocument(files[0], "GHGDocuments");
-                    if (GHGFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-
-                #endregion
-
-                HseClimateData.GHGFilename = files[0] != null ? GHGFile_File.fileName : null;
-                HseClimateData.GHGFilePath = files[0] != null ? GHGFile_File.filePath : null;
-                HseClimateData.Companyemail = WKPCompanyEmail;
-                HseClimateData.CompanyName = WKPCompanyName;
-                HseClimateData.COMPANY_ID = WKPCompanyId;
-                HseClimateData.Date_Updated = DateTime.Now;
-                HseClimateData.Updated_by = WKPCompanyId;
-                HseClimateData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getHseClimateData == null)
-                {
-                    HseClimateData.Created_by = WKPCompanyId;
-                    HseClimateData.Date_Created = DateTime.Now;
-                    await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(getHseClimateData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getHseClimateData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_SAFETY_CULTURE_TRAINING")]
-        public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(HSE_SAFETY_CULTURE_TRAINING_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseSafetyCultureData = new HSE_SAFETY_CULTURE_TRAINING();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Safety Culture
-                var getHseSafetyCultureData = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseSafetyCultureData = getHseSafetyCultureData != null ? getHseSafetyCultureData : HseSafetyCultureData;
-                HseSafetyCultureData = _mapper.Map<HSE_SAFETY_CULTURE_TRAINING>(wkp);
-                #region file section
-                UploadedDocument SafetyCurrentYearFile_File = null;
-                UploadedDocument SafetyLast2YearsFile_File = null;
-                if (files[0] != null)
-                {
-                    string docName = "Safety Current Year File";
-                    SafetyCurrentYearFile_File = _helpersController.UploadDocument(files[0], "SafetyCurrentYearDocuments");
-                    if (SafetyCurrentYearFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-
-                if (files[1] != null)
-                {
-                    string docName = "Safety Last Two Years";
-                    SafetyLast2YearsFile_File = _helpersController.UploadDocument(files[1], "SafetyLast2YearsDocuments");
-                    if (SafetyLast2YearsFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-
-                #endregion
-
-
-                HseSafetyCultureData.SafetyCurrentYearFilename = files[0] != null ? SafetyCurrentYearFile_File.fileName : null;
-                HseSafetyCultureData.SafetyCurrentYearFilePath = files[0] != null ? SafetyCurrentYearFile_File.filePath : null;
-                HseSafetyCultureData.SafetyLast2YearsFilename = files[1] != null ? SafetyLast2YearsFile_File.fileName : null;
-                HseSafetyCultureData.SafetyLast2YearsFilePath = files[1] != null ? SafetyLast2YearsFile_File.filePath : null;
-                HseSafetyCultureData.Companyemail = WKPCompanyEmail;
-                HseSafetyCultureData.CompanyName = WKPCompanyName;
-                HseSafetyCultureData.COMPANY_ID = WKPCompanyId;
-                HseSafetyCultureData.Date_Updated = DateTime.Now;
-                HseSafetyCultureData.Updated_by = WKPCompanyId;
-                HseSafetyCultureData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getHseSafetyCultureData == null)
-                {
-                    HseSafetyCultureData.Created_by = WKPCompanyId;
-                    HseSafetyCultureData.Date_Created = DateTime.Now;
-                    await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(getHseSafetyCultureData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(getHseSafetyCultureData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
-        public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseOccupationalData = new HSE_OCCUPATIONAL_HEALTH_MANAGEMENT();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Occupational 
-                var getHseOccupationalData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseOccupationalData = getHseOccupationalData != null ? getHseOccupationalData : HseOccupationalData;
-                HseOccupationalData = _mapper.Map<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>(wkp);
-
-                #region file section
-                UploadedDocument OHMplanFile_File = null;
-                UploadedDocument OHMplanCommunicationFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "Field Discovery";
-                    OHMplanFile_File = _helpersController.UploadDocument(files[0], "FieldDiscoveryDocuments");
-                    if (OHMplanFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                if (files[1] != null)
-                {
-                    string docName = "Field Discovery";
-                    OHMplanCommunicationFile_File = _helpersController.UploadDocument(files[1], "FieldDiscoveryDocuments");
-                    if (OHMplanCommunicationFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-
-                #endregion
-                HseOccupationalData.OHMplanFilename = files[0] != null ? OHMplanFile_File.fileName : null;
-                HseOccupationalData.OHMplanFilePath = files[0] != null ? OHMplanFile_File.filePath : null;
-                HseOccupationalData.OHMplanCommunicationFilename = files[1] != null ? OHMplanCommunicationFile_File.fileName : null;
-                HseOccupationalData.OHMplanCommunicationFilePath = files[1] != null ? OHMplanCommunicationFile_File.filePath : null;
-                HseOccupationalData.Companyemail = WKPCompanyEmail;
-                HseOccupationalData.CompanyName = WKPCompanyName;
-                HseOccupationalData.COMPANY_ID = WKPCompanyId;
-                HseOccupationalData.Date_Updated = DateTime.Now;
-                HseOccupationalData.Updated_by = WKPCompanyId;
-                HseOccupationalData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getHseOccupationalData == null)
-                {
-                    HseOccupationalData.Created_by = WKPCompanyId;
-                    HseOccupationalData.Date_Created = DateTime.Now;
-                    await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(getHseOccupationalData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getHseOccupationalData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_WASTE_MANAGEMENT_SYSTEM")]
-        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_SYSTEM(HSE_WASTE_MANAGEMENT_SYSTEM_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseWasteMgtSysData = new HSE_WASTE_MANAGEMENT_SYSTEM();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Waste Management
-                var getHseWasteMgtSysData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseWasteMgtSysData = getHseWasteMgtSysData != null ? getHseWasteMgtSysData : HseWasteMgtSysData;
-                HseWasteMgtSysData = _mapper.Map<HSE_WASTE_MANAGEMENT_SYSTEM>(wkp);
-                #region file section
-                UploadedDocument DecomCertificateFile_File = null;
-                UploadedDocument WasteManagementPlanFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "Decom Certificate";
-                    DecomCertificateFile_File = _helpersController.UploadDocument(files[0], "DecomCertificateDocuments");
-                    if (DecomCertificateFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                if (files[1] != null)
-                {
-                    string docName = "Waste Management Plan";
-                    WasteManagementPlanFile_File = _helpersController.UploadDocument(files[1], "WasteManagementPlanDocuments");
-                    if (WasteManagementPlanFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                #endregion
-
-                HseWasteMgtSysData.DecomCertificateFilePath = files[0] != null ? DecomCertificateFile_File.filePath : null;
-                HseWasteMgtSysData.DecomCertificateFilename = files[0] != null ? DecomCertificateFile_File.fileName : null;
-                HseWasteMgtSysData.WasteManagementPlanFilePath = files[1] != null ? WasteManagementPlanFile_File.filePath : null;
-                HseWasteMgtSysData.WasteManagementPlanFilename = files[1] != null ? WasteManagementPlanFile_File.fileName : null;
-                HseWasteMgtSysData.Companyemail = WKPCompanyEmail;
-                HseWasteMgtSysData.CompanyName = WKPCompanyName;
-                HseWasteMgtSysData.COMPANY_ID = WKPCompanyId;
-                HseWasteMgtSysData.Date_Updated = DateTime.Now;
-                HseWasteMgtSysData.Updated_by = WKPCompanyId;
-                HseWasteMgtSysData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getHseWasteMgtSysData == null)
-                {
-                    HseWasteMgtSysData.Created_by = WKPCompanyId;
-                    HseWasteMgtSysData.Date_Created = DateTime.Now;
-                    await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(getHseWasteMgtSysData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getHseWasteMgtSysData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var HseEnvWasteData = new HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Hse Environmental Management
-                var getHseEnvWasteData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                HseEnvWasteData = getHseEnvWasteData != null ? getHseEnvWasteData : HseEnvWasteData;
-                HseEnvWasteData = _mapper.Map<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>(wkp);
-                #region file section
-                UploadedDocument EMSFile_File = null;
-                UploadedDocument AUDITFile_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "EMS";
-                    EMSFile_File = _helpersController.UploadDocument(files[0], "EMSDocuments");
-                    if (EMSFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                if (files[1] != null)
-                {
-                    string docName = "Audit File";
-                    AUDITFile_File = _helpersController.UploadDocument(files[1], "AUDITDocuments");
-                    if (AUDITFile_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                #endregion
-
-
-                HseEnvWasteData.EMSFilename = files[0] != null ? EMSFile_File.fileName : null;
-                HseEnvWasteData.EMSFilePath = files[0] != null ? EMSFile_File.filePath : null;
-                HseEnvWasteData.AUDITFilename = files[1] != null ? AUDITFile_File.fileName : null;
-                HseEnvWasteData.AUDITFilePath = files[1] != null ? AUDITFile_File.filePath : null;
-                HseEnvWasteData.Companyemail = WKPCompanyEmail;
-                HseEnvWasteData.CompanyName = WKPCompanyName;
-                HseEnvWasteData.COMPANY_ID = WKPCompanyId;
-                HseEnvWasteData.Date_Updated = DateTime.Now;
-                HseEnvWasteData.Updated_by = WKPCompanyId;
-                HseEnvWasteData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getHseEnvWasteData == null)
-                {
-                    HseEnvWasteData.Created_by = WKPCompanyId;
-                    HseEnvWasteData.Date_Created = DateTime.Now;
-                    await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(getHseEnvWasteData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getHseEnvWasteData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT")]
-        public async Task<WebApiResponse> PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model wkp, string year, List<IFormFile> files, string ActionToDo = null)
-        {
-
-            int save = 0;
-            var PictureUploadData = new PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT();
-            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
-            try
-            {
-                #region Saving Picture Upload
-                var getPictureUploadData = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).FirstOrDefault();
-                PictureUploadData = getPictureUploadData != null ? getPictureUploadData : PictureUploadData;
-                PictureUploadData = _mapper.Map<PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT>(wkp);
-                #region file section
-                UploadedDocument UploadedPresentation_File = null;
-
-                if (files[0] != null)
-                {
-                    string docName = "Uploaded Presentation";
-                    UploadedPresentation_File = _helpersController.UploadDocument(files[0], "Presentations");
-                    if (UploadedPresentation_File == null)
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to uploading " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-                }
-                #endregion
-                PictureUploadData.uploaded_presentation = files[0] != null ? UploadedPresentation_File.filePath : null;
-                PictureUploadData.Companyemail = WKPCompanyEmail;
-                PictureUploadData.CompanyName = WKPCompanyName;
-                PictureUploadData.COMPANY_ID = WKPCompanyId;
-                PictureUploadData.Date_Updated = DateTime.Now;
-                PictureUploadData.Updated_by = WKPCompanyId;
-                PictureUploadData.Year_of_WP = DateTime.Now.Year.ToString();
-                if (getPictureUploadData == null)
-                {
-                    PictureUploadData.Created_by = WKPCompanyId;
-                    PictureUploadData.Date_Created = DateTime.Now;
-                    await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(getPictureUploadData);
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(getPictureUploadData);
-                }
-                save += await _context.SaveChangesAsync();
-                #endregion
-
-                if (save > 0)
-                {
-                    string successMsg = "Form has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = wkp, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
 
             }
             catch (Exception e)
@@ -4855,6 +3534,3651 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpGet("GET_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN")]
+        public async Task<WebApiResponse> GET_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN")]
+        public async Task<WebApiResponse> POST_NIGERIA_CONTENT_UPLOAD_SUCCESSION_PLAN([FromBody] NIGERIA_CONTENT_Upload_Succession_Plan nigeria_content_succession_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving NIGERIA_CONTENT_Upload_Succession_Plans data
+                if (nigeria_content_succession_model != null)
+                {
+                    var getData = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    nigeria_content_succession_model.Companyemail = WKPCompanyEmail;
+                    nigeria_content_succession_model.CompanyName = WKPCompanyName;
+                    nigeria_content_succession_model.COMPANY_ID = WKPCompanyId;
+                    nigeria_content_succession_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    nigeria_content_succession_model.Date_Updated = DateTime.Now;
+                    nigeria_content_succession_model.Updated_by = WKPCompanyId;
+                    nigeria_content_succession_model.Year_of_WP = year;
+                    nigeria_content_succession_model.OML_Name = nigeria_content_succession_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            nigeria_content_succession_model.Date_Created = DateTime.Now;
+                            nigeria_content_succession_model.Created_by = WKPCompanyId;
+                            await _context.NIGERIA_CONTENT_Upload_Succession_Plans.AddAsync(nigeria_content_succession_model);
+                        }
+                        else
+                        {
+                            nigeria_content_succession_model.Date_Created = getData.Date_Created;
+                            nigeria_content_succession_model.Created_by = getData.Created_by;
+                            nigeria_content_succession_model.Date_Updated = DateTime.Now;
+                            nigeria_content_succession_model.Updated_by = WKPCompanyId;
+                            await _context.NIGERIA_CONTENT_Upload_Succession_Plans.AddAsync(nigeria_content_succession_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.NIGERIA_CONTENT_Upload_Succession_Plans.Remove(nigeria_content_succession_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_NIGERIA_CONTENT_QUESTION")]
+        public async Task<WebApiResponse> GET_NIGERIA_CONTENT_QUESTION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_NIGERIA_CONTENT_QUESTION")]
+        public async Task<WebApiResponse> POST_NIGERIA_CONTENT_QUESTION([FromBody] NIGERIA_CONTENT_QUESTION nigeria_content_question_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving NIGERIA_CONTENT_QUESTIONs data
+                if (nigeria_content_question_model != null)
+                {
+                    var getData = (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    nigeria_content_question_model.Companyemail = WKPCompanyEmail;
+                    nigeria_content_question_model.CompanyName = WKPCompanyName;
+                    nigeria_content_question_model.COMPANY_ID = WKPCompanyId;
+                    nigeria_content_question_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    nigeria_content_question_model.Date_Updated = DateTime.Now;
+                    nigeria_content_question_model.Updated_by = WKPCompanyId;
+                    nigeria_content_question_model.Year_of_WP = year;
+                    nigeria_content_question_model.OML_Name = nigeria_content_question_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            nigeria_content_question_model.Date_Created = DateTime.Now;
+                            nigeria_content_question_model.Created_by = WKPCompanyId;
+                            await _context.NIGERIA_CONTENT_QUESTIONs.AddAsync(nigeria_content_question_model);
+                        }
+                        else
+                        {
+                            nigeria_content_question_model.Date_Created = getData.Date_Created;
+                            nigeria_content_question_model.Created_by = getData.Created_by;
+                            nigeria_content_question_model.Date_Updated = DateTime.Now;
+                            nigeria_content_question_model.Updated_by = WKPCompanyId;
+                            await _context.NIGERIA_CONTENT_QUESTIONs.AddAsync(nigeria_content_question_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.NIGERIA_CONTENT_QUESTIONs.Remove(nigeria_content_question_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_LEGAL_LITIGATION")]
+        public async Task<WebApiResponse> GET_LEGAL_LITIGATION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_LEGAL_LITIGATION")]
+        public async Task<WebApiResponse> POST_LEGAL_LITIGATION([FromBody] LEGAL_LITIGATION legal_litigation_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving LEGAL_LITIGATIONs data
+                if (legal_litigation_model != null)
+                {
+                    var getData = (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    legal_litigation_model.Companyemail = WKPCompanyEmail;
+                    legal_litigation_model.CompanyName = WKPCompanyName;
+                    legal_litigation_model.COMPANY_ID = WKPCompanyId;
+                    legal_litigation_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    legal_litigation_model.Date_Updated = DateTime.Now;
+                    legal_litigation_model.Updated_by = WKPCompanyId;
+                    legal_litigation_model.Year_of_WP = year;
+                    legal_litigation_model.OML_Name = legal_litigation_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            legal_litigation_model.Date_Created = DateTime.Now;
+                            legal_litigation_model.Created_by = WKPCompanyId;
+                            await _context.LEGAL_LITIGATIONs.AddAsync(legal_litigation_model);
+                        }
+                        else
+                        {
+                            legal_litigation_model.Date_Created = getData.Date_Created;
+                            legal_litigation_model.Created_by = getData.Created_by;
+                            legal_litigation_model.Date_Updated = DateTime.Now;
+                            legal_litigation_model.Updated_by = WKPCompanyId;
+                            await _context.LEGAL_LITIGATIONs.AddAsync(legal_litigation_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.LEGAL_LITIGATIONs.Remove(legal_litigation_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_LEGAL_ARBITRATION")]
+        public async Task<WebApiResponse> GET_LEGAL_ARBITRATION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_LEGAL_ARBITRATION")]
+        public async Task<WebApiResponse> POST_LEGAL_ARBITRATION([FromBody] LEGAL_ARBITRATION legal_arbitration_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving LEGAL_ARBITRATIONs data
+                if (legal_arbitration_model != null)
+                {
+                    var getData = (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    legal_arbitration_model.Companyemail = WKPCompanyEmail;
+                    legal_arbitration_model.CompanyName = WKPCompanyName;
+                    legal_arbitration_model.COMPANY_ID = WKPCompanyId;
+                    legal_arbitration_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    legal_arbitration_model.Date_Updated = DateTime.Now;
+                    legal_arbitration_model.Updated_by = WKPCompanyId;
+                    legal_arbitration_model.Year_of_WP = year;
+                    legal_arbitration_model.OML_Name = legal_arbitration_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            legal_arbitration_model.Date_Created = DateTime.Now;
+                            legal_arbitration_model.Created_by = WKPCompanyId;
+                            await _context.LEGAL_ARBITRATIONs.AddAsync(legal_arbitration_model);
+                        }
+                        else
+                        {
+                            legal_arbitration_model.Date_Created = getData.Date_Created;
+                            legal_arbitration_model.Created_by = getData.Created_by;
+                            legal_arbitration_model.Date_Updated = DateTime.Now;
+                            legal_arbitration_model.Updated_by = WKPCompanyId;
+                            await _context.LEGAL_ARBITRATIONs.AddAsync(legal_arbitration_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.LEGAL_ARBITRATIONs.Remove(legal_arbitration_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_STRATEGIC_PLANS_ON_COMPANY_BASES")]
+        public async Task<WebApiResponse> GET_STRATEGIC_PLANS_ON_COMPANY_BASES(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_STRATEGIC_PLANS_ON_COMPANY_BASES")]
+        public async Task<WebApiResponse> POST_STRATEGIC_PLANS_ON_COMPANY_BASI([FromBody] STRATEGIC_PLANS_ON_COMPANY_BASI strategic_plans_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving STRATEGIC_PLANS_ON_COMPANY_BASIs data
+                if (strategic_plans_model != null)
+                {
+                    var getData = (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    strategic_plans_model.Companyemail = WKPCompanyEmail;
+                    strategic_plans_model.CompanyName = WKPCompanyName;
+                    strategic_plans_model.COMPANY_ID = WKPCompanyId;
+                    strategic_plans_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    strategic_plans_model.Date_Updated = DateTime.Now;
+                    strategic_plans_model.Updated_by = WKPCompanyId;
+                    strategic_plans_model.Year_of_WP = year;
+                    strategic_plans_model.OML_Name = strategic_plans_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            strategic_plans_model.Date_Created = DateTime.Now;
+                            strategic_plans_model.Created_by = WKPCompanyId;
+                            await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.AddAsync(strategic_plans_model);
+                        }
+                        else
+                        {
+                            strategic_plans_model.Date_Created = getData.Date_Created;
+                            strategic_plans_model.Created_by = getData.Created_by;
+                            strategic_plans_model.Date_Updated = DateTime.Now;
+                            strategic_plans_model.Updated_by = WKPCompanyId;
+                            await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.AddAsync(strategic_plans_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Remove(strategic_plans_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_QUESTION")]
+        public async Task<WebApiResponse> GET_HSE_QUESTION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_QUESTION")]
+        public async Task<WebApiResponse> POST_HSE_QUESTION([FromBody] HSE_QUESTION hse_question_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_QUESTIONs data
+                if (hse_question_model != null)
+                {
+                    var getData = (from c in _context.HSE_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_question_model.Companyemail = WKPCompanyEmail;
+                    hse_question_model.CompanyName = WKPCompanyName;
+                    hse_question_model.COMPANY_ID = WKPCompanyId;
+                    hse_question_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_question_model.Date_Updated = DateTime.Now;
+                    hse_question_model.Updated_by = WKPCompanyId;
+                    hse_question_model.Year_of_WP = year;
+                    hse_question_model.OML_Name = hse_question_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_question_model.Date_Created = DateTime.Now;
+                            hse_question_model.Created_by = WKPCompanyId;
+                            await _context.HSE_QUESTIONs.AddAsync(hse_question_model);
+                        }
+                        else
+                        {
+                            hse_question_model.Date_Created = getData.Date_Created;
+                            hse_question_model.Created_by = getData.Created_by;
+                            hse_question_model.Date_Updated = DateTime.Now;
+                            hse_question_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_QUESTIONs.AddAsync(hse_question_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_QUESTIONs.Remove(hse_question_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_QUESTIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_FATALITY")]
+        public async Task<WebApiResponse> GET_HSE_FATALITY(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_FATALITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_FATALITY")]
+        public async Task<WebApiResponse> POST_HSE_FATALITY([FromBody] HSE_FATALITy hse_fatality_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_FATALITY data
+                if (hse_fatality_model != null)
+                {
+                    var getData = (from c in _context.HSE_FATALITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_fatality_model.Companyemail = WKPCompanyEmail;
+                    hse_fatality_model.CompanyName = WKPCompanyName;
+                    hse_fatality_model.COMPANY_ID = WKPCompanyId;
+                    hse_fatality_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_fatality_model.Date_Updated = DateTime.Now;
+                    hse_fatality_model.Updated_by = WKPCompanyId;
+                    hse_fatality_model.Year_of_WP = year;
+                    hse_fatality_model.OML_Name = hse_fatality_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_fatality_model.Date_Created = DateTime.Now;
+                            hse_fatality_model.Created_by = WKPCompanyId;
+                            await _context.HSE_FATALITIEs.AddAsync(hse_fatality_model);
+                        }
+                        else
+                        {
+                            hse_fatality_model.Date_Created = getData.Date_Created;
+                            hse_fatality_model.Created_by = getData.Created_by;
+                            hse_fatality_model.Date_Updated = DateTime.Now;
+                            hse_fatality_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_FATALITIEs.AddAsync(hse_fatality_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_FATALITIEs.Remove(hse_fatality_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_FATALITIEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_DESIGNS_SAFETY")]
+        public async Task<WebApiResponse> GET_HSE_DESIGNS_SAFETY(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_DESIGNS_SAFETY")]
+        public async Task<WebApiResponse> POST_HSE_DESIGNS_SAFETY([FromBody] HSE_DESIGNS_SAFETY hse_designs_safety_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_DESIGNS_SAFETYs data
+                if (hse_designs_safety_model != null)
+                {
+                    var getData = (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_designs_safety_model.Companyemail = WKPCompanyEmail;
+                    hse_designs_safety_model.CompanyName = WKPCompanyName;
+                    hse_designs_safety_model.COMPANY_ID = WKPCompanyId;
+                    hse_designs_safety_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_designs_safety_model.Date_Updated = DateTime.Now;
+                    hse_designs_safety_model.Updated_by = WKPCompanyId;
+                    hse_designs_safety_model.Year_of_WP = year;
+                    hse_designs_safety_model.OML_Name = hse_designs_safety_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_designs_safety_model.Date_Created = DateTime.Now;
+                            hse_designs_safety_model.Created_by = WKPCompanyId;
+                            await _context.HSE_DESIGNS_SAFETies.AddAsync(hse_designs_safety_model);
+                        }
+                        else
+                        {
+                            hse_designs_safety_model.Date_Created = getData.Date_Created;
+                            hse_designs_safety_model.Created_by = getData.Created_by;
+                            hse_designs_safety_model.Date_Updated = DateTime.Now;
+                            hse_designs_safety_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_DESIGNS_SAFETies.AddAsync(hse_designs_safety_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_DESIGNS_SAFETies.Remove(hse_designs_safety_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_INSPECTION_AND_MAINTENANCE_NEW")]
+        public async Task<WebApiResponse> GET_HSE_INSPECTION_AND_MAINTENANCE_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_INSPECTION_AND_MAINTENANCE_NEW")]
+        public async Task<WebApiResponse> POST_HSE_INSPECTION_AND_MAINTENANCE_NEW([FromBody] HSE_INSPECTION_AND_MAINTENANCE_NEW hse_IM_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_INSPECTION_AND_MAINTENANCE_NEWs data
+                if (hse_IM_model != null)
+                {
+                    var getData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_IM_model.Companyemail = WKPCompanyEmail;
+                    hse_IM_model.CompanyName = WKPCompanyName;
+                    hse_IM_model.COMPANY_ID = WKPCompanyId;
+                    hse_IM_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_IM_model.Date_Updated = DateTime.Now;
+                    hse_IM_model.Updated_by = WKPCompanyId;
+                    hse_IM_model.Year_of_WP = year;
+                    hse_IM_model.OML_Name = hse_IM_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_IM_model.Date_Created = DateTime.Now;
+                            hse_IM_model.Created_by = WKPCompanyId;
+                            await _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.AddAsync(hse_IM_model);
+                        }
+                        else
+                        {
+                            hse_IM_model.Date_Created = getData.Date_Created;
+                            hse_IM_model.Created_by = getData.Created_by;
+                            hse_IM_model.Date_Updated = DateTime.Now;
+                            hse_IM_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.AddAsync(hse_IM_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.Remove(hse_IM_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
+        public async Task<WebApiResponse> GET_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
+        public async Task<WebApiResponse> POST_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW([FromBody] HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW hse_IM_facility_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs data
+                if (hse_IM_facility_model != null)
+                {
+                    var getData = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_IM_facility_model.Companyemail = WKPCompanyEmail;
+                    hse_IM_facility_model.CompanyName = WKPCompanyName;
+                    hse_IM_facility_model.COMPANY_ID = WKPCompanyId;
+                    hse_IM_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_IM_facility_model.Date_Updated = DateTime.Now;
+                    hse_IM_facility_model.Updated_by = WKPCompanyId;
+                    hse_IM_facility_model.Year_of_WP = year;
+                    hse_IM_facility_model.OML_Name = hse_IM_facility_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_IM_facility_model.Date_Created = DateTime.Now;
+                            hse_IM_facility_model.Created_by = WKPCompanyId;
+                            await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.AddAsync(hse_IM_facility_model);
+                        }
+                        else
+                        {
+                            hse_IM_facility_model.Date_Created = getData.Date_Created;
+                            hse_IM_facility_model.Created_by = getData.Created_by;
+                            hse_IM_facility_model.Date_Updated = DateTime.Now;
+                            hse_IM_facility_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.AddAsync(hse_IM_facility_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(hse_IM_facility_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
+        public async Task<WebApiResponse> GET_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
+        public async Task<WebApiResponse> POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW([FromBody] HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW hse_technical_safety_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs data
+                if (hse_technical_safety_model != null)
+                {
+                    var getData = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_technical_safety_model.Companyemail = WKPCompanyEmail;
+                    hse_technical_safety_model.CompanyName = WKPCompanyName;
+                    hse_technical_safety_model.COMPANY_ID = WKPCompanyId;
+                    hse_technical_safety_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_technical_safety_model.Date_Updated = DateTime.Now;
+                    hse_technical_safety_model.Updated_by = WKPCompanyId;
+                    hse_technical_safety_model.Year_of_WP = year;
+                    hse_technical_safety_model.OML_Name = hse_technical_safety_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_technical_safety_model.Date_Created = DateTime.Now;
+                            hse_technical_safety_model.Created_by = WKPCompanyId;
+                            await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
+                        }
+                        else
+                        {
+                            hse_technical_safety_model.Date_Created = getData.Date_Created;
+                            hse_technical_safety_model.Created_by = getData.Created_by;
+                            hse_technical_safety_model.Date_Updated = DateTime.Now;
+                            hse_technical_safety_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(hse_technical_safety_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW([FromBody] HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW hse_asset_register_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs data
+                if (hse_asset_register_model != null)
+                {
+                    var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_asset_register_model.Companyemail = WKPCompanyEmail;
+                    hse_asset_register_model.CompanyName = WKPCompanyName;
+                    hse_asset_register_model.COMPANY_ID = WKPCompanyId;
+                    hse_asset_register_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_asset_register_model.Date_Updated = DateTime.Now;
+                    hse_asset_register_model.Updated_by = WKPCompanyId;
+                    hse_asset_register_model.Year_of_WP = year;
+                    hse_asset_register_model.OML_Name = hse_asset_register_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_asset_register_model.Date_Created = DateTime.Now;
+                            hse_asset_register_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(hse_asset_register_model);
+                        }
+                        else
+                        {
+                            hse_asset_register_model.Date_Created = getData.Date_Created;
+                            hse_asset_register_model.Created_by = getData.Created_by;
+                            hse_asset_register_model.Date_Updated = DateTime.Now;
+                            hse_asset_register_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(hse_asset_register_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(hse_asset_register_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_OIL_SPILL_REPORTING_NEW")]
+        public async Task<WebApiResponse> GET_HSE_OIL_SPILL_REPORTING_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_OIL_SPILL_REPORTING_NEW")]
+        public async Task<WebApiResponse> POST_HSE_OIL_SPILL_REPORTING_NEW([FromBody] HSE_OIL_SPILL_REPORTING_NEW hse_oil_spill_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_OIL_SPILL_REPORTING_NEWs data
+                if (hse_oil_spill_model != null)
+                {
+                    var getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_oil_spill_model.Companyemail = WKPCompanyEmail;
+                    hse_oil_spill_model.CompanyName = WKPCompanyName;
+                    hse_oil_spill_model.COMPANY_ID = WKPCompanyId;
+                    hse_oil_spill_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_oil_spill_model.Date_Updated = DateTime.Now;
+                    hse_oil_spill_model.Updated_by = WKPCompanyId;
+                    hse_oil_spill_model.Year_of_WP = year;
+                    hse_oil_spill_model.OML_Name = hse_oil_spill_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_oil_spill_model.Date_Created = DateTime.Now;
+                            hse_oil_spill_model.Created_by = WKPCompanyId;
+                            await _context.HSE_OIL_SPILL_REPORTING_NEWs.AddAsync(hse_oil_spill_model);
+                        }
+                        else
+                        {
+                            hse_oil_spill_model.Date_Created = getData.Date_Created;
+                            hse_oil_spill_model.Created_by = getData.Created_by;
+                            hse_oil_spill_model.Date_Updated = DateTime.Now;
+                            hse_oil_spill_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_OIL_SPILL_REPORTING_NEWs.AddAsync(hse_oil_spill_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(hse_oil_spill_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW([FromBody] HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW hse_asset_register_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs data
+                if (hse_asset_register_model != null)
+                {
+                    var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_asset_register_model.Companyemail = WKPCompanyEmail;
+                    hse_asset_register_model.CompanyName = WKPCompanyName;
+                    hse_asset_register_model.COMPANY_ID = WKPCompanyId;
+                    hse_asset_register_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_asset_register_model.Date_Updated = DateTime.Now;
+                    hse_asset_register_model.Updated_by = WKPCompanyId;
+                    hse_asset_register_model.Year_of_WP = year;
+                    hse_asset_register_model.OML_Name = hse_asset_register_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_asset_register_model.Date_Created = DateTime.Now;
+                            hse_asset_register_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(hse_asset_register_model);
+                        }
+                        else
+                        {
+                            hse_asset_register_model.Date_Created = getData.Date_Created;
+                            hse_asset_register_model.Created_by = getData.Created_by;
+                            hse_asset_register_model.Date_Updated = DateTime.Now;
+                            hse_asset_register_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(hse_asset_register_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(hse_asset_register_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_NEW hse_accident_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs data
+                if (hse_accident_model != null)
+                {
+                    var getData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_accident_model.Companyemail = WKPCompanyEmail;
+                    hse_accident_model.CompanyName = WKPCompanyName;
+                    hse_accident_model.COMPANY_ID = WKPCompanyId;
+                    hse_accident_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_accident_model.Date_Updated = DateTime.Now;
+                    hse_accident_model.Updated_by = WKPCompanyId;
+                    hse_accident_model.Year_of_WP = year;
+                    hse_accident_model.OML_Name = hse_accident_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_accident_model.Date_Created = DateTime.Now;
+                            hse_accident_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(hse_accident_model);
+                        }
+                        else
+                        {
+                            hse_accident_model.Date_Created = getData.Date_Created;
+                            hse_accident_model.Created_by = getData.Created_by;
+                            hse_accident_model.Date_Updated = DateTime.Now;
+                            hse_accident_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(hse_accident_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(hse_accident_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW hse_accident_reporting_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs data
+                if (hse_accident_reporting_model != null)
+                {
+                    var getData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_accident_reporting_model.Companyemail = WKPCompanyEmail;
+                    hse_accident_reporting_model.CompanyName = WKPCompanyName;
+                    hse_accident_reporting_model.COMPANY_ID = WKPCompanyId;
+                    hse_accident_reporting_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_accident_reporting_model.Date_Updated = DateTime.Now;
+                    hse_accident_reporting_model.Updated_by = WKPCompanyId;
+                    hse_accident_reporting_model.Year_of_WP = year;
+                    hse_accident_reporting_model.OML_Name = hse_accident_reporting_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_accident_reporting_model.Date_Created = DateTime.Now;
+                            hse_accident_reporting_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(hse_accident_reporting_model);
+                        }
+                        else
+                        {
+                            hse_accident_reporting_model.Date_Created = getData.Date_Created;
+                            hse_accident_reporting_model.Created_by = getData.Created_by;
+                            hse_accident_reporting_model.Date_Updated = DateTime.Now;
+                            hse_accident_reporting_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(hse_accident_reporting_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(hse_accident_reporting_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW")]
+        public async Task<WebApiResponse> GET_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW")]
+        public async Task<WebApiResponse> POST_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW([FromBody] HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW hse_community_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs data
+                if (hse_community_model != null)
+                {
+                    var getData = (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_community_model.Companyemail = WKPCompanyEmail;
+                    hse_community_model.CompanyName = WKPCompanyName;
+                    hse_community_model.COMPANY_ID = WKPCompanyId;
+                    hse_community_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_community_model.Date_Updated = DateTime.Now;
+                    hse_community_model.Updated_by = WKPCompanyId;
+                    hse_community_model.Year_of_WP = year;
+                    hse_community_model.OML_Name = hse_community_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_community_model.Date_Created = DateTime.Now;
+                            hse_community_model.Created_by = WKPCompanyId;
+                            await _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.AddAsync(hse_community_model);
+                        }
+                        else
+                        {
+                            hse_community_model.Date_Created = getData.Date_Created;
+                            hse_community_model.Created_by = getData.Created_by;
+                            hse_community_model.Date_Updated = DateTime.Now;
+                            hse_community_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.AddAsync(hse_community_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.Remove(hse_community_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ENVIRONMENTAL_STUDIES_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_STUDIES_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_STUDIES_NEW([FromBody] HSE_ENVIRONMENTAL_STUDIES_NEW hse_environmental_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ENVIRONMENTAL_STUDIES_NEWs data
+                if (hse_environmental_model != null)
+                {
+                    var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_environmental_model.Companyemail = WKPCompanyEmail;
+                    hse_environmental_model.CompanyName = WKPCompanyName;
+                    hse_environmental_model.COMPANY_ID = WKPCompanyId;
+                    hse_environmental_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_environmental_model.Date_Updated = DateTime.Now;
+                    hse_environmental_model.Updated_by = WKPCompanyId;
+                    hse_environmental_model.Year_of_WP = year;
+                    hse_environmental_model.OML_Name = hse_environmental_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_environmental_model.Date_Created = DateTime.Now;
+                            hse_environmental_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.AddAsync(hse_environmental_model);
+                        }
+                        else
+                        {
+                            hse_environmental_model.Date_Created = getData.Date_Created;
+                            hse_environmental_model.Created_by = getData.Created_by;
+                            hse_environmental_model.Date_Updated = DateTime.Now;
+                            hse_environmental_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.AddAsync(hse_environmental_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.Remove(hse_environmental_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_WASTE_MANAGEMENT_NEW")]
+        public async Task<WebApiResponse> GET_HSE_WASTE_MANAGEMENT_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_WASTE_MANAGEMENT_NEW")]
+        public async Task<WebApiResponse> POST_HSE_WASTE_MANAGEMENT_NEW([FromBody] HSE_WASTE_MANAGEMENT_NEW hse_waste_management_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_WASTE_MANAGEMENT_NEWs data
+                if (hse_waste_management_model != null)
+                {
+                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_waste_management_model.Companyemail = WKPCompanyEmail;
+                    hse_waste_management_model.CompanyName = WKPCompanyName;
+                    hse_waste_management_model.COMPANY_ID = WKPCompanyId;
+                    hse_waste_management_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_waste_management_model.Date_Updated = DateTime.Now;
+                    hse_waste_management_model.Updated_by = WKPCompanyId;
+                    hse_waste_management_model.Year_of_WP = year;
+                    hse_waste_management_model.OML_Name = hse_waste_management_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_waste_management_model.Date_Created = DateTime.Now;
+                            hse_waste_management_model.Created_by = WKPCompanyId;
+                            await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(hse_waste_management_model);
+                        }
+                        else
+                        {
+                            hse_waste_management_model.Date_Created = getData.Date_Created;
+                            hse_waste_management_model.Created_by = getData.Created_by;
+                            hse_waste_management_model.Date_Updated = DateTime.Now;
+                            hse_waste_management_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(hse_waste_management_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(hse_waste_management_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
+        public async Task<WebApiResponse> GET_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
+        public async Task<WebApiResponse> POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW([FromBody] HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW hse_waste_management_facility_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs data
+                if (hse_waste_management_facility_model != null)
+                {
+                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_waste_management_facility_model.Companyemail = WKPCompanyEmail;
+                    hse_waste_management_facility_model.CompanyName = WKPCompanyName;
+                    hse_waste_management_facility_model.COMPANY_ID = WKPCompanyId;
+                    hse_waste_management_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_waste_management_facility_model.Date_Updated = DateTime.Now;
+                    hse_waste_management_facility_model.Updated_by = WKPCompanyId;
+                    hse_waste_management_facility_model.Year_of_WP = year;
+                    hse_waste_management_facility_model.OML_Name = hse_waste_management_facility_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_waste_management_facility_model.Date_Created = DateTime.Now;
+                            hse_waste_management_facility_model.Created_by = WKPCompanyId;
+                            await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(hse_waste_management_facility_model);
+                        }
+                        else
+                        {
+                            hse_waste_management_facility_model.Date_Created = getData.Date_Created;
+                            hse_waste_management_facility_model.Created_by = getData.Created_by;
+                            hse_waste_management_facility_model.Date_Updated = DateTime.Now;
+                            hse_waste_management_facility_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(hse_waste_management_facility_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(hse_waste_management_facility_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
+        public async Task<WebApiResponse> GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
+        public async Task<WebApiResponse> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW hse_produced_water_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_PRODUCED_WATER_MANAGEMENT_NEWs data
+                if (hse_produced_water_model != null)
+                {
+                    var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_produced_water_model.Companyemail = WKPCompanyEmail;
+                    hse_produced_water_model.CompanyName = WKPCompanyName;
+                    hse_produced_water_model.COMPANY_ID = WKPCompanyId;
+                    hse_produced_water_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_produced_water_model.Date_Updated = DateTime.Now;
+                    hse_produced_water_model.Updated_by = WKPCompanyId;
+                    hse_produced_water_model.Year_of_WP = year;
+                    hse_produced_water_model.OML_Name = hse_produced_water_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_produced_water_model.Date_Created = DateTime.Now;
+                            hse_produced_water_model.Created_by = WKPCompanyId;
+                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(hse_produced_water_model);
+                        }
+                        else
+                        {
+                            hse_produced_water_model.Date_Created = getData.Date_Created;
+                            hse_produced_water_model.Created_by = getData.Created_by;
+                            hse_produced_water_model.Date_Updated = DateTime.Now;
+                            hse_produced_water_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(hse_produced_water_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(hse_produced_water_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW hse_compliance_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs data
+                if (hse_compliance_model != null)
+                {
+                    var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_compliance_model.Companyemail = WKPCompanyEmail;
+                    hse_compliance_model.CompanyName = WKPCompanyName;
+                    hse_compliance_model.COMPANY_ID = WKPCompanyId;
+                    hse_compliance_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_compliance_model.Date_Updated = DateTime.Now;
+                    hse_compliance_model.Updated_by = WKPCompanyId;
+                    hse_compliance_model.Year_of_WP = year;
+                    hse_compliance_model.OML_Name = hse_compliance_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_compliance_model.Date_Created = DateTime.Now;
+                            hse_compliance_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(hse_compliance_model);
+                        }
+                        else
+                        {
+                            hse_compliance_model.Date_Created = getData.Date_Created;
+                            hse_compliance_model.Created_by = getData.Created_by;
+                            hse_compliance_model.Date_Updated = DateTime.Now;
+                            hse_compliance_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(hse_compliance_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(hse_compliance_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW([FromBody] HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW hse_environmental_studies_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs data
+                if (hse_environmental_studies_model != null)
+                {
+                    var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_environmental_studies_model.Companyemail = WKPCompanyEmail;
+                    hse_environmental_studies_model.CompanyName = WKPCompanyName;
+                    hse_environmental_studies_model.COMPANY_ID = WKPCompanyId;
+                    hse_environmental_studies_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_environmental_studies_model.Date_Updated = DateTime.Now;
+                    hse_environmental_studies_model.Updated_by = WKPCompanyId;
+                    hse_environmental_studies_model.Year_of_WP = year;
+                    hse_environmental_studies_model.OML_Name = hse_environmental_studies_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_environmental_studies_model.Date_Created = DateTime.Now;
+                            hse_environmental_studies_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(hse_environmental_studies_model);
+                        }
+                        else
+                        {
+                            hse_environmental_studies_model.Date_Created = getData.Date_Created;
+                            hse_environmental_studies_model.Created_by = getData.Created_by;
+                            hse_environmental_studies_model.Date_Updated = DateTime.Now;
+                            hse_environmental_studies_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(hse_environmental_studies_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(hse_environmental_studies_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
+        public async Task<WebApiResponse> GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
+        public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs data
+                if (hse_sustainable_model != null)
+                {
+                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
+                    hse_sustainable_model.CompanyName = WKPCompanyName;
+                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+                    hse_sustainable_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_sustainable_model.Date_Updated = DateTime.Now;
+                    hse_sustainable_model.Updated_by = WKPCompanyId;
+                    hse_sustainable_model.Year_of_WP = year;
+                    hse_sustainable_model.OML_Name = hse_sustainable_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_sustainable_model.Date_Created = DateTime.Now;
+                            hse_sustainable_model.Created_by = WKPCompanyId;
+                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
+                        }
+                        else
+                        {
+                            hse_sustainable_model.Date_Created = getData.Date_Created;
+                            hse_sustainable_model.Created_by = getData.Created_by;
+                            hse_sustainable_model.Date_Updated = DateTime.Now;
+                            hse_sustainable_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(hse_sustainable_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
+        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
+        public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED([FromBody] HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED hse_environmental_studies_new_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs data
+                if (hse_environmental_studies_new_model != null)
+                {
+                    var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_environmental_studies_new_model.Companyemail = WKPCompanyEmail;
+                    hse_environmental_studies_new_model.CompanyName = WKPCompanyName;
+                    hse_environmental_studies_new_model.COMPANY_ID = WKPCompanyId;
+                    hse_environmental_studies_new_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
+                    hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
+                    hse_environmental_studies_new_model.Year_of_WP = year;
+                    hse_environmental_studies_new_model.OML_Name = hse_environmental_studies_new_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_environmental_studies_new_model.Date_Created = DateTime.Now;
+                            hse_environmental_studies_new_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(hse_environmental_studies_new_model);
+                        }
+                        else
+                        {
+                            hse_environmental_studies_new_model.Date_Created = getData.Date_Created;
+                            hse_environmental_studies_new_model.Created_by = getData.Created_by;
+                            hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
+                            hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(hse_environmental_studies_new_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(hse_environmental_studies_new_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_OSP_REGISTRATIONS_NEW")]
+        public async Task<WebApiResponse> GET_HSE_OSP_REGISTRATIONS_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_OSP_REGISTRATIONS_NEW")]
+        public async Task<WebApiResponse> POST_HSE_OSP_REGISTRATIONS_NEW([FromBody] HSE_OSP_REGISTRATIONS_NEW hse_osp_registrations_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_OSP_REGISTRATIONS_NEWs data
+                if (hse_osp_registrations_model != null)
+                {
+                    var getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_osp_registrations_model.Companyemail = WKPCompanyEmail;
+                    hse_osp_registrations_model.CompanyName = WKPCompanyName;
+                    hse_osp_registrations_model.COMPANY_ID = WKPCompanyId;
+                    hse_osp_registrations_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_osp_registrations_model.Date_Updated = DateTime.Now;
+                    hse_osp_registrations_model.Updated_by = WKPCompanyId;
+                    hse_osp_registrations_model.Year_of_WP = year;
+                    hse_osp_registrations_model.OML_Name = hse_osp_registrations_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_osp_registrations_model.Date_Created = DateTime.Now;
+                            hse_osp_registrations_model.Created_by = WKPCompanyId;
+                            await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(hse_osp_registrations_model);
+                        }
+                        else
+                        {
+                            hse_osp_registrations_model.Date_Created = getData.Date_Created;
+                            hse_osp_registrations_model.Created_by = getData.Created_by;
+                            hse_osp_registrations_model.Date_Updated = DateTime.Now;
+                            hse_osp_registrations_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(hse_osp_registrations_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(hse_osp_registrations_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
+        public async Task<WebApiResponse> GET_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
+        public async Task<WebApiResponse> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED hse_produced_water_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs data
+                if (hse_produced_water_model != null)
+                {
+                    var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_produced_water_model.Companyemail = WKPCompanyEmail;
+                    hse_produced_water_model.CompanyName = WKPCompanyName;
+                    hse_produced_water_model.COMPANY_ID = WKPCompanyId;
+                    hse_produced_water_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_produced_water_model.Date_Updated = DateTime.Now;
+                    hse_produced_water_model.Updated_by = WKPCompanyId;
+                    hse_produced_water_model.Year_of_WP = year;
+                    hse_produced_water_model.OML_Name = hse_produced_water_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_produced_water_model.Date_Created = DateTime.Now;
+                            hse_produced_water_model.Created_by = WKPCompanyId;
+                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(hse_produced_water_model);
+                        }
+                        else
+                        {
+                            hse_produced_water_model.Date_Created = getData.Date_Created;
+                            hse_produced_water_model.Created_by = getData.Created_by;
+                            hse_produced_water_model.Date_Updated = DateTime.Now;
+                            hse_produced_water_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(hse_produced_water_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(hse_produced_water_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
+        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
+        public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW hse_chemical_usage_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs data
+                if (hse_chemical_usage_model != null)
+                {
+                    var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_chemical_usage_model.Companyemail = WKPCompanyEmail;
+                    hse_chemical_usage_model.CompanyName = WKPCompanyName;
+                    hse_chemical_usage_model.COMPANY_ID = WKPCompanyId;
+                    hse_chemical_usage_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_chemical_usage_model.Date_Updated = DateTime.Now;
+                    hse_chemical_usage_model.Updated_by = WKPCompanyId;
+                    hse_chemical_usage_model.Year_of_WP = year;
+                    hse_chemical_usage_model.OML_Name = hse_chemical_usage_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_chemical_usage_model.Date_Created = DateTime.Now;
+                            hse_chemical_usage_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(hse_chemical_usage_model);
+                        }
+                        else
+                        {
+                            hse_chemical_usage_model.Date_Created = getData.Date_Created;
+                            hse_chemical_usage_model.Created_by = getData.Created_by;
+                            hse_chemical_usage_model.Date_Updated = DateTime.Now;
+                            hse_chemical_usage_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(hse_chemical_usage_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(hse_chemical_usage_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_CAUSES_OF_SPILL")]
+        public async Task<WebApiResponse> GET_HSE_CAUSES_OF_SPILL(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_CAUSES_OF_SPILL")]
+        public async Task<WebApiResponse> POST_HSE_CAUSES_OF_SPILL([FromBody] HSE_CAUSES_OF_SPILL hse_causes_of_spill_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_CAUSES_OF_SPILLs data
+                if (hse_causes_of_spill_model != null)
+                {
+                    var getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_causes_of_spill_model.Companyemail = WKPCompanyEmail;
+                    hse_causes_of_spill_model.CompanyName = WKPCompanyName;
+                    hse_causes_of_spill_model.COMPANY_ID = WKPCompanyId;
+                    hse_causes_of_spill_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_causes_of_spill_model.Date_Updated = DateTime.Now;
+                    hse_causes_of_spill_model.Updated_by = WKPCompanyId;
+                    hse_causes_of_spill_model.Year_of_WP = year;
+                    hse_causes_of_spill_model.OML_Name = hse_causes_of_spill_model.OML_Name.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_causes_of_spill_model.Date_Created = DateTime.Now;
+                            hse_causes_of_spill_model.Created_by = WKPCompanyId;
+                            await _context.HSE_CAUSES_OF_SPILLs.AddAsync(hse_causes_of_spill_model);
+                        }
+                        else
+                        {
+                            hse_causes_of_spill_model.Date_Created = getData.Date_Created;
+                            hse_causes_of_spill_model.Created_by = getData.Created_by;
+                            hse_causes_of_spill_model.Date_Updated = DateTime.Now;
+                            hse_causes_of_spill_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_CAUSES_OF_SPILLs.AddAsync(hse_causes_of_spill_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_CAUSES_OF_SPILLs.Remove(hse_causes_of_spill_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_CAUSES_OF_SPILLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU")]
+        public async Task<WebApiResponse> GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU")]
+        public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU hse_MOU_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs data
+                if (hse_MOU_model != null)
+                {
+                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_MOU_model.Companyemail = WKPCompanyEmail;
+                    hse_MOU_model.CompanyName = WKPCompanyName;
+                    hse_MOU_model.COMPANY_ID = WKPCompanyId;
+                    hse_MOU_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_MOU_model.Date_Updated = DateTime.Now;
+                    hse_MOU_model.Updated_by = WKPCompanyId;
+                    hse_MOU_model.Year_of_WP = year;
+                    hse_MOU_model.OML_Name = hse_MOU_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument MOUUploadFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "MOUU";
+                        MOUUploadFile_File = _helpersController.UploadDocument(files[0], "MOUDocuments");
+                        if (MOUUploadFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+
+                    hse_MOU_model.MOUUploadFilePath = files[0] != null ? MOUUploadFile_File.filePath : null; ;
+                    hse_MOU_model.MOUUploadFilename = files[0] != null ? MOUUploadFile_File.fileName : null; ;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_MOU_model.Date_Created = DateTime.Now;
+                            hse_MOU_model.Created_by = WKPCompanyId;
+                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_MOU_model);
+                        }
+                        else
+                        {
+                            hse_MOU_model.Date_Created = getData.Date_Created;
+                            hse_MOU_model.Created_by = getData.Created_by;
+                            hse_MOU_model.Date_Updated = DateTime.Now;
+                            hse_MOU_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_MOU_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(hse_MOU_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME")]
+        public async Task<WebApiResponse> GET_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME")]
+        public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME hse_scholarship_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs data
+                if (hse_scholarship_model != null)
+                {
+                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_scholarship_model.Companyemail = WKPCompanyEmail;
+                    hse_scholarship_model.CompanyName = WKPCompanyName;
+                    hse_scholarship_model.COMPANY_ID = WKPCompanyId;
+                    hse_scholarship_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_scholarship_model.Date_Updated = DateTime.Now;
+                    hse_scholarship_model.Updated_by = WKPCompanyId;
+                    hse_scholarship_model.Year_of_WP = year;
+                    hse_scholarship_model.OML_Name = hse_scholarship_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument SSUploadFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "SS";
+                        SSUploadFile_File = _helpersController.UploadDocument(files[0], "SSDocuments");
+                        if (SSUploadFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+                    hse_scholarship_model.SSUploadFilePath = files[0] != null ? SSUploadFile_File.filePath : null;
+                    hse_scholarship_model.SSUploadFilename = files[0] != null ? SSUploadFile_File.fileName : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_scholarship_model.Date_Created = DateTime.Now;
+                            hse_scholarship_model.Created_by = WKPCompanyId;
+                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
+                        }
+                        else
+                        {
+                            hse_scholarship_model.Date_Created = getData.Date_Created;
+                            hse_scholarship_model.Created_by = getData.Created_by;
+                            hse_scholarship_model.Date_Updated = DateTime.Now;
+                            hse_scholarship_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(hse_scholarship_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_MANAGEMENT_POSITION")]
+        public async Task<WebApiResponse> GET_HSE_MANAGEMENT_POSITION(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_MANAGEMENT_POSITION")]
+        public async Task<WebApiResponse> POST_HSE_MANAGEMENT_POSITION([FromBody] HSE_MANAGEMENT_POSITION hse_management_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_MANAGEMENT_POSITIONs data
+                if (hse_management_model != null)
+                {
+                    var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_management_model.Companyemail = WKPCompanyEmail;
+                    hse_management_model.CompanyName = WKPCompanyName;
+                    hse_management_model.COMPANY_ID = WKPCompanyId;
+                    hse_management_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_management_model.Date_Updated = DateTime.Now;
+                    hse_management_model.Updated_by = WKPCompanyId;
+                    hse_management_model.Year_of_WP = year;
+                    hse_management_model.OML_Name = hse_management_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument PromotionLetterFile_File = null;
+                    UploadedDocument OrganogramFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "Promotion Letter";
+                        PromotionLetterFile_File = _helpersController.UploadDocument(files[0], "HRDocuments");
+                        if (PromotionLetterFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    if (files[1] != null)
+                    {
+                        string docName = "Organogram";
+                        OrganogramFile_File = _helpersController.UploadDocument(files[1], "OGDocuments");
+                        if (OrganogramFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+
+                    hse_management_model.PromotionLetterFilePath = files[0] != null ? PromotionLetterFile_File.filePath : null;
+                    hse_management_model.PromotionLetterFilename = files[0] != null ? PromotionLetterFile_File.fileName : null;
+                    hse_management_model.OrganogramrFilePath = files[1] != null ? OrganogramFile_File.filePath : null;
+                    hse_management_model.OrganogramrFilename = files[1] != null ? OrganogramFile_File.fileName : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_management_model.Date_Created = DateTime.Now;
+                            hse_management_model.Created_by = WKPCompanyId;
+                            await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
+                        }
+                        else
+                        {
+                            hse_management_model.Date_Created = getData.Date_Created;
+                            hse_management_model.Created_by = getData.Created_by;
+                            hse_management_model.Date_Updated = DateTime.Now;
+                            hse_management_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_MANAGEMENT_POSITIONs.Remove(hse_management_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_QUALITY_CONTROL")]
+        public async Task<WebApiResponse> GET_HSE_QUALITY_CONTROL(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_QUALITY_CONTROLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_QUALITY_CONTROL")]
+        public async Task<WebApiResponse> POST_HSE_QUALITY_CONTROL([FromBody] HSE_QUALITY_CONTROL hse_quality_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_QUALITY_CONTROLs data
+                if (hse_quality_model != null)
+                {
+                    var getData = (from c in _context.HSE_QUALITY_CONTROLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_quality_model.Companyemail = WKPCompanyEmail;
+                    hse_quality_model.CompanyName = WKPCompanyName;
+                    hse_quality_model.COMPANY_ID = WKPCompanyId;
+                    hse_quality_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_quality_model.Date_Updated = DateTime.Now;
+                    hse_quality_model.Updated_by = WKPCompanyId;
+                    hse_quality_model.Year_of_WP = year;
+                    hse_quality_model.OML_Name = hse_quality_model.OML_Name.ToUpper();
+
+                    #region file section
+                    UploadedDocument QualityControlFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "Quality Control";
+                        QualityControlFile_File = _helpersController.UploadDocument(files[0], "COSDocuments");
+                        if (QualityControlFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+
+                    #endregion
+
+                    hse_quality_model.QualityControlFilename = files[0] != null ? QualityControlFile_File.fileName : null;
+                    hse_quality_model.QualityControlFilePath = files[0] != null ? QualityControlFile_File.filePath : null;
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_quality_model.Date_Created = DateTime.Now;
+                            hse_quality_model.Created_by = WKPCompanyId;
+                            await _context.HSE_QUALITY_CONTROLs.AddAsync(hse_quality_model);
+                        }
+                        else
+                        {
+                            hse_quality_model.Date_Created = getData.Date_Created;
+                            hse_quality_model.Created_by = getData.Created_by;
+                            hse_quality_model.Date_Updated = DateTime.Now;
+                            hse_quality_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_QUALITY_CONTROLs.AddAsync(hse_quality_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_QUALITY_CONTROLs.Remove(hse_quality_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_QUALITY_CONTROLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
+        public async Task<WebApiResponse> GET_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
+        public async Task<WebApiResponse> POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY([FromBody] HSE_CLIMATE_CHANGE_AND_AIR_QUALITY hse_climate_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_CLIMATE_CHANGE_AND_AIR_QUALITYs data
+                if (hse_climate_model != null)
+                {
+                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_climate_model.Companyemail = WKPCompanyEmail;
+                    hse_climate_model.CompanyName = WKPCompanyName;
+                    hse_climate_model.COMPANY_ID = WKPCompanyId;
+                    hse_climate_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_climate_model.Date_Updated = DateTime.Now;
+                    hse_climate_model.Updated_by = WKPCompanyId;
+                    hse_climate_model.Year_of_WP = year;
+                    hse_climate_model.OML_Name = hse_climate_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument GHGFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "GHG";
+                        GHGFile_File = _helpersController.UploadDocument(files[0], "GHGDocuments");
+                        if (GHGFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+
+                    #endregion
+
+                    hse_climate_model.GHGFilename = files[0] != null ? GHGFile_File.fileName : null;
+                    hse_climate_model.GHGFilePath = files[0] != null ? GHGFile_File.filePath : null;
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_climate_model.Date_Created = DateTime.Now;
+                            hse_climate_model.Created_by = WKPCompanyId;
+                            await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
+                        }
+                        else
+                        {
+                            hse_climate_model.Date_Created = getData.Date_Created;
+                            hse_climate_model.Created_by = getData.Created_by;
+                            hse_climate_model.Date_Updated = DateTime.Now;
+                            hse_climate_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(hse_climate_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_SAFETY_CULTURE_TRAINING")]
+        public async Task<WebApiResponse> GET_HSE_SAFETY_CULTURE_TRAINING(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_SAFETY_CULTURE_TRAINING")]
+        public async Task<WebApiResponse> POST_HSE_SAFETY_CULTURE_TRAINING([FromBody] HSE_SAFETY_CULTURE_TRAINING hse_safety_culture_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_SAFETY_CULTURE_TRAININGs data
+                if (hse_safety_culture_model != null)
+                {
+                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_safety_culture_model.Companyemail = WKPCompanyEmail;
+                    hse_safety_culture_model.CompanyName = WKPCompanyName;
+                    hse_safety_culture_model.COMPANY_ID = WKPCompanyId;
+                    hse_safety_culture_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_safety_culture_model.Date_Updated = DateTime.Now;
+                    hse_safety_culture_model.Updated_by = WKPCompanyId;
+                    hse_safety_culture_model.Year_of_WP = year;
+                    hse_safety_culture_model.OML_Name = hse_safety_culture_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument SafetyCurrentYearFile_File = null;
+                    UploadedDocument SafetyLast2YearsFile_File = null;
+                    if (files[0] != null)
+                    {
+                        string docName = "Safety Current Year File";
+                        SafetyCurrentYearFile_File = _helpersController.UploadDocument(files[0], "SafetyCurrentYearDocuments");
+                        if (SafetyCurrentYearFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+
+                    if (files[1] != null)
+                    {
+                        string docName = "Safety Last Two Years";
+                        SafetyLast2YearsFile_File = _helpersController.UploadDocument(files[1], "SafetyLast2YearsDocuments");
+                        if (SafetyLast2YearsFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+
+                    #endregion
+
+
+                    hse_safety_culture_model.SafetyCurrentYearFilename = files[0] != null ? SafetyCurrentYearFile_File.fileName : null;
+                    hse_safety_culture_model.SafetyCurrentYearFilePath = files[0] != null ? SafetyCurrentYearFile_File.filePath : null;
+                    hse_safety_culture_model.SafetyLast2YearsFilename = files[1] != null ? SafetyLast2YearsFile_File.fileName : null;
+                    hse_safety_culture_model.SafetyLast2YearsFilePath = files[1] != null ? SafetyLast2YearsFile_File.filePath : null;
+                    
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_safety_culture_model.Date_Created = DateTime.Now;
+                            hse_safety_culture_model.Created_by = WKPCompanyId;
+                            await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(hse_safety_culture_model);
+                        }
+                        else
+                        {
+                            hse_safety_culture_model.Date_Created = getData.Date_Created;
+                            hse_safety_culture_model.Created_by = getData.Created_by;
+                            hse_safety_culture_model.Date_Updated = DateTime.Now;
+                            hse_safety_culture_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(hse_safety_culture_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(hse_safety_culture_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
+        public async Task<WebApiResponse> GET_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
+        public async Task<WebApiResponse> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromBody] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs data
+                if (hse_occupational_model != null)
+                {
+                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_occupational_model.Companyemail = WKPCompanyEmail;
+                    hse_occupational_model.CompanyName = WKPCompanyName;
+                    hse_occupational_model.COMPANY_ID = WKPCompanyId;
+                    hse_occupational_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_occupational_model.Date_Updated = DateTime.Now;
+                    hse_occupational_model.Updated_by = WKPCompanyId;
+                    hse_occupational_model.Year_of_WP = year;
+                    hse_occupational_model.OML_Name = hse_occupational_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument OHMplanFile_File = null;
+                    UploadedDocument OHMplanCommunicationFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "Field Discovery";
+                        OHMplanFile_File = _helpersController.UploadDocument(files[0], "FieldDiscoveryDocuments");
+                        if (OHMplanFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    if (files[1] != null)
+                    {
+                        string docName = "Field Discovery";
+                        OHMplanCommunicationFile_File = _helpersController.UploadDocument(files[1], "FieldDiscoveryDocuments");
+                        if (OHMplanCommunicationFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+
+                    #endregion
+                    hse_occupational_model.OHMplanFilename = files[0] != null ? OHMplanFile_File.fileName : null;
+                    hse_occupational_model.OHMplanFilePath = files[0] != null ? OHMplanFile_File.filePath : null;
+                    hse_occupational_model.OHMplanCommunicationFilename = files[1] != null ? OHMplanCommunicationFile_File.fileName : null;
+                    hse_occupational_model.OHMplanCommunicationFilePath = files[1] != null ? OHMplanCommunicationFile_File.filePath : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_occupational_model.Date_Created = DateTime.Now;
+                            hse_occupational_model.Created_by = WKPCompanyId;
+                            await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+                        }
+                        else
+                        {
+                            hse_occupational_model.Date_Created = getData.Date_Created;
+                            hse_occupational_model.Created_by = getData.Created_by;
+                            hse_occupational_model.Date_Updated = DateTime.Now;
+                            hse_occupational_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(hse_occupational_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_WASTE_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> GET_HSE_WASTE_MANAGEMENT_SYSTEM(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_WASTE_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> POST_HSE_WASTE_MANAGEMENT_SYSTEM([FromBody] HSE_WASTE_MANAGEMENT_SYSTEM hse_waste_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_WASTE_MANAGEMENT_SYSTEMs data
+                if (hse_waste_model != null)
+                {
+                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_waste_model.Companyemail = WKPCompanyEmail;
+                    hse_waste_model.CompanyName = WKPCompanyName;
+                    hse_waste_model.COMPANY_ID = WKPCompanyId;
+                    hse_waste_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_waste_model.Date_Updated = DateTime.Now;
+                    hse_waste_model.Updated_by = WKPCompanyId;
+                    hse_waste_model.Year_of_WP = year;
+                    hse_waste_model.OML_Name = hse_waste_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument DecomCertificateFile_File = null;
+                    UploadedDocument WasteManagementPlanFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "Decom Certificate";
+                        DecomCertificateFile_File = _helpersController.UploadDocument(files[0], "DecomCertificateDocuments");
+                        if (DecomCertificateFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    if (files[1] != null)
+                    {
+                        string docName = "Waste Management Plan";
+                        WasteManagementPlanFile_File = _helpersController.UploadDocument(files[1], "WasteManagementPlanDocuments");
+                        if (WasteManagementPlanFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+
+                    hse_waste_model.DecomCertificateFilePath = files[0] != null ? DecomCertificateFile_File.filePath : null;
+                    hse_waste_model.DecomCertificateFilename = files[0] != null ? DecomCertificateFile_File.fileName : null;
+                    hse_waste_model.WasteManagementPlanFilePath = files[1] != null ? WasteManagementPlanFile_File.filePath : null;
+                    hse_waste_model.WasteManagementPlanFilename = files[1] != null ? WasteManagementPlanFile_File.fileName : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_waste_model.Date_Created = DateTime.Now;
+                            hse_waste_model.Created_by = WKPCompanyId;
+                            await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(hse_waste_model);
+                        }
+                        else
+                        {
+                            hse_waste_model.Date_Created = getData.Date_Created;
+                            hse_waste_model.Created_by = getData.Created_by;
+                            hse_waste_model.Date_Updated = DateTime.Now;
+                            hse_waste_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(hse_waste_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(hse_waste_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> GET_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM([FromBody] HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM hse_EMS_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs data
+                if (hse_EMS_model != null)
+                {
+                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    hse_EMS_model.Companyemail = WKPCompanyEmail;
+                    hse_EMS_model.CompanyName = WKPCompanyName;
+                    hse_EMS_model.COMPANY_ID = WKPCompanyId;
+                    hse_EMS_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_EMS_model.Date_Updated = DateTime.Now;
+                    hse_EMS_model.Updated_by = WKPCompanyId;
+                    hse_EMS_model.Year_of_WP = year;
+                    hse_EMS_model.OML_Name = hse_EMS_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument EMSFile_File = null;
+                    UploadedDocument AUDITFile_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "EMS";
+                        EMSFile_File = _helpersController.UploadDocument(files[0], "EMSDocuments");
+                        if (EMSFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    if (files[1] != null)
+                    {
+                        string docName = "Audit File";
+                        AUDITFile_File = _helpersController.UploadDocument(files[1], "AUDITDocuments");
+                        if (AUDITFile_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+                    hse_EMS_model.EMSFilename = files[0] != null ? EMSFile_File.fileName : null;
+                    hse_EMS_model.EMSFilePath = files[0] != null ? EMSFile_File.filePath : null;
+                    hse_EMS_model.AUDITFilename = files[1] != null ? AUDITFile_File.fileName : null;
+                    hse_EMS_model.AUDITFilePath = files[1] != null ? AUDITFile_File.filePath : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            hse_EMS_model.Date_Created = DateTime.Now;
+                            hse_EMS_model.Created_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(hse_EMS_model);
+                        }
+                        else
+                        {
+                            hse_EMS_model.Date_Created = getData.Date_Created;
+                            hse_EMS_model.Created_by = getData.Created_by;
+                            hse_EMS_model.Date_Updated = DateTime.Now;
+                            hse_EMS_model.Updated_by = WKPCompanyId;
+                            await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(hse_EMS_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(hse_EMS_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        [HttpGet("GET_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT")]
+        public async Task<WebApiResponse> GET_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT(string year, string omlName)
+        {
+
+            try
+            {
+                var getData = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+        [HttpPost("POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT")]
+        public async Task<WebApiResponse> POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT([FromBody] PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT picture_upload_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+            try
+            {
+
+                #region Saving PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs data
+                if (picture_upload_model != null)
+                {
+                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    picture_upload_model.Companyemail = WKPCompanyEmail;
+                    picture_upload_model.CompanyName = WKPCompanyName;
+                    picture_upload_model.COMPANY_ID = WKPCompanyId;
+                    picture_upload_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    picture_upload_model.Date_Updated = DateTime.Now;
+                    picture_upload_model.Updated_by = WKPCompanyId;
+                    picture_upload_model.Year_of_WP = year;
+                    picture_upload_model.OML_Name = picture_upload_model.OML_Name.ToUpper();
+                    #region file section
+                    UploadedDocument UploadedPresentation_File = null;
+
+                    if (files[0] != null)
+                    {
+                        string docName = "Uploaded Presentation";
+                        UploadedPresentation_File = _helpersController.UploadDocument(files[0], "Presentations");
+                        if (UploadedPresentation_File == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+                    }
+                    #endregion
+                    picture_upload_model.uploaded_presentation = files[0] != null ? UploadedPresentation_File.filePath : null;
+
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            picture_upload_model.Date_Created = DateTime.Now;
+                            picture_upload_model.Created_by = WKPCompanyId;
+                            await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(picture_upload_model);
+                        }
+                        else
+                        {
+                            picture_upload_model.Date_Created = getData.Date_Created;
+                            picture_upload_model.Created_by = getData.Created_by;
+                            picture_upload_model.Date_Updated = DateTime.Now;
+                            picture_upload_model.Updated_by = WKPCompanyId;
+                            await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(picture_upload_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(picture_upload_model);
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
 
         #endregion
 
