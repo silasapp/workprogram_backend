@@ -23,22 +23,22 @@ namespace Backend_UMR_Work_Program.Controllers
 
         public ReportController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper)
     {
-        //_httpContextAccessor = httpContextAccessor;
+        _httpContextAccessor = _httpContextAccessor;
         _account = account;
         _context = context;
         _configuration = configuration;
          _mapper = mapper;
         _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
     }
-        private string? WKPCompanyId => "221";
-        private string? WKPCompanyName => "Name";
-        private string? WKPCompanyEmail => "adeola.kween123@gmail.com";
-        private string? WKUserRole => "Admin";
+        //private string? WKPCompanyId => "221";
+        //private string? WKPCompanyName => "Name";
+        //private string? WKPCompanyEmail => "adeola.kween123@gmail.com";
+        //private string? WKUserRole => "Admin";
 
-        //private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
-        //private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
-        //private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
         #region General Report Section
@@ -441,12 +441,347 @@ namespace Backend_UMR_Work_Program.Controllers
             {
 
                 WorkProgrammeReport.Error = "Error : " + e.Message;
-                //return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
+
             }
             
             return WorkProgrammeReport;
 
         }
+        [HttpGet("GET_SEISMIC_DATA_REPORT")]
+        public WorkProgrammeReport2_Model GET_SEISMIC_DATA_REPORT(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired = _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == year && x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToList();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                          where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                          group o by new { o.Year_of_WP } into g
+                                                                          select new
+                                                                          {
+                                                                              Year_of_WP = g.Key,
+                                                                              CompanyName = g.FirstOrDefault().CompanyName,
+                                                                              OML_Name = g.FirstOrDefault().OML_Name,
+                                                                              Terrain = g.FirstOrDefault().Terrain,
+                                                                              Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                              Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                              Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                              Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                              Quantum_Planned = g.Sum(x => Convert.ToDouble(x.Quantum_Planned)),
+
+                                                                          }).ToList();
+
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PREVIOUS = _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == previousYear).ToList();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 = _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == twoYearsAgo).ToList();
+
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                           where o.Year_of_WP == year
+                                                                                           group o by new { o.CompanyName } into g
+                                                                                           select new
+                                                                                           {
+                                                                                               Year_of_WP = g.Key,
+                                                                                               CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                               OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                               Terrain = g.FirstOrDefault().Terrain,
+                                                                                               Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                               Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                               Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                               Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                           }).ToList();
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                                   where o.Year_of_WP == proposedYear
+                                                                                                   group o by new { o.CompanyName } into g
+                                                                                                   select new
+                                                                                                   {
+                                                                                                       Year_of_WP = g.Key,
+                                                                                                       CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                       OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                       Terrain = g.FirstOrDefault().Terrain,
+                                                                                                       Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                       Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                       Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                       Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                                   }).ToList();
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                            where o.Year_of_WP == previousYear
+                                                                                            group o by new { o.CompanyName } into g
+                                                                                            select new
+                                                                                            {
+                                                                                                Year_of_WP = g.Key,
+                                                                                                CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                Terrain = g.FirstOrDefault().Terrain,
+                                                                                                Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                            }).ToList();
+
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                                 where o.Year_of_WP == twoYearsAgo
+                                                                                                 group o by new { o.CompanyName } into g
+                                                                                                 select new
+                                                                                                 {
+                                                                                                     Year_of_WP = g.Key,
+                                                                                                     CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                     OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                     Terrain = g.FirstOrDefault().Terrain,
+                                                                                                     Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                     Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                     Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                     Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                                 }).ToList();
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+            }
+
+            return WKP_Report2;
+        }
+        [HttpGet("GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT")]
+        public WorkProgrammeReport2_Model GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration = _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Exploration).ToList();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal = _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.ToLower().Contains(GeneralModel.Appraisal.ToLower())).ToList();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development = _context.WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Development).ToList();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration_PY = _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category == GeneralModel.Exploration).ToList();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal_PY = _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category.ToLower().Contains(GeneralModel.Appraisal.ToLower())).ToList();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development_PY = _context.WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category == GeneralModel.Development).ToList();
+
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+        [HttpGet("GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS")]
+        public WorkProgrammeReport2_Model GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+                
+                WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS_PY = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year && x.Actual_Proposed == "Actual Year").ToList();
+
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+            }
+
+            return WKP_Report2;
+        }
+        [HttpGet("GET_NIGERIA_CONTENT")]
+        public WorkProgrammeReport2_Model GET_NIGERIA_CONTENT(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.NIGERIA_CONTENT_TRAINING_PY = _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year && x.Actual_Proposed == "Proposed Year").ToList();
+
+                WKP_Report2.NIGERIA_CONTENT_TRAINING = _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.NIGERIA_CONTENT_UPLOAD_SUCESSION_PLAN = _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(x => x.Year_of_WP == year).ToList();
+
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+        [HttpGet("GET_OIL_GAS_CONDENSATE_PRODUCTION_ACTIVITIES")]
+        public WorkProgrammeReport2_Model GET_OIL_GAS_CONDENSATE_PRODUCTION_ACTIVITIES(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_OPERATING_FACILITIES = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED = _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x => x.Fiveyear_Projection_Year == proposedYear).ToList();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToList();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_C_TYPE_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToList();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToList();
+
+                //error WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToList();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_PRODUCTION_BRKDWN_PLANNED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdown_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToList();
+
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNED = _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToList();
+
+                WKP_Report2.GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNED = _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToList();
+
+               
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+        [HttpGet("GET_BUDGET")]
+        public WorkProgrammeReport2_Model GET_BUDGET(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIES = _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIES = _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT = _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.BUDGET_PERFORMANCE_PRODUCTION_COST = _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.STRATEGIC_PLANS_ON_COMPANY_BASIS = _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(x => x.Year_of_WP == year).ToList();
+
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+        [HttpGet("GET_HSE")]
+        public WorkProgrammeReport2_Model GET_HSE(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+
+                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x => x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatalities).ToList();
+
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(x => x.Year_of_WP == year).ToList();
+
+                WKP_Report2.HSE_CAUSES_OF_SPILL = _context.HSE_CAUSES_OF_SPILLs.Where(x => x.Year_of_WP == year).ToList();
+
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+        [HttpGet("GET_RESERVES")]
+        public WorkProgrammeReport2_Model GET_RESERVES(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+
+                WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED = _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x => x.Fiveyear_Projection_Year == proposedYear).ToList();
+
+                //error WKP_Report2.RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED = _context.WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTEDs.ToList();
+            }
+
+            catch (Exception e)
+            {
+
+                WKP_Report2.Error = "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+
         [HttpGet("Get_General_Report")]
         public WorkProgrammeReport2_Model Get_General_Report(string year)
         {
@@ -587,21 +922,21 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_penalty_payment = _context.WP_GAS_PRODUCTION_ACTIVITIES_penalty_payments.ToList();
 
-                WKP_Report2.FATALITIES_accident_statistic_table = _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=>x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatalities).ToList();
+                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=>x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatalities).ToList();
 
                 //WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year && x.Actual_Proposed == "Actual Year").ToList();
 
-                //WKP_Report2.NIGERIA_CONTENT_Training = _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year && x.Actual_Proposed == "Proposed Year").ToList();
+                WKP_Report2.NIGERIA_CONTENT_TRAINING_PY = _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year && x.Actual_Proposed == "Proposed Year").ToList();
 
                 WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year ).ToList();
 
-                WKP_Report2.NIGERIA_CONTENT_Training = _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year ).ToList();
+                WKP_Report2.NIGERIA_CONTENT_TRAINING = _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year ).ToList();
 
-                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(x=>x.Year_of_WP == year).ToList();
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(x=>x.Year_of_WP == year).ToList();
                 
-                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities.Where(x=>x.Year_of_WP == year).ToList();
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_OPERATING_FACILITIES = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities.Where(x=>x.Year_of_WP == year).ToList();
 
-                WKP_Report2.NIGERIA_CONTENT_Upload_Succession_Plan = _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(x=>x.Year_of_WP == year ).ToList();
+                WKP_Report2.NIGERIA_CONTENT_UPLOAD_SUCESSION_PLAN = _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(x=>x.Year_of_WP == year ).ToList();
                 
                 WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW = _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(x=>x.Year_of_WP == year ).ToList();
                 
@@ -655,7 +990,7 @@ namespace Backend_UMR_Work_Program.Controllers
             {
 
                 WKP_Report2.Error = "Error : " + e.Message;
-                //return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
+
             }
             
             return WKP_Report2;
