@@ -2226,5 +2226,19 @@ namespace Backend_UMR_Work_Program.Models
             public const int Duplicate = 409;
             public const int InternalError = 500;
         }
+
+        public class FileReturn
+        {
+            public string fileId { get; set; }
+            public long? fileSize { get; set; }
+            public string path { get; set; }
+        }
+
+        public class DownReturn
+        {
+            public Stream stream { get; set; }
+            public string contentType { get; set; }
+            public string name { get; set; }
+        }
     }
 }

@@ -117,12 +117,10 @@ namespace Backend_UMR_Work_Program.Controllers
                 var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
                 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getGeophysicalActivitesData, StatusCode = ResponseCodes.Success };
-
             }
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
         
@@ -135,7 +133,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-
                 #region Saving Geophysical Activites
                 if (geophysical_activities_acquisition_model != null)
                 {
@@ -202,7 +199,6 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_GEOPHYSICAL_ACTIVITIES_PROCESSING")]
         public async Task<WebApiResponse> GET_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year, string omlName, string quarter)
         {
-
             try
             {
                 var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
@@ -308,7 +304,6 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
         public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromBody] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
         {
-
             int save = 0;
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
