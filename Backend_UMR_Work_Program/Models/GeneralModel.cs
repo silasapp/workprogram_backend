@@ -126,12 +126,14 @@ namespace Backend_UMR_Work_Program.Models
             public object GAS_PRODUCTION_ACTIVITIES_terrain_pivotted { get; set; }
             public object GAS_PRODUCTION_ACTIVITIES_contract_type_pivoted { get; set; }
             public object GAS_PRODUCTION_ACTIVITIES_penalty_payment { get; set; }
-            public object FATALITIES_accident_statistic_table { get; set; }
+            public object FATALITIES_ACCIDENT_STATISTIC_TABLE { get; set; }
             public object OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS { get; set; }
-            public object NIGERIA_CONTENT_Training { get; set; }
-            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment { get; set; }
-            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities { get; set; }
-            public object NIGERIA_CONTENT_Upload_Succession_Plan { get; set; }
+            public object OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS_PY { get; set; }
+            public object NIGERIA_CONTENT_TRAINING { get; set; }
+            public object NIGERIA_CONTENT_TRAINING_PY { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_OPERATING_FACILITIES { get; set; }
+            public object NIGERIA_CONTENT_UPLOAD_SUCESSION_PLAN { get; set; }
             public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW { get; set; }
             public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships { get; set; }
             public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition { get; set; }
