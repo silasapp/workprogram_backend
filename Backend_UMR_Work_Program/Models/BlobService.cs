@@ -26,6 +26,20 @@ namespace Musewall.Models
             this.accessKey = config.GetValue<string>("AzureBlobStorage");
         }
 
+        public string Filenamer(IFormFile file)
+        {
+            var name = Path.GetFileNameWithoutExtension(file.FileName);
+            var ext = Path.GetExtension(file.FileName);
+
+            var guid = Guid.NewGuid().ToString().Substring(2, 9);
+            var span = DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds;
+            Random rand = new Random();
+            var regtext = name.Substring(0, 15) + span.ToString().Substring(0, 5) + guid + rand.Next(1000).ToString();
+            var texo = System.Text.RegularExpressions.Regex.Replace(regtext, @"[^a-zA-Z0-9]", "");
+            var goodname = texo + ext;
+            return goodname;
+        }
+
         public async Task<string> UploadFileBlobAsync(string blobContainerName, Stream content, string contentType, string fileName)
         {
             //var storageAccount = CloudStorageAccount.Parse(accessKey);

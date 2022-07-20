@@ -34,6 +34,7 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
         private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
         private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private int? WKPCompanyNumber=> Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
 
 
 
@@ -61,15 +62,17 @@ namespace Backend_UMR_Work_Program.Controllers
                 ConcessionCONCESSION_SITUATION_Model.CompanyName = WKPCompanyName;
                 ConcessionCONCESSION_SITUATION_Model.COMPANY_ID = WKPCompanyId;
                 ConcessionCONCESSION_SITUATION_Model.Date_Updated = DateTime.Now;
-                ConcessionCONCESSION_SITUATION_Model.Updated_by = WKPCompanyId;
+                ConcessionCONCESSION_SITUATION_Model.Updated_by = WKPCompanyEmail;
                 ConcessionCONCESSION_SITUATION_Model.Year = year;
+                ConcessionCONCESSION_SITUATION_Model.OML_Name = omlName.ToUpper();
+                
                 if (action == GeneralModel.Insert)
                 {
                     if (concessionDbData == null)
                     {
                         ConcessionCONCESSION_SITUATION_Model.COMPANY_ID = WKPCompanyId;
-                        ConcessionCONCESSION_SITUATION_Model.CompanyNumber = int.Parse(WKPCompanyId);
-                        ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
+                        ConcessionCONCESSION_SITUATION_Model.CompanyNumber = WKPCompanyNumber;
+                        ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyEmail;
                         ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
                         await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
                     }
@@ -145,7 +148,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         geophysical_activities_acquisition_model.Date_Updated = DateTime.Now;
                         geophysical_activities_acquisition_model.Updated_by = WKPCompanyId;
                         geophysical_activities_acquisition_model.Year_of_WP = year;
-                        geophysical_activities_acquisition_model.OML_Name = geophysical_activities_acquisition_model.OML_Name.ToUpper();
+                        geophysical_activities_acquisition_model.OML_Name = omlName.ToUpper();
 
                         if (action == GeneralModel.Insert)
                         {

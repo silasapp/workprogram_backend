@@ -7,6 +7,7 @@
             public string? CompanyId { get; set; }
             public string? CompanyName { get; set; }
             public string? CompanyEmail { get; set; }
+            public int? CompanyNumber { get; set; }
             public string? Name { get; set; }
             public string? ContractType { get; set; }
             public string? token { get; set; }
