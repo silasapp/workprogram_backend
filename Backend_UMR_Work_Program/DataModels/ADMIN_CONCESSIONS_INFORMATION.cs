@@ -35,6 +35,7 @@ namespace Backend_UMR_Work_Program.Models
         public string? DELETED_BY { get; set; }
         public string? DELETED_DATE { get; set; }
         public string? EMAIL_REMARK { get; set; }
+        public string? Field_Name { get; set; }
         public int? CompanyNumber { get; set; }
     }
 }
