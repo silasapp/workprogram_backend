@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend_UMR_Work_Program.Models
 {
@@ -23,5 +24,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? GHGFilename { get; set; }
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
+      
     }
 }

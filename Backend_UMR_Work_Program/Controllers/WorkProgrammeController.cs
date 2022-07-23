@@ -38,8 +38,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
-
-
         #region database tables actions
         [HttpGet("GET_FORM_ONE_CONCESSION")]
         public async Task<object> GET_FORM_ONE_CONCESSION(string omlName, string myyear)
@@ -264,8 +262,27 @@ namespace Backend_UMR_Work_Program.Controllers
             var HSEAssetRegister = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
             var HSEOilSpill = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
             var HSEAssetRegisterRBI = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            
             var HSEAccidentIncidence = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
             var HSEAccidentIncidenceType = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            var accidentModel = (from a1 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs
+                                 join a2 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs on a1.COMPANY_ID equals a2.COMPANY_ID
+                                 where a1.COMPANY_ID == WKPCompanyId && a1.OML_Name == omlName && a1.Year_of_WP == year
+                                 && a2.COMPANY_ID == WKPCompanyId && a2.OML_Name == omlName && a2.Year_of_WP == year
+                                 select new HSE_ACCIDENT_INCIDENCE_MODEL
+                                 {
+                                     Was_there_any_accident_incidence = a1.Was_there_any_accident_incidence,
+                                     If_YES_were_they_reported = a1.If_YES_were_they_reported,
+                                     Cause = a2.Cause,
+                                     Type_of_Accident_Incidence=a2.Type_of_Accident_Incidence,
+                                     Consequence = a2.Consequence,
+                                     Frequency= a2.Frequency,
+                                     Investigation=a2.Investigation,
+                                     Lesson_Learnt = a2.Lesson_Learnt,
+                                     Location = a2.Location,
+                                     Date_= a2.Date_
+                                 }).FirstOrDefault();
+            
             var HSECommunityDisturbance = (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
             var HSEEnvironmentalStudies = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
             var HSEWasteManagement = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
@@ -290,46 +307,67 @@ namespace Backend_UMR_Work_Program.Controllers
             var HSEOccupationalHealth = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
             var HSEWasteManagementSystems = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
             var HSEEnvironmentalManagementSystems = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
-            var PictureUpload = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
 
             return new
             {
                 HSETechnicalSafety = HSETechnicalSafety,
                 HSESafetyStudies = HSESafetyStudies,
+                HSEQualityControl = HSEQualityControl,
+                HSEInspectionMaintenance = HSEInspectionMaintenance,
+                HSEAssetRegister = HSEAssetRegister,
+                HSEOilSpill = HSEOilSpill,
+                HSECausesOfSpill = HSECausesOfSpill,
+                HSEAssetRegisterRBI = HSEAssetRegisterRBI,
+                HSEAccidentModel = accidentModel,
+                HSEAccidentIncidence = HSEAccidentIncidence,
+                HSEOSPRegistrations = HSEOSPRegistrations,
+                HSEAccidentIncidenceType = HSEAccidentIncidenceType,
+                HSECommunityDisturbance = HSECommunityDisturbance,
 
                 HSEQuestion = HSEQuestion,
                 HSEFatality = HSEFatality,
                 HSEDesignSafety = HSEDesignSafety,
-                HSEInspectionMaintenance = HSEInspectionMaintenance,
                 HSEInspectionMaintenanceFacility = HSEInspectionMaintenanceFacility,
-                HSEAssetRegister = HSEAssetRegister,
-                HSEOilSpill = HSEOilSpill,
-                HSEAssetRegisterRBI = HSEAssetRegisterRBI,
-                HSEAccidentIncidence = HSEAccidentIncidence,
-                HSEAccidentIncidenceType = HSEAccidentIncidenceType,
-                HSECommunityDisturbance = HSECommunityDisturbance,
                 HSEEnvironmentalStudies = HSEEnvironmentalStudies,
                 HSEWasteManagement = HSEWasteManagement,
                 HSEWasteManagementType = HSEWasteManagementType,
                 HSEProducedWaterMgt = HSEProducedWaterMgt,
                 HSEEnvironmentalCompliance = HSEEnvironmentalCompliance,
                 HSEEnvironmentalFiveYears = HSEEnvironmentalFiveYears,
-                HSESustainableDev = HSESustainableDev,
                 HSEEnvironmentalStudiesUpdated = HSEEnvironmentalStudiesUpdated,
-                HSEOSPRegistrations = HSEOSPRegistrations,
                 HSEProducedWaterMgtUpdated = HSEProducedWaterMgtUpdated,
                 HSEEnvironmentalComplianceChemical = HSEEnvironmentalComplianceChemical,
-                HSECausesOfSpill = HSECausesOfSpill,
-                HSESustainableDevMOU = HSESustainableDevMOU,
-                HSESustainableDevScheme = HSESustainableDevScheme,
                 HSEManagementPosition = HSEManagementPosition,
-                HSEQualityControl = HSEQualityControl,
                 HSEClimateChange = HSEClimateChange,
                 HSESafetyCulture = HSESafetyCulture,
                 HSEOccupationalHealth = HSEOccupationalHealth,
                 HSEWasteManagementSystems = HSEWasteManagementSystems,
                 HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
-                PictureUpload = PictureUpload            };
+            };
+        }
+        
+        
+        [HttpGet("GET_FORM_FIVE_SDCP")]
+        public async Task<object> GET_FORM_FIVE_SDCP(string omlName, string year)
+        {
+            var HSESustainable_CSR =  (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainable_Question =  (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainable_Schorlarship_CSR =  (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainable_MOU = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainable_Schorlarship = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            var HSESustainable_Training_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+            var PictureUpload = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+
+            return new
+            {
+                HSESustainable_CSR = HSESustainable_CSR,
+                HSESustainable_Question = HSESustainable_Question,
+                HSESustainable_Schorlarship_CSR = HSESustainable_Schorlarship_CSR,
+                HSESustainable_MOU = HSESustainable_MOU,
+                HSESustainable_Schorlarship = HSESustainable_Schorlarship,
+                HSESustainable_Training_CSR = HSESustainable_Training_CSR,
+                PictureUpload = PictureUpload           
+            };
         }
 
         [HttpPost("POST_CONCESSION_SITUATION")]
@@ -361,7 +399,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         if (concessionDbData == null)
                         {
                             ConcessionCONCESSION_SITUATION_Model.COMPANY_ID = WKPCompanyId;
-                            ConcessionCONCESSION_SITUATION_Model.CompanyNumber = int.Parse(WKPCompanyId);
+                            //ConcessionCONCESSION_SITUATION_Model.CompanyNumber = 0;
                             ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
                             ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
                             await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
@@ -419,7 +457,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         geophysical_activities_acquisition_model.Companyemail = WKPCompanyEmail;
                         geophysical_activities_acquisition_model.CompanyName = WKPCompanyName;
                         geophysical_activities_acquisition_model.COMPANY_ID = WKPCompanyId;
-                        geophysical_activities_acquisition_model.CompanyNumber = int.Parse(WKPCompanyId);
+                        //geophysical_activities_acquisition_model.CompanyNumber = 0;
                         geophysical_activities_acquisition_model.Date_Updated = DateTime.Now;
                         geophysical_activities_acquisition_model.Updated_by = WKPCompanyId;
                         geophysical_activities_acquisition_model.Year_of_WP = year;
@@ -444,7 +482,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else if (action == GeneralModel.Delete)
                         {
-                            _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Remove(geophysical_activities_acquisition_model);
+                            _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Remove(getgeophysical_activities_acquisition_model);
                         }
 
                         save += await _context.SaveChangesAsync();
@@ -491,7 +529,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     geophysical_activities_processing_model.Companyemail = WKPCompanyEmail;
                     geophysical_activities_processing_model.CompanyName = WKPCompanyName;
                     geophysical_activities_processing_model.COMPANY_ID = WKPCompanyId;
-                    geophysical_activities_processing_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    geophysical_activities_processing_model.CompanyNumber = 0;
                     geophysical_activities_processing_model.Date_Updated = DateTime.Now;
                     geophysical_activities_processing_model.Updated_by = WKPCompanyId;
                     geophysical_activities_processing_model.Year_of_WP = year;
@@ -563,7 +601,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     drilling_operations_categories_of_well_model.Companyemail = WKPCompanyEmail;
                     drilling_operations_categories_of_well_model.CompanyName = WKPCompanyName;
                     drilling_operations_categories_of_well_model.COMPANY_ID = WKPCompanyId;
-                    drilling_operations_categories_of_well_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    drilling_operations_categories_of_well_model.CompanyNumber = 0;
                     drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
                     drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
                     drilling_operations_categories_of_well_model.Year_of_WP = year;
@@ -607,12 +645,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
                             drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
                             drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
+                            _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(getData);
                             await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(drilling_operations_categories_of_well_model);
+                        _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -659,7 +698,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     drilling_each_well_cost_model.Companyemail = WKPCompanyEmail;
                     drilling_each_well_cost_model.CompanyName = WKPCompanyName;
                     drilling_each_well_cost_model.COMPANY_ID = WKPCompanyId;
-                    drilling_each_well_cost_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    drilling_each_well_cost_model.CompanyNumber = 0;
                     drilling_each_well_cost_model.Date_Updated = DateTime.Now;
                     drilling_each_well_cost_model.Updated_by = WKPCompanyId;
                     drilling_each_well_cost_model.Year_of_WP = year;
@@ -679,12 +718,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             drilling_each_well_cost_model.Created_by = getData.Created_by;
                             drilling_each_well_cost_model.Date_Updated = DateTime.Now;
                             drilling_each_well_cost_model.Updated_by = WKPCompanyId;
+                            _context.DRILLING_EACH_WELL_COSTs.Remove(getData);
                             await _context.DRILLING_EACH_WELL_COSTs.AddAsync(drilling_each_well_cost_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.DRILLING_EACH_WELL_COSTs.Remove(drilling_each_well_cost_model);
+                        _context.DRILLING_EACH_WELL_COSTs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -731,12 +771,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     drilling_each_well_cost_proposed_model.Companyemail = WKPCompanyEmail;
                     drilling_each_well_cost_proposed_model.CompanyName = WKPCompanyName;
                     drilling_each_well_cost_proposed_model.COMPANY_ID = WKPCompanyId;
-                    drilling_each_well_cost_proposed_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    drilling_each_well_cost_proposed_model.CompanyNumber = 0;
                     drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
                     drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
                     drilling_each_well_cost_proposed_model.Year_of_WP = year;
                     drilling_each_well_cost_proposed_model.OML_Name = drilling_each_well_cost_proposed_model.OML_Name.ToUpper();
-
+                        
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
@@ -751,12 +791,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             drilling_each_well_cost_proposed_model.Created_by = getData.Created_by;
                             drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
                             drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
+                            _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(getData);
                             await _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(drilling_each_well_cost_proposed_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(drilling_each_well_cost_proposed_model);
+                        _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -803,7 +844,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Companyemail = WKPCompanyEmail;
                     field_development_plan_model.CompanyName = WKPCompanyName;
                     field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.CompanyNumber = 0;
                     field_development_plan_model.Date_Updated = DateTime.Now;
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
@@ -838,12 +879,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             field_development_plan_model.Created_by = getData.Created_by;
                             field_development_plan_model.Date_Updated = DateTime.Now;
                             field_development_plan_model.Updated_by = WKPCompanyId;
+                            _context.FIELD_DEVELOPMENT_PLANs.Remove(getData);
                             await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.FIELD_DEVELOPMENT_PLANs.Remove(field_development_plan_model);
+                        _context.FIELD_DEVELOPMENT_PLANs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -890,7 +932,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Companyemail = WKPCompanyEmail;
                     field_development_plan_model.CompanyName = WKPCompanyName;
                     field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.CompanyNumber = 0;
                     field_development_plan_model.Date_Updated = DateTime.Now;
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
@@ -910,12 +952,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             field_development_plan_model.Created_by = getData.Created_by;
                             field_development_plan_model.Date_Updated = DateTime.Now;
                             field_development_plan_model.Updated_by = WKPCompanyId;
+                            _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(getData);
                             await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(field_development_plan_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(field_development_plan_model);
+                        _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -962,7 +1005,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Companyemail = WKPCompanyEmail;
                     field_development_plan_model.CompanyName = WKPCompanyName;
                     field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.CompanyNumber = 0;
                     field_development_plan_model.Date_Updated = DateTime.Now;
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
@@ -982,12 +1025,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             field_development_plan_model.Created_by = getData.Created_by;
                             field_development_plan_model.Date_Updated = DateTime.Now;
                             field_development_plan_model.Updated_by = WKPCompanyId;
+                            _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(getData);
                             await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(field_development_plan_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(field_development_plan_model);
+                        _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1034,7 +1078,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Companyemail = WKPCompanyEmail;
                     field_development_plan_model.CompanyName = WKPCompanyName;
                     field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    field_development_plan_model.CompanyNumber = 0;
                     field_development_plan_model.Date_Updated = DateTime.Now;
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
@@ -1054,12 +1098,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             field_development_plan_model.Created_by = getData.Created_by;
                             field_development_plan_model.Date_Updated = DateTime.Now;
                             field_development_plan_model.Updated_by = WKPCompanyId;
+                            _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(getData);
                             await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(field_development_plan_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(field_development_plan_model);
+                        _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1106,7 +1151,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     initial_well_completion_model.Companyemail = WKPCompanyEmail;
                     initial_well_completion_model.CompanyName = WKPCompanyName;
                     initial_well_completion_model.COMPANY_ID = WKPCompanyId;
-                    initial_well_completion_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    initial_well_completion_model.CompanyNumber = 0;
                     initial_well_completion_model.Date_Updated = DateTime.Now;
                     initial_well_completion_model.Updated_by = WKPCompanyId;
                     initial_well_completion_model.Year_of_WP = year;
@@ -1126,12 +1171,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             initial_well_completion_model.Created_by = getData.Created_by;
                             initial_well_completion_model.Date_Updated = DateTime.Now;
                             initial_well_completion_model.Updated_by = WKPCompanyId;
+                            _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(getData);
                             await _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(initial_well_completion_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(initial_well_completion_model);
+                        _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1178,7 +1224,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     workovers_recompletion_model.Companyemail = WKPCompanyEmail;
                     workovers_recompletion_model.CompanyName = WKPCompanyName;
                     workovers_recompletion_model.COMPANY_ID = WKPCompanyId;
-                    workovers_recompletion_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    workovers_recompletion_model.CompanyNumber = 0;
                     workovers_recompletion_model.Date_Updated = DateTime.Now;
                     workovers_recompletion_model.Updated_by = WKPCompanyId;
                     workovers_recompletion_model.Year_of_WP = year;
@@ -1198,12 +1244,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             workovers_recompletion_model.Created_by = getData.Created_by;
                             workovers_recompletion_model.Date_Updated = DateTime.Now;
                             workovers_recompletion_model.Updated_by = WKPCompanyId;
+                            _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(getData);
                             await _context.WORKOVERS_RECOMPLETION_JOBs1.AddAsync(workovers_recompletion_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(workovers_recompletion_model);
+                        _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1250,7 +1297,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_condensate_activity_model.Companyemail = WKPCompanyEmail;
                     oil_condensate_activity_model.CompanyName = WKPCompanyName;
                     oil_condensate_activity_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_activity_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_activity_model.CompanyNumber = 0;
                     oil_condensate_activity_model.Date_Updated = DateTime.Now;
                     oil_condensate_activity_model.Updated_by = WKPCompanyId;
                     oil_condensate_activity_model.Year_of_WP = year;
@@ -1270,12 +1317,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_condensate_activity_model.Created_by = getData.Created_by;
                             oil_condensate_activity_model.Date_Updated = DateTime.Now;
                             oil_condensate_activity_model.Updated_by = WKPCompanyId;
+                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(getData);
                             await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(oil_condensate_activity_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(oil_condensate_activity_model);
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1322,7 +1370,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_condensate_unitisation_model.Companyemail = WKPCompanyEmail;
                     oil_condensate_unitisation_model.CompanyName = WKPCompanyName;
                     oil_condensate_unitisation_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_unitisation_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_unitisation_model.CompanyNumber = 0;
                     oil_condensate_unitisation_model.Date_Updated = DateTime.Now;
                     oil_condensate_unitisation_model.Updated_by = WKPCompanyId;
                     oil_condensate_unitisation_model.Year_of_WP = year;
@@ -1368,12 +1416,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_condensate_unitisation_model.Created_by = getData.Created_by;
                             oil_condensate_unitisation_model.Date_Updated = DateTime.Now;
                             oil_condensate_unitisation_model.Updated_by = WKPCompanyId;
+                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Remove(getData);
                             await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.AddAsync(oil_condensate_unitisation_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Remove(oil_condensate_unitisation_model);
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1420,7 +1469,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     gas_production_model.Companyemail = WKPCompanyEmail;
                     gas_production_model.CompanyName = WKPCompanyName;
                     gas_production_model.COMPANY_ID = WKPCompanyId;
-                    gas_production_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    gas_production_model.CompanyNumber = 0;
                     gas_production_model.Date_Updated = DateTime.Now;
                     gas_production_model.Updated_by = WKPCompanyId;
                     gas_production_model.Year_of_WP = year;
@@ -1456,12 +1505,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             gas_production_model.Created_by = getData.Created_by;
                             gas_production_model.Date_Updated = DateTime.Now;
                             gas_production_model.Updated_by = WKPCompanyId;
+                            _context.GAS_PRODUCTION_ACTIVITIEs.Remove(getData);
                             await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(gas_production_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.GAS_PRODUCTION_ACTIVITIEs.Remove(gas_production_model);
+                        _context.GAS_PRODUCTION_ACTIVITIEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1508,7 +1558,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     ndr_model.Companyemail = WKPCompanyEmail;
                     ndr_model.CompanyName = WKPCompanyName;
                     ndr_model.COMPANY_ID = WKPCompanyId;
-                    ndr_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    ndr_model.CompanyNumber = 0;
                     ndr_model.Date_Updated = DateTime.Now;
                     ndr_model.Updated_by = WKPCompanyId;
                     ndr_model.Year_of_WP = year;
@@ -1536,12 +1586,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             ndr_model.Created_by = getData.Created_by;
                             ndr_model.Date_Updated = DateTime.Now;
                             ndr_model.Updated_by = WKPCompanyId;
+                            _context.NDRs.Remove(getData);
                             await _context.NDRs.AddAsync(ndr_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.NDRs.Remove(ndr_model);
+                        _context.NDRs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1588,7 +1639,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_life_index_model.Companyemail = WKPCompanyEmail;
                     reserves_life_index_model.CompanyName = WKPCompanyName;
                     reserves_life_index_model.COMPANY_ID = WKPCompanyId;
-                    reserves_life_index_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_life_index_model.CompanyNumber = 0;
                     reserves_life_index_model.Date_Updated = DateTime.Now;
                     reserves_life_index_model.Updated_by = WKPCompanyId;
                     reserves_life_index_model.Year_of_WP = year;
@@ -1607,12 +1658,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             reserves_life_index_model.Created_by = getData.Created_by;
                             reserves_life_index_model.Date_Updated = DateTime.Now;
                             reserves_life_index_model.Updated_by = WKPCompanyId;
+                            _context.RESERVES_UPDATES_LIFE_INDices.Remove(getData);
                             await _context.RESERVES_UPDATES_LIFE_INDices.AddAsync(reserves_life_index_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.RESERVES_UPDATES_LIFE_INDices.Remove(reserves_life_index_model);
+                        _context.RESERVES_UPDATES_LIFE_INDices.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1659,7 +1711,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
                     reserves_condensate_status_model.CompanyName = WKPCompanyName;
                     reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
-                    reserves_condensate_status_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_condensate_status_model.CompanyNumber = 0;
                     reserves_condensate_status_model.Date_Updated = DateTime.Now;
                     reserves_condensate_status_model.Updated_by = WKPCompanyId;
                     reserves_condensate_status_model.Year_of_WP = year;
@@ -1678,12 +1730,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             reserves_condensate_status_model.Created_by = getData.Created_by;
                             reserves_condensate_status_model.Date_Updated = DateTime.Now;
                             reserves_condensate_status_model.Updated_by = WKPCompanyId;
+                            _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(getData);
                             await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(reserves_condensate_status_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(reserves_condensate_status_model);
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1730,7 +1783,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
                     reserves_condensate_status_model.CompanyName = WKPCompanyName;
                     reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
-                    reserves_condensate_status_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_condensate_status_model.CompanyNumber = 0;
                     reserves_condensate_status_model.Date_Updated = DateTime.Now;
                     reserves_condensate_status_model.Updated_by = WKPCompanyId;
                     reserves_condensate_status_model.Year_of_WP = year;
@@ -1749,12 +1802,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             reserves_condensate_status_model.Created_by = getData.Created_by;
                             reserves_condensate_status_model.Date_Updated = DateTime.Now;
                             reserves_condensate_status_model.Updated_by = WKPCompanyId;
+                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.Remove(getData);
                             await _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.AddAsync(reserves_condensate_status_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.Remove(reserves_condensate_status_model);
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1818,7 +1872,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_condensate_fiveyears_model.Companyemail = WKPCompanyEmail;
                     oil_condensate_fiveyears_model.CompanyName = WKPCompanyName;
                     oil_condensate_fiveyears_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_fiveyears_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_fiveyears_model.CompanyNumber = 0;
                     oil_condensate_fiveyears_model.Date_Updated = DateTime.Now;
                     oil_condensate_fiveyears_model.Updated_by = WKPCompanyId;
                     oil_condensate_fiveyears_model.Year_of_WP = year;
@@ -1837,12 +1891,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_condensate_fiveyears_model.Created_by = getData.Created_by;
                             oil_condensate_fiveyears_model.Date_Updated = DateTime.Now;
                             oil_condensate_fiveyears_model.Updated_by = WKPCompanyId;
+                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(getData);
                             await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(oil_condensate_fiveyears_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(oil_condensate_fiveyears_model);
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1889,7 +1944,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_update_production_model.Companyemail = WKPCompanyEmail;
                     reserves_update_production_model.CompanyName = WKPCompanyName;
                     reserves_update_production_model.COMPANY_ID = WKPCompanyId;
-                    reserves_update_production_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_update_production_model.CompanyNumber = 0;
                     reserves_update_production_model.Date_Updated = DateTime.Now;
                     reserves_update_production_model.Updated_by = WKPCompanyId;
                     reserves_update_production_model.Year_of_WP = year;
@@ -1908,12 +1963,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             reserves_update_production_model.Created_by = getData.Created_by;
                             reserves_update_production_model.Date_Updated = DateTime.Now;
                             reserves_update_production_model.Updated_by = WKPCompanyId;
+                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Remove(getData);
                             await _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.AddAsync(reserves_update_production_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Remove(reserves_update_production_model);
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -1960,7 +2016,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_update_decline_model.Companyemail = WKPCompanyEmail;
                     reserves_update_decline_model.CompanyName = WKPCompanyName;
                     reserves_update_decline_model.COMPANY_ID = WKPCompanyId;
-                    reserves_update_decline_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_update_decline_model.CompanyNumber = 0;
                     reserves_update_decline_model.Date_Updated = DateTime.Now;
                     reserves_update_decline_model.Updated_by = WKPCompanyId;
                     reserves_update_decline_model.Year_of_WP = year;
@@ -1979,12 +2035,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             reserves_update_decline_model.Created_by = getData.Created_by;
                             reserves_update_decline_model.Date_Updated = DateTime.Now;
                             reserves_update_decline_model.Updated_by = WKPCompanyId;
+                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Remove(getData);
                             await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.AddAsync(reserves_update_decline_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Remove(reserves_update_decline_model);
+                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2031,7 +2088,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_condensate_reserves_model.Companyemail = WKPCompanyEmail;
                     oil_condensate_reserves_model.CompanyName = WKPCompanyName;
                     oil_condensate_reserves_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_reserves_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_reserves_model.CompanyNumber = 0;
                     oil_condensate_reserves_model.Date_Updated = DateTime.Now;
                     oil_condensate_reserves_model.Updated_by = WKPCompanyId;
                     oil_condensate_reserves_model.Year_of_WP = year;
@@ -2050,12 +2107,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_condensate_reserves_model.Created_by = getData.Created_by;
                             oil_condensate_reserves_model.Date_Updated = DateTime.Now;
                             oil_condensate_reserves_model.Updated_by = WKPCompanyId;
+                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Remove(getData);
                             await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.AddAsync(oil_condensate_reserves_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Remove(oil_condensate_reserves_model);
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2102,7 +2160,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_replacement_model.Companyemail = WKPCompanyEmail;
                     reserves_replacement_model.CompanyName = WKPCompanyName;
                     reserves_replacement_model.COMPANY_ID = WKPCompanyId;
-                    reserves_replacement_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    reserves_replacement_model.CompanyNumber = 0;
                     reserves_replacement_model.Date_Updated = DateTime.Now;
                     reserves_replacement_model.Updated_by = WKPCompanyId;
                     reserves_replacement_model.Year_of_WP = year;
@@ -2121,12 +2179,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             reserves_replacement_model.Created_by = getData.Created_by;
                             reserves_replacement_model.Date_Updated = DateTime.Now;
                             reserves_replacement_model.Updated_by = WKPCompanyId;
+                            _context.RESERVES_REPLACEMENT_RATIOs.Remove(getData);
                             await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(reserves_replacement_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.RESERVES_REPLACEMENT_RATIOs.Remove(reserves_replacement_model);
+                        _context.RESERVES_REPLACEMENT_RATIOs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2173,7 +2232,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_condensate_monthly_model.Companyemail = WKPCompanyEmail;
                     oil_condensate_monthly_model.CompanyName = WKPCompanyName;
                     oil_condensate_monthly_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_monthly_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_monthly_model.CompanyNumber = 0;
                     oil_condensate_monthly_model.Date_Updated = DateTime.Now;
                     oil_condensate_monthly_model.Updated_by = WKPCompanyId;
                     oil_condensate_monthly_model.Year_of_WP = year;
@@ -2192,12 +2251,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_condensate_monthly_model.Created_by = getData.Created_by;
                             oil_condensate_monthly_model.Date_Updated = DateTime.Now;
                             oil_condensate_monthly_model.Updated_by = WKPCompanyId;
+                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(getData);
                             await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(oil_condensate_monthly_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(oil_condensate_monthly_model);
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2244,7 +2304,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_gas_domestic_model.Companyemail = WKPCompanyEmail;
                     oil_gas_domestic_model.CompanyName = WKPCompanyName;
                     oil_gas_domestic_model.COMPANY_ID = WKPCompanyId;
-                    oil_gas_domestic_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_gas_domestic_model.CompanyNumber = 0;
                     oil_gas_domestic_model.Date_Updated = DateTime.Now;
                     oil_gas_domestic_model.Updated_by = WKPCompanyId;
                     oil_gas_domestic_model.Year_of_WP = year;
@@ -2263,12 +2323,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_gas_domestic_model.Created_by = getData.Created_by;
                             oil_gas_domestic_model.Date_Updated = DateTime.Now;
                             oil_gas_domestic_model.Updated_by = WKPCompanyId;
+                            _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(getData);
                             await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(oil_gas_domestic_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(oil_gas_domestic_model);
+                        _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2315,7 +2376,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_actual_model.Companyemail = WKPCompanyEmail;
                     budget_actual_model.CompanyName = WKPCompanyName;
                     budget_actual_model.COMPANY_ID = WKPCompanyId;
-                    budget_actual_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_actual_model.CompanyNumber = 0;
                     budget_actual_model.Date_Updated = DateTime.Now;
                     budget_actual_model.Updated_by = WKPCompanyId;
                     budget_actual_model.Year_of_WP = year;
@@ -2334,12 +2395,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_actual_model.Created_by = getData.Created_by;
                             budget_actual_model.Date_Updated = DateTime.Now;
                             budget_actual_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(getData);
                             await _context.BUDGET_ACTUAL_EXPENDITUREs.AddAsync(budget_actual_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(budget_actual_model);
+                        _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2386,7 +2448,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_proposal_model.Companyemail = WKPCompanyEmail;
                     budget_proposal_model.CompanyName = WKPCompanyName;
                     budget_proposal_model.COMPANY_ID = WKPCompanyId;
-                    budget_proposal_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_proposal_model.CompanyNumber = 0;
                     budget_proposal_model.Date_Updated = DateTime.Now;
                     budget_proposal_model.Updated_by = WKPCompanyId;
                     budget_proposal_model.Year_of_WP = year;
@@ -2405,12 +2467,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_proposal_model.Created_by = getData.Created_by;
                             budget_proposal_model.Date_Updated = DateTime.Now;
                             budget_proposal_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(getData);
                             await _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.AddAsync(budget_proposal_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(budget_proposal_model);
+                        _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2457,7 +2520,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_exploratory_model.Companyemail = WKPCompanyEmail;
                     budget_exploratory_model.CompanyName = WKPCompanyName;
                     budget_exploratory_model.COMPANY_ID = WKPCompanyId;
-                    budget_exploratory_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_exploratory_model.CompanyNumber = 0;
                     budget_exploratory_model.Date_Updated = DateTime.Now;
                     budget_exploratory_model.Updated_by = WKPCompanyId;
                     budget_exploratory_model.Year_of_WP = year;
@@ -2476,12 +2539,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_exploratory_model.Created_by = getData.Created_by;
                             budget_exploratory_model.Date_Updated = DateTime.Now;
                             budget_exploratory_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(getData);
                             await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(budget_exploratory_model);
+                        _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2528,7 +2592,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_proposal_model.Companyemail = WKPCompanyEmail;
                     budget_proposal_model.CompanyName = WKPCompanyName;
                     budget_proposal_model.COMPANY_ID = WKPCompanyId;
-                    budget_proposal_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_proposal_model.CompanyNumber = 0;
                     budget_proposal_model.Date_Updated = DateTime.Now;
                     budget_proposal_model.Updated_by = WKPCompanyId;
                     budget_proposal_model.Year_of_WP = year;
@@ -2547,12 +2611,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_proposal_model.Created_by = getData.Created_by;
                             budget_proposal_model.Date_Updated = DateTime.Now;
                             budget_proposal_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(getData);
                             await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.AddAsync(budget_proposal_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(budget_proposal_model);
+                        _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2599,7 +2664,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_performance_model.Companyemail = WKPCompanyEmail;
                     budget_performance_model.CompanyName = WKPCompanyName;
                     budget_performance_model.COMPANY_ID = WKPCompanyId;
-                    budget_performance_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_performance_model.CompanyNumber = 0;
                     budget_performance_model.Date_Updated = DateTime.Now;
                     budget_performance_model.Updated_by = WKPCompanyId;
                     budget_performance_model.Year_of_WP = year;
@@ -2618,12 +2683,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_performance_model.Created_by = getData.Created_by;
                             budget_performance_model.Date_Updated = DateTime.Now;
                             budget_performance_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(getData);
                             await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.AddAsync(budget_performance_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(budget_performance_model);
+                        _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2670,7 +2736,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_facilities_model.Companyemail = WKPCompanyEmail;
                     budget_facilities_model.CompanyName = WKPCompanyName;
                     budget_facilities_model.COMPANY_ID = WKPCompanyId;
-                    budget_facilities_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_facilities_model.CompanyNumber = 0;
                     budget_facilities_model.Date_Updated = DateTime.Now;
                     budget_facilities_model.Updated_by = WKPCompanyId;
                     budget_facilities_model.Year_of_WP = year;
@@ -2689,12 +2755,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_facilities_model.Created_by = getData.Created_by;
                             budget_facilities_model.Date_Updated = DateTime.Now;
                             budget_facilities_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(getData);
                             await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.AddAsync(budget_facilities_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(budget_facilities_model);
+                        _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2741,7 +2808,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_gas_facility_model.Companyemail = WKPCompanyEmail;
                     oil_gas_facility_model.CompanyName = WKPCompanyName;
                     oil_gas_facility_model.COMPANY_ID = WKPCompanyId;
-                    oil_gas_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_gas_facility_model.CompanyNumber = 0;
                     oil_gas_facility_model.Date_Updated = DateTime.Now;
                     oil_gas_facility_model.Updated_by = WKPCompanyId;
                     oil_gas_facility_model.Year_of_WP = year;
@@ -2760,12 +2827,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_gas_facility_model.Created_by = getData.Created_by;
                             oil_gas_facility_model.Date_Updated = DateTime.Now;
                             oil_gas_facility_model.Updated_by = WKPCompanyId;
+                            _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(getData);
                             await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.AddAsync(oil_gas_facility_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(oil_gas_facility_model);
+                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2812,7 +2880,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_condensate_assessment_model.Companyemail = WKPCompanyEmail;
                     oil_condensate_assessment_model.CompanyName = WKPCompanyName;
                     oil_condensate_assessment_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_assessment_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_condensate_assessment_model.CompanyNumber = 0;
                     oil_condensate_assessment_model.Date_Updated = DateTime.Now;
                     oil_condensate_assessment_model.Updated_by = WKPCompanyId;
                     oil_condensate_assessment_model.Year_of_WP = year;
@@ -2831,12 +2899,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_condensate_assessment_model.Created_by = getData.Created_by;
                             oil_condensate_assessment_model.Date_Updated = DateTime.Now;
                             oil_condensate_assessment_model.Updated_by = WKPCompanyId;
+                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(getData);
                             await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(oil_condensate_assessment_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(oil_condensate_assessment_model);
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2883,7 +2952,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_gas_facility_model.Companyemail = WKPCompanyEmail;
                     oil_gas_facility_model.CompanyName = WKPCompanyName;
                     oil_gas_facility_model.COMPANY_ID = WKPCompanyId;
-                    oil_gas_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    oil_gas_facility_model.CompanyNumber = 0;
                     oil_gas_facility_model.Date_Updated = DateTime.Now;
                     oil_gas_facility_model.Updated_by = WKPCompanyId;
                     oil_gas_facility_model.Year_of_WP = year;
@@ -2902,12 +2971,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             oil_gas_facility_model.Created_by = getData.Created_by;
                             oil_gas_facility_model.Date_Updated = DateTime.Now;
                             oil_gas_facility_model.Updated_by = WKPCompanyId;
+                            _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(getData);
                             await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(oil_gas_facility_model);
+                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -2954,7 +3024,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     facilities_project_model.Companyemail = WKPCompanyEmail;
                     facilities_project_model.CompanyName = WKPCompanyName;
                     facilities_project_model.COMPANY_ID = WKPCompanyId;
-                    facilities_project_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    facilities_project_model.CompanyNumber = 0;
                     facilities_project_model.Date_Updated = DateTime.Now;
                     facilities_project_model.Updated_by = WKPCompanyId;
                     facilities_project_model.Year_of_WP = year;
@@ -2973,12 +3043,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             facilities_project_model.Created_by = getData.Created_by;
                             facilities_project_model.Date_Updated = DateTime.Now;
                             facilities_project_model.Updated_by = WKPCompanyId;
+                            _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(getData);
                             await _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(facilities_project_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(facilities_project_model);
+                        _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3025,7 +3096,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_capex_opex_model.Companyemail = WKPCompanyEmail;
                     budget_capex_opex_model.CompanyName = WKPCompanyName;
                     budget_capex_opex_model.COMPANY_ID = WKPCompanyId;
-                    budget_capex_opex_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    budget_capex_opex_model.CompanyNumber = 0;
                     budget_capex_opex_model.Date_Updated = DateTime.Now;
                     budget_capex_opex_model.Updated_by = WKPCompanyId;
                     budget_capex_opex_model.Year_of_WP = year;
@@ -3044,12 +3115,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_capex_opex_model.Created_by = getData.Created_by;
                             budget_capex_opex_model.Date_Updated = DateTime.Now;
                             budget_capex_opex_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_CAPEX_OPices.Remove(getData);
                             await _context.BUDGET_CAPEX_OPices.AddAsync(budget_capex_opex_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.BUDGET_CAPEX_OPices.Remove(budget_capex_opex_model);
+                        _context.BUDGET_CAPEX_OPices.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3096,7 +3168,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     nigeria_content_training_model.Companyemail = WKPCompanyEmail;
                     nigeria_content_training_model.CompanyName = WKPCompanyName;
                     nigeria_content_training_model.COMPANY_ID = WKPCompanyId;
-                    nigeria_content_training_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    nigeria_content_training_model.CompanyNumber = 0;
                     nigeria_content_training_model.Date_Updated = DateTime.Now;
                     nigeria_content_training_model.Updated_by = WKPCompanyId;
                     nigeria_content_training_model.Year_of_WP = year;
@@ -3115,12 +3187,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             nigeria_content_training_model.Created_by = getData.Created_by;
                             nigeria_content_training_model.Date_Updated = DateTime.Now;
                             nigeria_content_training_model.Updated_by = WKPCompanyId;
+                            _context.NIGERIA_CONTENT_Trainings.Remove(getData);
                             await _context.NIGERIA_CONTENT_Trainings.AddAsync(nigeria_content_training_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.NIGERIA_CONTENT_Trainings.Remove(nigeria_content_training_model);
+                        _context.NIGERIA_CONTENT_Trainings.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3167,7 +3240,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     nigeria_content_succession_model.Companyemail = WKPCompanyEmail;
                     nigeria_content_succession_model.CompanyName = WKPCompanyName;
                     nigeria_content_succession_model.COMPANY_ID = WKPCompanyId;
-                    nigeria_content_succession_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    nigeria_content_succession_model.CompanyNumber = 0;
                     nigeria_content_succession_model.Date_Updated = DateTime.Now;
                     nigeria_content_succession_model.Updated_by = WKPCompanyId;
                     nigeria_content_succession_model.Year_of_WP = year;
@@ -3186,12 +3259,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             nigeria_content_succession_model.Created_by = getData.Created_by;
                             nigeria_content_succession_model.Date_Updated = DateTime.Now;
                             nigeria_content_succession_model.Updated_by = WKPCompanyId;
+                            _context.NIGERIA_CONTENT_Upload_Succession_Plans.Remove(getData);
                             await _context.NIGERIA_CONTENT_Upload_Succession_Plans.AddAsync(nigeria_content_succession_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.NIGERIA_CONTENT_Upload_Succession_Plans.Remove(nigeria_content_succession_model);
+                        _context.NIGERIA_CONTENT_Upload_Succession_Plans.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3238,7 +3312,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     nigeria_content_question_model.Companyemail = WKPCompanyEmail;
                     nigeria_content_question_model.CompanyName = WKPCompanyName;
                     nigeria_content_question_model.COMPANY_ID = WKPCompanyId;
-                    nigeria_content_question_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    nigeria_content_question_model.CompanyNumber = 0;
                     nigeria_content_question_model.Date_Updated = DateTime.Now;
                     nigeria_content_question_model.Updated_by = WKPCompanyId;
                     nigeria_content_question_model.Year_of_WP = year;
@@ -3257,12 +3331,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             nigeria_content_question_model.Created_by = getData.Created_by;
                             nigeria_content_question_model.Date_Updated = DateTime.Now;
                             nigeria_content_question_model.Updated_by = WKPCompanyId;
+                            _context.NIGERIA_CONTENT_QUESTIONs.Remove(getData);
                             await _context.NIGERIA_CONTENT_QUESTIONs.AddAsync(nigeria_content_question_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.NIGERIA_CONTENT_QUESTIONs.Remove(nigeria_content_question_model);
+                        _context.NIGERIA_CONTENT_QUESTIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3309,7 +3384,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     legal_litigation_model.Companyemail = WKPCompanyEmail;
                     legal_litigation_model.CompanyName = WKPCompanyName;
                     legal_litigation_model.COMPANY_ID = WKPCompanyId;
-                    legal_litigation_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    legal_litigation_model.CompanyNumber = 0;
                     legal_litigation_model.Date_Updated = DateTime.Now;
                     legal_litigation_model.Updated_by = WKPCompanyId;
                     legal_litigation_model.Year_of_WP = year;
@@ -3328,12 +3403,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             legal_litigation_model.Created_by = getData.Created_by;
                             legal_litigation_model.Date_Updated = DateTime.Now;
                             legal_litigation_model.Updated_by = WKPCompanyId;
+                            _context.LEGAL_LITIGATIONs.Remove(getData);
                             await _context.LEGAL_LITIGATIONs.AddAsync(legal_litigation_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.LEGAL_LITIGATIONs.Remove(legal_litigation_model);
+                        _context.LEGAL_LITIGATIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3380,7 +3456,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     legal_arbitration_model.Companyemail = WKPCompanyEmail;
                     legal_arbitration_model.CompanyName = WKPCompanyName;
                     legal_arbitration_model.COMPANY_ID = WKPCompanyId;
-                    legal_arbitration_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    legal_arbitration_model.CompanyNumber = 0;
                     legal_arbitration_model.Date_Updated = DateTime.Now;
                     legal_arbitration_model.Updated_by = WKPCompanyId;
                     legal_arbitration_model.Year_of_WP = year;
@@ -3399,12 +3475,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             legal_arbitration_model.Created_by = getData.Created_by;
                             legal_arbitration_model.Date_Updated = DateTime.Now;
                             legal_arbitration_model.Updated_by = WKPCompanyId;
+                            _context.LEGAL_ARBITRATIONs.Remove(getData);
                             await _context.LEGAL_ARBITRATIONs.AddAsync(legal_arbitration_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.LEGAL_ARBITRATIONs.Remove(legal_arbitration_model);
+                        _context.LEGAL_ARBITRATIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3451,7 +3528,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     strategic_plans_model.Companyemail = WKPCompanyEmail;
                     strategic_plans_model.CompanyName = WKPCompanyName;
                     strategic_plans_model.COMPANY_ID = WKPCompanyId;
-                    strategic_plans_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    strategic_plans_model.CompanyNumber = 0;
                     strategic_plans_model.Date_Updated = DateTime.Now;
                     strategic_plans_model.Updated_by = WKPCompanyId;
                     strategic_plans_model.Year_of_WP = year;
@@ -3470,12 +3547,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             strategic_plans_model.Created_by = getData.Created_by;
                             strategic_plans_model.Date_Updated = DateTime.Now;
                             strategic_plans_model.Updated_by = WKPCompanyId;
+                            _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Remove(getData);
                             await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.AddAsync(strategic_plans_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Remove(strategic_plans_model);
+                        _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3522,7 +3600,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_question_model.Companyemail = WKPCompanyEmail;
                     hse_question_model.CompanyName = WKPCompanyName;
                     hse_question_model.COMPANY_ID = WKPCompanyId;
-                    hse_question_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_question_model.CompanyNumber = 0;
                     hse_question_model.Date_Updated = DateTime.Now;
                     hse_question_model.Updated_by = WKPCompanyId;
                     hse_question_model.Year_of_WP = year;
@@ -3541,12 +3619,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_question_model.Created_by = getData.Created_by;
                             hse_question_model.Date_Updated = DateTime.Now;
                             hse_question_model.Updated_by = WKPCompanyId;
+                            _context.HSE_QUESTIONs.Remove(getData);
                             await _context.HSE_QUESTIONs.AddAsync(hse_question_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_QUESTIONs.Remove(hse_question_model);
+                        _context.HSE_QUESTIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3593,7 +3672,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_fatality_model.Companyemail = WKPCompanyEmail;
                     hse_fatality_model.CompanyName = WKPCompanyName;
                     hse_fatality_model.COMPANY_ID = WKPCompanyId;
-                    hse_fatality_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_fatality_model.CompanyNumber = 0;
                     hse_fatality_model.Date_Updated = DateTime.Now;
                     hse_fatality_model.Updated_by = WKPCompanyId;
                     hse_fatality_model.Year_of_WP = year;
@@ -3612,12 +3691,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_fatality_model.Created_by = getData.Created_by;
                             hse_fatality_model.Date_Updated = DateTime.Now;
                             hse_fatality_model.Updated_by = WKPCompanyId;
+                            _context.HSE_FATALITIEs.Remove(getData);
                             await _context.HSE_FATALITIEs.AddAsync(hse_fatality_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_FATALITIEs.Remove(hse_fatality_model);
+                        _context.HSE_FATALITIEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3664,7 +3744,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_designs_safety_model.Companyemail = WKPCompanyEmail;
                     hse_designs_safety_model.CompanyName = WKPCompanyName;
                     hse_designs_safety_model.COMPANY_ID = WKPCompanyId;
-                    hse_designs_safety_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_designs_safety_model.CompanyNumber = 0;
                     hse_designs_safety_model.Date_Updated = DateTime.Now;
                     hse_designs_safety_model.Updated_by = WKPCompanyId;
                     hse_designs_safety_model.Year_of_WP = year;
@@ -3683,12 +3763,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_designs_safety_model.Created_by = getData.Created_by;
                             hse_designs_safety_model.Date_Updated = DateTime.Now;
                             hse_designs_safety_model.Updated_by = WKPCompanyId;
+                            _context.HSE_DESIGNS_SAFETies.Remove(getData);
                             await _context.HSE_DESIGNS_SAFETies.AddAsync(hse_designs_safety_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_DESIGNS_SAFETies.Remove(hse_designs_safety_model);
+                        _context.HSE_DESIGNS_SAFETies.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3735,7 +3816,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_IM_model.Companyemail = WKPCompanyEmail;
                     hse_IM_model.CompanyName = WKPCompanyName;
                     hse_IM_model.COMPANY_ID = WKPCompanyId;
-                    hse_IM_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_IM_model.CompanyNumber = 0;
                     hse_IM_model.Date_Updated = DateTime.Now;
                     hse_IM_model.Updated_by = WKPCompanyId;
                     hse_IM_model.Year_of_WP = year;
@@ -3754,12 +3835,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_IM_model.Created_by = getData.Created_by;
                             hse_IM_model.Date_Updated = DateTime.Now;
                             hse_IM_model.Updated_by = WKPCompanyId;
+                            _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.Remove(getData);
                             await _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.AddAsync(hse_IM_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.Remove(hse_IM_model);
+                        _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3806,7 +3888,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_IM_facility_model.Companyemail = WKPCompanyEmail;
                     hse_IM_facility_model.CompanyName = WKPCompanyName;
                     hse_IM_facility_model.COMPANY_ID = WKPCompanyId;
-                    hse_IM_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_IM_facility_model.CompanyNumber = 0;
                     hse_IM_facility_model.Date_Updated = DateTime.Now;
                     hse_IM_facility_model.Updated_by = WKPCompanyId;
                     hse_IM_facility_model.Year_of_WP = year;
@@ -3825,12 +3907,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_IM_facility_model.Created_by = getData.Created_by;
                             hse_IM_facility_model.Date_Updated = DateTime.Now;
                             hse_IM_facility_model.Updated_by = WKPCompanyId;
+                            _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(getData);
                             await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.AddAsync(hse_IM_facility_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(hse_IM_facility_model);
+                        _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -3860,34 +3943,38 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
-        public async Task<WebApiResponse> POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW([FromBody] HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW hse_technical_safety_model, string omlName, string year, string ActionToDo = null)
-        {
-            //var context = Request.HttpContext.Request.Method;
-            //if(Request.Method.Equals("OPTIONS"))
-            //    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = new { }, StatusCode = ResponseCodes.Success };
-
+        public async Task<WebApiResponse> POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW([FromBody] HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW hse_technical_safety_model,
+            string omlName, string year,string id, string ActionToDo = null)
+            {
             int save = 0;
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
 
-                #region Saving HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs data
-                if (hse_technical_safety_model != null)
+                if (!string.IsNullOrEmpty(id))
                 {
-                    var getData = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                     if (action == GeneralModel.Delete)
+                         _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(getData);
+                            save += _context.SaveChanges();                    
+                }
+                else if (hse_technical_safety_model != null)
+                {
+                    var getData = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).ToListAsync();
 
                     hse_technical_safety_model.Companyemail = WKPCompanyEmail;
                     hse_technical_safety_model.CompanyName = WKPCompanyName;
                     hse_technical_safety_model.COMPANY_ID = WKPCompanyId;
-                    //hse_technical_safety_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    //hse_technical_safety_model.CompanyNumber = 0;
                     hse_technical_safety_model.Date_Updated = DateTime.Now;
                     hse_technical_safety_model.Updated_by = WKPCompanyId;
                     hse_technical_safety_model.Year_of_WP = year;
                     hse_technical_safety_model.OML_Name = omlName.ToUpper();
                     if (action == GeneralModel.Insert)
                     {
-                        if (getData == null)
+                        if (getData.Count() <= 0)
                         {
                             hse_technical_safety_model.Date_Created = DateTime.Now;
                             hse_technical_safety_model.Created_by = WKPCompanyId;
@@ -3895,39 +3982,35 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            hse_technical_safety_model.Date_Created = getData.Date_Created;
-                            hse_technical_safety_model.Created_by = getData.Created_by;
+                            hse_technical_safety_model.Date_Created = getData.FirstOrDefault().Date_Created;
+                            hse_technical_safety_model.Created_by = getData.FirstOrDefault().Created_by;
                             hse_technical_safety_model.Date_Updated = DateTime.Now;
                             hse_technical_safety_model.Updated_by = WKPCompanyId;
-                            _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(getData);
+                            getData.ForEach(x =>
+                            {
+                                _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(x);
+                                save += _context.SaveChanges();
+
+                            });
                             await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
                         }
                     }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(getData);
-                    }
-
+                    
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                    }
                 }
-                //else
-                //    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = new { }, StatusCode = ResponseCodes.Success };
 
+                if (save > 0)
+                {
+                    string successMsg = "Form has been " + action + "D successfully.";
+                    var All_Data = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).ToListAsync();
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
+                }
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
 
             }
             catch (Exception e)
@@ -3936,8 +4019,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-         [HttpPost("POST_HSE_SAFETY_STUDIES_NEW")]
-        public async Task<WebApiResponse> POST_HSE_SAFETY_STUDIES_NEW([FromBody] HSE_SAFETY_STUDIES_NEW hse_safety_studies_model, string omlName, string year, string ActionToDo = null)
+        
+        [HttpPost("POST_HSE_SAFETY_STUDIES_NEW")]
+        public async Task<WebApiResponse> POST_HSE_SAFETY_STUDIES_NEW([FromBody] HSE_SAFETY_STUDIES_NEW hse_safety_studies_model, string omlName, string year, string id, string ActionToDo = null)
         {
 
             int save = 0;
@@ -3946,15 +4030,22 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving HSE_SAFETY_STUDIES_NEW data
-                if (hse_safety_studies_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+                    
+                    if (action == GeneralModel.Delete)
+                     _context.HSE_SAFETY_STUDIES_NEWs.Remove(getData);
+                    save+= _context.SaveChanges();
+                }
+                else if (hse_safety_studies_model != null)
                 {
                     var getData = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
 
                     hse_safety_studies_model.Companyemail = WKPCompanyEmail;
                     hse_safety_studies_model.CompanyName = WKPCompanyName;
                     hse_safety_studies_model.COMPANY_ID = WKPCompanyId;
-                    //hse_safety_studies_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    //hse_safety_studies_model.CompanyNumber = 0;
                     hse_safety_studies_model.Date_Updated = DateTime.Now;
                     hse_safety_studies_model.Updated_by = WKPCompanyId;
                     hse_safety_studies_model.Year_of_WP = year;
@@ -3977,11 +4068,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             await _context.HSE_SAFETY_STUDIES_NEWs.AddAsync(hse_safety_studies_model);
                         }
                     }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SAFETY_STUDIES_NEWs.Remove(getData);
-                    }
-
+                    
                     save += await _context.SaveChangesAsync();
 
                     if (save > 0)
@@ -3998,8 +4085,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
-
+               
             }
             catch (Exception e)
             {
@@ -4026,7 +4112,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_asset_register_model.Companyemail = WKPCompanyEmail;
                     hse_asset_register_model.CompanyName = WKPCompanyName;
                     hse_asset_register_model.COMPANY_ID = WKPCompanyId;
-                    hse_asset_register_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_asset_register_model.CompanyNumber = 0;
                     hse_asset_register_model.Date_Updated = DateTime.Now;
                     hse_asset_register_model.Updated_by = WKPCompanyId;
                     hse_asset_register_model.Year_of_WP = year;
@@ -4045,12 +4131,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_asset_register_model.Created_by = getData.Created_by;
                             hse_asset_register_model.Date_Updated = DateTime.Now;
                             hse_asset_register_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getData);
                             await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(hse_asset_register_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(hse_asset_register_model);
+                        _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4097,7 +4184,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_oil_spill_model.Companyemail = WKPCompanyEmail;
                     hse_oil_spill_model.CompanyName = WKPCompanyName;
                     hse_oil_spill_model.COMPANY_ID = WKPCompanyId;
-                    hse_oil_spill_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_oil_spill_model.CompanyNumber = 0;
                     hse_oil_spill_model.Date_Updated = DateTime.Now;
                     hse_oil_spill_model.Updated_by = WKPCompanyId;
                     hse_oil_spill_model.Year_of_WP = year;
@@ -4116,12 +4203,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_oil_spill_model.Created_by = getData.Created_by;
                             hse_oil_spill_model.Date_Updated = DateTime.Now;
                             hse_oil_spill_model.Updated_by = WKPCompanyId;
+                            _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(getData);
                             await _context.HSE_OIL_SPILL_REPORTING_NEWs.AddAsync(hse_oil_spill_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(hse_oil_spill_model);
+                        _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4168,7 +4256,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_asset_register_model.Companyemail = WKPCompanyEmail;
                     hse_asset_register_model.CompanyName = WKPCompanyName;
                     hse_asset_register_model.COMPANY_ID = WKPCompanyId;
-                    hse_asset_register_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_asset_register_model.CompanyNumber = 0;
                     hse_asset_register_model.Date_Updated = DateTime.Now;
                     hse_asset_register_model.Updated_by = WKPCompanyId;
                     hse_asset_register_model.Year_of_WP = year;
@@ -4187,12 +4275,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_asset_register_model.Created_by = getData.Created_by;
                             hse_asset_register_model.Date_Updated = DateTime.Now;
                             hse_asset_register_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getData);
                             await _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(hse_asset_register_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(hse_asset_register_model);
+                        _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4221,6 +4310,165 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpPost("POST_HSE_ACCIDENT_INCIDENCE")]
+        public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_MODEL hse_accident_model, string omlName, string year, string ActionToDo = null)
+        {
+
+            int save = 0;
+            string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+            var HSE_Accident_Incidence = new HSE_ACCIDENT_INCIDENCE_REPORTING_NEW();
+            var HSE_Accident_Incidence_Type = new HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW();
+            try
+            {
+
+                if (hse_accident_model != null)
+                {
+                    #region Saving HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs data
+                    var getData =await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).ToListAsync();
+
+                    HSE_Accident_Incidence.Was_there_any_accident_incidence = hse_accident_model.Was_there_any_accident_incidence;
+                    HSE_Accident_Incidence.If_YES_were_they_reported = hse_accident_model.If_YES_were_they_reported;
+                    HSE_Accident_Incidence.Companyemail = WKPCompanyEmail;
+                    HSE_Accident_Incidence.CompanyName = WKPCompanyName;
+                    HSE_Accident_Incidence.COMPANY_ID = WKPCompanyId;
+                    HSE_Accident_Incidence.CompanyNumber = 0;
+                    HSE_Accident_Incidence.Date_Updated = DateTime.Now;
+                    HSE_Accident_Incidence.Updated_by = WKPCompanyId;
+                    HSE_Accident_Incidence.Year_of_WP = year;
+                    HSE_Accident_Incidence.OML_Name = omlName.ToUpper();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if ( getData.Count() <= 0)
+                        {
+                            HSE_Accident_Incidence.Date_Created = DateTime.Now;
+                            HSE_Accident_Incidence.Created_by = WKPCompanyId;
+                            await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(HSE_Accident_Incidence);
+                        }
+                        else
+                        {
+                            HSE_Accident_Incidence.Date_Created = getData.FirstOrDefault().Date_Created;
+                            HSE_Accident_Incidence.Created_by = getData.FirstOrDefault().Created_by;
+                            HSE_Accident_Incidence.Date_Updated = DateTime.Now;
+                            HSE_Accident_Incidence.Updated_by = WKPCompanyId;
+                            getData.ForEach(x =>
+                            {
+                                _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(x);
+                                save += _context.SaveChanges();
+                            });
+                            await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(HSE_Accident_Incidence);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        getData.ForEach(x =>
+                        {
+                            _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(x);
+                            save += _context.SaveChanges();
+                        });
+                    }
+
+                    save += await _context.SaveChangesAsync();
+
+                    #endregion
+
+                    #region Saving HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs data
+                    
+                        var getData2 =await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).ToListAsync();
+
+                        HSE_Accident_Incidence_Type.Cause = hse_accident_model.Cause;
+                        HSE_Accident_Incidence_Type.Frequency = hse_accident_model.Frequency;
+                        HSE_Accident_Incidence_Type.Type_of_Accident_Incidence = hse_accident_model.Type_of_Accident_Incidence;
+                        HSE_Accident_Incidence_Type.Location = hse_accident_model.Location;
+                        HSE_Accident_Incidence_Type.Investigation = hse_accident_model.Investigation;
+                        HSE_Accident_Incidence_Type.Lesson_Learnt = hse_accident_model.Lesson_Learnt;
+                        HSE_Accident_Incidence_Type.Consequence = hse_accident_model.Consequence;
+                        HSE_Accident_Incidence_Type.Date_ = hse_accident_model.Date_;
+
+                        HSE_Accident_Incidence_Type.Companyemail = WKPCompanyEmail;
+                        HSE_Accident_Incidence_Type.CompanyName = WKPCompanyName;
+                        HSE_Accident_Incidence_Type.COMPANY_ID = WKPCompanyId;
+                        HSE_Accident_Incidence_Type.CompanyNumber = 0;
+                        HSE_Accident_Incidence_Type.Date_Updated = DateTime.Now;
+                        HSE_Accident_Incidence_Type.Updated_by = WKPCompanyId;
+                        HSE_Accident_Incidence_Type.Year_of_WP = year;
+                        HSE_Accident_Incidence_Type.OML_Name = omlName;
+                        if (action == GeneralModel.Insert)
+                        {
+                            if (getData2.Count() <= 0)
+                            {
+                                HSE_Accident_Incidence_Type.Date_Created = DateTime.Now;
+                                HSE_Accident_Incidence_Type.Created_by = WKPCompanyId;
+                                await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(HSE_Accident_Incidence_Type);
+                            }
+                            else
+                            {
+                                HSE_Accident_Incidence_Type.Date_Created = getData2.FirstOrDefault().Date_Created;
+                                HSE_Accident_Incidence_Type.Created_by = getData2.FirstOrDefault().Created_by;
+                                HSE_Accident_Incidence_Type.Date_Updated = DateTime.Now;
+                                HSE_Accident_Incidence_Type.Updated_by = WKPCompanyId;
+                                getData2.ForEach(x =>
+                                {
+                                    _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(x);
+                                    save += _context.SaveChanges();
+                                });
+                                await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(HSE_Accident_Incidence_Type);
+                            }
+                        }
+                        else if (action == GeneralModel.Delete)
+                        {
+                        getData2.ForEach(x =>
+                        {
+                            _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(x);
+                            save += _context.SaveChanges();
+                        });
+                    }
+
+                        save += await _context.SaveChangesAsync();
+                    #endregion
+
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+
+                        var All_Data =await (from a1 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs
+                                             join a2 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs on a1.COMPANY_ID equals a2.COMPANY_ID
+                                             where a1.COMPANY_ID == WKPCompanyId && a1.OML_Name == omlName && a1.Year_of_WP == year
+                                             && a2.COMPANY_ID == WKPCompanyId && a2.OML_Name == omlName && a2.Year_of_WP == year
+
+                                             select new HSE_ACCIDENT_INCIDENCE_MODEL
+                                             {
+                                                 Was_there_any_accident_incidence = a1.Was_there_any_accident_incidence,
+                                                 If_YES_were_they_reported = a1.If_YES_were_they_reported,
+                                                 Cause = a2.Cause,
+                                                 Type_of_Accident_Incidence = a2.Type_of_Accident_Incidence,
+                                                 Consequence = a2.Consequence,
+                                                 Frequency = a2.Frequency,
+                                                 Investigation = a2.Investigation,
+                                                 Lesson_Learnt = a2.Lesson_Learnt,
+                                                 Location = a2.Location,
+                                                 Date_ = a2.Date_
+                                             }).ToListAsync();
+
+
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                    }
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
         [HttpPost("POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
         public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_NEW hse_accident_model, string omlName, string year, string ActionToDo = null)
         {
@@ -4239,7 +4487,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_accident_model.Companyemail = WKPCompanyEmail;
                     hse_accident_model.CompanyName = WKPCompanyName;
                     hse_accident_model.COMPANY_ID = WKPCompanyId;
-                    hse_accident_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_accident_model.CompanyNumber = 0;
                     hse_accident_model.Date_Updated = DateTime.Now;
                     hse_accident_model.Updated_by = WKPCompanyId;
                     hse_accident_model.Year_of_WP = year;
@@ -4258,12 +4506,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_accident_model.Created_by = getData.Created_by;
                             hse_accident_model.Date_Updated = DateTime.Now;
                             hse_accident_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(hse_accident_model);
                             await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.AddAsync(hse_accident_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(hse_accident_model);
+                        _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4310,7 +4559,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_accident_reporting_model.Companyemail = WKPCompanyEmail;
                     hse_accident_reporting_model.CompanyName = WKPCompanyName;
                     hse_accident_reporting_model.COMPANY_ID = WKPCompanyId;
-                    hse_accident_reporting_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_accident_reporting_model.CompanyNumber = 0;
                     hse_accident_reporting_model.Date_Updated = DateTime.Now;
                     hse_accident_reporting_model.Updated_by = WKPCompanyId;
                     hse_accident_reporting_model.Year_of_WP = year;
@@ -4329,12 +4578,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_accident_reporting_model.Created_by = getData.Created_by;
                             hse_accident_reporting_model.Date_Updated = DateTime.Now;
                             hse_accident_reporting_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(getData);
                             await _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.AddAsync(hse_accident_reporting_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(hse_accident_reporting_model);
+                        _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4381,7 +4631,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_community_model.Companyemail = WKPCompanyEmail;
                     hse_community_model.CompanyName = WKPCompanyName;
                     hse_community_model.COMPANY_ID = WKPCompanyId;
-                    hse_community_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_community_model.CompanyNumber = 0;
                     hse_community_model.Date_Updated = DateTime.Now;
                     hse_community_model.Updated_by = WKPCompanyId;
                     hse_community_model.Year_of_WP = year;
@@ -4400,12 +4650,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_community_model.Created_by = getData.Created_by;
                             hse_community_model.Date_Updated = DateTime.Now;
                             hse_community_model.Updated_by = WKPCompanyId;
+                            _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.Remove(getData);
                             await _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.AddAsync(hse_community_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.Remove(hse_community_model);
+                        _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4452,7 +4703,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_environmental_model.Companyemail = WKPCompanyEmail;
                     hse_environmental_model.CompanyName = WKPCompanyName;
                     hse_environmental_model.COMPANY_ID = WKPCompanyId;
-                    hse_environmental_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_environmental_model.CompanyNumber = 0;
                     hse_environmental_model.Date_Updated = DateTime.Now;
                     hse_environmental_model.Updated_by = WKPCompanyId;
                     hse_environmental_model.Year_of_WP = year;
@@ -4471,12 +4722,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_environmental_model.Created_by = getData.Created_by;
                             hse_environmental_model.Date_Updated = DateTime.Now;
                             hse_environmental_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.Remove(getData);
                             await _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.AddAsync(hse_environmental_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.Remove(hse_environmental_model);
+                        _context.HSE_ENVIRONMENTAL_STUDIES_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4523,7 +4775,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_waste_management_model.Companyemail = WKPCompanyEmail;
                     hse_waste_management_model.CompanyName = WKPCompanyName;
                     hse_waste_management_model.COMPANY_ID = WKPCompanyId;
-                    hse_waste_management_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_waste_management_model.CompanyNumber = 0;
                     hse_waste_management_model.Date_Updated = DateTime.Now;
                     hse_waste_management_model.Updated_by = WKPCompanyId;
                     hse_waste_management_model.Year_of_WP = year;
@@ -4542,12 +4794,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_waste_management_model.Created_by = getData.Created_by;
                             hse_waste_management_model.Date_Updated = DateTime.Now;
                             hse_waste_management_model.Updated_by = WKPCompanyId;
+                            _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
                             await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(hse_waste_management_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(hse_waste_management_model);
+                        _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4594,7 +4847,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_waste_management_facility_model.Companyemail = WKPCompanyEmail;
                     hse_waste_management_facility_model.CompanyName = WKPCompanyName;
                     hse_waste_management_facility_model.COMPANY_ID = WKPCompanyId;
-                    hse_waste_management_facility_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_waste_management_facility_model.CompanyNumber = 0;
                     hse_waste_management_facility_model.Date_Updated = DateTime.Now;
                     hse_waste_management_facility_model.Updated_by = WKPCompanyId;
                     hse_waste_management_facility_model.Year_of_WP = year;
@@ -4613,12 +4866,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_waste_management_facility_model.Created_by = getData.Created_by;
                             hse_waste_management_facility_model.Date_Updated = DateTime.Now;
                             hse_waste_management_facility_model.Updated_by = WKPCompanyId;
+                            _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
                             await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(hse_waste_management_facility_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(hse_waste_management_facility_model);
+                        _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4665,7 +4919,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_produced_water_model.Companyemail = WKPCompanyEmail;
                     hse_produced_water_model.CompanyName = WKPCompanyName;
                     hse_produced_water_model.COMPANY_ID = WKPCompanyId;
-                    hse_produced_water_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_produced_water_model.CompanyNumber = 0;
                     hse_produced_water_model.Date_Updated = DateTime.Now;
                     hse_produced_water_model.Updated_by = WKPCompanyId;
                     hse_produced_water_model.Year_of_WP = year;
@@ -4684,12 +4938,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_produced_water_model.Created_by = getData.Created_by;
                             hse_produced_water_model.Date_Updated = DateTime.Now;
                             hse_produced_water_model.Updated_by = WKPCompanyId;
+                            _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
                             await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(hse_produced_water_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(hse_produced_water_model);
+                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4736,7 +4991,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_compliance_model.Companyemail = WKPCompanyEmail;
                     hse_compliance_model.CompanyName = WKPCompanyName;
                     hse_compliance_model.COMPANY_ID = WKPCompanyId;
-                    hse_compliance_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_compliance_model.CompanyNumber = 0;
                     hse_compliance_model.Date_Updated = DateTime.Now;
                     hse_compliance_model.Updated_by = WKPCompanyId;
                     hse_compliance_model.Year_of_WP = year;
@@ -4755,12 +5010,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_compliance_model.Created_by = getData.Created_by;
                             hse_compliance_model.Date_Updated = DateTime.Now;
                             hse_compliance_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
                             await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(hse_compliance_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(hse_compliance_model);
+                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4807,7 +5063,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_environmental_studies_model.Companyemail = WKPCompanyEmail;
                     hse_environmental_studies_model.CompanyName = WKPCompanyName;
                     hse_environmental_studies_model.COMPANY_ID = WKPCompanyId;
-                    hse_environmental_studies_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_environmental_studies_model.CompanyNumber = 0;
                     hse_environmental_studies_model.Date_Updated = DateTime.Now;
                     hse_environmental_studies_model.Updated_by = WKPCompanyId;
                     hse_environmental_studies_model.Year_of_WP = year;
@@ -4826,12 +5082,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_environmental_studies_model.Created_by = getData.Created_by;
                             hse_environmental_studies_model.Date_Updated = DateTime.Now;
                             hse_environmental_studies_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
                             await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(hse_environmental_studies_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(hse_environmental_studies_model);
+                        _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4878,7 +5135,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_sustainable_model.Companyemail = WKPCompanyEmail;
                     hse_sustainable_model.CompanyName = WKPCompanyName;
                     hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_sustainable_model.CompanyNumber = 0;
                     hse_sustainable_model.Date_Updated = DateTime.Now;
                     hse_sustainable_model.Updated_by = WKPCompanyId;
                     hse_sustainable_model.Year_of_WP = year;
@@ -4897,12 +5154,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_sustainable_model.Created_by = getData.Created_by;
                             hse_sustainable_model.Date_Updated = DateTime.Now;
                             hse_sustainable_model.Updated_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
+                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
+                        await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(hse_sustainable_model);
+                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -4949,7 +5207,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_environmental_studies_new_model.Companyemail = WKPCompanyEmail;
                     hse_environmental_studies_new_model.CompanyName = WKPCompanyName;
                     hse_environmental_studies_new_model.COMPANY_ID = WKPCompanyId;
-                    hse_environmental_studies_new_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_environmental_studies_new_model.CompanyNumber = 0;
                     hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
                     hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
                     hse_environmental_studies_new_model.Year_of_WP = year;
@@ -4968,12 +5226,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_environmental_studies_new_model.Created_by = getData.Created_by;
                             hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
                             hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
                             await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(hse_environmental_studies_new_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(hse_environmental_studies_new_model);
+                        _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5020,7 +5279,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_osp_registrations_model.Companyemail = WKPCompanyEmail;
                     hse_osp_registrations_model.CompanyName = WKPCompanyName;
                     hse_osp_registrations_model.COMPANY_ID = WKPCompanyId;
-                    hse_osp_registrations_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_osp_registrations_model.CompanyNumber = 0;
                     hse_osp_registrations_model.Date_Updated = DateTime.Now;
                     hse_osp_registrations_model.Updated_by = WKPCompanyId;
                     hse_osp_registrations_model.Year_of_WP = year;
@@ -5039,12 +5298,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_osp_registrations_model.Created_by = getData.Created_by;
                             hse_osp_registrations_model.Date_Updated = DateTime.Now;
                             hse_osp_registrations_model.Updated_by = WKPCompanyId;
+                            _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
                             await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(hse_osp_registrations_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(hse_osp_registrations_model);
+                        _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5091,7 +5351,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_produced_water_model.Companyemail = WKPCompanyEmail;
                     hse_produced_water_model.CompanyName = WKPCompanyName;
                     hse_produced_water_model.COMPANY_ID = WKPCompanyId;
-                    hse_produced_water_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_produced_water_model.CompanyNumber = 0;
                     hse_produced_water_model.Date_Updated = DateTime.Now;
                     hse_produced_water_model.Updated_by = WKPCompanyId;
                     hse_produced_water_model.Year_of_WP = year;
@@ -5110,12 +5370,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_produced_water_model.Created_by = getData.Created_by;
                             hse_produced_water_model.Date_Updated = DateTime.Now;
                             hse_produced_water_model.Updated_by = WKPCompanyId;
+                            _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
                             await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(hse_produced_water_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(hse_produced_water_model);
+                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5162,7 +5423,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_chemical_usage_model.Companyemail = WKPCompanyEmail;
                     hse_chemical_usage_model.CompanyName = WKPCompanyName;
                     hse_chemical_usage_model.COMPANY_ID = WKPCompanyId;
-                    hse_chemical_usage_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_chemical_usage_model.CompanyNumber = 0;
                     hse_chemical_usage_model.Date_Updated = DateTime.Now;
                     hse_chemical_usage_model.Updated_by = WKPCompanyId;
                     hse_chemical_usage_model.Year_of_WP = year;
@@ -5181,12 +5442,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_chemical_usage_model.Created_by = getData.Created_by;
                             hse_chemical_usage_model.Date_Updated = DateTime.Now;
                             hse_chemical_usage_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
                             await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(hse_chemical_usage_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(hse_chemical_usage_model);
+                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5233,7 +5495,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_causes_of_spill_model.Companyemail = WKPCompanyEmail;
                     hse_causes_of_spill_model.CompanyName = WKPCompanyName;
                     hse_causes_of_spill_model.COMPANY_ID = WKPCompanyId;
-                    hse_causes_of_spill_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_causes_of_spill_model.CompanyNumber = 0;
                     hse_causes_of_spill_model.Date_Updated = DateTime.Now;
                     hse_causes_of_spill_model.Updated_by = WKPCompanyId;
                     hse_causes_of_spill_model.Year_of_WP = year;
@@ -5252,12 +5514,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_causes_of_spill_model.Created_by = getData.Created_by;
                             hse_causes_of_spill_model.Date_Updated = DateTime.Now;
                             hse_causes_of_spill_model.Updated_by = WKPCompanyId;
+                            _context.HSE_CAUSES_OF_SPILLs.Remove(getData);
                             await _context.HSE_CAUSES_OF_SPILLs.AddAsync(hse_causes_of_spill_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_CAUSES_OF_SPILLs.Remove(hse_causes_of_spill_model);
+                        _context.HSE_CAUSES_OF_SPILLs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5304,7 +5567,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_MOU_model.Companyemail = WKPCompanyEmail;
                     hse_MOU_model.CompanyName = WKPCompanyName;
                     hse_MOU_model.COMPANY_ID = WKPCompanyId;
-                    hse_MOU_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_MOU_model.CompanyNumber = 0;
                     hse_MOU_model.Date_Updated = DateTime.Now;
                     hse_MOU_model.Updated_by = WKPCompanyId;
                     hse_MOU_model.Year_of_WP = year;
@@ -5339,12 +5602,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_MOU_model.Created_by = getData.Created_by;
                             hse_MOU_model.Date_Updated = DateTime.Now;
                             hse_MOU_model.Updated_by = WKPCompanyId;
+                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
                             await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_MOU_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(hse_MOU_model);
+                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5391,7 +5655,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_scholarship_model.Companyemail = WKPCompanyEmail;
                     hse_scholarship_model.CompanyName = WKPCompanyName;
                     hse_scholarship_model.COMPANY_ID = WKPCompanyId;
-                    hse_scholarship_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_scholarship_model.CompanyNumber = 0;
                     hse_scholarship_model.Date_Updated = DateTime.Now;
                     hse_scholarship_model.Updated_by = WKPCompanyId;
                     hse_scholarship_model.Year_of_WP = year;
@@ -5425,12 +5689,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_scholarship_model.Created_by = getData.Created_by;
                             hse_scholarship_model.Date_Updated = DateTime.Now;
                             hse_scholarship_model.Updated_by = WKPCompanyId;
+                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
                             await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(hse_scholarship_model);
+                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5460,12 +5725,12 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_HSE_MANAGEMENT_POSITION")]
-        public async Task<WebApiResponse> POST_HSE_MANAGEMENT_POSITION([FromBody] HSE_MANAGEMENT_POSITION hse_management_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> POST_HSE_MANAGEMENT_POSITION([FromBody] HSE_MANAGEMENT_POSITION hse_management_model, string omlName, string year, string ActionToDo = null)
         {
 
             int save = 0;
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
-
+            var files = Request.Form.Files;
             try
             {
 
@@ -5477,7 +5742,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_management_model.Companyemail = WKPCompanyEmail;
                     hse_management_model.CompanyName = WKPCompanyName;
                     hse_management_model.COMPANY_ID = WKPCompanyId;
-                    hse_management_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_management_model.CompanyNumber = 0;
                     hse_management_model.Date_Updated = DateTime.Now;
                     hse_management_model.Updated_by = WKPCompanyId;
                     hse_management_model.Year_of_WP = year;
@@ -5523,12 +5788,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_management_model.Created_by = getData.Created_by;
                             hse_management_model.Date_Updated = DateTime.Now;
                             hse_management_model.Updated_by = WKPCompanyId;
+                            _context.HSE_MANAGEMENT_POSITIONs.Remove(getData);
                             await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_MANAGEMENT_POSITIONs.Remove(hse_management_model);
+                        _context.HSE_MANAGEMENT_POSITIONs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5575,7 +5841,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_quality_model.Companyemail = WKPCompanyEmail;
                     hse_quality_model.CompanyName = WKPCompanyName;
                     hse_quality_model.COMPANY_ID = WKPCompanyId;
-                    hse_quality_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_quality_model.CompanyNumber = 0;
                     hse_quality_model.Date_Updated = DateTime.Now;
                     hse_quality_model.Updated_by = WKPCompanyId;
                     hse_quality_model.Year_of_WP = year;
@@ -5584,20 +5850,22 @@ namespace Backend_UMR_Work_Program.Controllers
                     #region file section
                     UploadedDocument QualityControlFile_File = null;
 
-                    if (files[0] != null)
+                    if (files.Count() > 0)
                     {
                         string docName = "Quality Control";
                         QualityControlFile_File = _helpersController.UploadDocument(files[0], "COSDocuments");
                         if (QualityControlFile_File == null)
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
+                        else
+                        {
+                            hse_quality_model.QualityControlFilename = files[0] != null ? QualityControlFile_File.fileName : null;
+                            hse_quality_model.QualityControlFilePath = files[0] != null ? QualityControlFile_File.filePath : null;
+                        }
                     }
 
                     #endregion
 
-                    hse_quality_model.QualityControlFilename = files[0] != null ? QualityControlFile_File.fileName : null;
-                    hse_quality_model.QualityControlFilePath = files[0] != null ? QualityControlFile_File.filePath : null;
-                    if (action == GeneralModel.Insert)
+                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
                         {
@@ -5611,12 +5879,15 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_quality_model.Created_by = getData.Created_by;
                             hse_quality_model.Date_Updated = DateTime.Now;
                             hse_quality_model.Updated_by = WKPCompanyId;
+                            _context.HSE_QUALITY_CONTROLs.RemoveRange(getData);
+                            save += await _context.SaveChangesAsync();
+
                             await _context.HSE_QUALITY_CONTROLs.AddAsync(hse_quality_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_QUALITY_CONTROLs.Remove(hse_quality_model);
+                        _context.HSE_QUALITY_CONTROLs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5646,9 +5917,12 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
-        public async Task<WebApiResponse> POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY([FromBody] HSE_CLIMATE_CHANGE_AND_AIR_QUALITY hse_climate_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
+        public async Task<WebApiResponse> POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY([FromBody] HSE_CLIMATE_CHANGE_AND_AIR_QUALITY hse_climate_model, string omlName, /*List<IFormFile> fileToUpload,*/ string year, string ActionToDo = null)
         {
 
+            //var formCollection =await Request.ReadFormAsync();
+            //var file = formCollection.Files.First();
+            List<IFormFile> files = new List<IFormFile>(); 
             int save = 0;
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
@@ -5663,7 +5937,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_climate_model.Companyemail = WKPCompanyEmail;
                     hse_climate_model.CompanyName = WKPCompanyName;
                     hse_climate_model.COMPANY_ID = WKPCompanyId;
-                    hse_climate_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_climate_model.CompanyNumber = 0;
                     hse_climate_model.Date_Updated = DateTime.Now;
                     hse_climate_model.Updated_by = WKPCompanyId;
                     hse_climate_model.Year_of_WP = year;
@@ -5682,7 +5956,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     #endregion
 
-                    hse_climate_model.GHGFilename = files[0] != null ? GHGFile_File.fileName : null;
+                    //hse_climate_model.GHGFilename = files[0] != null ? GHGFile_File.fileName : null;
                     hse_climate_model.GHGFilePath = files[0] != null ? GHGFile_File.filePath : null;
                     if (action == GeneralModel.Insert)
                     {
@@ -5698,12 +5972,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_climate_model.Created_by = getData.Created_by;
                             hse_climate_model.Date_Updated = DateTime.Now;
                             hse_climate_model.Updated_by = WKPCompanyId;
+                            _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getData);
                             await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(hse_climate_model);
+                        _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5732,6 +6007,96 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        //[HttpPost("POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_M")]
+        //public async Task<WebApiResponse> POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALIT_M([FromBody] HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model hse_climate_model, string omlName, /*List<IFormFile> fileToUpload,*/ string year, string ActionToDo = null)
+        //{
+
+        //    var formCollection = await Request.ReadFormAsync();
+        //    var file = formCollection.Files.First();
+        //    List<IFormFile> files = new List<IFormFile>();
+        //    int save = 0;
+        //    string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
+
+        //    try
+        //    {
+
+        //        #region Saving HSE_CLIMATE_CHANGE_AND_AIR_QUALITYs data
+        //        if (hse_climate_model != null)
+        //        {
+        //            var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+
+        //            //hse_climate_model.Companyemail = WKPCompanyEmail;
+        //            //hse_climate_model.CompanyName = WKPCompanyName;
+        //            //hse_climate_model.COMPANY_ID = WKPCompanyId;
+        //            //hse_climate_model.CompanyNumber = 0;
+        //            //hse_climate_model.Date_Updated = DateTime.Now;
+        //            //hse_climate_model.Updated_by = WKPCompanyId;
+        //            hse_climate_model.Year_of_WP = year;
+        //            hse_climate_model.OML_Name = hse_climate_model.OML_Name.ToUpper();
+        //            #region file section
+        //            UploadedDocument GHGFile_File = null;
+
+        //            if (hse_climate_model.GHGFilePath != null)
+        //            {
+        //                string docName = "GHG";
+        //                GHGFile_File = _helpersController.UploadDocument(files[0], "GHGDocuments");
+        //                if (GHGFile_File == null)
+        //                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+
+        //            }
+
+        //            #endregion
+
+        //            hse_climate_model.GHGFilename = files[0] != null ? GHGFile_File.fileName : null;
+        //            hse_climate_model.GHGFilePath = files[0] != null ? GHGFile_File.filePath : null;
+        //            if (action == GeneralModel.Insert)
+        //            {
+        //                if (getData == null)
+        //                {
+        //                    hse_climate_model.Date_Created = DateTime.Now;
+        //                    hse_climate_model.Created_by = WKPCompanyId;
+        //                    await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
+        //                }
+        //                else
+        //                {
+        //                    hse_climate_model.Date_Created = getData.Date_Created;
+        //                    hse_climate_model.Created_by = getData.Created_by;
+        //                    hse_climate_model.Date_Updated = DateTime.Now;
+        //                    hse_climate_model.Updated_by = WKPCompanyId;
+        //                    await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
+        //                }
+        //            }
+        //            else if (action == GeneralModel.Delete)
+        //            {
+        //                _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(hse_climate_model);
+        //            }
+
+        //            save += await _context.SaveChangesAsync();
+
+        //            if (save > 0)
+        //            {
+        //                string successMsg = "Form has been " + action + "D successfully.";
+        //                var All_Data = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+        //                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+        //            }
+        //            else
+        //            {
+        //                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+        //            }
+        //        }
+
+        //        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {ActionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+        //        #endregion
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+        //    }
+        //}
+
         [HttpPost("POST_HSE_SAFETY_CULTURE_TRAINING")]
         public async Task<WebApiResponse> POST_HSE_SAFETY_CULTURE_TRAINING([FromBody] HSE_SAFETY_CULTURE_TRAINING hse_safety_culture_model, string omlName, string year, List<IFormFile> files, string ActionToDo = null)
         {
@@ -5750,7 +6115,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_safety_culture_model.Companyemail = WKPCompanyEmail;
                     hse_safety_culture_model.CompanyName = WKPCompanyName;
                     hse_safety_culture_model.COMPANY_ID = WKPCompanyId;
-                    hse_safety_culture_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_safety_culture_model.CompanyNumber = 0;
                     hse_safety_culture_model.Date_Updated = DateTime.Now;
                     hse_safety_culture_model.Updated_by = WKPCompanyId;
                     hse_safety_culture_model.Year_of_WP = year;
@@ -5798,12 +6163,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_safety_culture_model.Created_by = getData.Created_by;
                             hse_safety_culture_model.Date_Updated = DateTime.Now;
                             hse_safety_culture_model.Updated_by = WKPCompanyId;
+                            _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(getData);
                             await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(hse_safety_culture_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(hse_safety_culture_model);
+                        _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5845,12 +6211,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs data
                 if (hse_occupational_model != null)
                 {
-                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
 
                     hse_occupational_model.Companyemail = WKPCompanyEmail;
                     hse_occupational_model.CompanyName = WKPCompanyName;
                     hse_occupational_model.COMPANY_ID = WKPCompanyId;
-                    hse_occupational_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_occupational_model.CompanyNumber = 0;
                     hse_occupational_model.Date_Updated = DateTime.Now;
                     hse_occupational_model.Updated_by = WKPCompanyId;
                     hse_occupational_model.Year_of_WP = year;
@@ -5896,12 +6262,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_occupational_model.Created_by = getData.Created_by;
                             hse_occupational_model.Date_Updated = DateTime.Now;
                             hse_occupational_model.Updated_by = WKPCompanyId;
+                            _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
                             await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(hse_occupational_model);
+                        _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -5943,12 +6310,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving HSE_WASTE_MANAGEMENT_SYSTEMs data
                 if (hse_waste_model != null)
                 {
-                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
 
                     hse_waste_model.Companyemail = WKPCompanyEmail;
                     hse_waste_model.CompanyName = WKPCompanyName;
                     hse_waste_model.COMPANY_ID = WKPCompanyId;
-                    hse_waste_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_waste_model.CompanyNumber = 0;
                     hse_waste_model.Date_Updated = DateTime.Now;
                     hse_waste_model.Updated_by = WKPCompanyId;
                     hse_waste_model.Year_of_WP = year;
@@ -5994,12 +6361,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_waste_model.Created_by = getData.Created_by;
                             hse_waste_model.Date_Updated = DateTime.Now;
                             hse_waste_model.Updated_by = WKPCompanyId;
+                            _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
                             await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(hse_waste_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(hse_waste_model);
+                        _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -6041,12 +6409,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs data
                 if (hse_EMS_model != null)
                 {
-                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
 
                     hse_EMS_model.Companyemail = WKPCompanyEmail;
                     hse_EMS_model.CompanyName = WKPCompanyName;
                     hse_EMS_model.COMPANY_ID = WKPCompanyId;
-                    hse_EMS_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    hse_EMS_model.CompanyNumber = 0;
                     hse_EMS_model.Date_Updated = DateTime.Now;
                     hse_EMS_model.Updated_by = WKPCompanyId;
                     hse_EMS_model.Year_of_WP = year;
@@ -6091,12 +6459,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_EMS_model.Created_by = getData.Created_by;
                             hse_EMS_model.Date_Updated = DateTime.Now;
                             hse_EMS_model.Updated_by = WKPCompanyId;
+                            _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
                             await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(hse_EMS_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(hse_EMS_model);
+                        _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -6138,12 +6507,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs data
                 if (picture_upload_model != null)
                 {
-                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefault();
 
                     picture_upload_model.Companyemail = WKPCompanyEmail;
                     picture_upload_model.CompanyName = WKPCompanyName;
                     picture_upload_model.COMPANY_ID = WKPCompanyId;
-                    picture_upload_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    picture_upload_model.CompanyNumber = 0;
                     picture_upload_model.Date_Updated = DateTime.Now;
                     picture_upload_model.Updated_by = WKPCompanyId;
                     picture_upload_model.Year_of_WP = year;
@@ -6176,12 +6545,13 @@ namespace Backend_UMR_Work_Program.Controllers
                             picture_upload_model.Created_by = getData.Created_by;
                             picture_upload_model.Date_Updated = DateTime.Now;
                             picture_upload_model.Updated_by = WKPCompanyId;
+                            _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(getData);
                             await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(picture_upload_model);
                         }
                     }
                     else if (action == GeneralModel.Delete)
                     {
-                        _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(picture_upload_model);
+                        _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(getData);
                     }
 
                     save += await _context.SaveChangesAsync();

@@ -1573,6 +1573,21 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
+        public class HSE_ACCIDENT_INCIDENCE_MODEL
+        {
+            public int id { get; set; }
+            public string? Was_there_any_accident_incidence { get; set; }
+            public string? If_YES_were_they_reported { get; set; }
+            public string? Type_of_Accident_Incidence { get; set; }
+            public string? Location { get; set; }
+            public string? Investigation { get; set; }
+            public string? Date_ { get; set; }
+            public string? Cause { get; set; }
+            public string? Consequence { get; set; }
+            public string? Lesson_Learnt { get; set; }
+            public string? Frequency { get; set; }
+
+        }
         public class HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model
         {
             public string? OML_ID { get; set; }
@@ -1585,6 +1600,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
             public string? Terrain { get; set; }
             public string? Consession_Type { get; set; }
+
         }
 
         public class HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model
@@ -1992,7 +2008,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? OML_Name { get; set; }
             public string? Year_of_WP { get; set; }
             public string? DoyouhaveGHG { get; set; }
-            public string? GHGFilePath { get; set; }
+            public FormFile? GHGFilePath { get; set; }
             public string? Consession_Type { get; set; }
             public string? Terrain { get; set; }
             public string? Contract_Type { get; set; }
