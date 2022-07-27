@@ -21,13 +21,15 @@ namespace Backend_UMR_Work_Program.Controllers
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private BlobService blobService;
 
-        public WorkProgrammeController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, IMapper mapper)
+        public WorkProgrammeController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, IMapper mapper, BlobService blobservice)
         {
             _context = context;
             _configuration = configuration;
             _mapper = mapper;
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
+            blobService = blobservice;
         }
 
         private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -139,12 +141,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving Geophysical Activites
                 if (geophysical_activities_acquisition_model != null)
                 {
-                        var getgeophysical_activities_acquisition_model = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                        var getgeophysical_activities_acquisition_model = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
                         
                         geophysical_activities_acquisition_model.Companyemail = WKPCompanyEmail;
                         geophysical_activities_acquisition_model.CompanyName = WKPCompanyName;
                         geophysical_activities_acquisition_model.COMPANY_ID = WKPCompanyId;
-                        geophysical_activities_acquisition_model.CompanyNumber = int.Parse(WKPCompanyId);
+                        geophysical_activities_acquisition_model.CompanyNumber = WKPCompanyNumber;
                         geophysical_activities_acquisition_model.Date_Updated = DateTime.Now;
                         geophysical_activities_acquisition_model.Updated_by = WKPCompanyId;
                         geophysical_activities_acquisition_model.Year_of_WP = year;
@@ -288,24 +290,24 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
-        public async Task<WebApiResponse> GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELL(string year, string omlName, string quarter)
+        public async Task<WebApiResponse> GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELL(string year, string omlName)
         {
 
             try
             {
-                var getData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
+                var drillingCategory = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+                var drillingWellCost = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+                var drillingWellProposed = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = new {drillingCategory = drillingCategory, drillingWellCost = drillingWellCost, drillingWellProposed = drillingWellProposed}, StatusCode = ResponseCodes.Success };
 
             }
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
-        [HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
-        public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromBody] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, List<IFormFile> files, string omlName, string year, string ActionToDo = null)
+        [HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL"), DisableRequestSizeLimit]
+        public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string year, string ActionToDo = null)
         {
             int save = 0;
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
@@ -316,40 +318,43 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving drilling data
                 if (drilling_operations_categories_of_well_model != null)
                 {
-                    var getData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
 
                     drilling_operations_categories_of_well_model.Companyemail = WKPCompanyEmail;
                     drilling_operations_categories_of_well_model.CompanyName = WKPCompanyName;
                     drilling_operations_categories_of_well_model.COMPANY_ID = WKPCompanyId;
-                    drilling_operations_categories_of_well_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    drilling_operations_categories_of_well_model.CompanyNumber = WKPCompanyNumber;
                     drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
                     drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
                     drilling_operations_categories_of_well_model.Year_of_WP = year;
                     drilling_operations_categories_of_well_model.OML_Name = drilling_operations_categories_of_well_model.OML_Name.ToUpper();
                     #region file section
-                    UploadedDocument FieldDiscoveryUploadFile_File = null;
-                    UploadedDocument HydrocarbonCountUploadFile_File = null;
+                    //UploadedDocument FieldDiscoveryUploadFile_File = null;
+                    //UploadedDocument HydrocarbonCountUploadFile_File = null;
+                    var file1 = Request.Form.Files[0];
+                    var file2 = Request.Form.Files[1];
+                    var blobname1 = blobService.Filenamer(file1);
+                    var blobname2 = blobService.Filenamer(file2);
 
-                    if (files[0] != null)
+                    if (file1 != null)
                     {
                         string docName = "Field Discovery";
-                        FieldDiscoveryUploadFile_File = _helpersController.UploadDocument(files[0], "FieldDiscoveryDocuments");
-                        if (FieldDiscoveryUploadFile_File == null)
+                        drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType,  $"FieldDiscoveryDocuments/{blobname1}");
+                        if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
                     }
-                    if (files[1] != null)
+                    if (file2 != null)
                     {
                         string docName = "Hydrocarbon Count";
-                        HydrocarbonCountUploadFile_File = _helpersController.UploadDocument(files[1], "HydrocarbonCountDocuments");
-                        if (HydrocarbonCountUploadFile_File == null)
+                        drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}");
+                        if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 
                     }
                     #endregion
 
-                    drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = files[0] != null ? FieldDiscoveryUploadFile_File.filePath : null;
-                    drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = files[1] != null ? HydrocarbonCountUploadFile_File.filePath : null;
+                    //drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = files[0] != null ? FieldDiscoveryUploadFile_File.filePath : null;
+                    //drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = files[1] != null ? HydrocarbonCountUploadFile_File.filePath : null;
 
                     if (action == GeneralModel.Insert)
                     {
@@ -365,6 +370,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
                             drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
                             drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
+                            //drilling_operations_categories_of_well_model.Id = null;
                             await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
                         }
                     }
@@ -378,7 +384,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
@@ -1442,7 +1448,6 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_NDR")]
         public async Task<WebApiResponse> GET_NDR(string year, string omlName)
         {
-
             try
             {
                 var getData = (from c in _context.NDRs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();

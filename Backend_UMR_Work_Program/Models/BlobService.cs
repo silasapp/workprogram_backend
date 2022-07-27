@@ -13,14 +13,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
-namespace Musewall.Models
+namespace Backend_UMR_Work_Program.Models
 {
-    public class BlobService2
+    public class BlobService
     {
         private readonly BlobServiceClient _blobServiceClient;
         string accessKey = string.Empty;
 
-        public BlobService2(BlobServiceClient blobServiceClient, IConfiguration config)
+        public BlobService(BlobServiceClient blobServiceClient, IConfiguration config)
         {
             _blobServiceClient = blobServiceClient;
             this.accessKey = config.GetValue<string>("AzureBlobStorage");
