@@ -2476,6 +2476,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_actual_model.Created_by = getData.Created_by;
                             budget_actual_model.Date_Updated = DateTime.Now;
                             budget_actual_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(getData);
                             await _context.BUDGET_ACTUAL_EXPENDITUREs.AddAsync(budget_actual_model);
                         }
                     }
@@ -2652,6 +2653,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_exploratory_model.Created_by = getData.Created_by;
                             budget_exploratory_model.Date_Updated = DateTime.Now;
                             budget_exploratory_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(getData);
                             await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
                         }
                     }
@@ -2741,6 +2743,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_proposal_model.Created_by = getData.Created_by;
                             budget_proposal_model.Date_Updated = DateTime.Now;
                             budget_proposal_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(getData);
                             await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.AddAsync(budget_proposal_model);
                         }
                     }
@@ -2831,6 +2834,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_performance_model.Created_by = getData.Created_by;
                             budget_performance_model.Date_Updated = DateTime.Now;
                             budget_performance_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(getData);
                             await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.AddAsync(budget_performance_model);
                         }
                     }
@@ -2919,6 +2923,8 @@ namespace Backend_UMR_Work_Program.Controllers
                             budget_facilities_model.Created_by = getData.Created_by;
                             budget_facilities_model.Date_Updated = DateTime.Now;
                             budget_facilities_model.Updated_by = WKPCompanyId;
+                            _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(getData);
+
                             await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.AddAsync(budget_facilities_model);
                         }
                     }
