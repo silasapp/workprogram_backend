@@ -111,13 +111,14 @@ namespace Backend_UMR_Work_Program.Models
                                 new Claim(ClaimTypes.Email, getUser.EMAIL ?? ""),
                                 new Claim(ClaimTypes.NameIdentifier, getUser.COMPANY_ID ?? ""),
                                 new Claim(ClaimTypes.GivenName, getUser?.NAME ?? ""),
-                                new Claim(ClaimTypes.Role, companyName)
+                                new Claim(ClaimTypes.Role, companyName),
+                                new Claim(ClaimTypes.PrimarySid, getUser.Id.ToString() ?? ""),
                             }),
                             Expires = DateTime.UtcNow.AddDays(7),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                         };
                         var token = tokenHandler.CreateToken(tokenDescriptor);
-                        UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, Name = getUser.NAME, ContractType = contractType, token = tokenHandler.WriteToken(token), code = 1 };
+                        UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, CompanyNumber = getUser.CompanyNumber, Name = getUser.NAME, ContractType = contractType, token = tokenHandler.WriteToken(token), code = 1 };
                         return tok;
                     }
                     return new UserToken { code = 2 };

@@ -114,6 +114,10 @@
               "target": "Package",
               "version": "[4.3.2, )"
             },
+            "WindowsAzure.Storage": {
+              "target": "Package",
+              "version": "[9.3.3, )"
+            },
             "YamlDotNet": {
               "target": "Package",
               "version": "[11.2.1, )"
