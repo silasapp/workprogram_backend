@@ -119,7 +119,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
+                var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
                 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getGeophysicalActivitesData, StatusCode = ResponseCodes.Success };
             }
@@ -162,6 +162,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             }
                             else
                             {
+                            _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Remove(getgeophysical_activities_acquisition_model);
                             geophysical_activities_acquisition_model.Date_Created = getgeophysical_activities_acquisition_model.Date_Created;
                             geophysical_activities_acquisition_model.Created_by = getgeophysical_activities_acquisition_model.Created_by;
                             geophysical_activities_acquisition_model.Date_Updated = DateTime.Now;
@@ -179,7 +180,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         if (save > 0)
                         {
                             string successMsg = "Form has been " + action + "D successfully.";
-                            var All_geophysical_activities_acquisitions = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                            var All_geophysical_activities_acquisitions = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_geophysical_activities_acquisitions, StatusCode = ResponseCodes.Success };
                         }
                         else
@@ -230,12 +231,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving Geophysical Activites
                 if (geophysical_activities_processing_model != null)
                 {
-                    var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == geophysical_activities_processing_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_processing_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
 
                     geophysical_activities_processing_model.Companyemail = WKPCompanyEmail;
                     geophysical_activities_processing_model.CompanyName = WKPCompanyName;
                     geophysical_activities_processing_model.COMPANY_ID = WKPCompanyId;
-                    geophysical_activities_processing_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    geophysical_activities_processing_model.CompanyNumber = WKPCompanyNumber;
                     geophysical_activities_processing_model.Date_Updated = DateTime.Now;
                     geophysical_activities_processing_model.Updated_by = WKPCompanyId;
                     geophysical_activities_processing_model.Year_of_WP = year;
@@ -251,6 +252,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
+                            _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Remove(getGeophysicalActivitesData);
                             geophysical_activities_processing_model.Date_Created = getGeophysicalActivitesData.Date_Created;
                             geophysical_activities_processing_model.Created_by = getGeophysicalActivitesData.Created_by;
                             geophysical_activities_processing_model.Date_Updated = DateTime.Now;
@@ -268,7 +270,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        var All_Data = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
@@ -285,7 +287,6 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
 
@@ -366,6 +367,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
+                            _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(getData);
                             drilling_operations_categories_of_well_model.Date_Created = getData.Date_Created;
                             drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
                             drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
@@ -412,7 +414,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
+                var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
 
@@ -437,12 +439,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving drilling data
                 if (drilling_each_well_cost_model != null)
                 {
-                    var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
 
                     drilling_each_well_cost_model.Companyemail = WKPCompanyEmail;
                     drilling_each_well_cost_model.CompanyName = WKPCompanyName;
                     drilling_each_well_cost_model.COMPANY_ID = WKPCompanyId;
-                    drilling_each_well_cost_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    drilling_each_well_cost_model.CompanyNumber = WKPCompanyNumber;
                     drilling_each_well_cost_model.Date_Updated = DateTime.Now;
                     drilling_each_well_cost_model.Updated_by = WKPCompanyId;
                     drilling_each_well_cost_model.Year_of_WP = year;
@@ -458,6 +460,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
+                            _context.DRILLING_EACH_WELL_COSTs.Remove(getData);
                             drilling_each_well_cost_model.Date_Created = getData.Date_Created;
                             drilling_each_well_cost_model.Created_by = getData.Created_by;
                             drilling_each_well_cost_model.Date_Updated = DateTime.Now;
@@ -475,7 +478,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
@@ -492,7 +495,6 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
 
@@ -502,7 +504,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
+                var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == quarter && c.Year_of_WP == year select c).FirstOrDefault();
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
 
@@ -527,12 +529,12 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving drilling data
                 if (drilling_each_well_cost_proposed_model != null)
                 {
-                    var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
 
                     drilling_each_well_cost_proposed_model.Companyemail = WKPCompanyEmail;
                     drilling_each_well_cost_proposed_model.CompanyName = WKPCompanyName;
                     drilling_each_well_cost_proposed_model.COMPANY_ID = WKPCompanyId;
-                    drilling_each_well_cost_proposed_model.CompanyNumber = int.Parse(WKPCompanyId);
+                    drilling_each_well_cost_proposed_model.CompanyNumber = WKPCompanyNumber;
                     drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
                     drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
                     drilling_each_well_cost_proposed_model.Year_of_WP = year;
@@ -548,6 +550,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
+                            _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(drilling_each_well_cost_proposed_model);
                             drilling_each_well_cost_proposed_model.Date_Created = getData.Date_Created;
                             drilling_each_well_cost_proposed_model.Created_by = getData.Created_by;
                             drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
@@ -565,7 +568,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.CompanyNumber == int.Parse(WKPCompanyId) && c.Year_of_WP == year select c).ToListAsync();
+                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
