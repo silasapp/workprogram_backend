@@ -227,7 +227,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-
                 #region Saving Geophysical Activites
                 if (geophysical_activities_processing_model != null)
                 {
