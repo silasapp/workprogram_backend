@@ -175,3 +175,4 @@ C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\o
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.WindowsAzure.Storage.dll
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.WindowsAzure.Storage.dll

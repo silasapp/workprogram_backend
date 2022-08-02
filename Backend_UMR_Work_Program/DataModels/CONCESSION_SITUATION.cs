@@ -48,5 +48,6 @@ namespace Backend_UMR_Work_Program.Models
         public int? CompanyNumber { get; set; }
         public string? Field_Name { get; set; }
         public int? AdminConcession_ID { get; set; }
+        public int? Field_ID { get; set; }
     }
 }
