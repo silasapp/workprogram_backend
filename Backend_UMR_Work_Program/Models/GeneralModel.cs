@@ -2258,5 +2258,15 @@ namespace Backend_UMR_Work_Program.Models
             public string contentType { get; set; }
             public string name { get; set; }
         }
+
+        public class ConcessionField
+        {
+            public int? Field_ID { get; set; }
+            public int Concession_ID { get; set; }
+            public string Concession_Name { get; set; }
+            public string Consession_Type { get; set; }
+            public string? Field_Name { get; set; }
+            public string? Terrain { get; set; }
+        }
     }
 }
