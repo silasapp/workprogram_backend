@@ -418,11 +418,11 @@ namespace Backend_UMR_Work_Program.Controllers
             if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
             {
 
-                var BudgetActualExpenditure = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceExploratory = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceDevelopment = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceProductionCost = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceFacilityDevProjects = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var BudgetActualExpenditure = await(from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceExploratory = await(from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceDevelopment = await(from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceProductionCost = await(from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceFacilityDevProjects = await(from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     BudgetActualExpenditure = BudgetActualExpenditure,
@@ -434,11 +434,11 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             else
             {
-                var BudgetActualExpenditure = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceExploratory = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceDevelopment = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceProductionCost = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetPerformanceFacilityDevProjects = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var BudgetActualExpenditure = await(from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceExploratory = await(from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceDevelopment = await(from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceProductionCost = await(from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetPerformanceFacilityDevProjects = await(from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     BudgetActualExpenditure = BudgetActualExpenditure,
@@ -456,8 +456,8 @@ namespace Backend_UMR_Work_Program.Controllers
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
             {
-                var BudgetProposalComponents = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetCapexOpex = (from c in _context.BUDGET_CAPEX_OPices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var BudgetProposalComponents = await(from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetCapexOpex = await(from c in _context.BUDGET_CAPEX_OPices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     BudgetProposalComponents = BudgetProposalComponents,
@@ -466,8 +466,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             else
             {
-                var BudgetProposalComponents = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var BudgetCapexOpex = (from c in _context.BUDGET_CAPEX_OPices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var BudgetProposalComponents = await(from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var BudgetCapexOpex = await(from c in _context.BUDGET_CAPEX_OPices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     BudgetProposalComponents = BudgetProposalComponents,
@@ -482,10 +482,10 @@ namespace Backend_UMR_Work_Program.Controllers
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
             {
-                var OilAndGasExpenditure = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var OilCondensateTechnologyAssessment = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var OilAndGasProjects = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var FacilitiesProjetPerformance = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var OilAndGasExpenditure = await(from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var OilCondensateTechnologyAssessment = await(from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var OilAndGasProjects = await(from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var FacilitiesProjetPerformance = await(from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                 return new
                 {
@@ -497,10 +497,10 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             else
             {
-                var OilAndGasExpenditure = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var OilCondensateTechnologyAssessment = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var OilAndGasProjects = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var FacilitiesProjetPerformance = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var OilAndGasExpenditure = await(from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var OilCondensateTechnologyAssessment = await(from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var OilAndGasProjects = await(from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var FacilitiesProjetPerformance = await(from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                 return new
                 {
@@ -518,9 +518,9 @@ namespace Backend_UMR_Work_Program.Controllers
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
             {
-                var NigeriaContent = (from c in _context.NIGERIA_CONTENT_Trainings where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var NigeriaContentUploadSuccession = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var NigeriaContentQuestion = (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var NigeriaContent = await(from c in _context.NIGERIA_CONTENT_Trainings where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var NigeriaContentUploadSuccession = await(from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var NigeriaContentQuestion = await(from c in _context.NIGERIA_CONTENT_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                 return new
                 {
@@ -531,9 +531,9 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             else
             {
-                var NigeriaContent = (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var NigeriaContentUploadSuccession = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var NigeriaContentQuestion = (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var NigeriaContent = await(from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var NigeriaContentUploadSuccession = await(from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var NigeriaContentQuestion = await(from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                 return new
                 {
@@ -550,7 +550,7 @@ namespace Backend_UMR_Work_Program.Controllers
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
             {
-                var StrategicPlans = (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var StrategicPlans = await(from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     StrategicPlans = StrategicPlans
@@ -558,7 +558,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             else
             {
-                var StrategicPlans = (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var StrategicPlans = await(from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     StrategicPlans = StrategicPlans
@@ -572,8 +572,8 @@ namespace Backend_UMR_Work_Program.Controllers
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
             {
-                var LegalLitigation = (from c in _context.LEGAL_LITIGATIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var LegalArbitration = (from c in _context.LEGAL_ARBITRATIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var LegalLitigation = await(from c in _context.LEGAL_LITIGATIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var LegalArbitration = await(from c in _context.LEGAL_ARBITRATIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     LegalLitigation = LegalLitigation,
@@ -582,8 +582,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             else
             {
-                var LegalLitigation = (from c in _context.LEGAL_LITIGATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                var LegalArbitration = (from c in _context.LEGAL_ARBITRATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                var LegalLitigation = await(from c in _context.LEGAL_LITIGATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var LegalArbitration = await(from c in _context.LEGAL_ARBITRATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                 return new
                 {
                     LegalLitigation = LegalLitigation,
@@ -2849,7 +2849,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_ACTUAL_EXPENDITURE")]
-        public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -2858,8 +2858,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving BUDGET_ACTUAL_EXPENDITURE data
-                if (budget_actual_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.BUDGET_ACTUAL_EXPENDITUREs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (budget_actual_model != null)
                 {
                     var getData = (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -2898,7 +2905,11 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
@@ -2910,11 +2921,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
-
+                
             }
             catch (Exception e)
             {
@@ -2924,7 +2931,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
-        public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName,  string year, string id,string actionToDo)
         {
 
             int save = 0;
@@ -2933,8 +2940,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT data
-                if (budget_proposal_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (budget_proposal_model != null)
                 {
                     var getData = (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -2973,8 +2987,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -2985,11 +3003,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
-
+                
             }
             catch (Exception e)
             {
@@ -2999,7 +3013,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITY")]
-        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy([FromBody] BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy budget_exploratory_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy([FromBody] BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy budget_exploratory_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3008,8 +3022,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy data
-                if (budget_exploratory_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (budget_exploratory_model != null)
                 {
                     var getData = (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3023,31 +3044,35 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_exploratory_model.OML_Name = omlName;
                     budget_exploratory_model.Field_ID = concessionField.Field_ID;
                     if (action == GeneralModel.Insert) if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
                         {
-                            budget_exploratory_model.Date_Created = DateTime.Now;
-                            budget_exploratory_model.Created_by = WKPCompanyId;
-                            await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
+                            if (getData == null)
+                            {
+                                budget_exploratory_model.Date_Created = DateTime.Now;
+                                budget_exploratory_model.Created_by = WKPCompanyId;
+                                await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
+                            }
+                            else
+                            {
+                                budget_exploratory_model.Date_Created = getData.Date_Created;
+                                budget_exploratory_model.Created_by = getData.Created_by;
+                                budget_exploratory_model.Date_Updated = DateTime.Now;
+                                budget_exploratory_model.Updated_by = WKPCompanyId;
+                                _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(getData);
+                                await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
+                            }
                         }
-                        else
+                        else if (action == GeneralModel.Delete)
                         {
-                            budget_exploratory_model.Date_Created = getData.Date_Created;
-                            budget_exploratory_model.Created_by = getData.Created_by;
-                            budget_exploratory_model.Date_Updated = DateTime.Now;
-                            budget_exploratory_model.Updated_by = WKPCompanyId;
                             _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(getData);
-                            await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.AddAsync(budget_exploratory_model);
                         }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Remove(getData);
-                    }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3058,11 +3083,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
-
+                
             }
             catch (Exception e)
             {
@@ -3072,7 +3093,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITY")]
-        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy([FromBody] BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy budget_proposal_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy([FromBody] BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy budget_proposal_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3081,8 +3102,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy data
-                if (budget_proposal_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (budget_proposal_model != null)
                 {
                     var getData = (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3119,8 +3147,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3131,10 +3163,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
+                
 
             }
             catch (Exception e)
@@ -3145,7 +3174,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_PERFORMANCE_PRODUCTION_COST")]
-        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_PRODUCTION_COST([FromBody] BUDGET_PERFORMANCE_PRODUCTION_COST budget_performance_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_PRODUCTION_COST([FromBody] BUDGET_PERFORMANCE_PRODUCTION_COST budget_performance_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3154,8 +3183,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving BUDGET_PERFORMANCE_PRODUCTION_COST data
-                if (budget_performance_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (budget_performance_model != null)
                 {
                     var getData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3192,8 +3228,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3204,10 +3244,6 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
 
             }
             catch (Exception e)
@@ -3218,7 +3254,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
-        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT([FromBody] BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT budget_facilities_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT([FromBody] BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT budget_facilities_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3227,8 +3263,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT data
-                if (budget_facilities_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (budget_facilities_model != null)
                 {
                     var getData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3266,8 +3309,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3278,10 +3325,6 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
 
             }
             catch (Exception e)
@@ -3292,7 +3335,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE")]
-        public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE oil_gas_facility_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE oil_gas_facility_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3301,8 +3344,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE data
-                if (oil_gas_facility_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (oil_gas_facility_model != null)
                 {
                     var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3342,8 +3392,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3354,11 +3408,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
-
+               
             }
             catch (Exception e)
             {
@@ -3368,7 +3418,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT")]
-        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment oil_condensate_assessment_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment oil_condensate_assessment_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3377,8 +3427,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments data
-                if (oil_condensate_assessment_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (oil_condensate_assessment_model != null)
                 {
                     var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3391,7 +3448,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_condensate_assessment_model.Year_of_WP = year;
                     oil_condensate_assessment_model.OML_Name = omlName;
                     oil_condensate_assessment_model.Field_ID = concessionField.Field_ID;
-                    
+
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
@@ -3416,8 +3473,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3428,10 +3489,6 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
 
             }
             catch (Exception e)
@@ -3442,7 +3499,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
-        public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3451,8 +3508,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs data
-                if (oil_gas_facility_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (oil_gas_facility_model != null)
                 {
                     var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3492,8 +3556,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3504,10 +3572,6 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
 
             }
             catch (Exception e)
@@ -3518,7 +3582,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
-        public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3527,8 +3591,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving FACILITIES_PROJECT_PERFORMANCEs data
-                if (facilities_project_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.FACILITIES_PROJECT_PERFORMANCEs.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (facilities_project_model != null)
                 {
                     var getData = (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3542,7 +3613,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
                     facilities_project_model.OML_Name = omlName;
                     facilities_project_model.Field_ID = concessionField.Field_ID;
-                    
+
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
@@ -3567,8 +3638,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3579,10 +3654,6 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
 
             }
             catch (Exception e)
@@ -3593,7 +3664,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_CAPEX_OPEX")]
-        public async Task<WebApiResponse> POST_BUDGET_CAPEX_OPEX([FromBody] BUDGET_CAPEX_OPEX budget_capex_opex_model, string omlName, string fieldName,  string year, string actionToDo)
+        public async Task<WebApiResponse> POST_BUDGET_CAPEX_OPEX([FromBody] BUDGET_CAPEX_OPEX budget_capex_opex_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -3602,8 +3673,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
 
-                #region Saving BUDGET_CAPEX_OPEXs data
-                if (budget_capex_opex_model != null)
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.BUDGET_CAPEX_OPices where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
+                        _context.BUDGET_CAPEX_OPices.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (budget_capex_opex_model != null)
                 {
                     var getData = (from c in _context.BUDGET_CAPEX_OPices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -3616,7 +3694,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_capex_opex_model.Year_of_WP = year;
                     budget_capex_opex_model.OML_Name = omlName;
                     budget_capex_opex_model.Field_ID = concessionField.Field_ID;
-                    
+
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
@@ -3641,8 +3719,12 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
 
                     save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
                         var All_Data = await (from c in _context.BUDGET_CAPEX_OPices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -3653,10 +3735,6 @@ namespace Backend_UMR_Work_Program.Controllers
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
                     }
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
 
             }
             catch (Exception e)
