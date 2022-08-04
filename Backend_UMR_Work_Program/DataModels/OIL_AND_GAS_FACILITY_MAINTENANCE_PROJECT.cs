@@ -50,5 +50,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Actual_Proposed { get; set; }
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
+        public int? Field_ID { get; set; }
     }
 }

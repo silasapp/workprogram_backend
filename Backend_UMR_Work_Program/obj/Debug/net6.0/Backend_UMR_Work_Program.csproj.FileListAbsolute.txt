@@ -86,6 +86,13 @@ C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\obj\Debug\net6.0\r
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.AssemblyReference.cache
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfoInputs.cache
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfo.cs
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CoreCompileInputs.cache
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.json
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.exe
@@ -158,13 +165,6 @@ C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\b
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.AssemblyReference.cache
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfoInputs.cache
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfo.cs
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CoreCompileInputs.cache
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\staticwebassets.build.json
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\staticwebassets.development.json
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\scopedcss\bundle\Backend_UMR_Work_Program.styles.css
@@ -175,3 +175,4 @@ C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\o
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
 C:\Workcode\Backend_UMR_Work_Program\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.WindowsAzure.Storage.dll
+C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.WindowsAzure.Storage.dll

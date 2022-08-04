@@ -34,7 +34,7 @@ namespace Backend_UMR_Work_Program.Models
             var guid = Guid.NewGuid().ToString().Substring(2, 9);
             var span = DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds;
             Random rand = new Random();
-            var regtext = name.Substring(0, 15) + span.ToString().Substring(0, 5) + guid + rand.Next(1000).ToString();
+            var regtext = name + span.ToString().Substring(0, 5) + guid + rand.Next(1000).ToString();
             var texo = System.Text.RegularExpressions.Regex.Replace(regtext, @"[^a-zA-Z0-9]", "");
             var goodname = texo + ext;
             return goodname;
