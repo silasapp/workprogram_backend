@@ -13407,6 +13407,7 @@ namespace Backend_UMR_Work_Program.Models
             {
                 entity.ToTable("STRATEGIC_PLANS_ON_COMPANY_BASIS");
 
+
                 entity.Property(e => e.ACTIVITIES)
                     .HasMaxLength(500)
                     .IsUnicode(false);
