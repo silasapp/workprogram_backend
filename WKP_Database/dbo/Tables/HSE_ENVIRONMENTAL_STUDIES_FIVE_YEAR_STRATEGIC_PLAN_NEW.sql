@@ -18,6 +18,9 @@
     [Terrain]                 VARCHAR (50)   NULL,
     [COMPANY_ID]              VARCHAR (100)  NULL,
     [CompanyNumber]           INT            NULL,
+    [Field_ID]                INT            NULL,
     CONSTRAINT [PK_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

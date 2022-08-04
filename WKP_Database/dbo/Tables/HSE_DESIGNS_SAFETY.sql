@@ -19,6 +19,9 @@
     [Contract_Type]                VARCHAR (50)  NULL,
     [COMPANY_ID]                   VARCHAR (100) NULL,
     [CompanyNumber]                INT           NULL,
+    [Field_ID]                     INT           NULL,
     CONSTRAINT [PK_HSE_DESIGNS_SAFETY] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
