@@ -141,7 +141,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving Geophysical Activites
                 if (geophysical_activities_acquisition_model != null)
                 {
-                        var getgeophysical_activities_acquisition_model = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+                        var getgeophysical_activities_acquisition_model = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                         
                         geophysical_activities_acquisition_model.Companyemail = WKPCompanyEmail;
                         geophysical_activities_acquisition_model.CompanyName = WKPCompanyName;
@@ -180,8 +180,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         if (save > 0)
                         {
                             string successMsg = "Form has been " + action + "D successfully.";
-                            var All_geophysical_activities_acquisitions = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_geophysical_activities_acquisitions, StatusCode = ResponseCodes.Success };
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = new Object{}, StatusCode = ResponseCodes.Success };
                         }
                         else
                         {
@@ -269,8 +268,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = new Object{}, StatusCode = ResponseCodes.Success };
                     }
                     else
                     {
@@ -966,7 +964,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var getData = (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+                var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getData, StatusCode = ResponseCodes.Success };
 
@@ -980,17 +978,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("POST_INITIAL_WELL_COMPLETION_JOB")]
         public async Task<WebApiResponse> POST_INITIAL_WELL_COMPLETION_JOB([FromBody] INITIAL_WELL_COMPLETION_JOB1 initial_well_completion_model, string omlName, string year, string ActionToDo = null)
         {
-
             int save = 0;
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-
                 #region Saving FDP data
                 if (initial_well_completion_model != null)
                 {
-                    var getData = (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
                     initial_well_completion_model.Companyemail = WKPCompanyEmail;
                     initial_well_completion_model.CompanyName = WKPCompanyName;
@@ -999,12 +995,13 @@ namespace Backend_UMR_Work_Program.Controllers
                     initial_well_completion_model.Date_Updated = DateTime.Now;
                     initial_well_completion_model.Updated_by = WKPCompanyId;
                     initial_well_completion_model.Year_of_WP = year;
-                    initial_well_completion_model.OML_Name = initial_well_completion_model.OML_Name.ToUpper();
+                    initial_well_completion_model.OML_Name = omlName.ToUpper();
 
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
                         {
+                             _context.INITIAL_WELL_COMPLETION_JOBs1.Remove(getData);
                             initial_well_completion_model.Date_Created = DateTime.Now;
                             initial_well_completion_model.Created_by = WKPCompanyId;
                             await _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(initial_well_completion_model);
@@ -1034,7 +1031,6 @@ namespace Backend_UMR_Work_Program.Controllers
                     else
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
                     }
                 }
 
@@ -1069,17 +1065,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("POST_WORKOVERS_RECOMPLETION_JOB")]
         public async Task<WebApiResponse> POST_WORKOVERS_RECOMPLETION_JOB([FromBody] WORKOVERS_RECOMPLETION_JOB1 workovers_recompletion_model, string omlName, string year, string ActionToDo = null)
         {
-
             int save = 0;
             string action = ActionToDo == null ? GeneralModel.Insert : ActionToDo;
 
             try
             {
-
                 #region Saving FDP data
                 if (workovers_recompletion_model != null)
                 {
-                    var getData = (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
                     workovers_recompletion_model.Companyemail = WKPCompanyEmail;
                     workovers_recompletion_model.CompanyName = WKPCompanyName;
@@ -1088,12 +1082,13 @@ namespace Backend_UMR_Work_Program.Controllers
                     workovers_recompletion_model.Date_Updated = DateTime.Now;
                     workovers_recompletion_model.Updated_by = WKPCompanyId;
                     workovers_recompletion_model.Year_of_WP = year;
-                    workovers_recompletion_model.OML_Name = workovers_recompletion_model.OML_Name.ToUpper();
+                    workovers_recompletion_model.OML_Name = omlName.ToUpper();
 
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
                         {
+                             _context.WORKOVERS_RECOMPLETION_JOBs1.Remove(getData);
                             workovers_recompletion_model.Date_Created = DateTime.Now;
                             workovers_recompletion_model.Created_by = WKPCompanyId;
                             await _context.WORKOVERS_RECOMPLETION_JOBs1.AddAsync(workovers_recompletion_model);
@@ -1123,7 +1118,6 @@ namespace Backend_UMR_Work_Program.Controllers
                     else
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
                     }
                 }
 
