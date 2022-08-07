@@ -20,5 +20,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Terrain { get; set; }
         public string? Consession_Type { get; set; }
         public int? CompanyNumber { get; set; }
+        public int? Field_ID { get; set; }
     }
 }

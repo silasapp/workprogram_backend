@@ -104,6 +104,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT> BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs { get; set; } = null!;
         public virtual DbSet<BudgetProposal> BudgetProposals { get; set; } = null!;
         public virtual DbSet<COMPANY_CONCESSIONS_FIELD> COMPANY_CONCESSIONS_FIELDs { get; set; } = null!;
+        public virtual DbSet<COMPANY_FIELD> COMPANY_FIELDs { get; set; } = null!;
         public virtual DbSet<CONCESSION_SITUATION> CONCESSION_SITUATIONs { get; set; } = null!;
         public virtual DbSet<CSR> CSRs { get; set; } = null!;
         public virtual DbSet<Class_Table> Class_Tables { get; set; } = null!;
@@ -607,9 +608,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
             {
-                entity.HasKey(e => e.Id)
-                    .HasName("PK_companycodeid")
-                    .IsClustered(false);
+                entity.HasNoKey();
 
                 entity.ToTable("ADMIN_COMPANY_CODE");
 
@@ -636,6 +635,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.GUID)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.IsActive)
                     .HasMaxLength(20)
@@ -989,7 +990,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_CONCESSIONS_INFORMATION>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Consession_Id)
+                    .HasName("PK_ADMIN_CONCESSIONS_INFORMATIONs");
 
                 entity.ToTable("ADMIN_CONCESSIONS_INFORMATION");
 
@@ -1017,6 +1019,10 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ConcessionName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Concession_Held)
                     .HasMaxLength(3900)
                     .IsUnicode(false);
@@ -1024,8 +1030,6 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Concession_Unique_ID)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Consession_Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Consession_Type)
                     .HasMaxLength(50)
@@ -1062,6 +1066,10 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Equity_distribution).IsUnicode(false);
+
+                entity.Property(e => e.Field_Name)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Flag1)
                     .HasMaxLength(3900)
@@ -3867,6 +3875,25 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<COMPANY_FIELD>(entity =>
+            {
+                entity.HasKey(e => e.Field_ID);
+
+                entity.ToTable("COMPANY_FIELDS");
+
+                entity.Property(e => e.Date_Created).HasColumnType("datetime");
+
+                entity.Property(e => e.Date_Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.Field_Location)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Field_Name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<CONCESSION_SITUATION>(entity =>
             {
                 entity.ToTable("CONCESSION_SITUATION");
@@ -3922,6 +3949,10 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Equity_distribution)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Field_Name)
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
@@ -7705,8 +7736,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_MANAGEMENT_POSITION>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("HSE_MANAGEMENT_POSITION");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -7736,8 +7765,6 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Date_Created).HasColumnType("datetime");
 
                 entity.Property(e => e.Date_Updated).HasColumnType("datetime");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
@@ -8222,8 +8249,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_QUALITY_CONTROL>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("HSE_QUALITY_CONTROL");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -8257,8 +8282,6 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.DoyouhaveQualityControl)
                     .HasMaxLength(500)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
@@ -9019,7 +9042,7 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.MOUOSCPFilePath)
-                    .HasMaxLength(100)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.MOUOSCPFilename)
@@ -9027,7 +9050,7 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.MOUResponderFilePath)
-                    .HasMaxLength(100)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.MOUResponderFilename)
