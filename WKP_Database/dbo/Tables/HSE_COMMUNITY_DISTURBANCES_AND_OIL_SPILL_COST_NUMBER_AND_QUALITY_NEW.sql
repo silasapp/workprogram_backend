@@ -19,6 +19,9 @@
     [Contract_Type]      VARCHAR (50)   NULL,
     [Terrain]            VARCHAR (50)   NULL,
     [CompanyNumber]      INT            NULL,
+    [Field_ID]           INT            NULL,
     CONSTRAINT [PK_HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NUMBER_AND_QUALITY_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

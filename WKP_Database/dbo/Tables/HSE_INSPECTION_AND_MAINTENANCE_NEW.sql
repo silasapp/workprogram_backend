@@ -20,6 +20,9 @@
     [Consession_Type]                                                     VARCHAR (50)   NULL,
     [COMPANY_ID]                                                          VARCHAR (100)  NULL,
     [CompanyNumber]                                                       INT            NULL,
+    [Field_ID]                                                            INT            NULL,
     CONSTRAINT [PK_HSE_INSPECTION_AND_MAINTENANCE_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

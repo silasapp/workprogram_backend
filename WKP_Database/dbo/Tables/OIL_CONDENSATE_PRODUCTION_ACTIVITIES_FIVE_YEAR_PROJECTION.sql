@@ -55,6 +55,9 @@
     [ProductionOilCondensateAGNAGUFilename]          VARCHAR (100) NULL,
     [COMPANY_ID]                                     VARCHAR (100) NULL,
     [CompanyNumber]                                  INT           NULL,
+    [Field_ID]                                       INT           NULL,
     CONSTRAINT [PK_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
