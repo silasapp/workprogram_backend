@@ -14,6 +14,9 @@
     [Terrain]              VARCHAR (50)  NULL,
     [Consession_Type]      VARCHAR (50)  NULL,
     [CompanyNumber]        INT           NULL,
+    [Field_ID]             INT           NULL,
     CONSTRAINT [PK_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

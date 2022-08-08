@@ -498,5 +498,6 @@
     <Build Include="dbo\Stored Procedures\sp_helpdiagrams.sql" />
     <Build Include="dbo\Stored Procedures\sp_renamediagram.sql" />
     <Build Include="dbo\Stored Procedures\sp_upgraddiagrams.sql" />
+    <Build Include="dbo\Tables\COMPANY_FIELDS.sql" />
   </ItemGroup>
 </Project>

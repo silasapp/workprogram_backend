@@ -29,6 +29,9 @@
     [FDPDocumentFilename]                        VARCHAR (500) NULL,
     [COMPANY_ID]                                 VARCHAR (100) NULL,
     [CompanyNumber]                              INT           NULL,
+    [Field_ID]                                   INT           NULL,
     CONSTRAINT [PK_FIELD_DEVELOPMENT_PLAN] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

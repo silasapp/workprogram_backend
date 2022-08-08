@@ -34,6 +34,9 @@
     [Terrain]                                   VARCHAR (50)  NULL,
     [Consession_Type]                           VARCHAR (50)  NULL,
     [CompanyNumber]                             INT           NULL,
+    [Field_ID]                                  INT           NULL,
     CONSTRAINT [PK_Drilling_Operations_] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

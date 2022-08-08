@@ -20,6 +20,9 @@
     [Terrain]                                          VARCHAR (50)  NULL,
     [COMPANY_ID]                                       VARCHAR (100) NULL,
     [CompanyNumber]                                    INT           NULL,
+    [Field_ID]                                         INT           NULL,
     CONSTRAINT [PK_RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
