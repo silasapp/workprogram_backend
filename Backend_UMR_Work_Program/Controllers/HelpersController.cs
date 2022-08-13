@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Azure.Storage.Blobs;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -22,7 +23,7 @@ namespace Backend_UMR_Work_Program.Controllers
         public WKP_DBContext _context;
         IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
-
+        
         public HelpersController(WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _mapper = mapper;
@@ -238,6 +239,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 throw ex;
             }
         }
+
         public UploadedDocument UploadDocument(IFormFile document, string folderToSave)
         {
             var document_uniqueFileName = "";
@@ -290,7 +292,51 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
+        public async Task<UploadedDocument> UploadBlobDocument(IFormFile document, string folderToSave)
+        {
+            try
+            {
+                if (document != null)
+                {
 
+                            string Connection = _configuration.GetSection("BlobStorage").GetSection("BlobConnectionString").Value.ToString();
+                            string containerName = _configuration.GetSection("BlobStorage").GetSection("BlobContainerName").Value.ToString();
+                            Stream myBlob = new MemoryStream();
+                            string fileExtension = document.FileName.Split(".")[1].Trim();
+                            string fileName = document.Name + Guid.NewGuid().ToString() + fileExtension;
+                            myBlob = document.OpenReadStream();
+                            var blobClient = new BlobContainerClient(Connection, containerName);
+                            var blob = blobClient.GetBlobClient(fileName);
+                            await blob.UploadAsync(myBlob);
+                    
+                            var uploadedDoc = new UploadedDocument()
+                            {
+                                fileName = fileName,
+                                filePath = blob.Uri.AbsoluteUri,
+                            };
+                        
+                            DownloadBlob(fileName);
+                             return uploadedDoc;
+
+
+                } return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+
+            }
+        }
+
+        public static async Task DownloadBlob(string filePath, BlobClient blobClient = null)
+        {
+            string Connection = Environment.GetEnvironmentVariable("BlobConnectionString");
+            string containerName = Environment.GetEnvironmentVariable("BlobContainerName");
+            //BlobClient blobClient = new BlobClient();
+            //var blobClient = new BlobContainerClient(Connection, containerName);
+            //FileStream fileStream = File.OpenWrite(filePath);
+            await blobClient.DownloadToAsync(filePath);
+        }
 
 
     }

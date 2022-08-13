@@ -129,38 +129,17 @@ namespace Backend_UMR_Work_Program.Controllers
                 //check if date has been scheduled by another company
                 var system_date = DateTime.Now.ToString(); // 
 
-                var uniqueFileName = "";
-                var FileExtension = "";
-                var newFileName = "";
-                var documentPath = "";
-                var fileName = "";
-                //For image cover
+
                 if (document != null)
                 {
-                    if (document.Length > 0)
+                    Task<UploadedDocument> uploadedDocument = _helpersController.UploadBlobDocument(document, "Presentations");
+                    if(uploadedDocument == null)
                     {
-
-                        var up = Path.Combine(Directory.GetCurrentDirectory(), "Documents");
-                        //var docName = ContentDispositionHeaderValue.Parse(document.ContentDisposition).FileName.Trim();
-                        //FileExtension = Path.GetExtension(docName).ToString().Replace("\n", ''');
-
-                        var uploads = Path.Combine(up, "Presentations");
-                        fileName = document.FileName.Split(".")[0].Trim();
-                        uniqueFileName = Convert.ToString(Guid.NewGuid());
-                        FileExtension = document.FileName.Split(".")[1].Trim();
-                        //newFileName = uniqueFileName + FileExtension;
-                        newFileName = fileName + "." + FileExtension;
-
-                        // store path of folder in database
-                        documentPath = "//Documents/Presentations/" + newFileName;
-                        using (var s = new FileStream(Path.Combine(uploads, newFileName),
-                             FileMode.Create))
-                        {
-                            document.CopyTo(s);
-                        }
-
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to upload presentation document.", StatusCode = ResponseCodes.Failure };
                     }
 
+
+                    string document_FileExtension = document.FileName.Split(".")[1].Trim();
 
                     var presentation = new PRESENTATION_UPLOAD()
                     {
@@ -168,9 +147,9 @@ namespace Backend_UMR_Work_Program.Controllers
                         Companyemail = WKPUserEmail,
                         COMPANY_ID = WKPUserId,
                         Year_of_WP = CurrentYear,
-                        uploaded_presentation = newFileName,
-                        upload_extension = "." + FileExtension,
-                        original_filemane = fileName,
+                        uploaded_presentation = uploadedDocument.Result.fileName,
+                        upload_extension = "." + document_FileExtension,
+                        original_filemane = document.Name,
                         Created_by = WKPUserEmail,
                         Date_Created = DateTime.Now,
                     };
@@ -467,7 +446,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 var documentPath = "";
                 var fileName = "";
                 var save = 0;
-                //For image cover
+
                 if (document != null)
                 {
                     if (document.Length > 0)
