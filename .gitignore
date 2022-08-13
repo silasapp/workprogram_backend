@@ -1,7 +1,9 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
+/.vs
+/Backend_UMR_Work_Program/bin
+/Backend_UMR_Work_Program/obj
 /.vs/Backend_UMR_Work_Program/FileContentIndex/merges
 /.vs/Backend_UMR_Work_Program/FileContentIndex
 
