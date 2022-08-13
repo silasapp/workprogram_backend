@@ -54,10 +54,111 @@ namespace Backend_UMR_Work_Program.Controllers
             var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
             return new { ConcessionFields = concessionFields };
         }
+
+        [HttpGet("GET_CONCESSIONS_FIELD")]
+        public async Task<object> GET_CONCESSIONS_FIELD(int companyNumber)
+        {
+            int companyID = companyNumber > 0 ? companyNumber : (int)WKPCompanyNumber;
+            var companyConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.DELETED_STATUS == null select d).ToListAsync();
+            var companyFields = await (from d in _context.COMPANY_FIELDs
+                                       where d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true
+                                       select new
+                                       {
+                                           Field_Name = d.Field_Name,
+                                           Field_ID = d.Field_ID,
+                                           Concession_Name = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(x => x.Consession_Id == d.Concession_ID && x.Company_ID == WKPCompanyId).FirstOrDefault().Concession_Held
+                                       }).ToListAsync();
+
+            return new { CompanyConcessions = companyConcessions, CompanyFields = companyFields };
+        }
+
+
+        [HttpPost("POST_ADMIN_CONCESSIONS_INFORMATION")]
+        public async Task<WebApiResponse> POST_ADMIN_CONCESSIONS_INFORMATION([FromBody] ADMIN_CONCESSIONS_INFORMATION ADMIN_CONCESSIONS_INFORMATION_model, string id, string actionToDo)
+        {
+            int save = 0;
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+
+            try
+            {
+                #region Saving Concession
+
+                if (action == GeneralModel.Insert)
+                {
+                    var companyConcession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs
+                                             where (d.ConcessionName == ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held.TrimEnd().ToUpper() || d.Concession_Held == ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held.TrimEnd().ToUpper())
+                                                   && d.CompanyNumber == WKPCompanyNumber && d.DELETED_STATUS == null
+                                             select d).FirstOrDefault();
+
+                    if (companyConcession != null)
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : Concession ({ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held} is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+                    }
+                    else
+                    {
+                        ADMIN_CONCESSIONS_INFORMATION_model.CompanyNumber = WKPCompanyNumber;
+                        ADMIN_CONCESSIONS_INFORMATION_model.Date_Created = DateTime.Now;
+                        ADMIN_CONCESSIONS_INFORMATION_model.Created_by = WKPCompanyEmail;
+                        ADMIN_CONCESSIONS_INFORMATION_model.ConcessionName = ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held.TrimEnd().ToUpper();
+                        await _context.ADMIN_CONCESSIONS_INFORMATIONs.AddAsync(ADMIN_CONCESSIONS_INFORMATION_model);
+                    }
+                }
+                else
+                {
+                    var companyConcession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs
+                                             where d.Consession_Id == int.Parse(id)
+                                                   && d.CompanyNumber == WKPCompanyNumber && d.DELETED_STATUS == null
+                                             select d).FirstOrDefault();
+
+                    if (action == GeneralModel.Update)
+                    {
+
+                        if (companyConcession == null)
+                        {
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This concession details could not be found.", StatusCode = ResponseCodes.Failure };
+                        }
+                        else
+                        {
+                            ADMIN_CONCESSIONS_INFORMATION_model.Date_Updated = DateTime.Now;
+                            ADMIN_CONCESSIONS_INFORMATION_model.Date_Created = companyConcession.Date_Created;
+                            ADMIN_CONCESSIONS_INFORMATION_model.Updated_by = WKPCompanyEmail;
+                            ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held = ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held.TrimEnd().ToUpper();
+                            _context.ADMIN_CONCESSIONS_INFORMATIONs.Remove(companyConcession);
+                            await _context.ADMIN_CONCESSIONS_INFORMATIONs.AddAsync(ADMIN_CONCESSIONS_INFORMATION_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.ADMIN_CONCESSIONS_INFORMATIONs.Remove(companyConcession);
+                    }
+                }
+                save += await _context.SaveChangesAsync();
+                #endregion
+
+                if (save > 0)
+                {
+                    string successMsg = "Concession has been " + action + "D successfully.";
+                    var allConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs
+                                                where d.CompanyNumber == WKPCompanyNumber && d.DELETED_STATUS == null
+                                                select d).ToListAsync();
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = allConcessions, Message = successMsg, StatusCode = ResponseCodes.Success };
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                }
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+
         [HttpGet("GET_CONCESSIONS_FIELDS")]
         public async Task<object> GET_CONCESSIONS_FIELDS(string concessionID, string companyID)
         {
-
 
             if (!string.IsNullOrEmpty(companyID) && companyID != "null")
             {
@@ -66,10 +167,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             else
             {
-                var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                  where
-                                  (d.Consession_Id.ToString() == concessionID || d.Concession_Held == concessionID) && d.CompanyNumber == WKPCompanyNumber && d.DELETED_STATUS != "DELETED"
-                                  select d).FirstOrDefault();
+                var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where (d.Consession_Id.ToString() == concessionID || d.Concession_Held == concessionID) && d.Company_ID == WKPCompanyId && d.DELETED_STATUS != "DELETED" select d).FirstOrDefault();
 
 
                 var companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
@@ -77,21 +175,94 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        //[HttpPost("POST_COMPANY_FIELD")]
+        //public async Task<WebApiResponse> POST_COMPANY_FIELD([FromBody] COMPANY_FIELD company_field_model, string actionToDo = null)
+        //{
+
+        //    int save = 0;
+        //    string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+        //    try
+        //    {
+        //        #region Saving Field
+
+        //        if (action == GeneralModel.Insert)
+        //        {
+        //            var companyField = (from d in _context.COMPANY_FIELDs
+        //                                where d.Field_Name == company_field_model.Field_Name.TrimEnd().ToUpper()
+        //                                      && d.CompanyNumber == int.Parse(WKPCompanyId) && d.DeletedStatus != true
+        //                                select d).FirstOrDefault();
+
+        //            if (companyField != null)
+        //            {
+        //                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : Field ({company_field_model.Field_Name} is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+        //            }
+        //            else
+        //            {
+        //                company_field_model.CompanyNumber = int.Parse(WKPCompanyId);
+        //                company_field_model.Date_Created = DateTime.Now;
+        //                company_field_model.Field_Name = company_field_model.Field_Name.TrimEnd().ToUpper();
+        //                await _context.COMPANY_FIELDs.AddAsync(company_field_model);
+        //            }
+        //        }
+        //        else if (action == GeneralModel.Update)
+        //        {
+        //            var companyField = (from d in _context.COMPANY_FIELDs
+        //                                where d.Field_ID == company_field_model.Field_ID
+        //                                      && d.CompanyNumber == int.Parse(WKPCompanyId) && d.DeletedStatus != true
+        //                                select d).FirstOrDefault();
+
+        //            if (companyField == null)
+        //            {
+        //                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This field details could not be found.", StatusCode = ResponseCodes.Failure };
+        //            }
+        //            else
+        //            {
+        //                company_field_model.Date_Updated = DateTime.Now;
+        //                company_field_model.Field_Name = company_field_model.Field_Name.TrimEnd().ToUpper();
+        //            }
+        //        }
+        //        else if (action == GeneralModel.Delete)
+        //        {
+        //            _context.COMPANY_FIELDs.Remove(company_field_model);
+        //        }
+
+        //        save += await _context.SaveChangesAsync();
+        //        #endregion
+
+        //        if (save > 0)
+        //        {
+        //            string successMsg = "Field has been " + action + "D successfully.";
+        //            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+        //        }
+        //        else
+        //        {
+        //            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+        //    }
+        //}
+
         [HttpPost("POST_COMPANY_FIELD")]
-        public async Task<WebApiResponse> POST_COMPANY_FIELD([FromBody] COMPANY_FIELD company_field_model, string actionToDo = null)
+        public async Task<WebApiResponse> POST_COMPANY_FIELD([FromBody] COMPANY_FIELD company_field_model, string id, string actionToDo)
         {
 
             int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
             try
             {
                 #region Saving Field
+                var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Concession_Held == company_field_model.Concession_Name && d.Company_ID == WKPCompanyId && d.DELETED_STATUS == null select d).FirstOrDefault();
 
                 if (action == GeneralModel.Insert)
                 {
                     var companyField = (from d in _context.COMPANY_FIELDs
                                         where d.Field_Name == company_field_model.Field_Name.TrimEnd().ToUpper()
-                                              && d.CompanyNumber == int.Parse(WKPCompanyId) && d.DeletedStatus != true
+                                              && d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true
                                         select d).FirstOrDefault();
 
                     if (companyField != null)
@@ -100,41 +271,55 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
                     else
                     {
-                        company_field_model.CompanyNumber = int.Parse(WKPCompanyId);
+                        company_field_model.Concession_ID = concession.Consession_Id;
+                        company_field_model.CompanyNumber = WKPCompanyNumber;
                         company_field_model.Date_Created = DateTime.Now;
                         company_field_model.Field_Name = company_field_model.Field_Name.TrimEnd().ToUpper();
                         await _context.COMPANY_FIELDs.AddAsync(company_field_model);
                     }
                 }
-                else if (action == GeneralModel.Update)
+                else
                 {
                     var companyField = (from d in _context.COMPANY_FIELDs
-                                        where d.Field_ID == company_field_model.Field_ID
-                                              && d.CompanyNumber == int.Parse(WKPCompanyId) && d.DeletedStatus != true
+                                        where d.Field_ID.ToString() == id
+                                              && d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true
                                         select d).FirstOrDefault();
 
-                    if (companyField == null)
+                    if (action == GeneralModel.Update)
                     {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This field details could not be found.", StatusCode = ResponseCodes.Failure };
-                    }
-                    else
-                    {
-                        company_field_model.Date_Updated = DateTime.Now;
-                        company_field_model.Field_Name = company_field_model.Field_Name.TrimEnd().ToUpper();
-                    }
-                }
-                else if (action == GeneralModel.Delete)
-                {
-                    _context.COMPANY_FIELDs.Remove(company_field_model);
-                }
 
+                        if (companyField == null)
+                        {
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This field details could not be found.", StatusCode = ResponseCodes.Failure };
+                        }
+                        else
+                        {
+                            companyField.Concession_ID = concession.Consession_Id;
+                            companyField.Date_Updated = DateTime.Now;
+                            companyField.Field_Name = company_field_model.Field_Name.TrimEnd().ToUpper();
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.COMPANY_FIELDs.Remove(companyField);
+                    }
+                }
                 save += await _context.SaveChangesAsync();
                 #endregion
 
                 if (save > 0)
                 {
                     string successMsg = "Field has been " + action + "D successfully.";
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+                    var allFields = await (from d in _context.COMPANY_FIELDs
+                                           where d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true
+                                           select new
+                                           {
+                                               Field_Name = d.Field_Name,
+                                               Field_ID = d.Field_ID,
+                                               Concession_Name =  _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(x => x.Consession_Id == d.Concession_ID && x.Company_ID == WKPCompanyId).FirstOrDefault().Concession_Held
+                                           }).ToListAsync();
+
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = allFields, Message = successMsg, StatusCode = ResponseCodes.Success };
                 }
                 else
                 {
@@ -212,7 +397,6 @@ namespace Backend_UMR_Work_Program.Controllers
                 Terrain = concession.Terrain,
                 Field_Name = field?.Field_Name,
                 Field_ID = field?.Field_ID,
-
             };
         }
 
@@ -1685,7 +1869,6 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
 
@@ -2263,7 +2446,6 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION")]
         public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection reserves_condensate_status_model, string omlName, string fieldName,  string year, string actionToDo)
         {
-
             int save = 0;
             string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
