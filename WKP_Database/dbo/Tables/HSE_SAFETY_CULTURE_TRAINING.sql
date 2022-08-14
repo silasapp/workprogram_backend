@@ -17,6 +17,9 @@
     [SafetyCurrentYearFilename] VARCHAR (100)  NULL,
     [SafetyLast2YearsFilename]  VARCHAR (100)  NULL,
     [COMPANY_ID]                VARCHAR (100)  NULL,
-    [CompanyNumber]             INT            NULL
+    [CompanyNumber]             INT            NULL,
+    [Field_ID]                  INT            NULL
 );
+
+
 

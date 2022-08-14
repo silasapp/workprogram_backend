@@ -115,7 +115,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         {
                             getCode.CompanyName = CompanyName.ToUpper().Trim();
                             getCode.Email = CompanyEmail.ToLower().Trim();
-                            getCode.CompanyNumber = company.Id;
+                            //getCode.CompanyNumber = company.Id;
                             getCode.CompanyCode = CompanyCode.Trim();
                             getCode.IsActive = "YES";
                             await _context.ADMIN_COMPANY_CODEs.AddAsync(getCode);
@@ -1336,6 +1336,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
+        
         [HttpPost("ADMIN_PRESENTATION_CATEGORIES")]
         public async Task<WebApiResponse> Admin_Presentation_Categories(ADMIN_PRESENTATION_CATEGORy model, string action)
         {
@@ -1496,7 +1497,105 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         #endregion
-        
+        #region company concessions and fields management
+        [HttpGet("GET_ADMIN_CONCESSIONS_INFORMATIONs")]
+        public async Task<object> GET_ADMIN_CONCESSIONS_INFORMATIONs(int companyNumber)
+        {
+            int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
+            var companyConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.CompanyNumber == companyID && d.DELETED_STATUS != "true" select d).ToListAsync();
+            return new { CompanyConcessions = companyConcessions };
+        }
+
+        [HttpGet("GET_COMPANY_FIELDS")]
+        public async Task<object> GET_COMPANY_FIELDS(int companyNumber)
+        {
+            int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
+            var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
+            return new { ConcessionFields = concessionFields };
+        }
+        [HttpGet("GET_CONCESSIONS_FIELDS")]
+        public async Task<object> GET_CONCESSIONS_FIELDS(int concessionID)
+        {
+            var companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concessionID && d.DeletedStatus != true select d).ToListAsync();
+            return new { CompanyFields = companyFields };
+        }
+
+
+        [HttpPost("POST_COMPANY_FIELD")]
+        public async Task<WebApiResponse> POST_COMPANY_FIELD([FromBody] COMPANY_FIELD company_field_model, string actionToDo = null)
+        {
+
+            int save = 0;
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+
+            try
+            {
+                #region Saving Field
+
+                if (action == GeneralModel.Insert)
+                {
+                    var companyField = (from d in _context.COMPANY_FIELDs
+                                        where d.Field_Name == company_field_model.Field_Name.TrimEnd().ToUpper()
+                                              && d.CompanyNumber == int.Parse(WKPCompanyId) && d.DeletedStatus != true
+                                        select d).FirstOrDefault();
+
+                    if (companyField != null)
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : Field ({company_field_model.Field_Name} is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+                    }
+                    else
+                    {
+                        company_field_model.CompanyNumber = int.Parse(WKPCompanyId);
+                        company_field_model.Date_Created = DateTime.Now;
+                        company_field_model.Field_Name = company_field_model.Field_Name.TrimEnd().ToUpper();
+                        await _context.COMPANY_FIELDs.AddAsync(company_field_model);
+                    }
+                }
+                else if (action == GeneralModel.Update)
+                {
+                    var companyField = (from d in _context.COMPANY_FIELDs
+                                        where d.Field_ID == company_field_model.Field_ID
+                                              && d.CompanyNumber == int.Parse(WKPCompanyId) && d.DeletedStatus != true
+                                        select d).FirstOrDefault();
+
+                    if (companyField == null)
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This field details could not be found.", StatusCode = ResponseCodes.Failure };
+                    }
+                    else
+                    {
+                        company_field_model.Date_Updated = DateTime.Now;
+                        company_field_model.Field_Name = company_field_model.Field_Name.TrimEnd().ToUpper();
+                    }
+                }
+                else if (action == GeneralModel.Delete)
+                {
+                    _context.COMPANY_FIELDs.Remove(company_field_model);
+                }
+
+                save += await _context.SaveChangesAsync();
+                #endregion
+
+                if (save > 0)
+                {
+                    string successMsg = "Field has been " + action + "D successfully.";
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+                }
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
+        #endregion
+
     }
 
 

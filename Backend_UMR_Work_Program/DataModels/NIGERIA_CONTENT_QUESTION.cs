@@ -28,5 +28,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? total_no_of_top_management_staff { get; set; }
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
+        public int? Field_ID { get; set; }
     }
 }

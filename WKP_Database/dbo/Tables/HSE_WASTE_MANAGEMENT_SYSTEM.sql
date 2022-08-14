@@ -17,6 +17,9 @@
     [WasteManagementPlanFilename] VARCHAR (100)  NULL,
     [DecomCertificateFilename]    VARCHAR (100)  NULL,
     [COMPANY_ID]                  VARCHAR (100)  NULL,
-    [CompanyNumber]               INT            NULL
+    [CompanyNumber]               INT            NULL,
+    [Field_ID]                    INT            NULL
 );
+
+
 

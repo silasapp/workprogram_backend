@@ -34,6 +34,9 @@
     [Consession_Type]                     VARCHAR (50)   NULL,
     [COMPANY_ID]                          VARCHAR (100)  NULL,
     [CompanyNumber]                       INT            NULL,
+    [Field_ID]                            INT            NULL,
     CONSTRAINT [PK_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

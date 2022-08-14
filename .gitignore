@@ -6,6 +6,7 @@
 /Backend_UMR_Work_Program/obj
 /.vs/Backend_UMR_Work_Program/FileContentIndex/merges
 /.vs/Backend_UMR_Work_Program/FileContentIndex
-
-/.vs/Backend_UMR_Work_Program/Adeola_WorkProgram/WKP_Database/WKP_Database.dbmdl
-/.vs/Backend_UMR_Work_Program/Adeola_WorkProgram/WKP_Database/WKP_Database.jfm
+\A_WorkProgram\WKP_Backend\WKP_Database\WKP_Database.dbmdl
+\A_WorkProgram\WKP_Backend\WKP_Database\WKP_Database.jfm
+/A_WorkProgram/WKP_Backend/WKP_Database/WKP_Database.dbmdl
+/A_WorkProgram/WKP_Backend/WKP_Database/WKP_Database.jfm

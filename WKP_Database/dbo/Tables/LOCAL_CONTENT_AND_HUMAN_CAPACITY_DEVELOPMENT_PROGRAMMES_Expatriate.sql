@@ -16,6 +16,9 @@
     [Terrain]                                                                                    VARCHAR (50)  NULL,
     [Consession_Type]                                                                            VARCHAR (50)  NULL,
     [CompanyNumber]                                                                              INT           NULL,
+    [Field_ID]                                                                                   INT           NULL,
     CONSTRAINT [PK_LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriate] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

@@ -22,6 +22,9 @@
     [total_no_of_top_management_staff]                            VARCHAR (50)  NULL,
     [COMPANY_ID]                                                  VARCHAR (100) NULL,
     [CompanyNumber]                                               INT           NULL,
+    [Field_ID]                                                    INT           NULL,
     CONSTRAINT [PK_NIGERIA_CONTENT_QUESTION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

@@ -13,6 +13,9 @@
     [Date_Created]  DATETIME      NULL,
     [Date_Updated]  DATETIME      NULL,
     [CompanyNumber] INT           NULL,
+    [Field_ID]      INT           NULL,
     CONSTRAINT [PK_LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_and_Nigeria_Content_Training] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

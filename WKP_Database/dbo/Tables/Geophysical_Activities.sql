@@ -28,6 +28,9 @@
     [Activity_Timeline_pro]                         VARCHAR (500) NULL,
     [Remarks_pro]                                   VARCHAR (MAX) NULL,
     [CompanyNumber]                                 INT           NULL,
+    [Field_ID]                                      INT           NULL,
     CONSTRAINT [PK_Geophysical_Activities_] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

@@ -15,6 +15,9 @@
     [QUATER]                                      VARCHAR (50)  NULL,
     [Surface_cordinates_for_each_well_in_degrees] VARCHAR (100) NULL,
     [COMPANY_ID]                                  VARCHAR (100) NULL,
-    [CompanyNumber]                               INT           NULL
+    [CompanyNumber]                               INT           NULL,
+    [Field_ID]                                    INT           NULL
 );
+
+
 
