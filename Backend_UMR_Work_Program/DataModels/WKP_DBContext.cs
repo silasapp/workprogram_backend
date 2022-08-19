@@ -230,6 +230,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE> RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs { get; set; } = null!;
         public virtual DbSet<ROLES_> ROLES_s { get; set; } = null!;
         public virtual DbSet<ROLES_SUPER_ADMIN> ROLES_SUPER_ADMINs { get; set; } = null!;
+        public virtual DbSet<Royalty> Royalties { get; set; } = null!;
         public virtual DbSet<Reserve_Update_Oil_Condensate> Reserve_Update_Oil_Condensates { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<STRATEGIC_PLANS_ON_COMPANY_BASI> STRATEGIC_PLANS_ON_COMPANY_BAses { get; set; } = null!;
@@ -13344,6 +13345,37 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Updated_by)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+            
+           modelBuilder.Entity<Royalty>(entity =>
+            {
+
+              entity.ToTable("Royalty");
+                entity.HasKey(e => e.Royalty_ID);
+                
+                entity.Property(e => e.Crude_Oil_Royalty)
+                .HasMaxLength(100)
+                 .IsUnicode(false);
+                entity.Property(e => e.Gas_Sales_Royalty)
+                .HasMaxLength(100)
+                 .IsUnicode(false); 
+                entity.Property(e => e.Gas_Flare_Payment)
+                .HasMaxLength(100)
+                 .IsUnicode(false); 
+                entity.Property(e => e.Concession_Rentals)
+                .HasMaxLength(100)
+                 .IsUnicode(false); 
+                entity.Property(e => e.Miscellaneous)
+                .HasMaxLength(100)
+                 .IsUnicode(false);
+                entity.Property(e => e.Year)
+               .HasMaxLength(50)
+                .IsUnicode(false);   
+                entity.Property(e => e.Status)
+               .HasMaxLength(50)
+                .IsUnicode(false);
+                entity.Property(e => e.Date_Created).HasColumnType("datetime");
+                               
             });
 
             modelBuilder.Entity<Reserve_Update_Oil_Condensate>(entity =>

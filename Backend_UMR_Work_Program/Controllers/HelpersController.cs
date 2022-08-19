@@ -41,36 +41,40 @@ namespace Backend_UMR_Work_Program.Controllers
         //private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
         //private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
-        public List<AppMessage> SaveMessage(int AppID, int userID, string subject, string content, string userElpsID, string type)
+        //public List<AppMessage> SaveMessage(int AppID, int userID, string subject, string content, string userElpsID, string type)
+        //{
+
+        //    messages messages = new Message()
+        //    {
+        //        companyID = type.Contains("ompany") ? userID : 0,
+        //        staffID = userID,
+        //        AppId = AppID,
+        //        subject = subject,
+        //        content = content,
+        //        //sender_id = userElpsID,
+        //        read = 0,
+        //        UserType = type,
+        //        date = DateTime.UtcNow.AddHours(1)
+        //    };
+        //    _context.Messages.Add(messages);
+        //    _context.SaveChanges();
+
+        //    var msg = GetMessage(messages.id, userID);
+        //    return msg;
+        //}
+
+        public AppMessage GetMessage(string subject, string content, int year, string companyName)
         {
-
-            //messages messages = new messages()
-            // {
-            //     company_id = type.Contains("ompany") ? userID : 0,
-            //     UserID = userID,
-            //     AppId = AppID,
-            //     subject = subject,
-            //     content = content,
-            //     sender_id = userElpsID,
-            //     read = 0,
-            //     UserType = type,
-            //     date = DateTime.UtcNow.AddHours(1)
-            // };
-            // _context.messages.Add(messages);
-            // _context.SaveChanges();
-
-            // var msg = GetMessage(messages.id, Convert.ToInt32(messages.UserID));
-            // return msg;
-            return null;
+            var appMsg = new AppMessage()
+            {
+                Subject = subject,
+                Content = content,
+                CompanyName = companyName
+            };
+           return appMsg;
         }
 
-        public List<AppMessage> GetMessage(int msg_id, int seid)
-        {
-
-            return null;
-        }
-
-        public string SendEmailMessage(string email_to, string email_to_name, List<AppMessage> AppMessages, byte[] attach)
+        public string SendEmailMessage(string email_to, string email_to_name, AppMessage appMsg, byte[] attach)
         {
             var result = "";
             var password = _configuration.GetSection("SmtpSettings").GetSection("Password").Value.ToString();
@@ -79,7 +83,7 @@ namespace Backend_UMR_Work_Program.Controllers
             var Host = _configuration.GetSection("SmtpSettings").GetSection("Server").Value.ToString();
             var Port = Convert.ToInt16(_configuration.GetSection("SmtpSettings").GetSection("Port").Value.ToString());
 
-            var msgBody = CompanyMessageTemplate(AppMessages);
+            var msgBody = CompanyMessageTemplate(appMsg);
 
             MailMessage _mail = new MailMessage();
             SmtpClient client = new SmtpClient(Host, Port);
@@ -90,7 +94,7 @@ namespace Backend_UMR_Work_Program.Controllers
             client.Credentials = new System.Net.NetworkCredential(username, password);
             _mail.From = new MailAddress(emailFrom);
             _mail.To.Add(new MailAddress(email_to, email_to_name));
-            _mail.Subject = AppMessages.FirstOrDefault().Subject.ToString();
+            _mail.Subject = appMsg.Subject.ToString();
             _mail.IsBodyHtml = true;
             _mail.Body = msgBody;
             if (attach != null)
@@ -99,7 +103,6 @@ namespace Backend_UMR_Work_Program.Controllers
                 Attachment at = new Attachment(new MemoryStream(attach), name);
                 _mail.Attachments.Add(at);
             }
-            //_mail.CC=
             try
             {
                 client.Send(_mail);
@@ -111,12 +114,12 @@ namespace Backend_UMR_Work_Program.Controllers
             return result;
         }
 
-        public string CompanyMessageTemplate(List<AppMessage> AppMessages)
+        public string CompanyMessageTemplate(AppMessage msg)
         {
-            var msg = AppMessages.FirstOrDefault();
             string body = "<div>";
 
-            body += "<div style='width: 800px; background-color: #ece8d4; padding: 5px 0 5px 0;'><img style='width: 98%; height: 120px; display: block; margin: 0 auto;' src='~/images/nmdpra.png' alt='Logo'/></div>";
+            body += "<div style='width: 800px; background-color: #ece8d4; padding: 5px 0 5px 0;'><img style='width: 98%; height: 120px; display: block; margin: 0 auto;" +
+                "' src='~/images/nmdpra.png' alt='Logo'/></div>";
             body += "<div class='text-left' style='background-color: #ece8d4; width: 800px; min-height: 200px;'>";
             body += "<div style='padding: 10px 30px 30px 30px;'>";
             body += "<h5 style='text-align: center; font-weight: 300; padding-bottom: 10px; border-bottom: 1px solid #ddd;'>" + msg.Subject + "</h5>";
@@ -129,7 +132,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             body += "<p> </p>";
             body += "&copy; " + DateTime.Now.Year + "<p>  Powered by NUPRC Work Program Team. </p>";
-            body += "<div style='padding:10px 0 10px; 10px; background-color:#888; color:#f9f9f9; width:800px;'> &copy; " + DateTime.UtcNow.AddHours(1).Year + " Nigerian Midstream and Downstream Petroleum Regulatory Authority &minus; NMDPRA Nigeria</div></div></div>";
+            body += "<div style='padding:10px 0 10px; 10px; background-color:#888; color:#f9f9f9; width:800px;'> &copy; " + DateTime.UtcNow.AddHours(1).Year + "Nigerian Upstream Petroleum Regulatory Commission &minus; NUPRC Nigeria</div></div></div>";
 
             return body;
         }

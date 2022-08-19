@@ -140,7 +140,6 @@
     <Build Include="dbo\Tables\ConcessionSituationTwo.sql" />
     <Build Include="dbo\Tables\ADMIN_CONCESSIONS_INFORMATION.sql" />
     <Build Include="dbo\Tables\NigerianContent.sql" />
-    <Build Include="dbo\Tables\ADMIN_CONCESSIONS_INFORMATION_BK_23112021.sql" />
     <Build Include="dbo\Tables\Contract_Type.sql" />
     <Build Include="dbo\Tables\OIL_AND_GAS_FACILITY_MAINTENANCE.sql" />
     <Build Include="dbo\Tables\ADMIN_CONCESSIONS_INFORMATION_HISTORY.sql" />
