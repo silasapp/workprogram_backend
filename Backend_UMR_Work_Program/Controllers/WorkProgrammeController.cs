@@ -2151,21 +2151,21 @@ namespace Backend_UMR_Work_Program.Controllers
                     gas_production_model.proposed_year = (int.Parse(year) + 1).ToString();
 
                     #region file section
-                    UploadedDocument Upload_NDR_payment_receipt_File = null;
+                    //UploadedDocument Upload_NDR_payment_receipt_File = null;
 
-                    if (files[0] != null)
-                    {
-                        string docName = "NDR Payment Receipt";
-                        Upload_NDR_payment_receipt_File = _helpersController.UploadDocument(files[0], "NDRPaymentReceipt");
-                        if (Upload_NDR_payment_receipt_File == null)
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+                    // if (files[0] != null)
+                    // {
+                    //     string docName = "NDR Payment Receipt";
+                    //     Upload_NDR_payment_receipt_File = _helpersController.UploadDocument(files[0], "NDRPaymentReceipt");
+                    //     if (Upload_NDR_payment_receipt_File == null)
+                    //         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 
-                    }
+                    // }
                     #endregion
 
 
-                    gas_production_model.Upload_NDR_payment_receipt = files[0] != null ? Upload_NDR_payment_receipt_File.filePath : null;
-                    gas_production_model.NDRFilename = files[0] != null ? Upload_NDR_payment_receipt_File.fileName : null;
+                    //gas_production_model.Upload_NDR_payment_receipt = files[0] != null ? Upload_NDR_payment_receipt_File.filePath : null;
+                    //gas_production_model.NDRFilename = files[0] != null ? Upload_NDR_payment_receipt_File.fileName : null;
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
@@ -2200,7 +2200,6 @@ namespace Backend_UMR_Work_Program.Controllers
                     else
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
                     }
                 }
 
