@@ -1083,7 +1083,6 @@ namespace Backend_UMR_Work_Program.Controllers
                 else
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
                 }
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No CONCESSION_SITUATION_Model was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
             }
@@ -1580,7 +1579,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-
                 #region Saving FDP data
                 if (field_development_plan_model != null)
                 {
