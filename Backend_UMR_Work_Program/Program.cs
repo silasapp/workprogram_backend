@@ -33,11 +33,11 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
@@ -45,3 +45,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+//"ConnectionString": "Server=.\\SQLEXPRESS;Trusted_Connection=True; Initial Catalog=workprogram;Trusted_Connection=True;MultipleActiveResultSets=true"
