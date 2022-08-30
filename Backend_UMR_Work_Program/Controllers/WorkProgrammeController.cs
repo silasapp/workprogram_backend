@@ -39,7 +39,7 @@ namespace Backend_UMR_Work_Program.Controllers
         private int? WKPCompanyNumber => Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
 
         #region company concessions and fields management
-        [HttpGet("GET_CONCESSIONS_FIELDS")]
+        [HttpGet("GET_CONCESSIONS_FIELD")]
         public async Task<object> GET_CONCESSIONS_FIELDS(int companyNumber)
         {
             int companyID = companyNumber > 0 ? companyNumber : (int)WKPCompanyNumber;

@@ -45,13 +45,12 @@ namespace Backend_UMR_Work_Program.Models
         public class ADMIN_WORK_PROGRAM_REPORTs_Model
         {
             public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
-
         }
 
         public class WorkProgrammeReport_Model
         {
-            public WorkProgrammeReport1_Model WorkProgrammeReport1_Model { get; set; }
-            public WorkProgrammeReport2_Model WorkProgrammeReport2_Model { get; set; }
+            public object WorkProgrammeReport1_Model { get; set; }
+            public object WorkProgrammeReport2_Model { get; set; }
         }
         public class WorkProgrammeReport1_Model
         {
