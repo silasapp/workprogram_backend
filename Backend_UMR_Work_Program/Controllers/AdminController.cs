@@ -425,7 +425,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (company != null)
                     {
                         var data = _mapper.Map<ADMIN_CONCESSIONS_INFORMATION>(concessionModel);
-                        data.CompanyNumber = company.Id;
+                        data.CompanyNumber = company.CompanyNumber;
+                        data.Company_ID = company.COMPANY_ID;
                         data.Date_Created = DateTime.Now;
                         data.Created_by = WKPCompanyEmail;
                         await _context.ADMIN_CONCESSIONS_INFORMATIONs.AddAsync(data);
