@@ -39,6 +39,8 @@ namespace Backend_UMR_Work_Program.Models
         public static string Insert = "INSERT";
         public static string Update = "UPDATE";
         public static string Delete = "DELETE";
+        public static string ProposedYear = "Proposed Year";
+        public static string ActualYear = "Actual Year";
 
 
 
