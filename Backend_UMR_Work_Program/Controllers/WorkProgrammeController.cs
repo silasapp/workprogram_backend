@@ -980,6 +980,75 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
         }
 
+        [HttpGet("GET_ROYALTY")]
+        public async Task<object> GET_ROYALTY(string omlName, string myyear)
+        {
+            var concessionField = GET_CONCESSION_FIELD(omlName, "");
+            var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
+            return new { royalty = royalty };
+        }
+        
+        [HttpPost("POST_ROYALTY")]
+        public async Task<WebApiResponse> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string id, string actionToDo)
+        {
+            int save = 0;
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+            var concessionField = GET_CONCESSION_FIELD(omlName, "");
+            try
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    var getData = (from c in _context.Royalties where c.Royalty_ID == int.Parse(id) select c).FirstOrDefault();
+                    if (action == GeneralModel.Delete)
+                        _context.Royalties.Remove(getData);
+                    save += _context.SaveChanges();
+                }
+                else if (royalty_model != null)
+                {
+                    var getData = (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == year select d).FirstOrDefault();
+                    royalty_model.CompanyNumber = WKPCompanyNumber;
+                    royalty_model.Field_ID = concessionField.Concession_ID;
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            royalty_model.Date_Created = DateTime.Now;
+                            await _context.Royalties.AddAsync(royalty_model);
+                        }
+                        else
+                        {
+                            royalty_model.Date_Created = getData.Date_Created;
+                            _context.Royalties.Remove(getData);
+                            await _context.Royalties.AddAsync(royalty_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.Royalties.Remove(getData);
+                    }
+                    save += await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+                }
+                if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.Royalties where c.Concession_ID == concessionField.Concession_ID && c.CompanyNumber == WKPCompanyNumber && c.Year == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+                    }
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
         [HttpGet("GET_FORM_FIVE_SDCP")]
         public async Task<object> GET_FORM_FIVE_SDCP(string omlName, string fieldName,  string year)
         {
