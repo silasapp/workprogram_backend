@@ -7,6 +7,6 @@ namespace Backend_UMR_Work_Program.Models
     {
         public string? CompanyName { get; set; }
         public string? Year_of_WP { get; set; }
-        public int? Frequency { get; set; }
+        public decimal? Frequency { get; set; }
     }
 }

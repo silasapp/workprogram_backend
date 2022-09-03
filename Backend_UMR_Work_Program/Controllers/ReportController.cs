@@ -144,8 +144,8 @@ namespace Backend_UMR_Work_Program.Controllers
                                                     into g
                                                         select new DRILLING_OPERATIONS_CATEGORIES_OF_WELL
                                                         {
-                                                            Actual_No_Drilled_in_Current_Year = g.Sum(x => Convert.ToInt32(x.Actual_No_Drilled_in_Current_Year)).ToString(),
-                                                            Proposed_No_Drilled = g.Sum(x => Convert.ToInt32(x.Proposed_No_Drilled)).ToString(),
+                                                            Actual_No_Drilled_in_Current_Year = g.Sum(x => Convert.ToDouble(x.Actual_No_Drilled_in_Current_Year)).ToString(),
+                                                            Proposed_No_Drilled = g.Sum(x => Convert.ToDouble(x.Proposed_No_Drilled)).ToString(),
                                                             Year_of_WP = g.FirstOrDefault().Year_of_WP,
 
                                                         }).ToListAsync();
@@ -208,10 +208,11 @@ namespace Backend_UMR_Work_Program.Controllers
                                              select new
                                              {
                                                  Actual_Total_Gas_Produced = Convert.ToInt64(g.Current_Actual_Year),
-                                                 Utilized_Gas_Produced = Convert.ToInt64(g.Utilized),
-                                                 Flared_Gas_Produced = Convert.ToInt64(Convert.ToDouble(g.Flared)),
+                                                 Utilized_Gas_Produced = double.TryParse(g.Utilized, out double n) ? Convert.ToDouble(g.Utilized) : 0,
+                                                 Flared_Gas_Produced = Convert.ToDouble(g.Flared),
                                                  Year_of_WP = g.Year_of_WP,
-                                                 Percentage_Utilized = (Convert.ToDecimal(g.Utilized) / Convert.ToDecimal(g.Actual_year)) * 100
+                                                 CompanyName= g.CompanyName,
+                                                 Percentage_Utilized = double.TryParse(g.Utilized, out double m) ? ((Convert.ToDouble(g.Utilized) / Convert.ToDouble(g.Actual_year)) * 100) : 0
                                              }).ToList();
 
                     var PY_GAS_ACTIVITIES = WP_GAS_ACTIVITIES.Where(x => x.Year_of_WP.ToString() == previousYear).ToList();
@@ -242,14 +243,14 @@ namespace Backend_UMR_Work_Program.Controllers
                                               }).GroupBy(x => x.Cause).Select(x => x.FirstOrDefault()).ToListAsync();
 
                     #endregion
-                    var GEO_ACTIVITIES = await (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
-                                                where u.Year_of_WP == year
-                                                select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
+                    // var GEO_ACTIVITIES = await (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
+                    //                             where u.Year_of_WP == year
+                    //                             select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
 
                     var HSE_VOLUME_OF_OILSPILL = await (from o in _context.HSE_OIL_SPILL_REPORTING_NEWs
                                                         where o.Year_of_WP == year
                                                         select o
-                                                                 ).SumAsync(x => int.Parse(x.Volume_of_spill_bbls));
+                                                                 ).SumAsync(x => Convert.ToDouble(x.Volume_of_spill_bbls));
 
                     var OILSPILL_REPORT = (from o in _context.WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVEREDs
                                            where o.Year_of_WP == year
@@ -330,32 +331,32 @@ namespace Backend_UMR_Work_Program.Controllers
                             .Replace("(NO_OF_FATALITIES)", HSE_ACCIDENT_Consequences?.FirstOrDefault()?.sum_accident.ToString())
                             .Replace("(NO_OF_SPILLS)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.Sabotage)?.FirstOrDefault()?.sum_accident.ToString())
                             .Replace("(NO_OF_RELEASE)", HSE_VOLUME_OF_OILSPILL.ToString())
-                            .Replace("(PERCENTAGE_OF_SABOTAGE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.Sabotage)?.FirstOrDefault()?.Percentage_Spill.ToString())
-                            .Replace("(PERCENTAGE_OF_EQUIPMENT_FAILURE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.EquipmentFailure)?.FirstOrDefault()?.Percentage_Spill.ToString())
-                            .Replace("(PERCENTAGE_OF_HUMAN_ERROR)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.HumanError)?.FirstOrDefault()?.Percentage_Spill.ToString())
-                            .Replace("(PERCENTAGE_OF_MYSTERY_SPILLS)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.MysterySpills)?.FirstOrDefault()?.Percentage_Spill.ToString())
+                            .Replace("(PERCENTAGE_OF_SABOTAGE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.Sabotage)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
+                            .Replace("(PERCENTAGE_OF_EQUIPMENT_FAILURE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.EquipmentFailure)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
+                            .Replace("(PERCENTAGE_OF_HUMAN_ERROR)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.HumanError)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
+                            .Replace("(PERCENTAGE_OF_MYSTERY_SPILLS)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.MysterySpills)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
                         ;
 
-                        get_ReportContent_2.Report_Content = get_ReportContent_2.Report_Content
-                            .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
-                            .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString())
-                            .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString())
-                            .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
-                            .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString())
-                            .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
-                            .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString())
-                            .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
-                            .Replace("(N)", year)
-                            .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
-                            .Replace("(N - 1)", previousYear)
-                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
-                            ;
+                        // get_ReportContent_2.Report_Content = get_ReportContent_2.Report_Content
+                        //     .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(N)", year)
+                        //     .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
+                        //     .Replace("(N - 1)", previousYear)
+                        //     .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     ;
 
                         var summaryReport = new ADMIN_WORK_PROGRAM_REPORTs_Model()
                         {
-                            summary_1 = get_ReportContent_1.Report_Content,
+                            summary_1 = get_ReportContent_1.Report_Content
 
-                            summary_2 = get_ReportContent_2.Report_Content,
+                            //summary_2 = get_ReportContent_2.Report_Content,
                         };
 
                         #endregion
@@ -395,7 +396,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 WKP_Report2.Seismic_Data_Approved_and_Acquired = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == year && x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToListAsync();
 
-                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
                                                                           where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
                                                                           group o by new { o.Year_of_WP } into g
                                                                           select new
@@ -418,7 +419,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 WKP_Report2.Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == twoYearsAgo).ToListAsync();
 
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                            where o.Year_of_WP == year
                                                                                            group o by new { o.CompanyName } into g
                                                                                            select new
@@ -434,7 +435,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                                                                            }).ToListAsync();
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                                    where o.Year_of_WP == proposedYear
                                                                                                    group o by new { o.CompanyName } into g
                                                                                                    select new
@@ -450,7 +451,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                                                                                    }).ToListAsync();
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                             where o.Year_of_WP == previousYear
                                                                                             group o by new { o.CompanyName } into g
                                                                                             select new
@@ -467,7 +468,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                                             }).ToListAsync();
 
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                                  where o.Year_of_WP == twoYearsAgo
                                                                                                  group o by new { o.CompanyName } into g
                                                                                                  select new
@@ -2717,6 +2718,58 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        }
+        
 
+        [HttpGet("EXECUTIVE_SUMMARY_REPORT2")]
+        public async Task<WebApiResponse> EXECUTIVE_SUMMARY(string year)
+        {
+            
+            try { 
+            string previousYear = year !=null ? (int.Parse(year) - 1).ToString(): "";
+            var WKP_Report = await _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id <= 5).ToListAsync();
+            var get_ReportContent_2 = WKP_Report.Where(x => x.Id == 2)?.FirstOrDefault();
+            var GEO_ACTIVITIES = await (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
+                                                where u.Year_of_WP == year
+                                                select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
+
+             var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                             where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                             group o by new
+                                                                             {
+                                                                                 o.Geo_type_of_data_acquired,
+                                                                                 o.Year_of_WP
+                                                                             }
+                                                                        into g
+                                                                             select new WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION
+                                                                             {
+                                                                                 Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                                 Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                 Year_of_WP = g.FirstOrDefault().Year_of_WP,
+
+                                                                             }).ToListAsync();
+
+            var reportText = get_ReportContent_2.Report_Content
+                            .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(N)", year)
+                            .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
+                            .Replace("(N - 1)", previousYear)
+                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString());
+            //var data = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 2 select a.Report_Content).FirstOrDefaultAsync();
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = reportText, StatusCode = ResponseCodes.Success };
+            }
+
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
+        }
     }
+}
