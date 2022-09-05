@@ -167,7 +167,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+            string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert : actionToDo;
             try
             {
                 #region Saving Field
@@ -182,7 +182,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (companyField != null)
                     {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : Field ({company_field_model.Field_Name} is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : Field ({company_field_model.Field_Name}) is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
                     }
                     else
                     {
