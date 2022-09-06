@@ -8,3 +8,13 @@ C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\Mod
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\refactor.xml
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\postdeploy.sql
 C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\predeploy.sql
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\bin\Debug\WKP_Database.dacpac
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\bin\Debug\WKP_Database.dll
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\bin\Debug\WKP_Database.pdb
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\obj\Debug\Model.xml
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\obj\Debug\refactor.xml
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\obj\Debug\postdeploy.sql
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\obj\Debug\predeploy.sql
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\obj\Debug\WKP_Database.dll
+C:\Sandbox\WORKPROGRAMV2\WKP_Database\obj\Debug\WKP_Database.pdb
