@@ -1108,7 +1108,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            var ConcessionCONCESSION_SITUATION_Model = new CONCESSION_SITUATION();
+            var ConcessionCONCESSION_SITUATION_Model = concession_situation_model;
             string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             try
