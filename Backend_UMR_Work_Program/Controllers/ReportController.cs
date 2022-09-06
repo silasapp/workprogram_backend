@@ -86,8 +86,19 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
+                var OIL_CONDENSATE_PRODUCTION_BY_MONTH_YEAR = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_years.Where(x => x.Year_of_WP == year).ToListAsync();
 
-                object WorkProgrammeReport2 = Get_General_Report(year);
+                var OIL_CONDENSATE_PRODUCTION_BY_CONTRACT_TYPE = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                var OIL_CONDENSATE_PRODUCTION_BY_TERRAIN = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == year).ToListAsync();
+
+
+                var WorkProgrammeReport2 = new 
+                {
+                    OIL_CONDENSATE_PRODUCTION_BY_MONTH_YEAR= OIL_CONDENSATE_PRODUCTION_BY_MONTH_YEAR,
+                    OIL_CONDENSATE_PRODUCTION_BY_CONTRACT_TYPE= OIL_CONDENSATE_PRODUCTION_BY_CONTRACT_TYPE,
+                    OIL_CONDENSATE_PRODUCTION_BY_TERRAIN = OIL_CONDENSATE_PRODUCTION_BY_TERRAIN
+                };
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = WorkProgrammeReport2, StatusCode = ResponseCodes.Success };
 
