@@ -20,6 +20,9 @@ using System;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
+using Backend_UMR_Work_Program.Controllers;
+using AutoMapper;
+using Backend_UMR_Work_Program.Helpers.AutoMapperSettings;
 
 namespace Backend_UMR_Work_Program
 {
@@ -45,9 +48,10 @@ namespace Backend_UMR_Work_Program
             //{
             //    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
             //}));
+            services.AddAutoMapper(typeof(MappingProfiles));
 
-            services.AddMvc()
-                .AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
+            services.AddMvc();
+                //.AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
             services.AddControllers();
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -75,13 +79,23 @@ namespace Backend_UMR_Work_Program
 
             services.AddTransient<Account>();
             services.AddTransient<Connection>();
+            services.AddTransient<HelpersController>();
             services.AddTransient<Presentation>();
-            //services.AddTransient<BlobService2>();
+            services.AddTransient<WorkProgrammeController>();
+            services.AddTransient<AdminController>();
+            services.AddTransient<DatabaseService>();
+            services.AddTransient<BlobService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorage")));
 
-            //services.AddDbContext<IdentityDataContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration["Data:WallConnect:ConnectionString"]));
+            services.AddDbContext<WKP_DBContext>(options =>
+                options.UseSqlServer(Configuration["Data:Wkpconnect:ConnectionString"],
+                options => options.EnableRetryOnFailure(
+                    maxRetryCount: 6,
+                    maxRetryDelay: System.TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null)
+                ));
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
             services.AddSingleton<IMailer, Mailer>();
             services.AddAzureClients(builder =>
@@ -133,12 +147,7 @@ namespace Backend_UMR_Work_Program
             //);
 
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+
         }
     }
 
