@@ -22,14 +22,15 @@ namespace Backend_UMR_Work_Program.Controllers
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
         IMapper _mapper;
-        public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        private BlobService blobService;
+        public PresentationController(Presentation presentation, WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper, BlobService blobservice)
         {
             _presentation = presentation;
             _context = context;
             _configuration = configuration;
             _mapper = mapper;
             _helpersController = new HelpersController(_context, configuration, _httpContextAccessor, _mapper);
-
+            this.blobService = blobservice;
         }
 
         //private string? WKPUserId => "1";
@@ -132,8 +133,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 if (document != null)
                 {
-                    Task<UploadedDocument> uploadedDocument = _helpersController.UploadBlobDocument(document, "Presentations");
-                    if(uploadedDocument == null)
+                    var blobname1 = blobService.Filenamer(document);
+                    var uploadedDocument = await blobService.UploadFileBlobAsync("documents", document.OpenReadStream(), document.ContentType, $"Presentations/{blobname1}");
+                    if (uploadedDocument == null)
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to upload presentation document.", StatusCode = ResponseCodes.Failure };
                     }
@@ -147,7 +149,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         Companyemail = WKPUserEmail,
                         COMPANY_ID = WKPUserId,
                         Year_of_WP = CurrentYear,
-                        uploaded_presentation = uploadedDocument.Result.fileName,
+                        uploaded_presentation = uploadedDocument,
                         upload_extension = "." + document_FileExtension,
                         original_filemane = document.Name,
                         Created_by = WKPUserEmail,
@@ -490,21 +492,5 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
             }
         }
-
-        [HttpGet("GetCompanyDetails")]
-        public CompanyDetail CompanyDetails(string companyName, string companyEmail, string companyId)
-        {
-            var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
-
-            return details;
-        }
-
-        [HttpPost("EditCompanyDetails")]
-        public IActionResult EditCompanyDetails([FromBody] CompanyDetail myDetail)
-        {
-            _presentation.Insert_Company_Details_Contact_Person(myDetail.CompanyName, myDetail.CompanyEmail, myDetail.Address_of_Company, myDetail.Name_of_MD_CEO, myDetail.Phone_NO_of_MD_CEO, myDetail.Contact_Person, myDetail.Phone_No, myDetail.Email_Address);
-            return Ok(myDetail);
-        }
-
     }
 }

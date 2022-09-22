@@ -429,7 +429,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 WKP_Report2.Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == twoYearsAgo).ToListAsync();
 
-
+                var text3data = await (from a in _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs where a.Year_of_WP == year && a.Geo_Type_of_Data_being_Processed == "3D" select a).FirstOrDefaultAsync();
+                var text3 = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 3 select a.Report_Content).FirstOrDefaultAsync();
+                var text3Modified = text3.Replace("(N)", year).Replace("(PROCESSED_3D)", text3data.Processed_Actual).Replace("(REPROCESSED_3D)", text3data.Reprocessed_Actual);
                 WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                            where o.Year_of_WP == year
                                                                                            group o by new { o.CompanyName } into g
@@ -443,7 +445,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                                                Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
                                                                                                Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
                                                                                                Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
-
+                                                                                               Report_Content = text3Modified
                                                                                            }).ToListAsync();
 
                 WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
