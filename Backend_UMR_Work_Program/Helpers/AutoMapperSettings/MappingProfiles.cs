@@ -90,8 +90,10 @@ namespace Backend_UMR_Work_Program.Helpers.AutoMapperSettings
             CreateMap<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM, HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model>().ReverseMap();
             CreateMap<PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT, PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model>().ReverseMap();
             CreateMap<ADMIN_COMPANY_INFORMATION, ADMIN_COMPANY_INFORMATION_Model>().ReverseMap();
+            CreateMap<ADMIN_CONCESSIONS_INFORMATION_Model, ADMIN_CONCESSIONS_INFORMATION>().ReverseMap();
+            CreateMap<ADMIN_COMPANY_CODE, CompanyCodeModel>().ReverseMap();
 
+        }
     }
-}
 }
 

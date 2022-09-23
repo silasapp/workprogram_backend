@@ -609,7 +609,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("ADMIN_COMPANY_CODE");
 
