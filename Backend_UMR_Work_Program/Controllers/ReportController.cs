@@ -420,8 +420,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                               Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
                                                                               Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
                                                                               Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
-                                                                              Quantum_Planned = g.Sum(x => Convert.ToDouble(x.Quantum_Planned)),
-
+                                                                              Quantum_Planned = g.Sum(x => Convert.ToDouble(x.Quantum_Planned))
                                                                           }).ToListAsync();
 
 
@@ -431,10 +430,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 var text3data = await (from a in _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs where a.Year_of_WP == year && a.Geo_Type_of_Data_being_Processed == "3D" select a).FirstOrDefaultAsync();
                 var text3 = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 3 select a.Report_Content).FirstOrDefaultAsync();
-                var text3Modified = text3.Replace("(N)", year).Replace("(PROCESSED_3D)", text3data.Processed_Actual).Replace("(REPROCESSED_3D)", text3data.Reprocessed_Actual);
+                var text3Modified = text3.Replace("(N)", year).Replace("(NO_OF_PROCESSED)", text3data.Processed_Actual.ToString()).Replace("(NO_OF_REPROCESSED)", text3data.Reprocessed_Actual.ToString() + " ");
+                WKP_Report2.GEOPHYSICAL_ACTIVITIES_PROCESSING_DESCRIPTION = text3Modified;
                 WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                            where o.Year_of_WP == year
-                                                                                           group o by new { o.CompanyName } into g
+                                                                                           group o by new { o.CompanyName, o.OML_Name, o.Terrain, o.Name_of_Contractor } into g
                                                                                            select new
                                                                                            {
                                                                                                Year_of_WP = g.Key,
@@ -444,8 +444,8 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                                                Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
                                                                                                Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
                                                                                                Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
-                                                                                               Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
-                                                                                               Report_Content = text3Modified
+                                                                                               Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data))
+                                                                                               
                                                                                            }).ToListAsync();
 
                 WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
@@ -460,13 +460,13 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                                                        Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
                                                                                                        Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
                                                                                                        Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
-                                                                                                       Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+                                                                                                       Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data))
 
                                                                                                    }).ToListAsync();
 
                 WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                             where o.Year_of_WP == previousYear
-                                                                                            group o by new { o.CompanyName } into g
+                                                                                            group o by new { o.CompanyName, o.OML_Name, o.Terrain, o.Name_of_Contractor } into g
                                                                                             select new
                                                                                             {
                                                                                                 Year_of_WP = g.Key,
@@ -476,7 +476,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                                                 Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
                                                                                                 Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
                                                                                                 Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
-                                                                                                Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+                                                                                                Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data))
 
                                                                                             }).ToListAsync();
 
@@ -1065,7 +1065,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                
                var Exploration_Report = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Exploration).ToListAsync();
                return Exploration_Report;
             }
@@ -1074,7 +1073,6 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 return "Error : " + e.Message;
             }
-
         }
         
         [HttpGet("Get_Appraisal_Report")]
@@ -1082,18 +1080,14 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
-
                 var Appraisal_Report = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.ToLower().Contains(GeneralModel.Appraisal.ToLower())).ToListAsync();
                 return Appraisal_Report;
             }
 
             catch (Exception e)
             {
-
              return "Error : " + e.Message;
-
             }
-
         }
         
         [HttpGet("Get_Development_Report")]
@@ -1101,8 +1095,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
-
-                var Development_Report = await _context.WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Development).ToListAsync();
+                var Development_Report = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.ToLower().Contains(GeneralModel.Development.ToLower())).ToListAsync();
                 return Development_Report;
             }
 

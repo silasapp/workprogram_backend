@@ -157,6 +157,7 @@ namespace Backend_UMR_Work_Program.Models
             public object RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED { get; set; }
             public object HSE_CAUSES_OF_SPILL { get; set; }
             public string Error { get; set; }
+            public string GEOPHYSICAL_ACTIVITIES_PROCESSING_DESCRIPTION {get; set;}
 
         }
         public class TOTAL_PRODUCED_WATER_Model
