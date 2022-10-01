@@ -24,8 +24,7 @@
     [Consession_Type]               VARCHAR (50)   NULL,
     [Created_by]                    VARCHAR (50)   NULL,
     [COMPANY_ID]                    VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                 INT            NULL,
     CONSTRAINT [PK_HSE_CAUSES_OF_SPILL] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

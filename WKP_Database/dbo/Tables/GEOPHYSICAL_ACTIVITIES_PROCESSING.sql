@@ -37,8 +37,7 @@
     [Consession_Type]                     VARCHAR (50)   NULL,
     [QUATER]                              VARCHAR (50)   NULL,
     [COMPANY_ID]                          VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                       INT            NULL,
     CONSTRAINT [PK_Geophysical_Activities_Processing] PRIMARY KEY CLUSTERED ([Geophysical_Activities_ProcessingId] ASC)
 );
 

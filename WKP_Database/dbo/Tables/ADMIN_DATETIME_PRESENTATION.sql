@@ -32,8 +32,7 @@
     [DAYS_TO_GO]              VARCHAR (50)  NULL,
     [LAST_RUN_TIME]           DATETIME      NULL,
     [Date_Created_BY_COMPANY] VARCHAR (50)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]           INT           NULL,
     CONSTRAINT [PK_ADMIN_DATETIME_PRESENTATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -94,7 +94,13 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<ADMIN_YES_NO> ADMIN_YES_NOs { get; set; } = null!;
         public virtual DbSet<ActualExpenditure> ActualExpenditures { get; set; } = null!;
         public virtual DbSet<ActualProposed_Year> ActualProposed_Years { get; set; } = null!;
+        public virtual DbSet<Application> Applications { get; set; } = null!;
+        public virtual DbSet<ApplicationCategory> ApplicationCategories { get; set; } = null!;
+        public virtual DbSet<ApplicationDeskHistory> ApplicationDeskHistories { get; set; } = null!;
+        public virtual DbSet<ApplicationDocument> ApplicationDocuments { get; set; } = null!;
+        public virtual DbSet<ApplicationProccess> ApplicationProccesses { get; set; } = null!;
         public virtual DbSet<Appraisal_Drilling> Appraisal_Drillings { get; set; } = null!;
+        public virtual DbSet<AuditTrail> AuditTrails { get; set; } = null!;
         public virtual DbSet<BUDGET_ACTUAL_EXPENDITURE> BUDGET_ACTUAL_EXPENDITUREs { get; set; } = null!;
         public virtual DbSet<BUDGET_CAPEX_OPEX> BUDGET_CAPEX_OPices { get; set; } = null!;
         public virtual DbSet<BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy> BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs { get; set; } = null!;
@@ -191,6 +197,8 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<Legal> Legals { get; set; } = null!;
         public virtual DbSet<LocalContent> LocalContents { get; set; } = null!;
         public virtual DbSet<Menu> Menus { get; set; } = null!;
+        public virtual DbSet<Message> Messages { get; set; } = null!;
+        public virtual DbSet<MyDesk> MyDesks { get; set; } = null!;
         public virtual DbSet<NDPR_SUBSCRIPTION_FEE> NDPR_SUBSCRIPTION_FEEs { get; set; } = null!;
         public virtual DbSet<NDR> NDRs { get; set; } = null!;
         public virtual DbSet<NDR_DATA_POPULATION_ON_BLOCK_BASI> NDR_DATA_POPULATION_ON_BLOCK_BAses { get; set; } = null!;
@@ -214,6 +222,8 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<OilSpill_Incident> OilSpill_Incidents { get; set; } = null!;
         public virtual DbSet<PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT> PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs { get; set; } = null!;
         public virtual DbSet<PRESENTATION_UPLOAD> PRESENTATION_UPLOADs { get; set; } = null!;
+        public virtual DbSet<staff> staff { get; set; } = null!;
+        public virtual DbSet<PermitApproval> PermitApprovals { get; set; } = null!;
         public virtual DbSet<RESERVES_REPLACEMENT_RATIO> RESERVES_REPLACEMENT_RATIOs { get; set; } = null!;
         public virtual DbSet<RESERVES_UPDATES_DEPLETION_RATE> RESERVES_UPDATES_DEPLETION_RATEs { get; set; } = null!;
         public virtual DbSet<RESERVES_UPDATES_LIFE_INDEX> RESERVES_UPDATES_LIFE_INDices { get; set; } = null!;

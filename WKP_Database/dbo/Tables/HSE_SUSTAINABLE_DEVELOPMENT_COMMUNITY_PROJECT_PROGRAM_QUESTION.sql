@@ -21,8 +21,7 @@
     [MOUOSCPFilename]                                             VARCHAR (100) NULL,
     [MOUResponderInPlace]                                         VARCHAR (50)  NULL,
     [COMPANY_ID]                                                  VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                                               INT           NULL,
     CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

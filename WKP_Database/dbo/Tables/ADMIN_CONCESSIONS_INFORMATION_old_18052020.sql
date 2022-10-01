@@ -22,8 +22,7 @@
     [Year]                VARCHAR (50)   NULL,
     [submitted]           VARCHAR (3900) NULL,
     [Consession_Type]     VARCHAR (50)   NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]       INT            NULL,
     CONSTRAINT [PK_ADMIN_CONCESSIONS_INFORMATION] PRIMARY KEY CLUSTERED ([Consession_Id] ASC)
 );
 

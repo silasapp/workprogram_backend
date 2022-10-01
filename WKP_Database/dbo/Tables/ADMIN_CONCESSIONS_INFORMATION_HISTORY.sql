@@ -18,8 +18,7 @@
     [Date_Created]        DATETIME      NULL,
     [Date_Updated]        DATETIME      NULL,
     [COMPANY_EMAIL]       VARCHAR (50)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]       INT           NULL,
     CONSTRAINT [PK_ADMIN_CONCESSIONS_INFORMATION_HISTORY] PRIMARY KEY CLUSTERED ([Consession_Id] ASC)
 );
 

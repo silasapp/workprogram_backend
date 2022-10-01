@@ -17,8 +17,7 @@
     [Terrain]              VARCHAR (50)  NULL,
     [Consession_Type]      VARCHAR (50)  NULL,
     [Contract_Type]        VARCHAR (50)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]        INT           NULL,
     CONSTRAINT [PK_HSE_ENVIRONMENTAL_IMPACT_ASSESSMENTS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -14,8 +14,7 @@
     [Terrain]               VARCHAR (50)  NULL,
     [Contract_Type]         VARCHAR (50)  NULL,
     [COMPANY_ID]            VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]         INT           NULL,
     CONSTRAINT [PK_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

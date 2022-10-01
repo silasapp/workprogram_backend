@@ -22,8 +22,7 @@
     [SMSFileUploadPath]                                                  VARCHAR (500)  NULL,
     [DoyouhaveSMSinPlace]                                                VARCHAR (500)  NULL,
     [COMPANY_ID]                                                         VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                                                      INT            NULL,
     CONSTRAINT [PK_HSE_SAFETY_STUDIES_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

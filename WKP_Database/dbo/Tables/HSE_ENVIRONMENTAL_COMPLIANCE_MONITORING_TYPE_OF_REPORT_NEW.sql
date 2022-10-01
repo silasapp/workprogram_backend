@@ -19,8 +19,7 @@
     [Consession_Type] VARCHAR (50)   NULL,
     [Contract_Type]   VARCHAR (50)   NULL,
     [Terrain]         VARCHAR (50)   NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]   INT            NULL,
     CONSTRAINT [PK_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_TYPE_OF_REPORT_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

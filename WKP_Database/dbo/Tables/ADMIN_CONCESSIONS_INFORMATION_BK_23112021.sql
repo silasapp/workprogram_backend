@@ -29,8 +29,7 @@
     [DELETED_BY]           VARCHAR (200)  NULL,
     [DELETED_DATE]         VARCHAR (100)  NULL,
     [EMAIL_REMARK]         VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]        INT            NULL,
     CONSTRAINT [PK_ADMIN_CONCESSIONS_INFORMATION_] PRIMARY KEY CLUSTERED ([Consession_Id] ASC)
 );
 

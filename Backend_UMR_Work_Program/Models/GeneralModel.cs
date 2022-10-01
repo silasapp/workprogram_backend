@@ -37,6 +37,35 @@ namespace Backend_UMR_Work_Program.Models
         public static string Insert = "Insert";
         public static string Update = "Update";
         public static string Delete = "Delete";
+        public static string New = "New";
+
+        public class ApplicationProcessModel
+        {
+            public int StaffId { get; set; }
+            public int FromStaffId { get; set; }
+            public int RoleId { get; set; }
+            public int Sort { get; set; }
+            public int ProcessId { get; set; }
+            public int DeskCount { get; set; }
+            public string RoleName { get; set; }
+        }
+
+        public class PermitAPIModel
+        {
+            public int Id { get; set; }
+            public string Permit_No { get; set; }
+
+            public string OrderId { get; set; }
+
+            public int Company_Id { get; set; }
+
+            public DateTime Date_Issued { get; set; }
+
+            public DateTime Date_Expire { get; set; }
+            public string CategoryName { get; set; }
+            public string Is_Renewed { get; set; }
+            public int LicenseId { get; set; }
+        }
 
         public class WorkProgramme_Model_1
         {
@@ -1944,7 +1973,9 @@ public class DRILLING_EACH_WELL_COST_Model
             public object Subject { get; set; }
             public object Content { get; set; }
             public object RefNo { get; set; }
-
+            public object Year { get; set; }
+            public object Concession { get; set; }
+            public object Field { get; set; }
             public object Status { get; set; }
             public object Stage { get; set; }
             public object TotalAmount { get; set; }

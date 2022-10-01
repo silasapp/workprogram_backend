@@ -17,8 +17,7 @@
     [Contract_Type]                   VARCHAR (50)  NULL,
     [Terrain]                         VARCHAR (50)  NULL,
     [COMPANY_ID]                      VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                   INT           NULL,
     CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

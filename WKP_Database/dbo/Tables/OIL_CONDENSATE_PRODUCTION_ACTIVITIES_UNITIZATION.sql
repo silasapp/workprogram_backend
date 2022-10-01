@@ -59,8 +59,7 @@
     [PUAUploadFilename]                              VARCHAR (100) NULL,
     [UUOAUploadFilename]                             VARCHAR (100) NULL,
     [COMPANY_ID]                                     VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                                  INT           NULL,
     CONSTRAINT [PK_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

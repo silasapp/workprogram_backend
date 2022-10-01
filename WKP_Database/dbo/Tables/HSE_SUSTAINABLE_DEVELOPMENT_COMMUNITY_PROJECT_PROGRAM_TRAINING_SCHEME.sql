@@ -21,7 +21,6 @@
     [Contract_Type]               VARCHAR (50)   NULL,
     [TSUploadFilename]            VARCHAR (500)  NULL,
     [COMPANY_ID]                  VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]               INT            NULL
 );
 

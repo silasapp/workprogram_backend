@@ -27,8 +27,7 @@
     [Actual_Completion_Date]                    DATE          NULL,
     [Proposed_Completion_Date]                  DATE          NULL,
     [COMPANY_ID]                                VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                             INT           NULL,
     CONSTRAINT [PK_INITIAL_WELL_COMPLETION_JOBS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

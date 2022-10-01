@@ -10,8 +10,8 @@
     [ApplicationRenewal]         VARCHAR (5)   NULL,
     [NoApplicationRenewalReason] VARCHAR (MAX) NULL,
     [ActualBudgetCurrentYr]      VARCHAR (MAX) NULL,
-    [FiveYrsProposal]            VARCHAR (MAX) NULL,        [CompanyNumber]      INT        NULL          
-
+    [FiveYrsProposal]            VARCHAR (MAX) NULL,
+    [CompanyNumber]              INT           NULL,
     CONSTRAINT [PK_ConcessionSituationTwo] PRIMARY KEY CLUSTERED ([ConcessionSituationId] ASC)
 );
 

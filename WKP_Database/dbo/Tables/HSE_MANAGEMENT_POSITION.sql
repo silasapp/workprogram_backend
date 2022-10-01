@@ -17,7 +17,6 @@
     [OrganogramrFilename]     VARCHAR (100)  NULL,
     [PromotionLetterFilename] VARCHAR (100)  NULL,
     [COMPANY_ID]              VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]           INT            NULL
 );
 

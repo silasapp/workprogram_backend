@@ -27,8 +27,7 @@
     [Completion_Status_pro]                         VARCHAR (500) NULL,
     [Activity_Timeline_pro]                         VARCHAR (500) NULL,
     [Remarks_pro]                                   VARCHAR (MAX) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                                 INT           NULL,
     CONSTRAINT [PK_Geophysical_Activities_] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

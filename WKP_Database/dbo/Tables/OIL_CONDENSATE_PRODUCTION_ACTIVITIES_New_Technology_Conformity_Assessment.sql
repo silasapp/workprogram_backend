@@ -21,8 +21,7 @@
     [Terrain]               VARCHAR (50)  NULL,
     [Contract_Type]         VARCHAR (50)  NULL,
     [COMPANY_ID]            VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]         INT           NULL,
     CONSTRAINT [PK_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

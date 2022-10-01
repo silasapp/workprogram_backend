@@ -52,8 +52,8 @@
     [COMPANY_ID]                                  VARCHAR (100)  NULL,
     [Cored]                                       VARCHAR (100)  NULL,
     [Actual_Proposed]                             VARCHAR (100)  NULL,
-    [WellName]                                    VARCHAR (2000) NULL,        [CompanyNumber]      INT        NULL          
-
+    [WellName]                                    VARCHAR (2000) NULL,
+    [CompanyNumber]                               INT            NULL,
     CONSTRAINT [PK_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

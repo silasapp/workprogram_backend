@@ -19,8 +19,7 @@
     [Gas_AG]               VARCHAR (20)  NULL,
     [Gas_NAG]              VARCHAR (20)  NULL,
     [COMPANY_ID]           VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]        INT           NULL,
     CONSTRAINT [PK_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -25,8 +25,7 @@
     [QUATER]                                             VARCHAR (50)  NULL,
     [oil_or_gas_wells]                                   VARCHAR (20)  NULL,
     [COMPANY_ID]                                         VARCHAR (100) NULL,
-        [CompanyNumber] INT NULL
-
+    [CompanyNumber]                                      INT           NULL,
     CONSTRAINT [PK_WORKOVERS_RECOMPLETION_JOBS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -15,8 +15,7 @@
     [Consession_Type]     VARCHAR (50)  NULL,
     [Contract_Type]       VARCHAR (50)  NULL,
     [Terrain]             VARCHAR (50)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]       INT           NULL,
     CONSTRAINT [PK_HSE_OIL_SPILL_INCIDENT] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

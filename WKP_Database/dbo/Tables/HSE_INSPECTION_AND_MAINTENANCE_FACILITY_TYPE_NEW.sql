@@ -22,8 +22,7 @@
     [If_RBI_was_approval_granted]        VARCHAR (50)   NULL,
     [If_No_Give_reasonS]                 VARCHAR (3999) NULL,
     [COMPANY_ID]                         VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                      INT            NULL,
     CONSTRAINT [PK_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

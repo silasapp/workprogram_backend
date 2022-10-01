@@ -25,8 +25,7 @@
     [Company_Reserves_AnnualGasAGProduction]      VARCHAR (100) NULL,
     [Company_Reserves_AnnualGasNAGProduction]     VARCHAR (100) NULL,
     [COMPANY_ID]                                  VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                               INT           NULL,
     CONSTRAINT [PK_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

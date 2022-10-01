@@ -18,8 +18,7 @@
     [Contract_Type]                  VARCHAR (50)  NULL,
     [Consession_Type]                VARCHAR (50)  NULL,
     [COMPANY_ID]                     VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                  INT           NULL,
     CONSTRAINT [PK_RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

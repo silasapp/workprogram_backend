@@ -15,7 +15,7 @@
     [Created_by]               VARCHAR (50)  NULL,
     [Date_Created]             VARCHAR (50)  NULL,
     [check_status]             VARCHAR (50)  NULL,
-    [CompanyNumber]      INT        NULL          
+    [CompanyNumber]            INT           NULL,
     CONSTRAINT [PK_ADMIN_COMPANY_DETAILS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -38,8 +38,8 @@
     [Has_Assignment_of_Interest_Fee_been_paid]      VARCHAR (50)  NULL,
     [relinquishment_retention]                      VARCHAR (500) NULL,
     [area_in_square_meter_based_on_company_records] VARCHAR (500) NULL,
-    [COMPANY_ID]                                    VARCHAR (100) NULL,        [CompanyNumber]      INT        NULL          
-
+    [COMPANY_ID]                                    VARCHAR (100) NULL,
+    [CompanyNumber]                                 INT           NULL,
     CONSTRAINT [PK_Concession_Situation] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

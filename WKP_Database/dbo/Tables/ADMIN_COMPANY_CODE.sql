@@ -9,7 +9,6 @@
     [Updated_by]   VARCHAR (100) NULL,
     [Date_Created] DATETIME      NULL,
     [Date_Updated] DATETIME      NULL,
-    [UserNumber]      INT        NULL          
-
+    [UserNumber]   INT           NULL
 );
 

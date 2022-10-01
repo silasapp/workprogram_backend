@@ -14,7 +14,7 @@
     [Consession_Type]                             VARCHAR (50)  NULL,
     [QUATER]                                      VARCHAR (50)  NULL,
     [Surface_cordinates_for_each_well_in_degrees] VARCHAR (100) NULL,
-    [COMPANY_ID]                                  VARCHAR (100) NULL,        [CompanyNumber]      INT        NULL          
-
+    [COMPANY_ID]                                  VARCHAR (100) NULL,
+    [CompanyNumber]                               INT           NULL
 );
 

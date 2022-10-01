@@ -25,8 +25,7 @@
     [Consession_Type]                                                                    VARCHAR (50)   NULL,
     [Oil_spill_reported]                                                                 VARCHAR (50)   NULL,
     [COMPANY_ID]                                                                         VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                                                                      INT            NULL,
     CONSTRAINT [PK_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

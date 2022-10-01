@@ -646,7 +646,7 @@
           "lib/netstandard2.0/Quartz.dll": {}
         }
       },
-      "RestSharp/107.3.0": {
+      "RestSharp/108.0.2": {
         "type": "package",
         "compile": {
           "lib/net6.0/RestSharp.dll": {}
@@ -3006,10 +3006,10 @@
         "quartz.nuspec"
       ]
     },
-    "RestSharp/107.3.0": {
-      "sha512": "qu+A+VAnVLX3OeWVNm11UJz0aVErqSfYqIiOUbJM9x98uLymCOoL/oXRAjMb6XHra27WXxHmzy9EKEOKXWR6Pw==",
+    "RestSharp/108.0.2": {
+      "sha512": "zI1lzI+Jjzl6bcicyUYfLIGmmOAdJRkYepMnSPzrxd1o9RxztPaR/blUOmY8BpXdN3I+XlK9dtwCYRGCxvaODw==",
       "type": "package",
-      "path": "restsharp/107.3.0",
+      "path": "restsharp/108.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3019,7 +3019,7 @@
         "lib/net6.0/RestSharp.xml",
         "lib/netstandard2.0/RestSharp.dll",
         "lib/netstandard2.0/RestSharp.xml",
-        "restsharp.107.3.0.nupkg.sha512",
+        "restsharp.108.0.2.nupkg.sha512",
         "restsharp.nuspec",
         "restsharp.png"
       ]
@@ -6277,7 +6277,7 @@
       "Microsoft.Extensions.Azure >= 1.2.0",
       "Newtonsoft.Json >= 13.0.1",
       "Quartz >= 3.4.0",
-      "RestSharp >= 107.3.0",
+      "RestSharp >= 108.0.2",
       "Swashbuckle.AspNetCore >= 6.2.3",
       "System.Data.OracleClient >= 1.0.8",
       "System.Data.SqlClient >= 4.8.3",
@@ -6374,7 +6374,7 @@
           },
           "RestSharp": {
             "target": "Package",
-            "version": "[107.3.0, )"
+            "version": "[108.0.2, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
@@ -6411,7 +6411,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.304\\RuntimeIdentifierGraph.json"
       }
     }
   }

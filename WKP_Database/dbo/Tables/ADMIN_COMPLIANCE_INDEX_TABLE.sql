@@ -15,8 +15,7 @@
     [Updated_by]                         VARCHAR (100)  NULL,
     [Date_Created]                       DATETIME       NULL,
     [Date_Updated]                       DATETIME       NULL,
-       [CompanyNumber]      INT        NULL          
-
-   CONSTRAINT [PK_ADMIN_COMPLIANCE_INDEX_TABLE] PRIMARY KEY CLUSTERED ([Id] ASC)
+    [CompanyNumber]                      INT            NULL,
+    CONSTRAINT [PK_ADMIN_COMPLIANCE_INDEX_TABLE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

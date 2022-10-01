@@ -21,8 +21,7 @@
     [Terrain]                          VARCHAR (50)   NULL,
     [Consession_Type]                  VARCHAR (50)   NULL,
     [COMPANY_ID]                       VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                    INT            NULL,
     CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

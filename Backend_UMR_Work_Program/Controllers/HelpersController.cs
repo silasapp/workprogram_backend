@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Backend_UMR_Work_Program.Helpers;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -22,6 +23,7 @@ namespace Backend_UMR_Work_Program.Controllers
         public WKP_DBContext _context;
         IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        RestSharpServices restSharpServices = new RestSharpServices();
 
         public HelpersController(WKP_DBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
@@ -35,99 +37,7 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
         private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
         private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
-        public List<AppMessage> SaveMessage(int AppID, int userID, string subject, string content, string userElpsID, string type)
-        {
-
-            //messages messages = new messages()
-            // {
-            //     company_id = type.Contains("ompany") ? userID : 0,
-            //     UserID = userID,
-            //     AppId = AppID,
-            //     subject = subject,
-            //     content = content,
-            //     sender_id = userElpsID,
-            //     read = 0,
-            //     UserType = type,
-            //     date = DateTime.UtcNow.AddHours(1)
-            // };
-            // _context.messages.Add(messages);
-            // _context.SaveChanges();
-
-            // var msg = GetMessage(messages.id, Convert.ToInt32(messages.UserID));
-            // return msg;
-            return null;
-        }
-
-        public List<AppMessage> GetMessage(int msg_id, int seid)
-        {
-
-            return null;
-        }
-
-        public string SendEmailMessage(string email_to, string email_to_name, List<AppMessage> AppMessages, byte[] attach)
-        {
-            var result = "";
-            var password = _configuration.GetSection("SmtpSettings").GetSection("Password").Value.ToString();
-            var username = _configuration.GetSection("SmtpSettings").GetSection("Username").Value.ToString();
-            var emailFrom = _configuration.GetSection("SmtpSettings").GetSection("SenderEmail").Value.ToString();
-            var Host = _configuration.GetSection("SmtpSettings").GetSection("Server").Value.ToString();
-            var Port = Convert.ToInt16(_configuration.GetSection("SmtpSettings").GetSection("Port").Value.ToString());
-
-            var msgBody = CompanyMessageTemplate(AppMessages);
-
-            MailMessage _mail = new MailMessage();
-            SmtpClient client = new SmtpClient(Host, Port);
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-
-            client.UseDefaultCredentials = false;
-            client.EnableSsl = true;
-            client.Credentials = new System.Net.NetworkCredential(username, password);
-            _mail.From = new MailAddress(emailFrom);
-            _mail.To.Add(new MailAddress(email_to, email_to_name));
-            _mail.Subject = AppMessages.FirstOrDefault().Subject.ToString();
-            _mail.IsBodyHtml = true;
-            _mail.Body = msgBody;
-            if (attach != null)
-            {
-                string name = "App Letter";
-                Attachment at = new Attachment(new MemoryStream(attach), name);
-                _mail.Attachments.Add(at);
-            }
-            //_mail.CC=
-            try
-            {
-                client.Send(_mail);
-            }
-            catch (Exception ex)
-            {
-                result = ex.Message;
-            }
-            return result;
-        }
-
-        public string CompanyMessageTemplate(List<AppMessage> AppMessages)
-        {
-            var msg = AppMessages.FirstOrDefault();
-            string body = "<div>";
-
-            body += "<div style='width: 800px; background-color: #ece8d4; padding: 5px 0 5px 0;'><img style='width: 98%; height: 120px; display: block; margin: 0 auto;' src='~/images/nmdpra.png' alt='Logo'/></div>";
-            body += "<div class='text-left' style='background-color: #ece8d4; width: 800px; min-height: 200px;'>";
-            body += "<div style='padding: 10px 30px 30px 30px;'>";
-            body += "<h5 style='text-align: center; font-weight: 300; padding-bottom: 10px; border-bottom: 1px solid #ddd;'>" + msg.Subject + "</h5>";
-            body += "<p>Dear Sir/Madam,</p>";
-            body += "<p style='line-height: 30px; text-align: justify;'>" + msg.Content + "</p>";
-
-            body += "<table style = 'width: 100%;'><tbody>";
-            body += "<tr><td style='width: 200px;'><strong>Company Name:</strong></td><td> " + msg.CompanyName + " </td></tr>";
-            body += "</tbody></table><br/>";
-
-            body += "<p> </p>";
-            body += "&copy; " + DateTime.Now.Year + "<p>  Powered by NUPRC Work Program Team. </p>";
-            body += "<div style='padding:10px 0 10px; 10px; background-color:#888; color:#f9f9f9; width:800px;'> &copy; " + DateTime.UtcNow.AddHours(1).Year + " Nigerian Midstream and Downstream Petroleum Regulatory Authority &minus; NMDPRA Nigeria</div></div></div>";
-
-            return body;
-        }
-
+       
         public string Encrypt(string clearText)
         {
             string EncryptionKey = "MAKV2SPBNI99212";
@@ -2754,6 +2664,394 @@ namespace Backend_UMR_Work_Program.Controllers
 
         #endregion
 
+        #region PermitGenerator
+        public string CreatePermit(Application app)
+        {
+            try
+            {
+                var application = _context.Applications.Where(a => a.Id == app.Id).FirstOrDefault();
+
+                #region Create The Permit
+                var getCategory = _context.ApplicationCategories.Where(p => p.Id == app.CategoryID).FirstOrDefault();
+                var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == app.CompanyID).FirstOrDefault();
+                string pm = "";
+                var elps_Approval = new PermitAPIModel();
+                string letterTemplate = "";
+                PermitApproval approval = new PermitApproval();
+                approval.PermitNo = GeneratePermitNo(app.Id, app.CategoryID, app.YearOfWKP);
+                approval.AppID = app.Id;
+                approval.CompanyID = app.CompanyID;
+                approval.DateIssued = DateTime.Now;
+                approval.DateExpired = approval.DateIssued;
+                _context.PermitApprovals.Add(approval);
+                _context.SaveChanges();
+
+                //Push Permit to ELPS
+                elps_Approval.CategoryName = getCategory.Name;
+                elps_Approval.Company_Id = Company.ELPS_ID.GetValueOrDefault();
+                elps_Approval.Date_Expire = approval.DateExpired;
+                elps_Approval.Date_Issued = approval.DateIssued;
+                elps_Approval.OrderId = application.ReferenceNo;
+                elps_Approval.Permit_No = approval.PermitNo;
+                elps_Approval.Id = approval.Id;
+                int elpsPermitId = 0;
+
+                if (!PostPermit(elps_Approval, elpsPermitId))
+                {
+                    throw new ArgumentException("Error Pushing Approval to ELPS!");
+                }
+                #endregion
+                pm = approval.PermitNo;
+
+                #region Send Mail
+                var date = DateTime.Now;
+                var dt = date.Day.ToString() + date.Month.ToString() + date.Year.ToString();
+                var sn = string.Format("NUPRC/WKP/{0}/{1}", dt, application.CompanyID);
+                var body = "";
+                var up = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                string file = up + @"\\Templates\" + letterTemplate;
+                using (var sr = new StreamReader(file))
+                {
+
+                    body = sr.ReadToEnd();
+                }
+
+                string subject = $"APPROVAL FOR WORK PROGRAM SUBMISSION FOR YEAR: {application.YearOfWKP}";
+                var msgBody = string.Format(body, subject, Company.NAME, approval.PermitNo, approval.DateIssued.ToShortDateString(), approval.DateExpired.ToShortDateString(), DateTime.Now.Year);
+                var emailMsg = SaveMessage(app.Id, app.CompanyID, subject, msgBody, "Company");
+                var sendEmail = SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+                #endregion
+
+                return pm;
+            }
+            catch (Exception x)
+            {
+                LogMessages(x.ToString());
+                return x.ToString();
+            }
+        }
+
+        private string GeneratePermitNo(int appId, int catId, int appYear)
+        {
+            string no = "NUPRC/WKP/";
+            string touse = string.Empty;
+
+            Random rnd = new Random();
+
+        generate:
+            int digits = rnd.Next(10001, 99999);
+
+            switch (catId)
+            {
+                case 1:
+                    no += "NEW/";
+                    break;
+                case 2:
+                    no += "MODIFICATION/";
+                    break;
+                default:
+                    break;
+            }
+            var getCategory = _context.ApplicationCategories.Where(p => p.Id == catId).FirstOrDefault();
+
+            if (getCategory.Name == GeneralModel.New)
+                no += appYear.ToString().Substring(2, 2) + "/N{0}";
+            else
+                no += appYear.ToString().Substring(2, 2) + "/M{0}";
+
+            touse = string.Format(no, digits.ToString("00000"));
+
+            var check = _context.PermitApprovals.Where(p => p.PermitNo.ToLower() == touse.ToLower()).FirstOrDefault();
+            //Check if the NO is not existing
+            if (check == null)
+            {
+                return touse;
+            }
+            else
+                goto generate;
+        }
+        public bool PostPermit(PermitAPIModel model, int elpsid)
+        {
+            var values = new JObject();
+            values.Add("permit_No", model.Permit_No);
+            values.Add("orderId", model.OrderId);
+            values.Add("company_Id", model.Company_Id.ToString());
+            values.Add("DateIssued", model.Date_Issued.ToString("yyyy-MM-ddTHH:mm:ss.fff"));
+            values.Add("DateExpired", model.Date_Issued.AddYears(100).ToString("yyyy-MM-ddTHH:mm:ss.fff"));
+            values.Add("categoryName", model.CategoryName);
+            values.Add("is_Renewed", (model.Is_Renewed == "true") ? "Yes" : "No");
+            values.Add("licenseId", model.Id.ToString());
+            values.Add("id", 0);
+
+            List<JObject> newDocs = new List<JObject>();
+
+            var paramData = restSharpServices.parameterData("CompId", model.Company_Id.ToString());
+            var savePermit = restSharpServices.Response("api/Permits/{CompId}/{email}/{apiHash}", paramData, "POST", values);
+
+            if (savePermit.IsCompleted)
+            {
+                JObject eplsPermit = JsonConvert.DeserializeObject<JObject>(savePermit.Result.Content);
+
+                var permit = _context.PermitApprovals.Where(x => x.Id == model.Id);
+
+                if (permit.Count() > 0)
+                {
+                    permit.FirstOrDefault().ElpsID = (int)eplsPermit.SelectToken("id");
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+
+                    var application = _context.Applications.Where(a => a.ReferenceNo == model.OrderId).FirstOrDefault();
+                    if (application != null)
+                    {
+                        var field = _context.CONCESSION_SITUATIONs.Where(a => a.Id == application.FieldID).FirstOrDefault();
+                        CreatePermit(application);
+
+                        var permitApproval = _context.PermitApprovals.Where(x => x.AppID == application.Id);
+
+                        if (permitApproval.Count() > 0)
+                        {
+                            permitApproval.FirstOrDefault().ElpsID = (int)eplsPermit.SelectToken("id");
+                            _context.SaveChanges();
+                            return true;
+                        }
+
+                    }
+                    return true;
+
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+        //Generating Application Reference Number
+        public string Generate_Reference_Number()
+        {
+            lock (lockThis)
+            {
+                Thread.Sleep(1000);
+                return "WKP" + DateTime.Now.ToString("MMddyyHHmmss");
+            }
+        }
+        private Object lockThis = new object();
+        public int RecordStaffDesk(int appID, ApplicationProcessModel appProcess)
+        {
+            if (appProcess != null)
+            {
+                MyDesk drop = new MyDesk()
+
+                {
+
+                    ProcessID = appProcess.ProcessId,
+
+                    Sort = appProcess.Sort,
+
+                    AppId = appID,
+
+                    StaffID = appProcess.ProcessId,
+
+                    FromStaffID = appProcess.FromStaffId,
+
+                    HasWork = false,
+
+                    HasPushed = false,
+
+                    CreatedAt = DateTime.Now
+
+                };
+                _context.MyDesks.Add(drop);
+
+                if (_context.SaveChanges() > 0)
+                {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+        public ApplicationProcessModel GetApplicationProccess(string appType, int sortID)
+        {
+            var applicationProcess = (from ap in _context.ApplicationProccesses
+                                      join cat in _context.ApplicationCategories on ap.CategoryID equals cat.Id
+                                      where cat.Name == appType && ap.DeleteStatus != true && cat.DeleteStatus != true
+                                      select ap).ToList();
+            if (sortID > 0)
+            {
+                applicationProcess = (from ap in _context.ApplicationProccesses
+                                      join cat in _context.ApplicationCategories on ap.CategoryID equals cat.Id
+                                      where ap.Sort == (sortID + 1) && cat.Name == appType && ap.DeleteStatus != true && cat.DeleteStatus != true
+                                      select ap).ToList();
+
+            }
+
+            if (applicationProcess.Count() > 0)
+            {
+                var getStaff = (from stf in _context.staff
+                                join role in _context.ROLES_s on stf.RoleID.ToString() equals role.RoleId
+                                where role.RoleId == applicationProcess.FirstOrDefault().RoleID.ToString() && stf.DeleteStatus != true && stf.ActiveStatus != false
+                                select new ApplicationProcessModel
+                                {
+
+                                    StaffId = stf.StaffID,
+                                    RoleId = int.Parse(role.RoleId),
+                                    RoleName = role.Description,
+                                    Sort = applicationProcess.FirstOrDefault().Sort,
+                                    ProcessId = applicationProcess.FirstOrDefault().ProccessID,
+                                    DeskCount = _context.MyDesks.Where(x => x.StaffID == stf.StaffID && x.HasWork != true).Count(),
+                                });
+                if (getStaff.Count() > 0)
+                {
+                    var minDeskCount = getStaff.Min(x => x.DeskCount);
+                    var minStaffDesk = getStaff.Where(x => x.DeskCount == minDeskCount).FirstOrDefault();
+                    return minStaffDesk;
+                }
+            }
+
+            return null;
+        }
+        public void SaveHistory(int appid, int staffid, string status, string comment)
+        {
+            var getStaff = (from u in _context.staff where u.StaffID == staffid select u).FirstOrDefault();
+
+            ApplicationDeskHistory appDeskHistory = new ApplicationDeskHistory()
+            {
+                //StaffEmail = getStaff.StaffEmail,
+                AppId = appid,
+                StaffID = staffid,
+                Comment = comment,
+                Status = status,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.ApplicationDeskHistories.Add(appDeskHistory);
+            _context.SaveChanges();
+        }
+        public List<AppMessage> SaveMessage(int appID, int userID, string subject, string content, string type)
+        {
+
+            Message messages = new Message()
+            {
+                companyID = type.Contains("ompany") ? userID : 0,
+                staffID = userID,
+                AppId = appID,
+                subject = subject,
+                content = content,
+                //sender_id = userElpsID,
+                read = 0,
+                UserType = type,
+                date = DateTime.UtcNow.AddHours(1)
+            };
+            _context.Messages.Add(messages);
+            _context.SaveChanges();
+
+            var msg = GetMessage(messages.id, userID);
+            return msg;
+        }
+        public List<AppMessage> GetMessage(int msg_id, int seid)
+        {
+
+            var message = from m in _context.Messages
+                          join a in _context.Applications on m.AppId equals a.Id
+                          join cm in _context.ADMIN_COMPANY_INFORMATIONs on a.CompanyID equals cm.CompanyNumber
+                          join ca in _context.ApplicationCategories on a.CategoryID equals ca.Id
+                          where m.id == msg_id
+                          select new AppMessage
+                          {
+                              Subject = m.subject,
+                              Content = m.content,
+                              RefNo = a == null ? "" : a.ReferenceNo,
+                              Status = a == null ? "" : a.Status,
+                              Seen = m.read,
+                              CompanyName = cm == null ? "" : cm.COMPANY_NAME,
+                              CategoryName = ca.Name,
+                              Field = "Field",
+                              Concession = "Concession",
+                              DateSubmitted = a.CreatedAt
+                          };
+            return message.ToList();
+        }
+        public string SendEmailMessage(string email_to, string email_to_name, List<AppMessage> AppMessages, byte[] attach)
+        {
+            var result = "";
+            var password = _configuration.GetSection("SmtpSettings").GetSection("Password").Value.ToString();
+            var username = _configuration.GetSection("SmtpSettings").GetSection("Username").Value.ToString();
+            var emailFrom = _configuration.GetSection("SmtpSettings").GetSection("SenderEmail").Value.ToString();
+            var Host = _configuration.GetSection("SmtpSettings").GetSection("Server").Value.ToString();
+            var Port = Convert.ToInt16(_configuration.GetSection("SmtpSettings").GetSection("Port").Value.ToString());
+
+            var msgBody = CompanyMessageTemplate(AppMessages);
+
+            MailMessage _mail = new MailMessage();
+            SmtpClient client = new SmtpClient(Host, Port);
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+            client.UseDefaultCredentials = false;
+            client.EnableSsl = true;
+            client.Credentials = new System.Net.NetworkCredential(username, password);
+            _mail.From = new MailAddress(emailFrom);
+            _mail.To.Add(new MailAddress(email_to, email_to_name));
+            _mail.Subject = AppMessages.FirstOrDefault().Subject.ToString();
+            _mail.IsBodyHtml = true;
+            _mail.Body = msgBody;
+            if (attach != null)
+            {
+                string name = "App Letter";
+                Attachment at = new Attachment(new MemoryStream(attach), name);
+                _mail.Attachments.Add(at);
+            }
+            //_mail.CC=
+            try
+            {
+                client.Send(_mail);
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+            }
+            return result;
+        }
+        public string CompanyMessageTemplate(List<AppMessage> AppMessages)
+        {
+            var msg = AppMessages.FirstOrDefault();
+            string body = "<div>";
+
+            body += "<div style='width: 800px; background-color: #ece8d4; padding: 5px 0 5px 0;'><img style='width: 98%; height: 120px; display: block; margin: 0 auto;' src='~/images/NUPRC Logo.JPG' alt='Logo'/></div>";
+            body += "<div class='text-left' style='background-color: #ece8d4; width: 800px; min-height: 200px;'>";
+            body += "<div style='padding: 10px 30px 30px 30px;'>";
+            body += "<h5 style='text-align: center; font-weight: 300; padding-bottom: 10px; border-bottom: 1px solid #ddd;'>" + msg.Subject + "</h5>";
+            body += "<p>Dear Sir/Madam,</p>";
+            body += "<p style='line-height: 30px; text-align: justify;'>" + msg.Content + "</p>";
+            body += "<p style='line-height: 30px; text-align: justify;'> Kindly find application details below.</p>";
+            body += "<table style = 'width: 100%;'><tbody>";
+            body += "<tr><td style='width: 200px;'><strong>Company Name:</strong></td><td> " + msg.CompanyName + " </td></tr>";
+            body += "<tr><td style='width: 200px;'><strong>Year:</strong></td><td> " + msg.Year + " </td></tr>";
+            body += "<tr><td style='width: 200px;'><strong>Concession:</strong></td><td> " + msg.Concession + " </td></tr>";
+            body += "<tr><td style='width: 200px;'><strong>Field:</strong></td><td> " + msg.Field + " </td></tr>";
+            body += "</tbody></table><br/>";
+
+            body += "<p> </p>";
+            body += "&copy; " + DateTime.Now.Year + "<p>  Powered by NUPRC Work Program Team. </p>";
+            body += "<div style='padding:10px 0 10px; 10px; background-color:#888; color:#f9f9f9; width:800px;'> &copy; " + DateTime.UtcNow.AddHours(1).Year + " Nigerian Upstream Petroleum Regulatory Commission &minus; NUPRC Nigeria</div></div></div>";
+
+            return body;
+        }
+        public void LogMessages(string message, string user_id = null)
+        {
+            var auditTrail = new AuditTrail()
+            {
+                CreatedAt = DateTime.UtcNow,
+                UserID = user_id,
+                AuditAction = message
+            };
+
+            _context.AuditTrails.Add(auditTrail);
+            _context.SaveChanges();
+
+        }
 
     }
 }

@@ -24,8 +24,7 @@
     [DIV_REP_NAME]          VARCHAR (500) NULL,
     [DIV_REP_DIV]           VARCHAR (500) NULL,
     [DIV_REP_EMAIL]         VARCHAR (500) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]         INT           NULL,
     CONSTRAINT [PK_ADMIN_DIVISIONAL_REPRESENTATIVE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

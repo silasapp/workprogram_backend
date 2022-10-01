@@ -6,13 +6,13 @@
     <Name>WKP_Database</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{cc1e2908-c0df-4ed6-895e-7c52f349e982}</ProjectGuid>
+    <ProjectGuid>{da7a1f48-f357-44dc-8fca-581071c35a7e}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>WKP_Database</RootNamespace>
-    <AssemblyName>WKP_Database</AssemblyName>
+    <RootNamespace>WKP__Database</RootNamespace>
+    <AssemblyName>WKP__Database</AssemblyName>
     <ModelCollation>1033,CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -202,6 +202,7 @@
     <Build Include="dbo\Tables\ADMIN_HSE_CONDITION_OF_EQUIPMENT.sql" />
     <Build Include="dbo\Tables\HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW.sql" />
     <Build Include="dbo\Tables\RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION.sql" />
+    <Build Include="dbo\Tables\Table_1.sql" />
     <Build Include="dbo\Tables\GeographicalActivity.sql" />
     <Build Include="dbo\Tables\ADMIN_HSE_OSP REGISTRATIONS_NEW.sql" />
     <Build Include="dbo\Tables\RESERVES_UPDATES_OIL_CONDENSATE_CURRENT_RESERVE.sql" />
@@ -398,7 +399,6 @@
     <Build Include="dbo\Views\VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_appraisal.sql" />
     <Build Include="dbo\Views\VW_Geophysical_SEISMIC_DATA_total_summed.sql" />
     <Build Include="dbo\Views\VW_company_and_contract_type.sql" />
-    <Build Include="dbo\Views\View_2.sql" />
     <Build Include="dbo\Views\WP_OML_Oil_spill_reported_Index_MN_MAX_RGT_by_Year_of_WP.sql" />
     <Build Include="dbo\Views\VW_GEOPHYSICAL_ACTIVITIES_PROCESSING.sql" />
     <Build Include="dbo\Views\WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PERCENTAGE.sql" />
@@ -495,6 +495,5 @@
     <Build Include="dbo\Stored Procedures\sp_helpdiagrams.sql" />
     <Build Include="dbo\Stored Procedures\sp_renamediagram.sql" />
     <Build Include="dbo\Stored Procedures\sp_upgraddiagrams.sql" />
-    <Build Include="dbo\Tables\Table_1.sql" />
   </ItemGroup>
 </Project>

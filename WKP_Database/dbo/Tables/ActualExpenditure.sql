@@ -4,7 +4,7 @@
     [Equivalent_Naira_Dollar_Component] VARCHAR (100) NULL,
     [Other_Activity_Budget]             VARCHAR (100) NULL,
     [UserEmail]                         VARCHAR (100) NULL,
-    [UserNumber]                        INT NULL,
+    [UserNumber]                        INT           NULL,
     CONSTRAINT [PK_ActualExpenditure] PRIMARY KEY CLUSTERED ([Actual_ExpenditureId] ASC)
 );
 

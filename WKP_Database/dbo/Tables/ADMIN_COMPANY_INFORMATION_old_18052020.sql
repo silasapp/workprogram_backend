@@ -12,8 +12,7 @@
     [NAME]                 VARCHAR (50)  NULL,
     [DESIGNATION]          VARCHAR (50)  NULL,
     [PHONE_NO]             VARCHAR (50)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]        INT           NULL,
     CONSTRAINT [PK_ADMIN_COMPANY_INFORMATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

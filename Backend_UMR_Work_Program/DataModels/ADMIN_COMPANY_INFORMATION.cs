@@ -6,6 +6,8 @@ namespace Backend_UMR_Work_Program.Models
     public partial class ADMIN_COMPANY_INFORMATION
     {
         public int Id { get; set; }
+        public int? CompanyNumber { get; set; }
+        public int? ELPS_ID { get; set; }
         public string? COMPANY_NAME { get; set; }
         public string? EMAIL { get; set; }
         public string? PASSWORDS { get; set; }

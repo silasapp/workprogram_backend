@@ -19,8 +19,7 @@
     [Terrain]             VARCHAR (50)  NULL,
     [Consession_Type]     VARCHAR (50)  NULL,
     [COMPANY_ID]          VARCHAR (100) NULL,
-            [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]       INT           NULL,
     CONSTRAINT [PK_BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIES] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

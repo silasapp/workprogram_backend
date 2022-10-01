@@ -20,7 +20,7 @@
     [FLAG2]                VARCHAR (200) NULL,
     [UPDATED_BY]           VARCHAR (200) NULL,
     [UPDATED_DATE]         VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
+    [CompanyNumber]        INT           NULL,
     CONSTRAINT [PK_ADMIN_COMPANY_INFORMATION_AUDIT_] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

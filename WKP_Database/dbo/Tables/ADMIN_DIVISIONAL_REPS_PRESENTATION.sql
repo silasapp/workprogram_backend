@@ -33,8 +33,7 @@
     [DAYS_TO_GO]            VARCHAR (50)  NULL,
     [REPRESENTATIVE]        VARCHAR (50)  NULL,
     [REPRESENTATIVE_EMAIL]  VARCHAR (50)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]         INT           NULL,
     CONSTRAINT [PK_ADMIN_DIVISIONAL_REPS_PRESENTATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

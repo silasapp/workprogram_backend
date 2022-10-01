@@ -28,8 +28,7 @@
     [Are_they_oil_or_gas_wells]                  VARCHAR (20)  NULL,
     [FDPDocumentFilename]                        VARCHAR (500) NULL,
     [COMPANY_ID]                                 VARCHAR (100) NULL,
-    [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                              INT           NULL,
     CONSTRAINT [PK_FIELD_DEVELOPMENT_PLAN] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

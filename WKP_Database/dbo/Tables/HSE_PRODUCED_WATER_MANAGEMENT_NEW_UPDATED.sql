@@ -20,8 +20,7 @@
     [Terrain]                           VARCHAR (50)   NULL,
     [Consession_Type]                   VARCHAR (50)   NULL,
     [COMPANY_ID]                        VARCHAR (100)  NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                     INT            NULL,
     CONSTRAINT [PK_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

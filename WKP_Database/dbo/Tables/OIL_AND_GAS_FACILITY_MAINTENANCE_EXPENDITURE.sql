@@ -22,8 +22,7 @@
     [Terrain]                                     VARCHAR (50)  NULL,
     [Consession_Type]                             VARCHAR (50)  NULL,
     [COMPANY_ID]                                  VARCHAR (100) NULL,
-        [CompanyNumber]      INT        NULL          
-
+    [CompanyNumber]                               INT           NULL,
     CONSTRAINT [PK_OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

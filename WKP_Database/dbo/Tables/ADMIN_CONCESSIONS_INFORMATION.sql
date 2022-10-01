@@ -28,7 +28,7 @@
     [DELETED_STATUS]       VARCHAR (100)  NULL,
     [DELETED_BY]           VARCHAR (200)  NULL,
     [DELETED_DATE]         VARCHAR (100)  NULL,
-    [EMAIL_REMARK]         VARCHAR (100)  NULL,    [CompanyNumber]      INT        NULL          
-
+    [EMAIL_REMARK]         VARCHAR (100)  NULL,
+    [CompanyNumber]        INT            NULL
 );
 
