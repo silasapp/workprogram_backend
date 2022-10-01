@@ -24,6 +24,15 @@
     [Terrain]                    VARCHAR (50)   NULL,
     [COMPANY_ID]                 VARCHAR (100)  NULL,
     [CompanyNumber]              INT            NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_ID]                   INT            NULL,
+    CONSTRAINT [PK_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main

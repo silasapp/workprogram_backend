@@ -6,6 +6,10 @@
     [Updated_by]      VARCHAR (100) NULL,
     [Date_Created]    DATETIME      NULL,
     [Date_Updated]    DATETIME      NULL,
+<<<<<<< HEAD
+=======
+    [CompanyNumber]   INT           NULL,
+>>>>>>> origin/main
     CONSTRAINT [PK_ADMIN_WELL_CATEGORIES] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

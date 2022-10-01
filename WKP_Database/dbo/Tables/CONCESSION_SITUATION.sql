@@ -40,6 +40,17 @@
     [area_in_square_meter_based_on_company_records] VARCHAR (500) NULL,
     [COMPANY_ID]                                    VARCHAR (100) NULL,
     [CompanyNumber]                                 INT           NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_Concession_Situation] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_Name]                                    VARCHAR (500) NULL,
+    [AdminConcession_ID]                            INT           NULL,
+    [Field_ID]                                      INT           NULL,
+    CONSTRAINT [PK_Concession_Situation] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main

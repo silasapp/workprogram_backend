@@ -18,6 +18,15 @@
     [original_filemane]     VARCHAR (2500) NULL,
     [COMPANY_ID]            VARCHAR (300)  NULL,
     [CompanyNumber]         INT            NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_Presentation_Upload] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_ID]              INT            NULL,
+    CONSTRAINT [PK_Presentation_Upload] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main

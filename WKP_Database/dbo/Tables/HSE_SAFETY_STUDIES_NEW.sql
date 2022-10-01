@@ -23,6 +23,15 @@
     [DoyouhaveSMSinPlace]                                                VARCHAR (500)  NULL,
     [COMPANY_ID]                                                         VARCHAR (100)  NULL,
     [CompanyNumber]                                                      INT            NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_HSE_SAFETY_STUDIES_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_ID]                                                           INT            NULL,
+    CONSTRAINT [PK_HSE_SAFETY_STUDIES_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main

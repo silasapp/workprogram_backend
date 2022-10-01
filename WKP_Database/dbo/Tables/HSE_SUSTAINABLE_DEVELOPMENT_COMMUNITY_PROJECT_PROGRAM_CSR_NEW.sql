@@ -21,6 +21,15 @@
     [Consession_Type]         VARCHAR (50)   NULL,
     [COMPANY_ID]              VARCHAR (100)  NULL,
     [CompanyNumber]           INT            NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_ID]                INT            NULL,
+    CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main

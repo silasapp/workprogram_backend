@@ -21,6 +21,15 @@
     [Date_Created]                        DATETIME       NULL,
     [Date_Updated]                        DATETIME       NULL,
     [COMPANY_ID]                          VARCHAR (100)  NULL,
+<<<<<<< HEAD
     [CompanyNumber]                       INT            NULL
 );
 
+=======
+    [CompanyNumber]                       INT            NULL,
+    [Field_ID]                            INT            NULL
+);
+
+
+
+>>>>>>> origin/main

@@ -15,13 +15,27 @@
     [Terrain]                                                     VARCHAR (50)  NULL,
     [Consession_Type]                                             VARCHAR (50)  NULL,
     [Contract_Type]                                               VARCHAR (50)  NULL,
+<<<<<<< HEAD
     [MOUResponderFilePath]                                        VARCHAR (100) NULL,
     [MOUOSCPFilePath]                                             VARCHAR (100) NULL,
+=======
+    [MOUResponderFilePath]                                        VARCHAR (200) NULL,
+    [MOUOSCPFilePath]                                             VARCHAR (200) NULL,
+>>>>>>> origin/main
     [MOUResponderFilename]                                        VARCHAR (100) NULL,
     [MOUOSCPFilename]                                             VARCHAR (100) NULL,
     [MOUResponderInPlace]                                         VARCHAR (50)  NULL,
     [COMPANY_ID]                                                  VARCHAR (100) NULL,
     [CompanyNumber]                                               INT           NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_ID]                                                    INT           NULL,
+    CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main

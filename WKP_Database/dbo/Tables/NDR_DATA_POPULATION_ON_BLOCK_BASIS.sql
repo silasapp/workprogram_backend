@@ -18,6 +18,15 @@
     [Terrain]            VARCHAR (50)  NULL,
     [Consession_Type]    VARCHAR (50)  NULL,
     [CompanyNumber]      INT           NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_NDR_DATA_POPULATION_ON_BLOCK_BASIS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_ID]           INT           NULL,
+    CONSTRAINT [PK_NDR_DATA_POPULATION_ON_BLOCK_BASIS] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main

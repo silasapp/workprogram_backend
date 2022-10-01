@@ -6,6 +6,7 @@
     <Name>WKP_Database</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
+<<<<<<< HEAD
     <ProjectGuid>{da7a1f48-f357-44dc-8fca-581071c35a7e}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
@@ -17,6 +18,19 @@
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+=======
+    <ProjectGuid>{c5437f16-f389-4f53-969a-6079e921334a}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>WKP_Database</RootNamespace>
+    <AssemblyName>WKP_Database</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+>>>>>>> origin/main
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
@@ -140,7 +154,10 @@
     <Build Include="dbo\Tables\ConcessionSituationTwo.sql" />
     <Build Include="dbo\Tables\ADMIN_CONCESSIONS_INFORMATION.sql" />
     <Build Include="dbo\Tables\NigerianContent.sql" />
+<<<<<<< HEAD
     <Build Include="dbo\Tables\ADMIN_CONCESSIONS_INFORMATION_BK_23112021.sql" />
+=======
+>>>>>>> origin/main
     <Build Include="dbo\Tables\Contract_Type.sql" />
     <Build Include="dbo\Tables\OIL_AND_GAS_FACILITY_MAINTENANCE.sql" />
     <Build Include="dbo\Tables\ADMIN_CONCESSIONS_INFORMATION_HISTORY.sql" />
@@ -170,6 +187,10 @@
     <Build Include="dbo\Tables\HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW.sql" />
     <Build Include="dbo\Tables\Exploration_Drilling.sql" />
     <Build Include="dbo\Tables\ADMIN_ENVIROMENTAL_STUDIES.sql" />
+<<<<<<< HEAD
+=======
+    <Build Include="dbo\Tables\COMPANY_CONCESSIONS_FIELDS.sql" />
+>>>>>>> origin/main
     <Build Include="dbo\Tables\OilCondensateProduction.sql" />
     <Build Include="dbo\Tables\HSE_CAUSES_OF_SPILL.sql" />
     <Build Include="dbo\Tables\FacilityConstruction.sql" />
@@ -299,6 +320,7 @@
     <Build Include="dbo\Views\WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Five_Year_Trend_for_Companies_Reserve_Replacement_Ratio.sql" />
     <Build Include="dbo\Views\WP_OPL_Discovery_Index_MN_MAX_RGT_by_YEAR_OLD.sql" />
     <Build Include="dbo\Views\WP_OML_EXPLORATORY_DRILLING_INDEX_WEIGHTED_SCORE.sql" />
+<<<<<<< HEAD
     <Build Include="dbo\Views\WP_WORKOVERS_RECOMPLETION_JOBS.sql" />
     <Build Include="dbo\Views\WP_OML_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR.sql" />
     <Build Include="dbo\Views\WP_Total_E_and_P_companies_old.sql" />
@@ -307,6 +329,19 @@
     <Build Include="dbo\Views\WP_INITIAL_WELL_COMPLETION_JOBS.sql" />
     <Build Include="dbo\Views\WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION.sql" />
     <Build Include="dbo\Views\WP_OML_NDPR_SUBSCRIPTION_FEE_Index_MN_MAX_RGT_by_Year_of_WP.sql" />
+=======
+    <Build Include="dbo\Views\WP_OML_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR.sql" />
+    <Build Include="dbo\Views\WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIES.sql" />
+    <Build Include="dbo\Views\WP_Total_E_and_P_companies_old.sql" />
+    <Build Include="dbo\Views\WP_OML_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE.sql" />
+    <Build Include="dbo\Views\WP_OML_Aggregated_Score_ALL_COMPANIES.sql" />
+    <Build Include="dbo\Views\WP_Total_E_and_P_companies.sql" />
+    <Build Include="dbo\Views\WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS.sql" />
+    <Build Include="dbo\Views\WP_WORKOVERS_RECOMPLETION_JOBS.sql" />
+    <Build Include="dbo\Views\WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION.sql" />
+    <Build Include="dbo\Views\WP_OML_NDPR_SUBSCRIPTION_FEE_Index_MN_MAX_RGT_by_Year_of_WP.sql" />
+    <Build Include="dbo\Views\WP_INITIAL_WELL_COMPLETION_JOBS.sql" />
+>>>>>>> origin/main
     <Build Include="dbo\Views\WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED.sql" />
     <Build Include="dbo\Views\WP_OML_NDPR_SUBSCRIPTION_FEE_INDEX_WEIGHTED_SCORE.sql" />
     <Build Include="dbo\Views\WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED.sql" />
@@ -331,12 +366,24 @@
     <Build Include="dbo\Views\WP_OML_Discovery_Index_MN_MAX_RGT_by_YEAR.sql" />
     <Build Include="dbo\Views\WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident.sql" />
     <Build Include="dbo\Views\WP_OML_DISCOVERY_INDEX_WEIGHTED_SCORE.sql" />
+<<<<<<< HEAD
     <Build Include="dbo\Views\WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil.sql" />
     <Build Include="dbo\Views\WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLD.sql" />
     <Build Include="dbo\Views\Sum_GEOPHYSICAL_ACTIVITIES_PROCESSING.sql" />
     <Build Include="dbo\Views\WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD.sql" />
     <Build Include="dbo\Views\WP_OML_Has_annual_NDR_subscription_fee_been_paid_new_Index_MN_MAX_RGT_by_Year_of_WP.sql" />
     <Build Include="dbo\Views\WP_OML_Has_annual_NDR_subscription_fee_been_paid_new_INDEX_WEIGHTED_SCORE.sql" />
+=======
+    <Build Include="dbo\Views\WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLD.sql" />
+    <Build Include="dbo\Views\Sum_GEOPHYSICAL_ACTIVITIES_PROCESSING.sql" />
+    <Build Include="dbo\Views\WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL.sql" />
+    <Build Include="dbo\Views\WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD.sql" />
+    <Build Include="dbo\Views\WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_contract_type.sql" />
+    <Build Include="dbo\Views\WP_OML_Has_annual_NDR_subscription_fee_been_paid_new_Index_MN_MAX_RGT_by_Year_of_WP.sql" />
+    <Build Include="dbo\Views\WP_Gas_Production_Utilisation_And_Flaring_Forecast.sql" />
+    <Build Include="dbo\Views\WP_OML_Has_annual_NDR_subscription_fee_been_paid_new_INDEX_WEIGHTED_SCORE.sql" />
+    <Build Include="dbo\Views\WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil.sql" />
+>>>>>>> origin/main
     <Build Include="dbo\Views\WP_OML_Gas_Sales_Royalty_Payment_Index_MN_MAX_RGT_by_Year_of_WP.sql" />
     <Build Include="dbo\Views\WP_OML_Gas_Sales_Royalty_Payment_INDEX_WEIGHTED_SCORE.sql" />
     <Build Include="dbo\Views\WP_OML_Gas_flare_Royalty_payment_Index_MN_MAX_RGT_by_Year_of_WP.sql" />
@@ -368,7 +415,10 @@
     <Build Include="dbo\Views\WP_OML_Facility_Project_Performance_INDEX_MN_MAX_RGT_by_YEAR.sql" />
     <Build Include="dbo\Views\WP_OML_Facility_Project_Performance_INDEX_WEIGHTED_SCORE_OLD.sql" />
     <Build Include="dbo\Views\VW_HSE_OIL_SPILL_REPORTING_NEW.sql" />
+<<<<<<< HEAD
     <Build Include="dbo\Views\WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS.sql" />
+=======
+>>>>>>> origin/main
     <Build Include="dbo\Views\VW_HSE_OIL_SPILL_REPORTING_NEW_total.sql" />
     <Build Include="dbo\Views\WP_COUNT_PRESENTATION_CATERGORY_BY_YEAR_old.sql" />
     <Build Include="dbo\Views\VW_HSE_OIL_SPILL_REPORTING_NEW_total_summed.sql" />
@@ -434,7 +484,10 @@
     <Build Include="dbo\Views\WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE.sql" />
     <Build Include="dbo\Views\VW_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL_total_4_percentage_calculation.sql" />
     <Build Include="dbo\Views\VW_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_PIVOT_Completion_Workover _join_Contracttype.sql" />
+<<<<<<< HEAD
     <Build Include="dbo\Views\WP_Gas_Production_Utilisation_And_Flaring_Forecast.sql" />
+=======
+>>>>>>> origin/main
     <Build Include="dbo\Views\VW_GAS_PRODUCTION_ACTIVITIES.sql" />
     <Build Include="dbo\Views\WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_TOBE_Pivotted_by_company_productionmonth_year_PLANNED.sql" />
     <Build Include="dbo\Views\VW_GAS_PRODUCTION_ACTIVITIES_total.sql" />
@@ -462,7 +515,10 @@
     <Build Include="dbo\Views\WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR.sql" />
     <Build Include="dbo\Views\WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages.sql" />
     <Build Include="dbo\Views\WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCORE.sql" />
+<<<<<<< HEAD
     <Build Include="dbo\Views\WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_contract_type.sql" />
+=======
+>>>>>>> origin/main
     <Build Include="dbo\Views\WP_OPL_Discovery_Index_MN_MAX_RGT_by_YEAR.sql" />
     <Build Include="dbo\Views\WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_count_contract_type.sql" />
     <Build Include="dbo\Views\WP_OPL_DISCOVERY_INDEX_WEIGHTED_SCORE.sql" />
@@ -476,7 +532,10 @@
     <Build Include="dbo\Views\WP_OML_INJURY_Index_MN_MAX_RGT_by_Year_of_WP_OLD.sql" />
     <Build Include="dbo\Views\WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT.sql" />
     <Build Include="dbo\Views\WP_OPL_Aggregated_Score_ALL_COMPANIES.sql" />
+<<<<<<< HEAD
     <Build Include="dbo\Views\WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL.sql" />
+=======
+>>>>>>> origin/main
     <Build Include="dbo\Views\WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED.sql" />
     <Build Include="dbo\Views\WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE.sql" />
     <Build Include="dbo\Views\WP_GEOPHYSICAL_ACTIVITIES_PROCESSING.sql" />
@@ -495,5 +554,9 @@
     <Build Include="dbo\Stored Procedures\sp_helpdiagrams.sql" />
     <Build Include="dbo\Stored Procedures\sp_renamediagram.sql" />
     <Build Include="dbo\Stored Procedures\sp_upgraddiagrams.sql" />
+<<<<<<< HEAD
+=======
+    <Build Include="dbo\Tables\COMPANY_FIELDS.sql" />
+>>>>>>> origin/main
   </ItemGroup>
 </Project>

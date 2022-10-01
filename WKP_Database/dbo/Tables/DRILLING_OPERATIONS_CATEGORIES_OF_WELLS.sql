@@ -54,6 +54,15 @@
     [Actual_Proposed]                             VARCHAR (100)  NULL,
     [WellName]                                    VARCHAR (2000) NULL,
     [CompanyNumber]                               INT            NULL,
+<<<<<<< HEAD
     CONSTRAINT [PK_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+=======
+    [Field_ID]                                    INT            NULL,
+    CONSTRAINT [PK_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+>>>>>>> origin/main
