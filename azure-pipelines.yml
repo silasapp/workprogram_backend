@@ -15,22 +15,26 @@ variables:
 
 steps:
 - task: UseDotNet@2
-  displayName: 'Install .NET Core SDK'
   inputs:
-    version: 5.0.x
-    performMultiLevelLookup: true
-    includePreviewVersions: true # Required for preview versions
-
+    packageType: 'sdk'
+    version: '6.0.x'
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2   
+  displayName: 'dotnet build'   
+  inputs:
+    projects: 'Backend_UMR_Work_Program/Backend_UMR_Work_Program*.csproj'
+
 - task: DotNetCoreCLI@2
   displayName: 'Publishing App...'
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: $(myproject)
+    projects: Backend_UMR_Work_Program.csproj
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: false
     modifyOutputPath: false
+    workingDirectory: $(Build.SourcesDirectory)/WorkProgram_BEnd/Backend_UMR_Work_Program
 - task: PublishBuildArtifacts@1
   displayName: 'Publishing Build Artifacts...'
