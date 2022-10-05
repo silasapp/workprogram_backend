@@ -36,7 +36,7 @@ steps:
   displayName: 'Publishing App...'
   inputs:
     command: 'publish'
-    publishWebProjects: true
+    publishWebProjects: false
     projects: Backend_UMR_Work_Program.csproj
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: false
