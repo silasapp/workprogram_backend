@@ -1116,7 +1116,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-
              return "Error : " + e.Message;
             }
         }
@@ -1302,8 +1301,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     return new
                     {
-                    Nigeria_Content = Nigeria_Content,
-                    Nigeria_Content_SuccessionPlan = Nigeria_Content_SuccessionPlan
+                        Nigeria_Content = Nigeria_Content,
+                        Nigeria_Content_SuccessionPlan = Nigeria_Content_SuccessionPlan
                     };
             }
 
@@ -1359,7 +1358,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-             return "Error : " + e.Message;
+                return "Error : " + e.Message;
             }
 
         }
@@ -2054,7 +2053,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("GAS_PRODUCTION_ACTIVITIES")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year )
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year)
         {
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITy>();
             try { 
@@ -2272,7 +2271,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 OilCondensate_Reserves =await _context.RESERVES_UPDATES_LIFE_INDices.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)

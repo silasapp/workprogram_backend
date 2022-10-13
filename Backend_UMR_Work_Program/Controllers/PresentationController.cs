@@ -209,7 +209,6 @@ namespace Backend_UMR_Work_Program.Controllers
                     else
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
-
                     }
                     save = await _context.SaveChangesAsync();
                     if (save > 0)
@@ -248,7 +247,6 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 if (WKPUserRole == GeneralModel.Admin)
                 {
-
                     details =await _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.YEAR == year).ToListAsync();
                 }
                 else
