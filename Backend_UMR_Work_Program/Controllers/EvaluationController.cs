@@ -20,9 +20,81 @@ namespace Backend_UMR_Work_Program.Controllers
             _context = context;
         }
 
+        public async Task<object> Best10OPLAcquisitionIndex(string year)
+        {
+            var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
+            var acqlist = new List<double>();
+            long value = 0;
+            int i = 0;
+
+            while (i < reel.Count())
+            {
+                double acq = (Convert.ToInt64(reel[i].Quantum) / Convert.ToInt64(reel[i].Quantum_Planned)) * 100;
+                acqlist.Add(acq);
+                i++;
+            }
+
+            acqlist.Sort();
+            return acqlist.Take(10);
+        }
+
+         public async Task<object> Best10OPLExploratoryIndex(string year)
+        {
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var acqlist = new List<double>();
+            long value = 0;
+            int i = 0;
+
+            while (i < reel.Count())
+            {
+                var drillingFieldPresent = Convert.ToInt32(reel[i].No_of_discovered_field) > 0 ? 100 : 0;
+                acqlist.Add(drillingFieldPresent);
+                i++;
+            }
+
+            acqlist.Sort();
+            return acqlist.Take(10);
+        }
+
+        public async Task<object> Best10OPLDiscoveryIndex(string year)
+        {
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var acqlist = new List<double>();
+            long value = 0;
+            int i = 0;
+
+            while (i < reel.Count())
+            {
+                var discoveredFieldPresent = Convert.ToInt32(reel[i].No_of_discovered_field) > 0 ? 100 : 0;
+                acqlist.Add(discoveredFieldPresent);
+                i++;
+            }
+
+            acqlist.Sort();
+            return acqlist.Take(10);
+        }
+
+        public async Task<object> Best10OPLConcessionRentalsIndex(string year)
+        {
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var acqlist = new List<double>();
+            long value = 0;
+            int i = 0;
+
+            while (i < reel.Count())
+            {
+                var concessionRentalPaid = Convert.ToInt32(reel[i].Has_the_Concession_Rentals_been_paid) > 0 ? 100 : 0;
+                acqlist.Add(concessionRentalPaid);
+                i++;
+            }
+
+            acqlist.Sort();
+            return acqlist.Take(10);
+        }
+
         public async Task<object> Best10OMLAcquisitionIndex(string year)
         {
-            var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year select a).ToListAsync();
+            var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
             int i = 0;
