@@ -1201,7 +1201,6 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<object> Get_Gas_Production_Report(string year)
         {
             WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
-
             try
             {
                 var Gas_Produced_Utilized_Flared = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flareds.Where(x=> x.Year_of_WP == year).ToListAsync();
