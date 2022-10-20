@@ -40,7 +40,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
          public async Task<object> Best10OPLExploratoryIndex(string year)
         {
-            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
             int i = 0;
@@ -58,7 +58,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         public async Task<object> Best10OPLDiscoveryIndex(string year)
         {
-            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
             int i = 0;
@@ -76,7 +76,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         public async Task<object> Best10OPLConcessionRentalsIndex(string year)
         {
-            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
             int i = 0;
@@ -112,7 +112,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         public async Task<object> Best10OMLExploratoryIndex(string year)
         {
-            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
             int i = 0;
@@ -130,7 +130,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         public async Task<object> Best10OMLDiscoveryIndex(string year)
         {
-            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
             int i = 0;
@@ -148,7 +148,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         public async Task<object> Best10OMLConcessionRentalsIndex(string year)
         {
-            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
             int i = 0;
@@ -156,6 +156,42 @@ namespace Backend_UMR_Work_Program.Controllers
             while (i < reel.Count())
             {
                 var concessionRentalPaid = Convert.ToInt32(reel[i].Has_the_Concession_Rentals_been_paid) > 0 ? 100 : 0;
+                acqlist.Add(concessionRentalPaid);
+                i++;
+            }
+
+            acqlist.Sort();
+            return acqlist.Take(10);
+        }
+
+        // public async Task<object> Best10OMLRoyaltyPaymentIndex(string year)
+        // {
+        //     var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
+        //     var acqlist = new List<double>();
+        //     long value = 0;
+        //     int i = 0;
+
+        //     while (i < reel.Count())
+        //     {
+        //         var concessionRentalPaid = Convert.ToInt32(reel[i]) > 0 ? 100 : 0;
+        //         acqlist.Add(concessionRentalPaid);
+        //         i++;
+        //     }
+
+        //     acqlist.Sort();
+        //     return acqlist.Take(10);
+        // }
+
+        public async Task<object> Best10OMLReverseReplacementRatio(string year)
+        {
+            var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
+            var acqlist = new List<double>();
+            long value = 0;
+            int i = 0;
+
+            while (i < reel.Count())
+            {
+                var concessionRentalPaid = Convert.ToInt32(reel[i]) > 0 ? 100 : 0;
                 acqlist.Add(concessionRentalPaid);
                 i++;
             }
