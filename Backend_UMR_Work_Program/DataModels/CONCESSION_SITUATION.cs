@@ -45,5 +45,9 @@ namespace Backend_UMR_Work_Program.Models
         public string? relinquishment_retention { get; set; }
         public string? area_in_square_meter_based_on_company_records { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
+        public string? Field_Name { get; set; }
+        public int? AdminConcession_ID { get; set; }
+        public int? Field_ID { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace nes_workflow
+namespace Backend_UMR_Work_Program
 {
     public class send_autoemail
     {

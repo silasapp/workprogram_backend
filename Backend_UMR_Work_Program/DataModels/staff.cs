@@ -7,7 +7,7 @@ namespace Backend_UMR_Work_Program.Models
     {
         public int StaffID { get; set; }
         public string? StaffElpsID { get; set; }
-        public int? FieldOfficeID { get; set; }
+        public int? Staff_SBU { get; set; }
         public int? RoleID { get; set; }
         public int? LocationID { get; set; }
         public string? StaffEmail { get; set; }

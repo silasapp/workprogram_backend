@@ -28,5 +28,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Year { get; set; }
         public string? submitted { get; set; }
         public string? Consession_Type { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

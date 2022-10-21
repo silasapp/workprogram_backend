@@ -22,5 +22,8 @@ namespace Backend_UMR_Work_Program.Models
         public string? Contract_Type { get; set; }
         public string? QualityControlFilename { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
+        public int? Field_ID { get; set; }
+        public string? Valid_Accreditation_Letter_For_QualityControl { get; set; }
     }
 }

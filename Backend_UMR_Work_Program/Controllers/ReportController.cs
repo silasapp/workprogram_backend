@@ -3,9 +3,14 @@ using Backend_UMR_Work_Program.Models;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using AutoMapper;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
@@ -18,305 +23,1629 @@ namespace Backend_UMR_Work_Program.Controllers
 
         public ReportController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper)
     {
-        //_httpContextAccessor = httpContextAccessor;
+        _httpContextAccessor = _httpContextAccessor;
         _account = account;
         _context = context;
         _configuration = configuration;
          _mapper = mapper;
         _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
     }
-        private string? WKPUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
-        private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
-        private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
+        //private string? WKPCompanyId => "221";
+        //private string? WKPCompanyName => "Name";
+        //private string? WKPCompanyEmail => "adeola.kween123@gmail.com";
+        //private string? WKUserRole => "Admin";
+
+        private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
+        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
+        private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
 
-
-        [HttpGet("WORKPROGRAMME_REPORT")]
-        public async Task<WebApiResponse> WORKPROGRAMME_REPORT(string year = null)
+        #region General Report Section
+        [HttpGet("GENERAL_WORKPROGRAMME_REPORT")]
+        public async Task<WebApiResponse> GENERAL_WORKPROGRAMME(string year)
         {
             try
             {
 
-                string previousYear = year !=null ? (int.Parse(year) - 1).ToString(): "";
+                WorkProgrammeReport_Model GeneralReport = new WorkProgrammeReport_Model();
 
-                var WKP_Report = _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id == 1).FirstOrDefault();
-                var WKP_Report2_Acquisition_Activities = _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id == 2).FirstOrDefault();
-                var WKP_Report3_Reprocessing_Activities = _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id == 3).FirstOrDefault();
-                var WKP_Report4_Crude_Oil_Production = _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id == 4).FirstOrDefault();
-                var WKP_Report5_Produced_Utilized = _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id == 5).FirstOrDefault();
+                var WorkProgrammeReport = Get_General_SummaryReport(year);
+                var WorkProgrammeReport2 = Get_General_Report(year);
+
+                GeneralReport.WorkProgrammeReport1_Model = WorkProgrammeReport;
+                GeneralReport.WorkProgrammeReport2_Model = WorkProgrammeReport2;
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = GeneralReport, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+        
+        [HttpGet("GENERAL_SUMMARYREPORT")]
+        public async Task<WebApiResponse> GENERAL_SUMMARYREPORT(string year)
+        {
+            try
+            {
+
+                Task<object> WorkProgrammeReport = Get_General_SummaryReport(year);
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = WorkProgrammeReport, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+        [HttpGet("GENERAL_REPORT")]
+        public async Task<WebApiResponse> GENERAL_REPORT(string year)
+        {
+            try
+            {
+                var OIL_CONDENSATE_PRODUCTION_BY_MONTH_YEAR = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_years.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                var OIL_CONDENSATE_PRODUCTION_BY_CONTRACT_TYPE = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                var OIL_CONDENSATE_PRODUCTION_BY_TERRAIN = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == year).ToListAsync();
+
+
+                var WorkProgrammeReport2 = new 
+                {
+                    OIL_CONDENSATE_PRODUCTION_BY_MONTH_YEAR= OIL_CONDENSATE_PRODUCTION_BY_MONTH_YEAR,
+                    OIL_CONDENSATE_PRODUCTION_BY_CONTRACT_TYPE= OIL_CONDENSATE_PRODUCTION_BY_CONTRACT_TYPE,
+                    OIL_CONDENSATE_PRODUCTION_BY_TERRAIN = OIL_CONDENSATE_PRODUCTION_BY_TERRAIN
+                };
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = WorkProgrammeReport2, StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+        [HttpGet("Get_General_SummaryReport")]
+        public async Task<object> Get_General_SummaryReport(string year)
+        {
+
+            try
+            {  
+
+                string previousYear = year !=null ? (int.Parse(year) - 1).ToString(): "";
+                var WKP_Report = await _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id <= 5).ToListAsync();
+                var Seismic_Data_Acquisition_Activities = WKP_Report.Where(x => x.Id == 2).FirstOrDefault();
                 if (year != null)
                 {
-                    var E_and_P_companies = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies.Where(x => x.YEAR == year).ToList();
+                    var WP_COUNT = await _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year).ToListAsync();
+                    var E_and_P_companies = await _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies.Where(x => x.YEAR == year).ToListAsync();
 
-                    var WP_COUNT_PRESENTEDs = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year && x.PRESENTED == GeneralModel.Presented).ToList();
 
-                    var WP_COUNT_FAILED_TO_SHOW_UP = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year && x.PRESENTED == GeneralModel.FailedToShow).ToList();
+                    var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                             where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                             group o by new
+                                                                             {
+                                                                                 o.Geo_type_of_data_acquired,
+                                                                                 o.Year_of_WP
+                                                                             }
+                                                                        into g
+                                                                             select new WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION
+                                                                             {
+                                                                                 Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                                 Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                 Year_of_WP = g.FirstOrDefault().Year_of_WP,
 
-                    var WP_COUNT_NOT_INVITED = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year && x.PRESENTED == GeneralModel.NotInvited).ToList();
+                                                                             }).ToListAsync();
 
-                    var WP_COUNT_SHOWED_UP_BUT_COULD_NOT_PRESENT = _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year && x.PRESENTED == GeneralModel.ShowedButNoPresentation).ToList();
 
-                    var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == year && x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToList();
+                    var WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING = await _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(x => x.Year_of_WP == year && (x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD || x.Geo_Type_of_Data_being_Processed == GeneralModel.TwoD)).ToListAsync();
 
-                    var WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING_3D = _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(x => x.Year_of_WP == year && x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD).ToList();
 
-                    var WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING_2D = _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(x => x.Year_of_WP == year && x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD).ToList();
+                    var WP_COUNT_WELLS = await _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && (x.Category == GeneralModel.Exploration || x.Category == GeneralModel.Development)).ToListAsync();
 
-                    var WP_COUNT_WELLS_Exploration = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Exploration).ToList();
-
-                    var WP_COUNT_WELLS_Development = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Development).ToList();
-
-                    var WP_SUM_APPRAISAL_WELLS = (from o in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs
-                                                  where o.Category.Contains("Appraisal") && o.Year_of_WP == year
-                                                  group o by new
-                                                  {
-                                                      o.Category
-                                                  }
+                    var WP_SUM_APPRAISAL_WELLS = await (from o in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs
+                                                        where o.Category.Contains(GeneralModel.Appraisal) && o.Year_of_WP == year
+                                                        group o by new
+                                                        {
+                                                            o.Category
+                                                        }
                                                     into g
-                                                  select new
-                                                  {
-                                                      Actual_No_Drilled_in_Current_Year = g.Sum(x => Convert.ToInt32(x.Actual_No_Drilled_in_Current_Year)),
-                                                      Proposed_No_Drilled = g.Sum(x => Convert.ToInt32(x.Proposed_No_Drilled)),
-                                                      Year_of_WP = g.FirstOrDefault().Year_of_WP,
+                                                        select new DRILLING_OPERATIONS_CATEGORIES_OF_WELL
+                                                        {
+                                                            Actual_No_Drilled_in_Current_Year = g.Sum(x => Convert.ToDouble(x.Actual_No_Drilled_in_Current_Year)).ToString(),
+                                                            Proposed_No_Drilled = g.Sum(x => Convert.ToDouble(x.Proposed_No_Drilled)).ToString(),
+                                                            Year_of_WP = g.FirstOrDefault().Year_of_WP,
 
-                                                  }).ToList();
-
-
-                    var WP_SUM_WORKOVERS_RECOMPLETION = _context.WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETIONs.Where(x => x.Year_of_WP_I == year).ToList();
-
-                    var WP_COUNT_FirstAppraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.FirstAppraisal).ToList();
-                    var WP_COUNT_SecondAppraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.SecondAppraisal).ToList();
-                    var WP_COUNT_Appraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Appraisal).ToList();
-                    var WP_COUNT_OrdinaryAppraisal = _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Appraisal).ToList();
-
-                    var WP_JV_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.JV).ToList();
-                    string JV_Total_Reconciled_National_Crude_Oil_Production = WP_JV_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
-                    var WP_MF_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.MF).ToList();
-                    string MF_Total_Reconciled_National_Crude_Oil_Production = WP_MF_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
-                    var WP_PSC_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.PSC).ToList();
-                    string PSC_Total_Reconciled_National_Crude_Oil_Production = WP_PSC_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
-                    var WP_SR_Contract_Type = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.SR).ToList();
-                    string SR_Total_Reconciled_National_Crude_Oil_Production = WP_SR_Contract_Type.FirstOrDefault().Total_Reconciled_National_Crude_Oil_Production.ToString();
-
-                    var WP_crude_oil_FOR_CURRENT_YEAR = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oils.Where(x => x.Year_of_WP == year).ToList();
-                    var WP_crude_oil_FOR_PREV_YEAR = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oils.Where(x => x.Year_of_WP == previousYear).ToList();
-                    var WP_OIL_PRODUCTION_total_barrel = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs.Where(x => x.Year_of_WP == year).ToList();
-                    var WP_OIL_PRODUCTION_total_barrel_JV = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.JV).ToList();
-                    var WP_OIL_PRODUCTION_total_barrel_MF = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.MF).ToList();
-                    var WP_OIL_PRODUCTION_total_barrel_SR = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.SR).ToList();
-                    var WP_OIL_PRODUCTION_total_barrel_PSC = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oils.Where(x => x.Year_of_WP == year).ToList();
-
-                    var WP_Terrain_Continental_Shelf_or_Offshore = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == year && x.Terrain == GeneralModel.ContinentalShelf).ToList();
-                    var WP_Terrain_Continental_Deep_Offshore = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == year && x.Terrain == GeneralModel.DeepOffshore).ToList();
-
-                    var WP_Terrain_Continental_Terrain_Onshore = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == year && x.Terrain == GeneralModel.Onshore).ToList();
+                                                        }).ToListAsync();
 
 
-                    #region Gas Production Activities For Previous Year 
-                    var WP_GAS_ACTIVITIES_PY = _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages.Where(x => x.Year_of_WP == previousYear).FirstOrDefault();
+                    var WP_SUM_WORKOVERS_RECOMPLETION = await _context.WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETIONs.Where(x => x.Year_of_WP_I == year).ToListAsync();
 
-                    string Actual_Total_Gas_Produced_PY = WP_GAS_ACTIVITIES_PY.Actual_Total_Gas_Produced.ToString();
-                    string Utilized_Gas_Produced_PY = WP_GAS_ACTIVITIES_PY.Utilized_Gas_Produced.ToString();
-                    string Flared_Gas_Produced_PY = WP_GAS_ACTIVITIES_PY.Flared_Gas_Produced.ToString();
-                    string Percentage_Utilized_PY = WP_GAS_ACTIVITIES_PY.Percentage_Utilized.ToString();
-                    Decimal PY_GasPercentage = Decimal.Parse(Percentage_Utilized_PY);
-                    PY_GasPercentage = Decimal.Round(PY_GasPercentage, 2);
-                    Percentage_Utilized_PY = PY_GasPercentage.ToString();
+                    var WP_COUNT_Appraisal = await _context.WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.Contains(GeneralModel.Appraisal)).ToListAsync();
 
-                    var WP_GAS_PRODUCTION_JV = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == previousYear && x.Contract_Type == GeneralModel.JV).ToList();
-                    string JV_Total_Gas_Produced_PY = WP_GAS_PRODUCTION_JV.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
+                    var WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES = await (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oils
+                                                                         where u.Year_of_WP == year
+                                                                         select u).ToListAsync();
 
-                    var WP_GAS_PRODUCTION_MF = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == previousYear && x.Contract_Type == GeneralModel.MF).ToList();
-                    string MF_Total_Gas_Produced_PY = WP_GAS_PRODUCTION_MF.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
+                    var WP_JV_Contract_Type = await (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Types
+                                                     where u.Year_of_WP == previousYear /*&& u.Contract_Type == GeneralModel.JV*/
+                                                     select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
 
-                    var WP_GAS_PRODUCTION_PSC = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == previousYear && x.Contract_Type == GeneralModel.PSC).ToList();
-                    string PSC_Total_Gas_Produced_PY = WP_GAS_PRODUCTION_PSC.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
+                    var WP_GAS_PRODUCTION_ACTIVITIES_Percentages = await (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages
+                                                                          where u.Year_of_WP == previousYear
+                                                                          select u).ToListAsync();
+
+                    var WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY = await (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages
+                                                                             where u.Year_of_WP == year
+                                                                             select u).ToListAsync();
+
+                    var WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type = await (from u in _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types
+                                                                            where u.Year_of_WP == previousYear
+                                                                            select u).ToListAsync();
+
+
+
+                    var WP_CRUDE_OIL = await (from u in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs
+                                              where u.Year_of_WP == previousYear || u.Year_of_WP == year
+                                              group u by new { u.Year_of_WP } into g
+                                              select new
+                                              {
+                                                  Year = g.Key,
+                                                  Total_Reconciled_National_Crude_Oil_Production = g.Sum(c => Convert.ToInt64(Convert.ToDouble(c.Total_Reconciled_National_Crude_Oil_Production))),
+                                              }).ToListAsync();
+                    var WP_CRUDE_OIL_PY = WP_CRUDE_OIL.Where(x => x.Year.ToString() == previousYear).ToList();
+                    var WP_CRUDE_OIL_CY = WP_CRUDE_OIL.Where(x => x.Year.ToString() == year).ToList();
+
+                    var WP_OIL_PRODUCTION_total_barrel = await (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs
+                                                                where u.Year_of_WP == year
+                                                                select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
+
+                    var WP_Terrain_Continental = await (from u in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains
+                                                        where u.Year_of_WP == year
+                                                        select u).GroupBy(x => x.Terrain).Select(x => x.FirstOrDefault()).ToListAsync();
+
+                    #region Gas Production Activities For Previous Year & Current Year
+
+                    var GAS_ACTIVITIES = await (from u in _context.GAS_PRODUCTION_ACTIVITIEs
+                                                select u).ToListAsync();
+
+                    var GAS_ACTIVITIES_YEAR = await (from u in _context.GAS_PRODUCTION_ACTIVITIEs
+                                                     select u).GroupBy(x => x.Year_of_WP).Select(x => x.FirstOrDefault()).ToListAsync();
+
+                    var WP_GAS_ACTIVITIES = (from g in GAS_ACTIVITIES_YEAR
+                                             select new
+                                             {
+                                                 Actual_Total_Gas_Produced = Convert.ToInt64(g.Current_Actual_Year),
+                                                 Utilized_Gas_Produced = double.TryParse(g.Utilized, out double n) ? Convert.ToDouble(g.Utilized) : 0,
+                                                 Flared_Gas_Produced = Convert.ToDouble(g.Flared),
+                                                 Year_of_WP = g.Year_of_WP,
+                                                 CompanyName= g.CompanyName,
+                                                 Percentage_Utilized = double.TryParse(g.Utilized, out double m) ? ((Convert.ToDouble(g.Utilized) / Convert.ToDouble(g.Actual_year)) * 100) : 0
+                                             }).ToList();
+
+                    var PY_GAS_ACTIVITIES = WP_GAS_ACTIVITIES.Where(x => x.Year_of_WP.ToString() == previousYear).ToList();
+                    var CY_GAS_ACTIVITIES = WP_GAS_ACTIVITIES.Where(x => x.Year_of_WP.ToString() == year).ToList();
+
+                    var GAS_ACTIVITIES_CONTRACTTYPES = await (from u in _context.GAS_PRODUCTION_ACTIVITIEs
+                                                              select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
+
 
                     #endregion
 
-                    #region Gas Production Activities For Current Year 
-                    var WP_GAS_ACTIVITIES_CY = _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages.Where(x => x.Year_of_WP == year).FirstOrDefault();
-
-                    string Actual_Total_Gas_Produced_CY = WP_GAS_ACTIVITIES_CY.Actual_Total_Gas_Produced.ToString();
-                    string Utilized_Gas_Produced_CY = WP_GAS_ACTIVITIES_CY.Utilized_Gas_Produced.ToString();
-                    string Flared_Gas_Produced_CY = WP_GAS_ACTIVITIES_CY.Flared_Gas_Produced.ToString();
-                    string Percentage_Utilized_CY = WP_GAS_ACTIVITIES_CY.Percentage_Utilized.ToString();
-                    Decimal CY_GasPercentage = Decimal.Parse(Percentage_Utilized_CY);
-                    CY_GasPercentage = Decimal.Round(CY_GasPercentage, 2);
-                    Percentage_Utilized_CY = CY_GasPercentage.ToString();
-
-                    var CY_GAS_PRODUCTION_JV = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.JV).ToList();
-                    string JV_Total_Gas_Produced_CY = WP_GAS_PRODUCTION_JV.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
-
-                    var CY_GAS_PRODUCTION_MF = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.MF).ToList();
-                    string MF_Total_Gas_Produced_CY = WP_GAS_PRODUCTION_MF.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
-
-                    var CY_GAS_PRODUCTION_PSC = _context.WP_GAS_PRODUCTION_ACTIVITIES_Contract_Types.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.PSC).ToList();
-                    string PSC_Total_Gas_Produced_CY = WP_GAS_PRODUCTION_PSC.FirstOrDefault().Actual_Total_Gas_Produced.ToString();
-
-                    #endregion
-
-                    var OIL_CONDENSATE_MMBBL = _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(x => x.Year_of_WP == year).FirstOrDefault();
-                    string Reserves_as_at_MMbbl = OIL_CONDENSATE_MMBBL.Reserves_as_at_MMbbl.ToString();
-                    string Reserves_as_at_MMbbl_gas = OIL_CONDENSATE_MMBBL.Reserves_as_at_MMbbl_gas.ToString();
-                    string Reserves_as_at_MMbbl_condensate = OIL_CONDENSATE_MMBBL.Reserves_as_at_MMbbl_condensate.ToString();
+                    var OIL_CONDENSATE_MMBBL = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(x => x.Year_of_WP == year).ToListAsync();
 
                     #region HSE Accident
-                    var HSE_ACCIDENT_Consequences = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequences.Where(x => x.Year_of_WP == year && x.Consequence == GeneralModel.Fatality).FirstOrDefault();
-                    string Sum_accident = HSE_ACCIDENT_Consequences.sum_accident.ToString();
-                    var HSE_ACCIDENT_Total = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accidents.Where(x => x.Year_of_WP == year).FirstOrDefault();
-                    string Sum_accident_total = HSE_ACCIDENT_Total.Sum_accident.ToString();
+                    var HSE_ACCIDENT_Consequences = await _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequences.Where(x => x.Year_of_WP == year && x.Consequence == GeneralModel.Fatality).ToListAsync();
+                    //string Sum_accident = HSE_ACCIDENT_Consequences.sum_accident.ToString();
 
+                    var HSE_ACCIDENT_Total = await _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accidents.Where(x => x.Year_of_WP == year).ToListAsync();
+                    //string Sum_accident_total = HSE_ACCIDENT_Total.Sum_accident.ToString();
 
-                    var HSE_ACCIDENT_Sabotage = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages.Where(x => x.Year_of_WP == year && x.Cause == GeneralModel.Sabotage).FirstOrDefault();
-                    string Sabotage_Sum_accident = HSE_ACCIDENT_Sabotage.sum_accident.ToString();
-                    string Sabotage_Percentage_Spill = HSE_ACCIDENT_Sabotage.Percentage_Spill.ToString();
-                    Decimal S_DECIMAL = Decimal.Parse(Sabotage_Percentage_Spill);
-                    S_DECIMAL = Decimal.Round(S_DECIMAL, 2);
-                    Sabotage_Percentage_Spill = S_DECIMAL.ToString();
-
-                    var HSE_ACCIDENT_Error = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages.Where(x => x.Year_of_WP == year && x.Cause == GeneralModel.HumanError).FirstOrDefault();
-                    string Error_Sum_accident = HSE_ACCIDENT_Error.sum_accident.ToString();
-                    string Error_Percentage_Spill = HSE_ACCIDENT_Error.Percentage_Spill.ToString();
-                    Decimal E_DECIMAL = Decimal.Parse(Error_Percentage_Spill);
-                    E_DECIMAL = Decimal.Round(E_DECIMAL, 2);
-                    Error_Percentage_Spill = E_DECIMAL.ToString();
-
-
-                    var HSE_ACCIDENT_MS = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages.Where(x => x.Year_of_WP == year && x.Cause == GeneralModel.MysterySpills).FirstOrDefault();
-                    string MS_Sum_accident = HSE_ACCIDENT_MS.sum_accident.ToString();
-                    string MS_Percentage_Spill = HSE_ACCIDENT_MS.Percentage_Spill.ToString();
-                    Decimal MS_DECIMAL = Decimal.Parse(MS_Percentage_Spill);
-                    MS_DECIMAL = Decimal.Round(MS_DECIMAL, 2);
-                    MS_Percentage_Spill = MS_DECIMAL.ToString();
-
-                    var HSE_ACCIDENT_EF = _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages.Where(x => x.Year_of_WP == year && x.Cause == GeneralModel.EquipmentFailure).FirstOrDefault();
-                    string EF_Sum_accident = HSE_ACCIDENT_EF.sum_accident.ToString();
-                    string EF_Percentage_Spill = HSE_ACCIDENT_EF.Percentage_Spill.ToString();
-                    Decimal EF_DECIMAL = Decimal.Parse(EF_Percentage_Spill);
-                    EF_DECIMAL = Decimal.Round(EF_DECIMAL, 2);
-                    EF_Percentage_Spill = EF_DECIMAL.ToString();
-                    #endregion
-
-                    #region GEO Activities
-                    var JV_GEO_ACTIVITIES = _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.JV).FirstOrDefault();
-                    string JV_Count_Contract_Type = JV_GEO_ACTIVITIES.Count_Contract_Type.ToString();
-                    string JV_Actual_year_aquired_data = JV_GEO_ACTIVITIES.Actual_year_aquired_data.ToString();
-                    string JV_proposed_year_data = JV_GEO_ACTIVITIES.proposed_year_data.ToString();
-
-                    var MF_GEO_ACTIVITIES = _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.MF).FirstOrDefault();
-                    string MF_Count_Contract_Type = MF_GEO_ACTIVITIES.Count_Contract_Type.ToString();
-                    string MF_Actual_year_aquired_data = MF_GEO_ACTIVITIES.Actual_year_aquired_data.ToString();
-                    string MF_proposed_year_data = MF_GEO_ACTIVITIES.proposed_year_data.ToString();
-
-                    var PSC_GEO_ACTIVITIES = _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.PSC).FirstOrDefault();
-                    string PSC_Count_Contract_Type = PSC_GEO_ACTIVITIES.Count_Contract_Type.ToString();
-                    string PSC_Actual_year_aquired_data = PSC_GEO_ACTIVITIES.Actual_year_aquired_data.ToString();
-                    string PSC_proposed_year_data = PSC_GEO_ACTIVITIES.proposed_year_data.ToString();
-
-                    var HSE_REPORTING_NEW_volume_of_spill = (from o in _context.HSE_OIL_SPILL_REPORTING_NEWs
-                                                             where o.Year_of_WP == year
-                                                             select o
-                                                             ).ToList().Sum(x => int.Parse(x.Volume_of_spill_bbls));
-
-                    var GEO_sum_and_count_SR = (from o in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
-                                                where o.Year_of_WP == year && o.Contract_Type == GeneralModel.SR
-                                                select o).FirstOrDefault();
-
-                    string Count_Contract_Type = GEO_sum_and_count_SR.Count_Contract_Type.ToString();
-                    string Actual_year_aquired_data = GEO_sum_and_count_SR.Actual_year_aquired_data.ToString();
-                    string proposed_year_data = GEO_sum_and_count_SR.proposed_year_data.ToString();
+                    var HSE_ACCIDENT = await (from u in _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentages
+                                              where u.Year_of_WP == year
+                                              select new WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage
+                                              {
+                                                  Cause = u.Cause,
+                                                  sum_accident = u.sum_accident,
+                                                  Percentage_Spill = u.Percentage_Spill,
+                                              }).GroupBy(x => x.Cause).Select(x => x.FirstOrDefault()).ToListAsync();
 
                     #endregion
-                    var Oil_Spill_REPORT = (from o in _context.WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVEREDs
-                                            where o.Year_of_WP == year
-                                            group o by new
-                                            {
-                                                o.CompanyName
-                                            }
-                                                   into g
-                                            select new
-                                            {
-                                                Frequency = g.Min(x => x.Frequency),
-                                                Highest_1st = g.Min(x => x.Frequency),
-                                                Highest_2nd = g.Min(x => x.Frequency),
-                                                Highest_3rd = g.Min(x => x.Frequency),
-                                                TOTAL_QUANTITY_SPILLED = g.Sum(x => Convert.ToInt32(x.Total_Quantity_Spilled)),
-                                                CompanyName = g.Key,
-                                                Year_of_WP = g.FirstOrDefault().Year_of_WP,
+                    // var GEO_ACTIVITIES = await (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
+                    //                             where u.Year_of_WP == year
+                    //                             select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
 
-                                            }).OrderBy(x => x.Frequency);
+                    var HSE_VOLUME_OF_OILSPILL = await (from o in _context.HSE_OIL_SPILL_REPORTING_NEWs
+                                                        where o.Year_of_WP == year
+                                                        select o
+                                                                 ).SumAsync(x => Convert.ToDouble(x.Volume_of_spill_bbls));
 
-                    var Oil_Spill_REPORT_1st = Oil_Spill_REPORT.Take(1);
-                    var Oil_Spill_REPORT_2nd = Oil_Spill_REPORT.Take(2);
-                    var Oil_Spill_REPORT_3rd = Oil_Spill_REPORT.Take(3);
-                    var Oil_Spill_REPORT_4th = Oil_Spill_REPORT.Take(4);
-                    var Oil_Spill_REPORT_5th = Oil_Spill_REPORT.Take(5);
+                    var OILSPILL_REPORT = (from o in _context.WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVEREDs
+                                           where o.Year_of_WP == year
+                                           group o by new
+                                           {
+                                               o.CompanyName
+                                           }
+                                                into g
+                                           select new
+                                           {
+                                               Frequency = g.Min(x => x.Frequency),
+                                               Highest_1st = g.Min(x => x.Frequency),
+                                               Highest_2nd = g.Min(x => x.Frequency),
+                                               Highest_3rd = g.Min(x => x.Frequency),
+                                               TOTAL_QUANTITY_SPILLED = g.Sum(x => x.Total_Quantity_Spilled),
+                                               CompanyName = g.Key,
+                                               Year_of_WP = g.FirstOrDefault().Year_of_WP,
+                                           }).OrderBy(x => x.Frequency).Take(5).ToListAsync();
+
+                    #region GENERAL REPORT DATA POPULATION
+                    var get_ReportContent_1 = WKP_Report.Where(x => x.Id == 1)?.FirstOrDefault();
+                    var get_ReportContent_2 = WKP_Report.Where(x => x.Id == 2)?.FirstOrDefault();
+                    
+                    if (get_ReportContent_1 != null && get_ReportContent_2 != null)
+                    {
+                        string NO_OF_COMPANY_PRESENTED = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.Presented).Count().ToString();
+                        string SHOWED_UP = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.ShowedButNoPresentation).Count().ToString();
+                        string FAIL_TO_SHOW_UP = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.FailedToShow).Count().ToString();
+                        string NOT_INVITED = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.NotInvited).Count().ToString();
 
 
-                    var QUANTITY_RECOVERED = (from o in _context.HSE_CAUSES_OF_SPILLs
-                                              where o.Year_of_WP == year
-                                              select o).ToList();
-                    var Total_no_of_QUANTITY_RECOVERED = QUANTITY_RECOVERED.Sum(x => int.Parse(x.Total_Quantity_Recovered));
-                    var Total_no_of_QUANTITY_SPILLED = QUANTITY_RECOVERED.Sum(x => int.Parse(x.Total_Quantity_Spilled));
-                    var Total_PRODUCED_WATER = _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Where(x => x.Year_of_WP == year).Sum(x => int.Parse(x.Produced_water_volumes));
+                        get_ReportContent_1.Report_Content = get_ReportContent_1.Report_Content.Replace("(NO_OF_COMPANY_PRESENTED)", NO_OF_COMPANY_PRESENTED)
+                            .Replace("(NO_OF_EP_COMPANIES)", E_and_P_companies.Count().ToString())
+                            .Replace("(N)", year)
+                            .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
+                            .Replace("(N - 1)", previousYear)
+                            .Replace("(SHOWED_UP)", SHOWED_UP).Replace("(FAIL_TO_SHOW_UP)", SHOWED_UP).Replace("(NOT_INVITED)", NOT_INVITED)
+                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(PROCESSED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Processed_Actual.ToString())
+                            .Replace("(REPROCESSED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Reprocessed_Actual.ToString())
+                            .Replace("(PROPOSED_ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Geo_type_of_data_acquired.ToString())
+                            .Replace("(PROPOSED_PROCESS_2D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.TwoD)?.FirstOrDefault()?.Processed_Proposed.ToString())
+                            .Replace("(PROPOSED_PROCESS_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Processed_Proposed.ToString())
+                            .Replace("(PROPOSED_REPROCESSED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_PROCESSING.Where(x => x.Geo_Type_of_Data_being_Processed == GeneralModel.ThreeD)?.FirstOrDefault()?.Reprocessed_Proposed.ToString())
+                            .Replace("(NO_EXPLORATION_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Exploration)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_EXPLORATION_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Exploration)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_FIRST_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.FirstAppraisal)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_FIRST_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.FirstAppraisal)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_SECOND_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.SecondAppraisal)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_SECOND_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.SecondAppraisal)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_ORDINARY_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.OrdinaryAppraisal)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_ORDINARY_APPRAISALS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.OrdinaryAppraisal)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_DEVELOPMENT_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Development)?.FirstOrDefault()?.Actual_No_Drilled_in_Current_Year.ToString())
+                            .Replace("(NO_PROPOSED_DEVELOPMENT_WELLS)", WP_COUNT_WELLS.Where(x => x.Category == GeneralModel.Development)?.FirstOrDefault()?.Proposed_No_Drilled.ToString())
+                            .Replace("(NO_COMPLETION_WORKOVER)", WP_SUM_WORKOVERS_RECOMPLETION.Where(x => x.Year_of_WP_I == year)?.FirstOrDefault()?.Actual_Year.ToString())
+                            .Replace("(NO_PROPOSED_COMPLETION_WORKOVER)", WP_SUM_WORKOVERS_RECOMPLETION.Where(x => x.Year_of_WP_I == year)?.FirstOrDefault()?.Proposed_Year.ToString())
+                            .Replace("(PREVIOUS_NO_TOTAL_RECONCILED_NATIONAL_CRUDE)", WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_JV)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_PSC)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_SR)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_MF)", WP_JV_Contract_Type.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_RECONCILED_NATIONAL_CRUDE_YEAR_TO_DATE)", WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES?.FirstOrDefault()?.Total_Reconciled_National_Crude_Oil_Production.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Actual_Total_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Utilized_Gas_Produced.ToString())
+                            .Replace("(PERCENTAGE_TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Percentage_Utilized.ToString())
+                            .Replace("(NO_TOTAL_GAS_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_JV)", WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_PSC)", WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_MFIO)", WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_YEAR_TO_DATE)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Actual_Total_Gas_Produced.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_YEAR_TO_DATE_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Utilized_Gas_Produced.ToString())
+                            .Replace("(PERCENTAGE_TOTAL_GAS_PRODUCED_YEAR_TO_DATE_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Percentage_Utilized.ToString())
+                            .Replace("(NO_TOTAL_GAS_PRODUCED_YEAR_TO_DATE_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY?.FirstOrDefault()?.Flared_Gas_Produced.ToString())
+                            .Replace("(NO_NIGERIA_OIL_RESERVES)", OIL_CONDENSATE_MMBBL?.FirstOrDefault()?.Reserves_as_at_MMbbl.ToString())
+                            .Replace("(NO_NIGERIA_OIL_CONDENSATE)", OIL_CONDENSATE_MMBBL?.FirstOrDefault()?.Reserves_as_at_MMbbl_condensate.ToString())
+                            .Replace("(NO_NIGERIA_OIL_RESERVE_GAS)", OIL_CONDENSATE_MMBBL?.FirstOrDefault()?.Reserves_as_at_MMbbl_gas.ToString())
+                            .Replace("(NO_OF_ACCIDENTS)", HSE_ACCIDENT_Total?.FirstOrDefault()?.Sum_accident.ToString())
+                            .Replace("(NO_OF_FATALITIES)", HSE_ACCIDENT_Consequences?.FirstOrDefault()?.sum_accident.ToString())
+                            .Replace("(NO_OF_SPILLS)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.Sabotage)?.FirstOrDefault()?.sum_accident.ToString())
+                            .Replace("(NO_OF_RELEASE)", HSE_VOLUME_OF_OILSPILL.ToString())
+                            .Replace("(PERCENTAGE_OF_SABOTAGE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.Sabotage)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
+                            .Replace("(PERCENTAGE_OF_EQUIPMENT_FAILURE)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.EquipmentFailure)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
+                            .Replace("(PERCENTAGE_OF_HUMAN_ERROR)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.HumanError)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
+                            .Replace("(PERCENTAGE_OF_MYSTERY_SPILLS)", HSE_ACCIDENT.Where(x => x.Cause == GeneralModel.MysterySpills)?.FirstOrDefault()?.Percentage_Spill.ToString() ?? "0")
+                        ;
 
+                        // get_ReportContent_2.Report_Content = get_ReportContent_2.Report_Content
+                        //     .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                        //     .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     .Replace("(N)", year)
+                        //     .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
+                        //     .Replace("(N - 1)", previousYear)
+                        //     .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                        //     ;
 
-                    WP_SUM_APPRAISAL_WELLS = WP_SUM_APPRAISAL_WELLS;
+                        var summaryReport = new ADMIN_WORK_PROGRAM_REPORTs_Model()
+                        {
+                            summary_1 = get_ReportContent_1.Report_Content
 
-                    var PRODUCTION_total_barrel_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == year);
-                    var JV_PRODUCTION_total_barrel_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.JV);
-                    var MF_PRODUCTION_total_barrel_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.MF);
-                    var PSC_PRODUCTION_total_barrel_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.PSC);
-                    var SR_PRODUCTION_total_barrel_PROPOSED = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == year && x.Contract_Type == GeneralModel.SR);
+                            //summary_2 = get_ReportContent_2.Report_Content,
+                        };
 
-                    var Planned_Terrain_Continental_Shelf_or_Offshore = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNEDs.Where(x => x.Year_of_WP == year && x.Terrain == GeneralModel.ContinentalShelf).ToList();
-                    var Planned_Terrain_Continental_Onshore = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNEDs.Where(x => x.Year_of_WP == year && x.Terrain == GeneralModel.Onshore).ToList();
-                    var Planned_Terrain_Continental_DeepOffshore = _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNEDs.Where(x => x.Year_of_WP == year && x.Terrain == GeneralModel.DeepOffshore).ToList();
-                    var FlaringForecast = _context.WP_Gas_Production_Utilisation_And_Flaring_Forecasts.Where(x => x.Year_of_WP == year).ToList();
+                        #endregion
 
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data =WP_COUNT_Appraisal, StatusCode = ResponseCodes.Success };
+                        return summaryReport;
+                    }
+
+                    else
+                    {
+                        return "Error : No report summary has been configured yet.";
+                    }
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = WKP_Report, StatusCode = ResponseCodes.Success };
-
+                    return "Error : Year wasn't passed correctly";
                 }
             }
+            catch (Exception e)
+            {
 
+                return "Error : " + e.Message;
+
+            }
+            
+
+        }
+        [HttpGet("GET_SEISMIC_DATA_REPORT")]
+        public async Task<object> GET_SEISMIC_DATA_REPORT(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == year && x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                          where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                          group o by new { o.Year_of_WP } into g
+                                                                          select new
+                                                                          {
+                                                                              Year_of_WP = g.Key,
+                                                                              CompanyName = g.FirstOrDefault().CompanyName,
+                                                                              OML_Name = g.FirstOrDefault().OML_Name,
+                                                                              Terrain = g.FirstOrDefault().Terrain,
+                                                                              Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                              Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                              Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                              Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                              Quantum_Planned = g.Sum(x => Convert.ToDouble(x.Quantum_Planned))
+                                                                          }).ToListAsync();
+
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PREVIOUS = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == previousYear).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == twoYearsAgo).ToListAsync();
+
+                var text3data = await (from a in _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs where a.Year_of_WP == year && a.Geo_Type_of_Data_being_Processed == "3D" select a).FirstOrDefaultAsync();
+                var text3 = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 3 select a.Report_Content).FirstOrDefaultAsync();
+                var text3Modified = text3.Replace("(N)", year).Replace("(NO_OF_PROCESSED)", text3data.Processed_Actual.ToString()).Replace("(NO_OF_REPROCESSED)", text3data.Reprocessed_Actual.ToString() + " ");
+                WKP_Report2.GEOPHYSICAL_ACTIVITIES_PROCESSING_DESCRIPTION = text3Modified;
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                           where o.Year_of_WP == year
+                                                                                           group o by new { o.CompanyName, o.OML_Name, o.Terrain, o.Name_of_Contractor } into g
+                                                                                           select new
+                                                                                           {
+                                                                                               Year_of_WP = g.Key,
+                                                                                               CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                               OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                               Terrain = g.FirstOrDefault().Terrain,
+                                                                                               Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                               Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                               Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                               Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data))
+                                                                                               
+                                                                                           }).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                                   where o.Year_of_WP == proposedYear
+                                                                                                   group o by new { o.CompanyName } into g
+                                                                                                   select new
+                                                                                                   {
+                                                                                                       Year_of_WP = g.Key,
+                                                                                                       CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                       OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                       Terrain = g.FirstOrDefault().Terrain,
+                                                                                                       Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                       Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                       Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                       Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data))
+
+                                                                                                   }).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                            where o.Year_of_WP == previousYear
+                                                                                            group o by new { o.CompanyName, o.OML_Name, o.Terrain, o.Name_of_Contractor } into g
+                                                                                            select new
+                                                                                            {
+                                                                                                Year_of_WP = g.Key,
+                                                                                                CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                Terrain = g.FirstOrDefault().Terrain,
+                                                                                                Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data))
+
+                                                                                            }).ToListAsync();
+
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                                 where o.Year_of_WP == twoYearsAgo
+                                                                                                 group o by new { o.CompanyName } into g
+                                                                                                 select new
+                                                                                                 {
+                                                                                                     Year_of_WP = g.Key,
+                                                                                                     CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                     OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                     Terrain = g.FirstOrDefault().Terrain,
+                                                                                                     Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                     Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                     Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                     Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                                 }).ToListAsync();
+            }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Failure };
+
+             return "Error : " + e.Message;
             }
-            
+
+            return WKP_Report2;
+        }
+        [HttpGet("GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT")]
+        public async Task<object> GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Exploration).ToListAsync();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.ToLower().Contains(GeneralModel.Appraisal.ToLower())).ToListAsync();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development = await _context.WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Development).ToListAsync();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration_PY = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category == GeneralModel.Exploration).ToListAsync();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal_PY = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category.ToLower().Contains(GeneralModel.Appraisal.ToLower())).ToListAsync();
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development_PY = await _context.WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category == GeneralModel.Development).ToListAsync();
+
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+        [HttpGet("GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS")]
+        public async Task<object> GET_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+                
+                WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS = await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS_PY = await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year && x.Actual_Proposed == "Actual Year").ToListAsync();
+
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+            }
+
+            return WKP_Report2;
+        }
+        [HttpGet("GET_NIGERIA_CONTENT")]
+        public async Task<object> GET_NIGERIA_CONTENT(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.NIGERIA_CONTENT_TRAINING_PY = await _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year && x.Actual_Proposed == "Proposed Year").ToListAsync();
+
+                WKP_Report2.NIGERIA_CONTENT_TRAINING = await _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.NIGERIA_CONTENT_UPLOAD_SUCESSION_PLAN = await _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(x => x.Year_of_WP == year).ToListAsync();
+
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
         }
 
-        [HttpGet("CONCESSIONSINFORMATION")]
-        public async Task<WebApiResponse> Get_ADMIN_CONCESSIONS_INFORMATION_BY_CURRENT_YEAR(string year = null)
+        [HttpGet("GET_OIL_GAS_CONDENSATE_PRODUCTION_ACTIVITIES")]
+        public async Task<object> GET_OIL_GAS_CONDENSATE_PRODUCTION_ACTIVITIES(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT = await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_OPERATING_FACILITIES = await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x => x.Fiveyear_Projection_Year == proposedYear).ToListAsync();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_C_TYPE_PROPOSED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+
+                //error WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_PRODUCTION_BRKDWN_PLANNED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdown_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNED = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+
+                WKP_Report2.GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNED = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+
+               
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+        [HttpGet("GET_BUDGET")]
+        public async Task<object> GET_BUDGET(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIES = await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIES = await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT = await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.BUDGET_PERFORMANCE_PRODUCTION_COST = await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.STRATEGIC_PLANS_ON_COMPANY_BASIS = await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(x => x.Year_of_WP == year).ToListAsync();
+
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+        [HttpGet("GET_HSE")]
+        public async Task<object> GET_HSE(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+
+                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x => x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
+
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.HSE_CAUSES_OF_SPILL = await _context.HSE_CAUSES_OF_SPILLs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+        [HttpGet("GET_RESERVES")]
+        public async Task<object> GET_RESERVES(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+
+                WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x => x.Fiveyear_Projection_Year == proposedYear).ToListAsync();
+
+                //error WKP_Report2.RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED = await _context.WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTEDs.ToListAsync();
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+
+
+        [HttpGet("Get_General_Report")]
+        public async Task<object> Get_General_Report(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == year && x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                   where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                   group o by new { o.Year_of_WP } into g
+                                                                   select new 
+                                                                   {
+                                                                       Year_of_WP = g.Key,
+                                                                       CompanyName = g.FirstOrDefault().CompanyName,
+                                                                       OML_Name = g.FirstOrDefault().OML_Name,
+                                                                       Terrain = g.FirstOrDefault().Terrain,
+                                                                       Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                       Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                       Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                       Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                       Quantum_Planned = g.Sum(x => Convert.ToDouble(x.Quantum_Planned)),
+
+                                                                   }).ToListAsync();
+                
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PREVIOUS = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == previousYear ).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == twoYearsAgo).ToListAsync();
+
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                  where o.Year_of_WP == year 
+                                                                  group o by new { o.CompanyName } into g
+                                                                  select new
+                                                                  {
+                                                                      Year_of_WP = g.Key,
+                                                                      CompanyName = g.FirstOrDefault().CompanyName,
+                                                                      OML_Name = g.FirstOrDefault().OML_Name,
+                                                                      Terrain = g.FirstOrDefault().Terrain,
+                                                                      Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                      Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                      Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                      Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                  }).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                  where o.Year_of_WP == proposedYear 
+                                                                  group o by new { o.CompanyName } into g
+                                                                  select new
+                                                                  {
+                                                                      Year_of_WP = g.Key,
+                                                                      CompanyName = g.FirstOrDefault().CompanyName,
+                                                                      OML_Name = g.FirstOrDefault().OML_Name,
+                                                                      Terrain = g.FirstOrDefault().Terrain,
+                                                                      Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                      Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                      Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                      Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                  }).ToListAsync();
+                
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                    where o.Year_of_WP == previousYear
+                                                                           group o by new { o.CompanyName } into g
+                                                                           select new
+                                                                           {
+                                                                               Year_of_WP = g.Key,
+                                                                               CompanyName = g.FirstOrDefault().CompanyName,
+                                                                               OML_Name = g.FirstOrDefault().OML_Name,
+                                                                               Terrain = g.FirstOrDefault().Terrain,
+                                                                               Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                               Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                               Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                               Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                           }).ToListAsync();
+
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                    where o.Year_of_WP == twoYearsAgo
+                                                                                    group o by new { o.CompanyName } into g
+                                                                                    select new
+                                                                                    {
+                                                                                        Year_of_WP = g.Key,
+                                                                                        CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                        OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                        Terrain = g.FirstOrDefault().Terrain,
+                                                                                        Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                        Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                        Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                        Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                    }).ToListAsync();
+
+
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Exploration).ToListAsync();
+               
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal   = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.ToLower().Contains( GeneralModel.Appraisal.ToLower() )).ToListAsync();
+                
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development = await _context.WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Development ).ToListAsync();
+                
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration_PY = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category == GeneralModel.Exploration).ToListAsync();
+               
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal_PY   = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category.ToLower().Contains( GeneralModel.Appraisal.ToLower() )).ToListAsync();
+                
+                WKP_Report2.DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development_PY = await _context.WP_COUNT_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == proposedYear && x.Category == GeneralModel.Development ).ToListAsync();
+                
+                //err WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENTs.Where(x => x.Company_Reserves_Year == proposedYear ).ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTIONs.Where(x => x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs.Where(x => x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_years.Where(x => x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_Pivotted = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_Pivotteds.ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoted = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoteds.ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdowns.ToListAsync();
+
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flareds.ToListAsync();
+
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_contract_type_basis = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_bases.ToListAsync();
+
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_terrain_pivotted = await _context.WP_GAS_PRODUCTION_ACTIVITIES_terrain_pivotteds.ToListAsync();
+
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_contract_type_pivoted = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_pivoteds.ToListAsync();
+
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_penalty_payment = await _context.WP_GAS_PRODUCTION_ACTIVITIES_penalty_payments.ToListAsync();
+
+                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=>x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
+
+                //WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS = await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year && x.Actual_Proposed == "Actual Year").ToListAsync();
+
+                WKP_Report2.NIGERIA_CONTENT_TRAINING_PY = await _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year && x.Actual_Proposed == "Proposed Year").ToListAsync();
+
+                WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS = await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year ).ToListAsync();
+
+                WKP_Report2.NIGERIA_CONTENT_TRAINING = await _context.NIGERIA_CONTENT_Trainings.Where(x => x.Year_of_WP == year ).ToListAsync();
+
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT = await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(x=>x.Year_of_WP == year).ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_OPERATING_FACILITIES = await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Operating_Facilities.Where(x=>x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.NIGERIA_CONTENT_UPLOAD_SUCESSION_PLAN = await _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(x=>x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(x=>x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Where(x=>x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(x=>x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIES = await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Where(x=>x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIES = await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Where(x=>x.Year_of_WP == year ).ToListAsync();
+                
+                WKP_Report2.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT = await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Where(x=>x.Year_of_WP == year ).ToListAsync();
+
+                WKP_Report2.BUDGET_PERFORMANCE_PRODUCTION_COST = await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                WKP_Report2.STRATEGIC_PLANS_ON_COMPANY_BASIS = await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(x => x.Year_of_WP == year).ToListAsync();
+
+
+
+                //WP_OML_WEIGHTED_SCORE_UNION_ALL_COMPANIES_by_Contract_Type_new
+                //WKP_Report2.OML_WEIGHTED_SCORE_UNION_COMPANIES_BY_CONTRACT_TYPE__JV = await _context.WP_OML_WEIGHTED_SCORE_UNION_ALL_COMPANIES_by_Contract_Type_news.Where(x=>x.Year_of_WP == year &&  x.Contract_Type == GeneralModel.JV).ToListAsync().orderbyweightedscore;
+                //WKP_Report2.OML_WEIGHTED_SCORE_UNION_COMPANIES_BY_CONTRACT_TYPE__JV = await _context.WP_OML_WEIGHTED_SCORE_UNION_ALL_COMPANIES_by_Contract_Type_news.Where(x=>x.Year_of_WP == year &&  x.Contract_Type == GeneralModel.PSC).ToListAsync();
+                //WKP_Report2.OML_WEIGHTED_SCORE_UNION_COMPANIES_BY_CONTRACT_TYPE__JV = await _context.WP_OML_WEIGHTED_SCORE_UNION_ALL_COMPANIES_by_Contract_Type_news.Where(x=>x.Year_of_WP == year &&  x.Contract_Type == GeneralModel.SR).ToListAsync();
+                //WKP_Report2.OML_WEIGHTED_SCORE_UNION_COMPANIES_BY_CONTRACT_TYPE__JV = await _context.WP_OML_WEIGHTED_SCORE_UNION_ALL_COMPANIES_by_Contract_Type_news.Where(x=>x.Year_of_WP == year &&  x.Contract_Type == GeneralModel.MF).ToListAsync();
+                 
+                 //err WKP_Report2.OML_Aggregated_Score_ALL_COMPANIES = await _context.WP_OML_Aggregated_Score_ALL_COMPANIEs.Where(x => x.Year_of_WP == year).ToListAsync().OrderByDescending(x => x.OML_Aggregated_Score);
+               
+                 WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x => x.Fiveyear_Projection_Year == proposedYear).ToListAsync();
+
+                 WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED =       _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+                
+                 WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_C_TYPE_PROPOSED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+                 
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+               
+                //error WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+                
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_PRODUCTION_BRKDWN_PLANNED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdown_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+               
+                //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNED = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+                
+                WKP_Report2.GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNED = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+             
+                //error WKP_Report2.RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED = await _context.WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTEDs.ToListAsync();
+
+                WKP_Report2.HSE_CAUSES_OF_SPILL = await _context.HSE_CAUSES_OF_SPILLs.Where(x=> x.Year_of_WP == year ).ToListAsync();
+
+            }
+         
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+            
+            return WKP_Report2;
+        }
+
+        [HttpGet("Get_Summary_Report")]
+        public async Task<object> Get_Summary_Report(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                string previousYear = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string twoYearsAgo = year != null ? (int.Parse(year) - 1).ToString() : "";
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == year && x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                          where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                          group o by new { o.Year_of_WP } into g
+                                                                          select new
+                                                                          {
+                                                                              Year_of_WP = g.Key,
+                                                                              CompanyName = g.FirstOrDefault().CompanyName,
+                                                                              OML_Name = g.FirstOrDefault().OML_Name,
+                                                                              Terrain = g.FirstOrDefault().Terrain,
+                                                                              Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                              Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                              Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                              Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                              Quantum_Planned = g.Sum(x => Convert.ToDouble(x.Quantum_Planned)),
+
+                                                                          }).ToListAsync();
+
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PREVIOUS = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == previousYear).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == twoYearsAgo).ToListAsync();
+
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                           where o.Year_of_WP == year
+                                                                                           group o by new { o.CompanyName } into g
+                                                                                           select new
+                                                                                           {
+                                                                                               Year_of_WP = g.Key,
+                                                                                               CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                               OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                               Terrain = g.FirstOrDefault().Terrain,
+                                                                                               Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                               Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                               Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                               Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                           }).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                                   where o.Year_of_WP == proposedYear
+                                                                                                   group o by new { o.CompanyName } into g
+                                                                                                   select new
+                                                                                                   {
+                                                                                                       Year_of_WP = g.Key,
+                                                                                                       CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                       OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                       Terrain = g.FirstOrDefault().Terrain,
+                                                                                                       Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                       Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                       Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                       Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                                   }).ToListAsync();
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                            where o.Year_of_WP == previousYear
+                                                                                            group o by new { o.CompanyName } into g
+                                                                                            select new
+                                                                                            {
+                                                                                                Year_of_WP = g.Key,
+                                                                                                CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                Terrain = g.FirstOrDefault().Terrain,
+                                                                                                Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                            }).ToListAsync();
+
+
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                                                 where o.Year_of_WP == twoYearsAgo
+                                                                                                 group o by new { o.CompanyName } into g
+                                                                                                 select new
+                                                                                                 {
+                                                                                                     Year_of_WP = g.Key,
+                                                                                                     CompanyName = g.FirstOrDefault().CompanyName,
+                                                                                                     OML_Name = g.FirstOrDefault().OML_Name,
+                                                                                                     Terrain = g.FirstOrDefault().Terrain,
+                                                                                                     Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                                                     Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                                     Quantum_Approved = g.Sum(x => Convert.ToDouble(x.Quantum_Approved)),
+                                                                                                     Geo_Quantum_of_Data = g.Sum(x => Convert.ToDouble(x.Geo_Quantum_of_Data)),
+
+                                                                                                 }).ToListAsync();
+
+
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+
+            return WKP_Report2;
+        }
+        [HttpGet("Get_Exploration_Report")]
+        public async Task<object> Get_Exploration_Report(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+               var Exploration_Report = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category == GeneralModel.Exploration).ToListAsync();
+               return Exploration_Report;
+            }
+
+            catch (Exception e)
+            {
+                return "Error : " + e.Message;
+            }
+        }
+        
+        [HttpGet("Get_Appraisal_Report")]
+        public async Task<object> Get_Appraisal_Report(string year)
+        {
+            try
+            {
+                var Appraisal_Report = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.ToLower().Contains(GeneralModel.Appraisal.ToLower())).ToListAsync();
+                return Appraisal_Report;
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+        }
+        
+        [HttpGet("Get_Development_Report")]
+        public async Task<object> Get_Development_Report(string year)
+        {
+            try
+            {
+                var Development_Report = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x => x.Year_of_WP == year && x.Category.ToLower().Contains(GeneralModel.Development.ToLower())).ToListAsync();
+                return Development_Report;
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+        }
+
+        [HttpGet("Get_Reserves_Updates_Report")]
+        public async Task<object> Get_Reserves_Updates_Report(string year)
+        {
+            try
+            {
+                var Reserves_Updates_Report = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENTs.Where(x => x.Company_Reserves_Year == year ).ToListAsync();
+                return Reserves_Updates_Report;
+            }
+
+            catch (Exception e)
+            {
+
+             return "Error : " + e.Message;
+
+            }
+        }
+        
+        [HttpGet("Get_Crude_Oil_Production_Report")]
+        public async Task<object> Get_Crude_Oil_Production_Report(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                var Crude_Oil_Production = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTIONs.Where(x => x.Year_of_WP == year).ToListAsync();
+                var Crude_Oil_Production_By_Contract_Basis = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTIONs.Where(x => x.Year_of_WP == year).ToListAsync();
+                var Crude_Oil_Monthly_Production = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_years.Where(x => x.Year_of_WP == year).ToListAsync();
+                var Crude_Oil_Production_By_Terrain = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == year).ToListAsync();
+                var Crude_Oil_Production_By_ContractType_Pivotted = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_Pivotteds.ToListAsync();
+                var Crude_Oil_Production_By_Terrain_Pivotted = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoteds.ToListAsync();
+                var Crude_Oil_Monthly_Production_Pivotted = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdowns.ToListAsync();
+                var Crude_Oil_Monthly_Activities_Pivotted_Breakdown = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdown_PLANNEDs.Where(x => x.Year_of_WP == year).OrderBy(x=> x.CompanyName).ToListAsync();
+                var Company_RRR_Pivotted = await _context.WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTEDs.ToListAsync();
+                var Nation_RRR_Pivotted = await _context.WP_RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTEDs.ToListAsync();
+                  
+                
+                return new
+                {
+                    Crude_Oil_Production = Crude_Oil_Production,
+                    Crude_Oil_Production_By_Contract_Basis = Crude_Oil_Production_By_Contract_Basis,
+                    Crude_Oil_Monthly_Production = Crude_Oil_Monthly_Production,
+                    Crude_Oil_Production_By_Terrain = Crude_Oil_Production_By_Terrain,
+                    Crude_Oil_Production_By_ContractType_Pivotted = Crude_Oil_Production_By_ContractType_Pivotted,
+                    Crude_Oil_Production_By_Terrain_Pivotted = Crude_Oil_Production_By_Terrain_Pivotted,
+                    Crude_Oil_Monthly_Production_Pivotted = Crude_Oil_Monthly_Production_Pivotted,
+                    Crude_Oil_Monthly_Activities_Pivotted_Breakdown= Crude_Oil_Monthly_Activities_Pivotted_Breakdown,
+                    Company_RRR_Pivotted = Company_RRR_Pivotted,
+                    Nation_RRR_Pivotted= Nation_RRR_Pivotted,
+
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Gas_Production_Report")]
+        public async Task<object> Get_Gas_Production_Report(string year)
+        {
+            WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
+
+            try
+            {
+                var Gas_Produced_Utilized_Flared = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flareds.Where(x=> x.Year_of_WP == year).ToListAsync();
+                var Gas_Produced_Utilized_By_Contract_Basis = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_bases.ToListAsync();
+                var Gas_Produced_Utilized_By_Contract_Basis_Pivotted = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_pivoteds.ToListAsync();
+                var Gas_Produced_Utilized_By_Terrain_Pivotted = await _context.WP_GAS_PRODUCTION_ACTIVITIES_terrain_pivotteds.ToListAsync();
+                var Gas_Flare_Penalty = await _context.WP_GAS_PRODUCTION_ACTIVITIES_penalty_payments.Where(x => x.Year_of_WP == year).ToListAsync();
+
+                return new
+                {
+                    Gas_Produced_Utilized_Flared = Gas_Produced_Utilized_Flared,
+                    Gas_Produced_Utilized_By_Contract_Basis = Gas_Produced_Utilized_By_Contract_Basis,
+                    Gas_Produced_Utilized_By_Contract_Basis_Pivotted = Gas_Produced_Utilized_By_Contract_Basis_Pivotted,
+                    Gas_Produced_Utilized_By_Terrain_Pivotted = Gas_Produced_Utilized_By_Terrain_Pivotted,
+                    Gas_Flare_Penalty = Gas_Flare_Penalty
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Accident_Statistics_Report")]
+        public async Task<object> Get_Accident_Statistics_Report(string year)
         {
 
+            try
+            {
+                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
+                var Causes_Of_Spill = await _context.HSE_CAUSES_OF_SPILLs.Where(x=> x.Year_of_WP == year).OrderBy(x=> x.CompanyName).ToListAsync();
+                return new
+                {
+                        Accident_Statistics_Facility = Accident_Statistics_Facility,
+                        Causes_Of_Spill = Causes_Of_Spill
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Facilities_Report")]
+        public async Task<object> Get_Facilities_Report(string year)
+        {
+
+            try
+            {
+                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
+                var Causes_Of_Spill = await _context.HSE_CAUSES_OF_SPILLs.Where(x=> x.Year_of_WP == year).OrderBy(x=> x.CompanyName).ToListAsync();
+                return new
+                {
+                        Accident_Statistics_Facility = Accident_Statistics_Facility,
+                        Causes_Of_Spill = Causes_Of_Spill
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Facilities_Projects_Report")]
+        public async Task<object> Get_Facilities_Projects_Report(string year)
+        {
+
+            try
+            {
+                var Major_Projects = await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=> x.Year_of_WP == year && x.Actual_Proposed == "Actual Year").ToListAsync();
+                var New_Technology_Conformity = await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(x=> x.Year_of_WP == year).ToListAsync();
+                
+                return new
+                {
+                    Major_Projects = Major_Projects,
+                    New_Technology_Conformity = New_Technology_Conformity
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }  
+        [HttpGet("Get_Nigeria_Content_Report")]
+        public async Task<object> Get_Nigeria_Content_Report(string year)
+        {
+
+            try
+            {
+                var Nigeria_Content = await _context.NIGERIA_CONTENT_Trainings.Where(x=> x.Year_of_WP == year && x.Actual_Proposed == "Actual Year").ToListAsync();
+                var Nigeria_Content_SuccessionPlan = await _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(x=> x.Year_of_WP == year && x.Actual_proposed == "Actual Year").ToListAsync();
+
+                    return new
+                    {
+                    Nigeria_Content = Nigeria_Content,
+                    Nigeria_Content_SuccessionPlan = Nigeria_Content_SuccessionPlan
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Sustainable_Community_Development_Report")]
+        public async Task<object> Get_Sustainable_Community_Development_Report(string year)
+        {
+
+            try
+            {
+                var Capital_Projects = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(x=> x.Year_of_WP == year && x.Actual_proposed == "Actual Year").ToListAsync();
+                var Scholarship = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Where(x=> x.Year_of_WP == year && x.Actual_proposed == "Actual Year").ToListAsync();
+                var Training_Skill_Acquisition = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(x=> x.Year_of_WP == year && x.Actual_proposed == "Actual Year").ToListAsync();
+
+                    return new
+                    {
+                        Capital_Projects = Capital_Projects,
+                        Scholarship = Scholarship,
+                        Training_Skill_Acquisition = Training_Skill_Acquisition,
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Budget_Performance_Report")]
+        public async Task<object> Get_Budget_Performance_Report(string year)
+        {
+
+            try
+            {
+                var Exploratory_Activities = await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Where(x=> x.Year_of_WP == year).ToListAsync();
+                var Development_Activities = await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Where(x=> x.Year_of_WP == year).ToListAsync();
+                var Facilities_Development_Projects = await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Where(x=> x.Year_of_WP == year).ToListAsync();
+                var Production_Costs = await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Where(x=> x.Year_of_WP == year).ToListAsync();
+
+                    return new
+                    {
+                        Exploratory_Activities = Exploratory_Activities,
+                        Development_Activities= Development_Activities,
+                        Facilities_Development_Projects= Facilities_Development_Projects,
+                        Production_Costs = Production_Costs,
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Planned_Seismic_Activities_Report")]
+        public async Task<object> Get_Planned_Seismic_Activities_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                var Planned_Seismic_Activities = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                         where o.proposed_year == proposedYear && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                         group o by new
+                                                                         {
+                                                                             o.CompanyName,
+                                                                             o.OML_Name, o.Name_of_Contractor, o.Terrain,
+                                                                             o.Geo_type_of_data_acquired,
+                                                                         }
+                                                                        into g
+                                                                         select new 
+                                                                         {
+                                                                             Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                             Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                             Quantum_Approved = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Quantum_Approved))),
+                                                                             Quantum_Planned = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Quantum_Planned))),
+                                                                             Year_of_WP = g.FirstOrDefault().Year_of_WP,
+                                                                             OML_Name = g.FirstOrDefault().OML_Name,
+                                                                             CompanyName = g.FirstOrDefault().CompanyName,
+                                                                             Terrain = g.FirstOrDefault().Terrain,
+                                                                             Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                         }).ToListAsync();  
+                
+                var Planned_Seismic_Processing_Reprocessing = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                                                                     where o.proposed_year == proposedYear 
+                                                                         group o by new
+                                                                         {
+                                                                             o.CompanyName,
+                                                                             o.OML_Name,
+                                                                             o.Name_of_Contractor,
+                                                                             o.Terrain,
+                                                                         }
+                                                                        into g
+                                                                         select new 
+                                                                         {
+                                                                             Quantum_Approved = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Quantum_Approved))),
+                                                                             Quantum_Planned = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Quantum_Planned))),
+                                                                             OML_Name = g.FirstOrDefault().OML_Name,
+                                                                             CompanyName = g.FirstOrDefault().CompanyName,
+                                                                             Terrain = g.FirstOrDefault().Terrain,
+                                                                             Name_of_Contractor = g.FirstOrDefault().Name_of_Contractor,
+                                                                         }).ToListAsync();
+
+
+                    return new
+                    {
+                        Planned_Seismic_Activities = Planned_Seismic_Activities,
+                        Planned_Seismic_Processing_Reprocessing = Planned_Seismic_Processing_Reprocessing,
+
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Planned_Exploration_Report")]
+        public async Task<object> Get_Planned_Exploration_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                var Planned_Exploration_Wells = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x=>x.Year_of_WP == year && x.Category == GeneralModel.Exploration).ToListAsync();
+                var Planned_Appraisal_Wells = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x=>x.Year_of_WP == year && x.Category.Contains( GeneralModel.Appraisal)).ToListAsync();
+                var Planned_Develoment_Wells = await _context.Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(x=>x.Year_of_WP == year && x.Category== GeneralModel.Development).ToListAsync();
+                
+                    return new
+                    {
+                        Planned_Exploration_Wells = Planned_Exploration_Wells,
+                        Planned_Appraisal_Wells = Planned_Appraisal_Wells,
+                        Planned_Develoment_Wells = Planned_Develoment_Wells,
+
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Research_Forecast_Report")]
+        public async Task<object> Get_Research_Forecast_Report(string year)
+        {
+
+            try
+            {
+
+                var Research_Forecast = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x=>x.Fiveyear_Projection_Year == year).ToListAsync();
+               
+                    return new
+                    {
+                        Research_Forecast = Research_Forecast
+
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Projected_Oil_Production_Report")]
+        public async Task<object> Get_Projected_Oil_Production_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+
+                var Projected_Oil_Production = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSEDs.Where(x=>x.Year_of_WP == proposedYear).ToListAsync();
+                var Oil_Production_Forecast_By_ContractBasis = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x=>x.Year_of_WP == proposedYear).ToListAsync();
+                var Monthly_Production_Forecast = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSEDs.Where(x=>x.Year_of_WP == proposedYear).ToListAsync();
+                var Oil_Production_Forecast_ByTerrainBasis = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+                var Crude_Oil_Production_ByContractBasis_BBLs_Pivotted = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_Pivotteds.ToListAsync();
+                var Crude_Oil_Production_ByTerrainBasis_BBLs_Pivotted = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoteds.ToListAsync();
+                var Breakdown_of_Reconciled_Oil_Production = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year_breakdowns.Where(x=> x.Year_of_WP == year).OrderBy(x=>x.CompanyName).ToListAsync();
+                
+                return new
+                    {
+                        Projected_Oil_Production = Projected_Oil_Production,
+                        Oil_Production_Forecast_By_ContractBasis = Oil_Production_Forecast_By_ContractBasis,
+                        Monthly_Production_Forecast = Monthly_Production_Forecast,
+                        Oil_Production_Forecast_ByTerrainBasis= Oil_Production_Forecast_ByTerrainBasis,
+                        Crude_Oil_Production_ByContractBasis_BBLs_Pivotted = Crude_Oil_Production_ByContractBasis_BBLs_Pivotted,
+                        Crude_Oil_Production_ByTerrainBasis_BBLs_Pivotted = Crude_Oil_Production_ByTerrainBasis_BBLs_Pivotted,
+                        Breakdown_of_Reconciled_Oil_Production = Breakdown_of_Reconciled_Oil_Production,
+
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Gas_Production_Utilization_Report")]
+        public async Task<object> Get_Gas_Production_Utilization_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+                
+                var Gas_Production_Utilization_Forecast = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNEDs.Where(x=>x.Year_of_WP == proposedYear).OrderBy(x=> x.CompanyName).ToListAsync();
+                var Gas_Production_Utilization_Forecast_By_ContractBasis = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNEDs.Where(x=>x.Year_of_WP == proposedYear).ToListAsync();
+                
+                return new
+                    {
+                    Gas_Production_Utilization_Forecast = Gas_Production_Utilization_Forecast,
+                    Gas_Production_Utilization_Forecast_By_ContractBasis = Gas_Production_Utilization_Forecast_By_ContractBasis,
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Proposed_Facility_Project_Report")]
+        public async Task<object> Get_Proposed_Facility_Project_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+                
+                var Proposed_Facility_Project = await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year && x.Actual_Proposed == GeneralModel.ProposedYear).OrderBy(x=> x.CompanyName).ToListAsync();
+                
+                return new
+                    {
+                    Proposed_Facility_Project = Proposed_Facility_Project,
+                    };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Nigeria_Content_Planning_Report")]
+        public async Task<object> Get_Nigeria_Content_Planning_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+                
+                var Nigeria_Content_Planning = await _context.NIGERIA_CONTENT_Trainings.Where(x=>x.Year_of_WP == year && x.Actual_Proposed == GeneralModel.ProposedYear).OrderBy(x=> x.CompanyName).ToListAsync();
+                var Proposed_Succession_Plans = await _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(x=>x.Year_of_WP == year && x.Actual_proposed == GeneralModel.ProposedYear).OrderBy(x=> x.CompanyName).ToListAsync();
+                
+                return new
+                    {
+                    Nigeria_Content_Planning = Nigeria_Content_Planning,
+                    Proposed_Succession_Plans= Proposed_Succession_Plans
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Planned_SDCP_Report")]
+        public async Task<object> Get_Planned_SDCP_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+                
+                var Capital_Projects = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(x=>x.Year_of_WP == year && x.Actual_proposed == GeneralModel.ProposedYear).OrderBy(x=> x.CompanyNumber).ToListAsync();
+                var Proposed_Scholarships = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Where(x=>x.Year_of_WP == year && x.Actual_proposed == GeneralModel.ProposedYear).OrderBy(x=> x.CompanyName).ToListAsync();
+                var Proposed_Training_Skills_Acquisition = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(x=>x.Year_of_WP == year && x.Actual_proposed == GeneralModel.ProposedYear).OrderBy(x=> x.CompanyName).ToListAsync();
+                
+                return new
+                    {
+                    Capital_Projects = Capital_Projects,
+                    Proposed_Scholarships = Proposed_Scholarships,
+                    Proposed_Training_Skills_Acquisition= Proposed_Training_Skills_Acquisition
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        } 
+        [HttpGet("Get_Planned_Budget_Report")]
+        public async Task<object> Get_Planned_Budget_Report(string year)
+        {
+
+            try
+            {
+                string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
+                
+                var Proposed_Exploratory_Activities = await _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs.Where(x=> x.Year_of_WP == year ).OrderBy(x=> x.CompanyNumber).ToListAsync();
+                var Proposed_DevelopmentDrilling_Activities = await _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs.Where(x=>x.Year_of_WP == year).OrderBy(x=> x.CompanyNumber).ToListAsync();
+                var Proposed_FacilityDevelopmentProjects_Activities = await _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Where(x=>x.Year_of_WP == year).OrderBy(x=> x.CompanyNumber).ToListAsync();
+                var Planned_ProductionCost = await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Where(x=>x.Year_of_WP == year).OrderBy(x=> x.CompanyNumber).ToListAsync();
+                
+                return new
+                    {
+                    Proposed_Exploratory_Activities = Proposed_Exploratory_Activities,
+                    Proposed_DevelopmentDrilling_Activities = Proposed_DevelopmentDrilling_Activities,
+                    Proposed_FacilityDevelopmentProjects_Activities = Proposed_FacilityDevelopmentProjects_Activities,
+                    Planned_ProductionCost = Planned_ProductionCost,
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+        [HttpGet("Get_Strategic_Plan_Report")]
+        public async Task<object> Get_Strategic_Plan_Report(string year)
+        {
+
+            try
+            {                
+                var Strategic_Plan = await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(x=> x.Year_of_WP == year ).ToListAsync();
+                
+                return new
+                    {
+                    Strategic_Plan = Strategic_Plan
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+       
+        #endregion
 
 
 
+        [HttpGet("CONCESSIONSINFORMATION")]
+        public async Task<WebApiResponse> Get_ADMIN_CONCESSIONS_INFORMATION_BY_CURRENT_YEAR(string year)
+        {
 
             try { 
             var dateYear = DateTime.Now.AddYears(0).ToString("yyyy");
             var ConcessionsInformation = new List<ADMIN_CONCESSIONS_INFORMATION>();
 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.DELETED_STATUS == null).ToList();
-            }
+                ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.DELETED_STATUS == null).ToListAsync();
+            } 
             else
             {
-                ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.Company_ID == WKPUserId && c.DELETED_STATUS == null).ToList();
+                ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.Company_ID == WKPCompanyId && c.DELETED_STATUS == null).ToListAsync();
             }
 
             if (year != null)
             {
-                ConcessionsInformation = _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == year).ToList();
+                ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ConcessionsInformation, StatusCode = ResponseCodes.Success };
@@ -324,24 +1653,34 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
+        [HttpGet("REPORTS_YEARLIST")]
+        public async Task<object> REPORTS_YEARLIST()
+        {
+            int portalDate =int.Parse( _configuration.GetSection("AppSettings").GetSection("portalDate").Value.ToString()); 
+            var yearList = from n in Enumerable.Range(0, (DateTime.Now.Year - portalDate) + 1)
+                             select (DateTime.Now.Year -  n).ToString();
+
+            return yearList;
+        }
+
         [HttpGet("CONCESSIONSITUATION")]
-        public async Task<WebApiResponse> Get_CONCESSION_SITUATION(string year = null )
+        public async Task<WebApiResponse> Get_CONCESSION_SITUATION(string year )
         {
 
             var ConcessionSituation = new List<CONCESSION_SITUATION>();
             try { 
 
-                if (WKPUserRole == GeneralModel.Admin)
+                if (WKUserRole == GeneralModel.Admin)
                 {
-                    ConcessionSituation = _context.CONCESSION_SITUATIONs.Where(c => c.Year == year).ToList();
+                    ConcessionSituation =await _context.CONCESSION_SITUATIONs.Where(c => c.Year == year).ToListAsync();
                 }
                 else
                 {
-                    ConcessionSituation = _context.CONCESSION_SITUATIONs.Where(c => c.Year == year && c.COMPANY_ID == WKPUserId).ToList();
+                    ConcessionSituation =await _context.CONCESSION_SITUATIONs.Where(c => c.Year == year && c.COMPANY_ID == WKPCompanyId && c.Year == year).ToListAsync();
                 }
 
 
@@ -350,24 +1689,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
         }
-
         
         [HttpGet("GEOPHYSICALACTIVITIES")]
-        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year = null )
+        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_ACQUISITION(string year )
         {
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_ACQUISITION>();
             try
             {
-                if (WKPUserRole == GeneralModel.Admin)
+                if (WKUserRole == GeneralModel.Admin)
                 {
-                    GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(c => c.Year_of_WP == year).ToList();
+                    GEOPHYSICALACTIVITIES =await _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(c => c.Year_of_WP == year).ToListAsync();
                 }
                 else
                 {
-                    GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
+                    GEOPHYSICALACTIVITIES =await _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
                 }
 
 
@@ -376,24 +1714,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
       
       
         [HttpGet("GEOPHYSICALPROCESSING")]
-        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year = null )
+        public async Task<WebApiResponse> Get_GEOPHYSICAL_ACTIVITIES_PROCESSING(string year )
         {
 
             var GEOPHYSICALACTIVITIES = new List<GEOPHYSICAL_ACTIVITIES_PROCESSING>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(c => c.Year_of_WP == year).ToList();
+                GEOPHYSICALACTIVITIES =await _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                GEOPHYSICALACTIVITIES = _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
+                GEOPHYSICALACTIVITIES =await _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
 
@@ -402,25 +1740,25 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
 
         [HttpGet("DRILLING-OPERATIONS")]
-        public async Task<WebApiResponse> Get_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS(string year = null )
+        public async Task<WebApiResponse> Get_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS(string year )
         {
 
             var DRILLING_OPERATIONS = new List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
-            {
-                DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year).ToList();
-            }
-            else
-            {
-                DRILLING_OPERATIONS = _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
-            }
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    DRILLING_OPERATIONS =await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    DRILLING_OPERATIONS =await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
 
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = DRILLING_OPERATIONS.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -428,23 +1766,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
         
         [HttpGet("WORKOVERS_RECOMPLETION")]
-        public async Task<WebApiResponse> Get_WORKOVERS_RECOMPLETION_JOBs(string year = null )
+        public async Task<WebApiResponse> Get_WORKOVERS_RECOMPLETION_JOBs(string year )
         {
             var WORKOVERS_RECOMPLETION = new List<WORKOVERS_RECOMPLETION_JOB1>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                WORKOVERS_RECOMPLETION = _context.WORKOVERS_RECOMPLETION_JOBs1.Where(c => c.Year_of_WP == year).ToList();
+                WORKOVERS_RECOMPLETION =await _context.WORKOVERS_RECOMPLETION_JOBs1.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                WORKOVERS_RECOMPLETION = _context.WORKOVERS_RECOMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
+                WORKOVERS_RECOMPLETION =await _context.WORKOVERS_RECOMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
 
@@ -453,23 +1791,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
          
         [HttpGet("INITIAL_WELLCOMPLETION")]
-        public async Task<WebApiResponse> Get_INITIAL_WELL_COMPLETION(string year = null )
+        public async Task<WebApiResponse> Get_INITIAL_WELL_COMPLETION(string year )
         {
             var INITIAL_WELLCOMPLETION = new List<INITIAL_WELL_COMPLETION_JOB1>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                INITIAL_WELLCOMPLETION = _context.INITIAL_WELL_COMPLETION_JOBs1.Where(c => c.Year_of_WP == year).ToList();
+                INITIAL_WELLCOMPLETION =await _context.INITIAL_WELL_COMPLETION_JOBs1.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                INITIAL_WELLCOMPLETION = _context.INITIAL_WELL_COMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPUserId).ToList();
+                INITIAL_WELLCOMPLETION =await _context.INITIAL_WELL_COMPLETION_JOBs1.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
 
@@ -478,173 +1816,148 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
 
         [HttpGet("FDP_EXPECTED_RESERVES")]
-        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_EXPECTED_RESERVES(string year = null )
+        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_EXPECTED_RESERVES(string year )
         {
             var FDP_Reserves = new List<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.ToList();
+                FDP_Reserves =await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Where(c=> c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
+                FDP_Reserves =await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            if(year != null)
-            {
-                FDP_Reserves = FDP_Reserves.Where(c => c.Year_of_WP == year).ToList();
-            }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = FDP_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
 
         [HttpGet("FDP_TOSUBMIT")]
-        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_TOBESUBMITTED(string year = null )
+        public async Task<WebApiResponse> Get_FIELD_DEVELOPMENT_PLAN_TOBESUBMITTED(string year )
         {
             var FDP_Reserves = new List<FIELD_DEVELOPMENT_PLAN>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLANs.ToList();
+                FDP_Reserves =await _context.FIELD_DEVELOPMENT_PLANs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                FDP_Reserves = _context.FIELD_DEVELOPMENT_PLANs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
+                FDP_Reserves =await _context.FIELD_DEVELOPMENT_PLANs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            if(year != null)
-            {
-                FDP_Reserves = FDP_Reserves.Where(c => c.Year_of_WP == year).ToList();
-            }
-
+            
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = FDP_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
 
         [HttpGet("FDP_FIELDSTATUS")]
-        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year = null )
+        public async Task<WebApiResponse> FIELD_DEVELOPMENT_FIELDS_AND_STATUS(string year )
         {
             var FDP_Fields = new List<FIELD_DEVELOPMENT_FIELDS_AND_STATUS>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                FDP_Fields = _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.ToList();
+                FDP_Fields =await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Where(c=> c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                FDP_Fields = _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Where(c => c.COMPANY_ID == WKPUserId).ToList();
+                FDP_Fields =await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            if(year != null)
-            {
-                FDP_Fields = FDP_Fields.Where(c => c.Year_of_WP == year).ToList();
-            }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = FDP_Fields.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
 
         [HttpGet("NDR")]
-        public async Task<WebApiResponse> NDR(string year = null )
+        public async Task<WebApiResponse> NDR(string year )
         {
             var NDR = new List<NDR>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                NDR = _context.NDRs.ToList();
+                NDR =await _context.NDRs.Where(c=> c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                NDR = _context.NDRs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
+                NDR =await _context.NDRs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            if(year != null)
-            {
-                NDR = NDR.Where(c => c.Year_of_WP == year).ToList();
-            }
-
+            
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = NDR.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("OIL_CONDENSATE_PRODUCTION_ACTIVITIES")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITy>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Where(c=> c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            if(year != null)
-            {
-                OilCondensate = OilCondensate.Where(c => c.Year_of_WP == year).ToList();
-            }
-
+            
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
 
         
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Where(c=> c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate = OilCondensate.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -652,28 +1965,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate = OilCondensate.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -681,28 +1989,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("OIL_CONDENSATE_MONTHLY_ACTIVITIES_PROPOSED_FIVEYEARS")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate = OilCondensate.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -710,28 +2013,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("GAS_PRODUCTION_ACTIVITIES")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year = null )
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year )
         {
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITy>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                GasProduction = _context.GAS_PRODUCTION_ACTIVITIEs.ToList();
+                GasProduction =await _context.GAS_PRODUCTION_ACTIVITIEs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                GasProduction = _context.GAS_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                GasProduction = GasProduction.Where(c => c.Year_of_WP == year).ToList();
+                GasProduction =await _context.GAS_PRODUCTION_ACTIVITIEs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = GasProduction.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -739,29 +2037,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year = null )
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY(string year )
         {
 
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                GasProduction = _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.ToList();
+                GasProduction =await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                GasProduction = _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                GasProduction = GasProduction.Where(c => c.Year_of_WP == year).ToList();
+                GasProduction =await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = GasProduction.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -769,29 +2062,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("UNITIZATION")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION(string year )
         {
 
             var GasProduction = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                GasProduction = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.ToList();
+                GasProduction =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
             else
             {
-                GasProduction = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                GasProduction = GasProduction.Where(c => c.Year_of_WP == year).ToList();
+                GasProduction =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = GasProduction.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -799,29 +2087,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("CONCESSION_RESERVES_FOR_1ST_JANUARY")]
-        public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_1ST_JANUARY(string year = null )
+        public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_1ST_JANUARY(string year )
         {
             var Concession = new List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                Concession = _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR").ToList();
+                Concession =await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c =>c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR").ToListAsync();
             }
 
             else
             {
-                Concession = _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" && c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                Concession = Concession.Where(c => c.Year_of_WP == year).ToList();
+                Concession =await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = Concession.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -829,29 +2112,54 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
-        
-        
+
+        [HttpGet("CONCESSION_RESERVES_FOR_CURRENT_YEAR")]
+        public async Task<WebApiResponse> CONCESSION_RESERVES_FOR_CURRENT_YEAR(string year)
+        {
+            var Concession = new List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    Concession = await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_CURRENT_RESERVE").ToListAsync();
+                }
+
+                else
+                {
+                    Concession = await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Where(c => c.FLAG1 == "COMPANY_CURRENT_RESERVE" && c.COMPANY_ID == WKPCompanyId).ToListAsync();
+                }
+
+                if (year != null)
+                {
+                    Concession = Concession.Where(c => c.Year_of_WP == year).ToList();
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = Concession.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError }; ;
+            }
+        }
+
+
         [HttpGet("RESERVES_OIL_CONDENSATE_PRODUCTION")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate_Reserves = OilCondensate_Reserves.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -859,29 +2167,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("RESERVES_ADDITION")]
-        public async Task<WebApiResponse> RESERVES_ADDITION(string year = null )
+        public async Task<WebApiResponse> RESERVES_ADDITION(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate_Reserves = OilCondensate_Reserves.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -889,29 +2192,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("RESERVES_DECLINE")]
-        public async Task<WebApiResponse> RESERVES_DECLINE(string year = null )
+        public async Task<WebApiResponse> RESERVES_DECLINE(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate_Reserves = OilCondensate_Reserves.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -919,29 +2217,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("RESERVES_LIFE_INDEX")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_LIFE_INDEX(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_LIFE_INDEX>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_LIFE_INDices.ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_LIFE_INDices.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_LIFE_INDices.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate_Reserves = OilCondensate_Reserves.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_LIFE_INDices.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -949,29 +2242,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("RESERVES_UPDATES_DEPLETION_RATE")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_DEPLETION_RATE(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_DEPLETION_RATE(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_DEPLETION_RATE>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_DEPLETION_RATEs.ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_DEPLETION_RATEs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_DEPLETION_RATEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate_Reserves = OilCondensate_Reserves.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_DEPLETION_RATEs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -979,29 +2267,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("RESERVES_OIL_CONDENSATE_MMBBL")]
-        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_MMBBL(string year = null )
+        public async Task<WebApiResponse> RESERVES_UPDATES_OIL_CONDENSATE_MMBBL(string year )
         {
             var OilCondensate_Reserves = new List<RESERVES_UPDATES_OIL_CONDENSATE_MMBBL>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(c => c.Companyemail == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate_Reserves = OilCondensate_Reserves.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate_Reserves =await _context.RESERVES_UPDATES_OIL_CONDENSATE_MMBBLs.Where(c => c.Companyemail == WKPCompanyId).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1009,30 +2292,25 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("RESERVES_REPLACEMENT_RATIO")]
-        public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(string year = null )
+        public async Task<WebApiResponse> RESERVES_REPLACEMENT_RATIO(string year )
         {
 
             var OilCondensate_Reserves = new List<RESERVES_REPLACEMENT_RATIO>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate_Reserves = _context.RESERVES_REPLACEMENT_RATIOs.ToList();
+                OilCondensate_Reserves =await _context.RESERVES_REPLACEMENT_RATIOs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate_Reserves = _context.RESERVES_REPLACEMENT_RATIOs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate_Reserves = OilCondensate_Reserves.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate_Reserves =await _context.RESERVES_REPLACEMENT_RATIOs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1040,59 +2318,50 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("BUDGET_CAPEX_OPEX")]
-        public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(string year = null )
+        public async Task<WebApiResponse> BUDGET_CAPEX_OPEX(string year )
         {
             var BudgetCapex = new List<BUDGET_CAPEX_OPEX>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                BudgetCapex = _context.BUDGET_CAPEX_OPices.ToList();
+                BudgetCapex =await _context.BUDGET_CAPEX_OPices.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                BudgetCapex = _context.BUDGET_CAPEX_OPices.Where(c => c.COMPANY_ID == WKPUserId).ToList();
+                BudgetCapex =await _context.BUDGET_CAPEX_OPices.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            if(year != null)
-            {
-                BudgetCapex = BudgetCapex.Where(c => c.Year_of_WP == year).ToList();
-            }
-
+            
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = BudgetCapex.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("OIL_AND_GAS__MAINTENANCE_PROJECTS")]
-        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year = null )
+        public async Task<WebApiResponse> OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS(string year )
         {
             var BudgetCapex = new List<OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                BudgetCapex = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.ToList();
+                BudgetCapex =await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                BudgetCapex = _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                BudgetCapex = BudgetCapex.Where(c => c.Year_of_WP == year).ToList();
+                BudgetCapex =await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = BudgetCapex.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1100,29 +2369,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("OIL_CONDENSATE_CONFORMITY")]
-        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year = null )
+        public async Task<WebApiResponse> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment(string year )
         {
             var OilCondensate = new List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                OilCondensate = _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                OilCondensate = OilCondensate.Where(c => c.Year_of_WP == year).ToList();
+                OilCondensate =await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1130,29 +2394,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("FACILITIES_PROJECT_PERFORMANCE")]
-        public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(string year = null )
+        public async Task<WebApiResponse> FACILITIES_PROJECT_PERFORMANCE(string year )
         {
             var ResultData = new List<FACILITIES_PROJECT_PERFORMANCE>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.FACILITIES_PROJECT_PERFORMANCEs.ToList();
+                ResultData =await _context.FACILITIES_PROJECT_PERFORMANCEs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.FACILITIES_PROJECT_PERFORMANCEs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.FACILITIES_PROJECT_PERFORMANCEs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1160,59 +2419,50 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("LEGAL_LITIGATION")]
-        public async Task<WebApiResponse> LEGAL_LITIGATION(string year = null )
+        public async Task<WebApiResponse> LEGAL_LITIGATION(string year )
         {
             var ResultData = new List<LEGAL_LITIGATION>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.LEGAL_LITIGATIONs.ToList();
+                ResultData =await _context.LEGAL_LITIGATIONs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.LEGAL_LITIGATIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
+                ResultData =await _context.LEGAL_LITIGATIONs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
-            }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
          
         
         [HttpGet("LEGAL_ARBITRATION")]
-        public async Task<WebApiResponse> LEGAL_ARBITRATION(string year = null )
+        public async Task<WebApiResponse> LEGAL_ARBITRATION(string year )
         {
             var ResultData = new List<LEGAL_ARBITRATION>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.LEGAL_ARBITRATIONs.ToList();
+                ResultData =await _context.LEGAL_ARBITRATIONs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.LEGAL_ARBITRATIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.LEGAL_ARBITRATIONs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1220,29 +2470,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("NIGERIA_CONTENT_TRAINING")]
-        public async Task<WebApiResponse> NIGERIA_CONTENT_TRAINING(string year = null )
+        public async Task<WebApiResponse> NIGERIA_CONTENT_TRAINING(string year )
         {
             var ResultData = new List<NIGERIA_CONTENT_Training>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.NIGERIA_CONTENT_Trainings.ToList();
+                ResultData =await _context.NIGERIA_CONTENT_Trainings.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.NIGERIA_CONTENT_Trainings.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.NIGERIA_CONTENT_Trainings.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1250,29 +2495,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("NIGERIA_CONTENT_SUCCESSIONPLAN")]
-        public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(string year = null )
+        public async Task<WebApiResponse> NIGERIA_CONTENT_Upload_Succession_Plan(string year )
         {
             var ResultData = new List<NIGERIA_CONTENT_Upload_Succession_Plan>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.NIGERIA_CONTENT_Upload_Succession_Plans.ToList();
+                ResultData =await _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.NIGERIA_CONTENT_Upload_Succession_Plans.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1280,29 +2520,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("STRATEGIC_PLANS_ON_COMPANY_BASIS")]
-        public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASIS(string year = null )
+        public async Task<WebApiResponse> STRATEGIC_PLANS_ON_COMPANY_BASIS(string year )
         {
             var ResultData = new List<STRATEGIC_PLANS_ON_COMPANY_BASI>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.STRATEGIC_PLANS_ON_COMPANY_BAses.ToList();
+                ResultData =await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.STRATEGIC_PLANS_ON_COMPANY_BAses.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1310,29 +2545,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
-        public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year = null )
+        public async Task<WebApiResponse> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW(string year )
         {
             var ResultData = new List<HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.ToList();
+                ResultData =await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1340,29 +2570,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("HSE_MANAGEMENT_POSITION")]
-        public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(string year = null )
+        public async Task<WebApiResponse> HSE_MANAGEMENT_POSITION(string year )
         {
             var ResultData = new List<HSE_MANAGEMENT_POSITION>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.HSE_MANAGEMENT_POSITIONs.ToList();
+                ResultData =await _context.HSE_MANAGEMENT_POSITIONs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.HSE_MANAGEMENT_POSITIONs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.HSE_MANAGEMENT_POSITIONs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1370,29 +2595,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("HSE_SAFETY_CULTURE_TRAINING")]
-        public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(string year = null )
+        public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(string year )
         {
             var ResultData = new List<HSE_SAFETY_CULTURE_TRAINING>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.HSE_SAFETY_CULTURE_TRAININGs.ToList();
+                ResultData =await _context.HSE_SAFETY_CULTURE_TRAININGs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.HSE_SAFETY_CULTURE_TRAININGs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.HSE_SAFETY_CULTURE_TRAININGs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1400,29 +2620,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT")]
-        public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year = null )
+        public async Task<WebApiResponse> HSE_OCCUPATIONAL_HEALTH_MANAGEMENT(string year )
         {
             var ResultData = new List<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.ToList();
+                ResultData =await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1430,29 +2645,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("HSE_QUALITY_CONTROL")]
-        public async Task<WebApiResponse> HSE_QUALITY_CONTROL(string year = null )
+        public async Task<WebApiResponse> HSE_QUALITY_CONTROL(string year )
         {
             var ResultData = new List<HSE_QUALITY_CONTROL>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.HSE_QUALITY_CONTROLs.ToList();
+                ResultData =await _context.HSE_QUALITY_CONTROLs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.HSE_QUALITY_CONTROLs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.HSE_QUALITY_CONTROLs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1460,29 +2670,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
           
         
         [HttpGet("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY")]
-        public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year = null )
+        public async Task<WebApiResponse> HSE_CLIMATE_CHANGE_AND_AIR_QUALITY(string year )
         {
             var ResultData = new List<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.ToList();
+                ResultData =await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1490,29 +2695,24 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
         
         
         [HttpGet("HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW")]
-        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year = null )
+        public async Task<WebApiResponse> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW(string year )
         {
             var ResultData = new List<HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW>();
             try { 
-            if (WKPUserRole == GeneralModel.Admin)
+            if (WKUserRole == GeneralModel.Admin)
             {
-                ResultData = _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.ToList();
+                ResultData =await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
             }
 
             else
             {
-                ResultData = _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Where(c => c.COMPANY_ID == WKPUserId).ToList();
-            }
-
-            if(year != null)
-            {
-                ResultData = ResultData.Where(c => c.Year_of_WP == year).ToList();
+                ResultData =await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
@@ -1520,12 +2720,62 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
+
         
 
+        [HttpGet("EXECUTIVE_SUMMARY_REPORT2")]
+        public async Task<WebApiResponse> EXECUTIVE_SUMMARY(string year)
+        {
+            
+            try { 
+            string previousYear = year !=null ? (int.Parse(year) - 1).ToString(): "";
+            var WKP_Report = await _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id <= 5).ToListAsync();
+            var get_ReportContent_2 = WKP_Report.Where(x => x.Id == 2)?.FirstOrDefault();
+            var GEO_ACTIVITIES = await (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
+                                                where u.Year_of_WP == year
+                                                select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
 
+             var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                                                                             where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
+                                                                             group o by new
+                                                                             {
+                                                                                 o.Geo_type_of_data_acquired,
+                                                                                 o.Year_of_WP
+                                                                             }
+                                                                        into g
+                                                                             select new WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION
+                                                                             {
+                                                                                 Geo_type_of_data_acquired = g.FirstOrDefault().Geo_type_of_data_acquired,
+                                                                                 Actual_year_aquired_data = g.Sum(x => Convert.ToInt32(Convert.ToDouble(x.Actual_year_aquired_data))),
+                                                                                 Year_of_WP = g.FirstOrDefault().Year_of_WP,
+
+                                                                             }).ToListAsync();
+
+            var reportText = get_ReportContent_2.Report_Content
+                            .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(N)", year)
+                            .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
+                            .Replace("(N - 1)", previousYear)
+                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString());
+            //var data = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 2 select a.Report_Content).FirstOrDefaultAsync();
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = reportText, StatusCode = ResponseCodes.Success };
+            }
+
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
         }
-
     }
+}

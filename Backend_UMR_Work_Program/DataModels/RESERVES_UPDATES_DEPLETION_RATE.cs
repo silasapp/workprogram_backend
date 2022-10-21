@@ -21,5 +21,7 @@ namespace Backend_UMR_Work_Program.Models
         public DateTime? Date_Updated { get; set; }
         public string? Consession_Type { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
+        public int? Field_ID { get; set; }
     }
 }

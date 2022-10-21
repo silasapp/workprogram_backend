@@ -8,6 +8,7 @@ namespace Backend_UMR_Work_Program.Models
         public int ProccessID { get; set; }
         public int CategoryID { get; set; }
         public int RoleID { get; set; }
+        public int SBU_ID { get; set; }
         public int Sort { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? CreatedBy { get; set; }

@@ -81,68 +81,6 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             return cipherText;
         }
-
-        public int DecryptIDs(string ids)
-        {
-            int id = 0;
-            var ID = this.Decrypt(ids);
-
-            if (ID == "Error")
-            {
-                id = 0;
-            }
-            else
-            {
-                id = Convert.ToInt32(ID);
-            }
-
-            return id;
-        }
-        public int getSessionRoleID()
-        {
-            try
-            {
-                return Convert.ToInt32(Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionRoleID)));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public string getSessionEmail()
-        {
-            try
-            {
-                return Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionEmail));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public int getSessionLogin()
-        {
-            try
-            {
-                int sessionLogin = Convert.ToInt32(Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionLogin)));
-                return sessionLogin;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public int getSessionUserID()
-        {
-            try
-            {
-                return Convert.ToInt32(Decrypt(_httpContextAccessor.HttpContext.Session.GetString(AuthController.sessionUserID)));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
         public UploadedDocument UploadDocument(IFormFile document, string folderToSave)
         {
             var document_uniqueFileName = "";
@@ -195,7 +133,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-
         #region database tables actions
 
         [HttpPost]
@@ -2873,41 +2810,39 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             return 0;
         }
-        public ApplicationProcessModel GetApplicationProccess(string appType, int sortID)
+        public async Task<List<ApplicationProcessModel>> GetApplicationProccess(string appType, int sortID)
         {
-            var applicationProcess = (from ap in _context.ApplicationProccesses
+            var applicationProcess =  (from ap in _context.ApplicationProccesses
                                       join cat in _context.ApplicationCategories on ap.CategoryID equals cat.Id
                                       where cat.Name == appType && ap.DeleteStatus != true && cat.DeleteStatus != true
                                       select ap).ToList();
-            if (sortID > 0)
-            {
-                applicationProcess = (from ap in _context.ApplicationProccesses
-                                      join cat in _context.ApplicationCategories on ap.CategoryID equals cat.Id
-                                      where ap.Sort == (sortID + 1) && cat.Name == appType && ap.DeleteStatus != true && cat.DeleteStatus != true
-                                      select ap).ToList();
-
-            }
 
             if (applicationProcess.Count() > 0)
             {
-                var getStaff = (from stf in _context.staff
-                                join role in _context.ROLES_s on stf.RoleID.ToString() equals role.RoleId
-                                where role.RoleId == applicationProcess.FirstOrDefault().RoleID.ToString() && stf.DeleteStatus != true && stf.ActiveStatus != false
+                var getSBUs = applicationProcess.Select(x=> x.SBU_ID).Distinct();
+
+                var getStaff = (from sbu in getSBUs
+                                join stf in _context.staff on sbu equals stf.Staff_SBU
+                                //join sbu in applicationProcess.AsEnumerable() on stf.Staff_SBU equals sbu.SBU_ID
+                                join role in _context.Roles on stf.RoleID equals role.id
+                                where role.id == applicationProcess.FirstOrDefault().RoleID 
+                                && stf.DeleteStatus != true && stf.ActiveStatus != false
                                 select new ApplicationProcessModel
                                 {
-
+                                    SBU_Id= stf.Staff_SBU,
                                     StaffId = stf.StaffID,
-                                    RoleId = int.Parse(role.RoleId),
+                                    RoleId = applicationProcess.FirstOrDefault().RoleID,
                                     RoleName = role.Description,
                                     Sort = applicationProcess.FirstOrDefault().Sort,
                                     ProcessId = applicationProcess.FirstOrDefault().ProccessID,
                                     DeskCount = _context.MyDesks.Where(x => x.StaffID == stf.StaffID && x.HasWork != true).Count(),
-                                });
+                                }).OrderBy(x => x.DeskCount).ToList();
+
                 if (getStaff.Count() > 0)
                 {
-                    var minDeskCount = getStaff.Min(x => x.DeskCount);
-                    var minStaffDesk = getStaff.Where(x => x.DeskCount == minDeskCount).FirstOrDefault();
-                    return minStaffDesk;
+                    var minimum_DeskStaff = getStaff.GroupBy(x => x.SBU_Id).Select(x=> x.FirstOrDefault()).ToList();
+              
+                    return minimum_DeskStaff;
                 }
             }
 
@@ -2954,9 +2889,9 @@ namespace Backend_UMR_Work_Program.Controllers
         public List<AppMessage> GetMessage(int msg_id, int seid)
         {
 
-            var message = from m in _context.Messages
+            var message = (from m in _context.Messages
                           join a in _context.Applications on m.AppId equals a.Id
-                          join cm in _context.ADMIN_COMPANY_INFORMATIONs on a.CompanyID equals cm.CompanyNumber
+                          join cm in _context.ADMIN_COMPANY_INFORMATIONs on a.CompanyID equals cm.Id
                           join ca in _context.ApplicationCategories on a.CategoryID equals ca.Id
                           where m.id == msg_id
                           select new AppMessage
@@ -2971,7 +2906,7 @@ namespace Backend_UMR_Work_Program.Controllers
                               Field = "Field",
                               Concession = "Concession",
                               DateSubmitted = a.CreatedAt
-                          };
+                          });
             return message.ToList();
         }
         public string SendEmailMessage(string email_to, string email_to_name, List<AppMessage> AppMessages, byte[] attach)

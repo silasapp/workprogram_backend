@@ -54,7 +54,7 @@
             },
             "Azure.Storage.Blobs": {
               "target": "Package",
-              "version": "[12.12.0, )"
+              "version": "[12.13.0, )"
             },
             "Azure.Storage.Queues": {
               "target": "Package",
@@ -73,6 +73,12 @@
               "version": "[6.0.5, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.5, )"
             },
@@ -107,6 +113,14 @@
             "System.Net.Security": {
               "target": "Package",
               "version": "[4.3.2, )"
+            },
+            "WindowsAzure.Storage": {
+              "target": "Package",
+              "version": "[9.3.3, )"
+            },
+            "YamlDotNet": {
+              "target": "Package",
+              "version": "[11.2.1, )"
             }
           },
           "imports": [
@@ -127,7 +141,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.305\\RuntimeIdentifierGraph.json"
         }
       }
     }
