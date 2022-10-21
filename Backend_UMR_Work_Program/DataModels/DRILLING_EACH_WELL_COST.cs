@@ -21,5 +21,7 @@ namespace Backend_UMR_Work_Program.Models
         public string? QUATER { get; set; }
         public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
+        public int? Field_ID { get; set; }
     }
 }

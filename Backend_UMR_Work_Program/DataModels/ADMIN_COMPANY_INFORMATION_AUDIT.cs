@@ -26,5 +26,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? FLAG2 { get; set; }
         public string? UPDATED_BY { get; set; }
         public string? UPDATED_DATE { get; set; }
+        public int? CompanyNumber { get; set; }
     }
 }

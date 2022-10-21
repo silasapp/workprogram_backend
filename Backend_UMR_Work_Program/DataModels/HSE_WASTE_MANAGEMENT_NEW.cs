@@ -24,5 +24,12 @@ namespace Backend_UMR_Work_Program.Models
         public string? Terrain { get; set; }
         public string? Contract_Type { get; set; }
         public string? COMPANY_ID { get; set; }
+        public int? CompanyNumber { get; set; }
+        public int? Field_ID { get; set; }
+        public string? Commitment_To_Waste_Management { get; set; }
+        public double? How_Much_Is_Budgeted_For_Waste_MGT_Plan { get; set; }
+        public string? Evidence_Of_Submission_Of_Journey_MGT_Plan { get; set; }
+        public string? Are_Registered_Point_Sources_Valid { get; set; }
+        public string? Evidence_Of_Submission_Of_PreviousYears_Waste_Release { get; set; }
     }
 }

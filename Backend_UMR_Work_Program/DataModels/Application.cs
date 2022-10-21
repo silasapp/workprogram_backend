@@ -15,7 +15,6 @@ namespace Backend_UMR_Work_Program.Models
         public string Status { get; set; } = null!;
         public string PaymentStatus { get; set; } = null!;
         public int? CurrentDesk { get; set; }
-        public string CurrentPermit { get; set; }
         public bool? Submitted { get; set; }
         public string? ApprovalRef { get; set; }
         public DateTime? CreatedAt { get; set; }

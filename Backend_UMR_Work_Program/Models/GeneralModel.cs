@@ -34,22 +34,372 @@ namespace Backend_UMR_Work_Program.Models
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
         public static string EquipmentFailure = "EQUIPMENT_FAILURE";
-        public static string Insert = "Insert";
-        public static string Update = "Update";
-        public static string Delete = "Delete";
+        public static string Insert = "INSERTE";
+        public static string Update = "UPDATE";
+        public static string Delete = "DELETE";
         public static string New = "New";
+        public static string Modification = "MODIFICATION";
+        public static string ActualYear = "Actual Year";
+        public static string ProposedYear = "Proposed Year";
+        public static string PaymentPending = "Payment Confirmation Pending";
+        public static string PaymentCompleted = "PaymentCompleted";
+        public static string Processing = "Processing";
+        public static string Rejected = "Rejected";
+        public static string Approved = "Approved";
 
+        public class Concession_Index
+        {
+            public string companyName { get; set; }
+            public string concessionName { get; set; }
+            public string concessionType { get; set; }
+            public double? acquisition_Index { get; set; }
+            public double? exploratory_Index { get; set; }
+            public double? discovery_Index { get; set; }
+            public double? concessionRentals_Index { get; set; }
+            public double? compliance_Index { get; set; }
+            public double? NDR_Index { get; set; }
+            public double? royaltyPayment_Index { get; set; }
+            public double? RRR_Index { get; set; }
+            public double? IncrementInProduction_Index { get; set; }
+            public double? costEfficiency_Index { get; set; }
+            public double? CSR_Index { get; set; }
+            public double? statutoryPayment_Index { get; set; }
+        }
+        public class Field_Index
+        {
+            public string fieldName { get; set; }
+            public string concessionName { get; set; }
+            public string concessionType { get; set; }
+            public double? acquisition_Index { get; set; }
+            public double? exploratory_Index { get; set; }
+            public double? discovery_Index { get; set; }
+            public double? concessionRentals_Index { get; set; }
+            public double? compliance_Index { get; set; }
+            public double? NDR_Index { get; set; }
+            public double? royaltyPayment_Index { get; set; }
+            public double? RRR_Index { get; set; }
+            public double? IncrementInProduction_Index { get; set; }
+            public double? costEfficiency_Index { get; set; }
+            public double? CSR_Index { get; set; }
+            public double? statutoryPayment_Index { get; set; }
+
+        }
+        public class Company_Index
+        {
+            public string fieldName { get; set; }
+            public string concessionName { get; set; }
+            public string concessionType { get; set; }
+            public double? acquisition_Index { get; set; }
+            public double? exploratory_Index { get; set; }
+            public double? discovery_Index { get; set; }
+            public double? concessionRentals_Index { get; set; }
+            public double? NDR_Index { get; set; }
+        }
+        public class WorkProgrammeReport_Model
+        {
+            public object WorkProgrammeReport1_Model { get; set; }
+            public object WorkProgrammeReport2_Model { get; set; }
+        }
+        public class CompanyDashboardModel
+        {
+            public string concessionName { get; set; }
+            public string fieldName { get; set; }
+            public double oil_NetProduction { get; set; }
+            public double AG_NetProduction { get; set; }
+            public double NAG_NetProduction { get; set; }
+            public double condensate_NetProduction { get; set; }
+            public double totalNetProduction { get; set; }
+            public double oil_Reserves { get; set; }
+            public double AG_Reserves { get; set; }
+            public double NAG_Reserves { get; set; }
+            public double condensate_Reserves { get; set; }
+            public double totalReserves { get; set; }
+        }
+
+        public class WorkProgrammeReport1_Model
+        {
+            public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
+            public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLY> E_and_P_companies_Model { get; set; }
+            public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY> WP_Presentations_Model { get; set; }
+            //public List<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY> WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORY_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION> WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_PROCESSING> WP_GEOPHYSICAL_ACTIVITIES_PROCESSING_Model { get; set; }
+            public List<WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL> WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model { get; set; }
+            public List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL> WP_SUM_APPRAISAL_WELL_Model { get; set; }
+            public List<WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION> WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION_Model { get; set; }
+            public List<WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELL> DRILLING_OPERATIONS_Appraisal_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Contract_Type> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_Contract_Type_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_Model { get; set; }
+            public List<WP_GAS_PRODUCTION_ACTIVITIES_Percentage> WP_GAS_PRODUCTION_ACTIVITY_Percentage_Model { get; set; }
+            public object PY_GAS_ACTIVITIES_Model { get; set; }
+            public object CY_GAS_ACTIVITIES_Model { get; set; }
+            public object GAS_ACTIVITIES_CONTRACTTYPES_Model { get; set; }
+            public List<WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type> WP_GAS_PRODUCTION_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_PreviousYearr_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil> WP_GAS_PRODUCTION_ACTIVITY_CurrentYearr_Model { get; set; }
+            public object WP_GAS_PRODUCTION_ACTIVITY_PREVIOUSYEAR_Model { get; set; }
+            public object WP_GAS_PRODUCTION_ACTIVITY_CURRENTYEAR_Model { get; set; }
+            public List<WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL> WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequence_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accident_Model { get; set; }
+            public List<WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage> WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_spill_accident_and_percentage_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count> WP_GEOPHYSICAL_ACTIVITY_ACQUISITION_sum_and_count_Model { get; set; }
+            public List<HSE_OIL_SPILL_REPORTING_NEW> HSE_OIL_SPILL_REPORTING_NEW_Model { get; set; }
+            public List<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count> GEO_sum_and_count_Model { get; set; }
+            public string VOLUME_OF_OILSPILL { get; set; }
+            public List<WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED> WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED_Model { get; set; }
+            public object OILSPILL_REPORT_Model { get; set; }
+            public object TOTAL_PRODUCED_WATER_Model { get; set; }
+            public List<HSE_CAUSES_OF_SPILL> HSE_QUANTITY_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSED_Model { get; set; }
+            //public List<WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDZENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
+            public List<WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED> WP_OIL_CONDENSATE_PRODUCTION_ACTIVITY_monthly_ActivitY_OIL_PRODUCTION_by_Terrain_PLANNED_Model { get; set; }
+            public List<WP_Gas_Production_Utilisation_And_Flaring_Forecast> WP_Gas_Production_Utilisation_And_Flaring_Forecast_Model { get; set; }
+            public string Error { get; set; }
+
+        }
+        public class WorkProgrammeReport2_Model
+        {
+            public List<Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION> Seismic_Data_Approved_and_Acquired { get; set; }
+            public object Seismic_Data_Approved_and_Acquired_PREVIOUS { get; set; }
+            public object Seismic_Data_Approved_and_Acquired_PLANNED { get; set; }
+            public object Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 { get; set; }
+            public object Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT { get; set; }
+            public object Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED { get; set; }
+            public object Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS { get; set; }
+            public object Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO { get; set; }
+            public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration { get; set; }
+            public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal { get; set; }
+            public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development { get; set; }
+            public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Exploration_PY { get; set; }
+            public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Appraisal_PY { get; set; }
+            public object DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_Development_PY { get; set; }
+            public object RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_ContractType_Pivotted { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_by_Terrain_Pivoted { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_by_company_productionmonth_year { get; set; }
+            public object GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared { get; set; }
+            public object GAS_PRODUCTION_ACTIVITIES_contract_type_basis { get; set; }
+            public object GAS_PRODUCTION_ACTIVITIES_terrain_pivotted { get; set; }
+            public object GAS_PRODUCTION_ACTIVITIES_contract_type_pivoted { get; set; }
+            public object GAS_PRODUCTION_ACTIVITIES_penalty_payment { get; set; }
+            public object FATALITIES_ACCIDENT_STATISTIC_TABLE { get; set; }
+            public object OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS { get; set; }
+            public object OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS_PY { get; set; }
+            public object NIGERIA_CONTENT_TRAINING { get; set; }
+            public object NIGERIA_CONTENT_TRAINING_PY { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_OPERATING_FACILITIES { get; set; }
+            public object NIGERIA_CONTENT_UPLOAD_SUCESSION_PLAN { get; set; }
+            public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW { get; set; }
+            public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships { get; set; }
+            public object HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition { get; set; }
+            public object BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIES { get; set; }
+            public object BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIES { get; set; }
+            public object BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT { get; set; }
+            public object BUDGET_PERFORMANCE_PRODUCTION_COST { get; set; }
+            public object OML_Aggregated_Score_ALL_COMPANIES { get; set; }
+            public object RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED { get; set; }
+            public object STRATEGIC_PLANS_ON_COMPANY_BASIS { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_C_TYPE_PROPOSED { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_By_month_year_PROPOSED { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrain_PLANNED { get; set; }
+            public object OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_Pivotted_PRODUCTION_BRKDWN_PLANNED { get; set; }
+            public object GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNED { get; set; }
+            public object GAS_PRODUCTION_ACTIVITIES_contract_type_basis_PLANNED { get; set; }
+            public object RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED { get; set; }
+            public object HSE_CAUSES_OF_SPILL { get; set; }
+            public string Error { get; set; }
+            public string GEOPHYSICAL_ACTIVITIES_PROCESSING_DESCRIPTION { get; set; }
+
+        }
+        public class ADMIN_WORK_PROGRAM_REPORTs_Model
+        {
+            public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
+            public object summary_1 { get; set; }
+            public object summary_2 { get; set; }
+        }
         public class ApplicationProcessModel
         {
             public int StaffId { get; set; }
             public int FromStaffId { get; set; }
             public int RoleId { get; set; }
+            public int? SBU_Id { get; set; }
             public int Sort { get; set; }
             public int ProcessId { get; set; }
             public int DeskCount { get; set; }
             public string RoleName { get; set; }
         }
+        public class Application_Model
+        {
+            public int Id { get; set; }
+            public string ReferenceNo { get; set; } = null!;
+            public int? ConcessionID { get; set; }
+            public int CompanyID { get; set; }
+            public string CompanyName { get; set; }
+            public string FieldName { get; set; }
+            public string ConcessionName { get; set; }
+            public int? FieldID { get; set; }
+            //public int? DeskID { get; set; }
+            public int CategoryID { get; set; }
+            public int YearOfWKP { get; set; }
+            public string Status { get; set; } = null!;
+            public string PaymentStatus { get; set; } = null!;
+            public int? CurrentDesk { get; set; }
+            public bool? Submitted { get; set; }
+            public string? ApprovalRef { get; set; }
+            public DateTime? CreatedAt { get; set; }
+            public DateTime? SubmittedAt { get; set; }
+            public DateTime? UpdatedAt { get; set; }
+            public int? DeletedBy { get; set; }
+            public bool? DeleteStatus { get; set; }
+            public DateTime? DeletedAt { get; set; }
+           
+        }
 
+        public class ApplicationDetailsModel
+        {
+            public Application Application { get; set; }
+            public COMPANY_FIELD Field { get; set; }
+            public ADMIN_COMPANY_INFORMATION Company { get; set; }
+            public ADMIN_CONCESSIONS_INFORMATION Concession { get; set; }
+            public List<Staff_Model> Staff { get; set; }
+            public List<ApplicationDeskHistory_Model> Application_History { get; set; }
+            public List<SubmittedDocument> Document { get; set; }
+        }
+        public class Staff_Model
+        {
+            public string Staff_Name { get; set; }
+            public string Staff_Email { get; set; }
+            public string Staff_SBU { get; set; }
+            public string Staff_Role { get; set; }
+            public int Sort { get; set; }
+        }
+
+        public class ApplicationDeskHistory_Model
+        {
+            public int ID { get; set; }
+            public string Staff_Name { get; set; }
+            public string Staff_Email { get; set; }
+            public string Staff_SBU { get; set; }
+            public string Staff_Role { get; set; }
+            public string Comment { get; set; }
+            public string Status { get; set; }
+            public DateTime Date { get; set; }
+       }
+ 
+            public class HSE_ACCIDENT_INCIDENCE_MODEL
+        {
+            public int id { get; set; }
+            public string? Was_there_any_accident_incidence { get; set; }
+            public string? If_YES_were_they_reported { get; set; }
+            public string? Type_of_Accident_Incidence { get; set; }
+            public string? Location { get; set; }
+            public string? Investigation { get; set; }
+            public string? Date_ { get; set; }
+            public string? Cause { get; set; }
+            public string? Consequence { get; set; }
+            public string? Lesson_Learnt { get; set; }
+            public string? Frequency { get; set; }
+
+        }
+
+        public class FileReturn
+        {
+            public string fileId { get; set; }
+            public long? fileSize { get; set; }
+            public string path { get; set; }
+        }
+
+        public class DownReturn
+        {
+            public Stream stream { get; set; }
+            public string contentType { get; set; }
+            public string name { get; set; }
+        }
+
+        public class ConcessionField
+        {
+            public int? Field_ID { get; set; }
+            public int? Concession_ID { get; set; }
+            public string Concession_Name { get; set; }
+            public string Consession_Type { get; set; }
+            public string? Field_Name { get; set; }
+            public string? Terrain { get; set; }
+        }
+        public class ADMIN_COMPANY_INFORMATION_Model
+        {
+            public int? Id { get; set; }
+            public string? COMPANY_NAME { get; set; }
+            public string? EMAIL { get; set; }
+            public string? PASSWORDS { get; set; }
+            public string? STATUS_ { get; set; }
+            public string? FLAG_PASSWORD_CHANGE { get; set; }
+            public string? CATEGORY { get; set; }
+            public string? NAME { get; set; }
+            public string? DESIGNATION { get; set; }
+            public string? PHONE_NO { get; set; }
+            public string? COMPANY_ID { get; set; }
+            public string? DELETED_STATUS { get; set; }
+            public string? DELETED_BY { get; set; }
+            public string? DELETED_DATE { get; set; }
+            public string? FLAG1 { get; set; }
+            public string? FLAG2 { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+        }
+        public partial class ADMIN_CONCESSIONS_INFORMATION_Model
+        {
+            public int Consession_Id { get; set; }
+            public string? Company_ID { get; set; }
+            public string? CompanyName { get; set; }
+            public string? Equity_distribution { get; set; }
+            public string? Concession_Held { get; set; }
+            public string? Area { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Year_of_Grant_Award { get; set; }
+            public DateTime? Date_of_Expiration { get; set; }
+            public string? Geological_location { get; set; }
+            public string? Comment { get; set; }
+            public string? Status_ { get; set; }
+            public string? Flag1 { get; set; }
+            public string? Flag2 { get; set; }
+            public string? COMPANY_EMAIL { get; set; }
+            public string? Terrain { get; set; }
+            public string? Year { get; set; }
+            public string? submitted { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? Concession_Unique_ID { get; set; }
+            public string? OPEN_DATE { get; set; }
+            public string? CLOSE_DATE { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+            public int? CompanyNumber { get; set; }
+        }
+        public class UserModel
+        {
+            public List<ADMIN_COMPANY_INFORMATION> companiesList { get; set; }
+            public List<ADMIN_COMPANY_INFORMATION> staffList { get; set; }
+            public List<ROLES_> roles { get; set; }
+        }
+        public class parameterConfigModel
+        {
+            public List<ADMIN_CATEGORy> adminCategories { get; set; }
+            public List<Data_Type> dataTypes { get; set; }
+            public List<ADMIN_WELL_CATEGORy> wellCategories { get; set; }
+            public List<ADMIN_WP_START_END_DATE> startEndDate { get; set; }
+            public List<ADMIN_WP_START_END_DATE_DATA_UPLOAD> startEndDateUpload { get; set; }
+            public List<ADMIN_WP_PENALTy> penalties { get; set; }
+            public List<ADMIN_EMAIL_DAY> emailDays { get; set; }
+            public List<ROLES_SUPER_ADMIN> superAdmins { get; set; }
+            public List<ADMIN_PRESENTATION_CATEGORy> presentationCategories { get; set; }
+            public List<ADMIN_MEETING_ROOM> meetingRooms { get; set; }
+        }
         public class PermitAPIModel
         {
             public int Id { get; set; }
