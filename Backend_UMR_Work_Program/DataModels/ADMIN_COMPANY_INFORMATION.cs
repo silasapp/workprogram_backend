@@ -28,5 +28,7 @@ namespace Backend_UMR_Work_Program.Models
         public string? UPDATED_DATE { get; set; }
         public string? EMAIL_REMARK { get; set; }
         public int? CompanyNumber { get; set; }
+        public int? ELPS_ID { get; set; }
+        public string? CompanyAddress { get; set; }
     }
 }

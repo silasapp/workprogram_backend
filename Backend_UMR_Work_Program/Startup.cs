@@ -23,6 +23,8 @@ using Azure.Storage.Queues;
 using Backend_UMR_Work_Program.Controllers;
 using AutoMapper;
 using Backend_UMR_Work_Program.Helpers.AutoMapperSettings;
+using Backend_UMR_Work_Program.Helpers;
+using Backend_UMR_Work_Program.Controllers.Authentications;
 
 namespace Backend_UMR_Work_Program
 {
@@ -51,7 +53,7 @@ namespace Backend_UMR_Work_Program
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddMvc();
-                //.AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
+            //.AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
             services.AddControllers();
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -76,13 +78,20 @@ namespace Backend_UMR_Work_Program
                     ValidateAudience = false
                 };
             });
+            ElpsServices._elpsAppEmail = Configuration.GetSection("ElpsKeys").GetSection("elpsAppEmail").Value.ToString();
+            ElpsServices._elpsBaseUrl = Configuration.GetSection("ElpsKeys").GetSection("elpsBaseUrl").Value.ToString();
+            ElpsServices.public_key = Configuration.GetSection("ElpsKeys").GetSection("PK").Value.ToString();
+            ElpsServices._elpsAppKey = Configuration.GetSection("ElpsKeys").GetSection("elpsSecretKey").Value.ToString();
 
+            services.AddTransient<EvaluationController>();
             services.AddTransient<Account>();
+            services.AddTransient<AuthController>();
             services.AddTransient<Connection>();
             services.AddTransient<HelpersController>();
             services.AddTransient<Presentation>();
             services.AddTransient<WorkProgrammeController>();
             services.AddTransient<AdminController>();
+            services.AddTransient<DashboardController>();
             services.AddTransient<DatabaseService>();
             services.AddTransient<BlobService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -204,4 +213,5 @@ namespace Backend_UMR_Work_Program
         }
     }
 }
+
 

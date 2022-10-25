@@ -40,9 +40,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Quantum_Planned { get; set; }
         public string? Gas_flare_Royalty_payment { get; set; }
         public string? Gas_Sales_Royalty_Payment { get; set; }
-
-        //New Addition
-        public string? No_of_Folds { get; set; }
         public string? QUATER { get; set; }
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }

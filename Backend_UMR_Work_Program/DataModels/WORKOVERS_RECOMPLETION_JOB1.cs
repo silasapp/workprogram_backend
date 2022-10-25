@@ -19,9 +19,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Do_you_have_approval_for_the_workover_recompletion { get; set; }
         public string? Actual_year { get; set; }
         public string? proposed_year { get; set; }
-
-        //New Addition
-        public string? DaysForCompletion { get; set; }
         public string? Created_by { get; set; }
         public string? Updated_by { get; set; }
         public DateTime? Date_Created { get; set; }
@@ -36,5 +33,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
         public int? Field_ID { get; set; }
+        public string? DaysForCompletion { get; set; }
     }
 }

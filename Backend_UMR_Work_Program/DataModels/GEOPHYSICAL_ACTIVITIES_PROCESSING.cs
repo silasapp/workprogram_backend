@@ -35,7 +35,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Reprocessed_Proposed { get; set; }
         public string? Interpreted_Actual { get; set; }
         public string? Interpreted_Proposed { get; set; }
-       
         public string? Name_of_Contractor { get; set; }
         public string? Quantum_Approved { get; set; }
         public string? Contract_Type { get; set; }
@@ -46,5 +45,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
         public int? Field_ID { get; set; }
+        public string? No_of_Folds { get; set; }
     }
 }
