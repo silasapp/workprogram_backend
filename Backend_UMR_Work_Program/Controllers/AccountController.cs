@@ -31,10 +31,15 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GetData")]
         public object GetData()
         {
-            var table = _account.GetData();
-            string JSONString = string.Empty;
-            JSONString = JsonConvert.SerializeObject(table);
-            return JSONString;
+            try {
+                var table = _account.GetData();
+                string JSONString = string.Empty;
+                JSONString = JsonConvert.SerializeObject(table);
+                return JSONString;
+            }
+            catch(Exception ex) {
+                return new {message = ex.Message, trace = ex.StackTrace};
+            }
         }
 
         [HttpPost("Authenticate")]

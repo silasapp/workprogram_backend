@@ -8,7 +8,6 @@ using System.Security.Claims;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore;
-using Backend_UMR_Work_Program.Helpers;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -55,7 +54,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
+
         [HttpGet("GET_COMPANYCODE_UPDATE")]
         public async Task<WebApiResponse> Get_CompanyCodeUpdate(int Id)
         {
@@ -71,14 +70,14 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
+
         [HttpPost("POST_COMPANYCODESTATUS_UPDATE")]
         public async Task<WebApiResponse> Get_CompanyCodeStatusUpdate(int Id, string Status)
         {
             try
             {
                 var getCode = (from c in _context.ADMIN_COMPANY_CODEs where c.Id == Id select c).FirstOrDefault();
-                if(getCode != null)
+                if (getCode != null)
                 {
                     getCode.IsActive = Status;
                     await _context.SaveChangesAsync();
@@ -97,42 +96,191 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost("UPLOAD_COMPANYCODE")]
-        public async Task<WebApiResponse>Upload_CompanyCode(string CompanyName, string CompanyCode, string CompanyEmail)
+        //[HttpPost("UPLOAD_COMPANYCODE2"), DisableRequestSizeLimit]
+        //public async Task<WebApiResponse> Upload_CompanyCode2(string CompanyName, string CompanyCode)
+        //{
+
+        //    try
+        //    {
+        //        int save = 0;
+        //        List<string> companyCodes = new List<string> { CompanyName, CompanyCode };
+        //        //List<string> companyCodes = new List<string> { CompanyName, CompanyCode, CompanyEmail };
+        //        foreach (var companyCode in companyCodes)
+        //        {
+        //            var getCode = (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == CompanyCode && c.IsActive == "YES" select c).FirstOrDefault();
+        //            if (getCode == null)
+        //            {
+        //                var company = (from c in _context.ADMIN_COMPANY_INFORMATIONs
+        //                               where c.NAME.ToLower() == CompanyName.ToLower() /*|| c.EMAIL.ToLower() == CompanyEmail.ToLower()*/
+        //                               select c).FirstOrDefault();
+        //                if (company != null)
+        //                {
+        //                    getCode.CompanyName = CompanyName;
+        //                    getCode.Created_by = WKPCompanyEmail;
+        //                    getCode.CompanyCode = CompanyCode;
+        //                    getCode.IsActive = "YES";
+        //                    getCode.Date_Created = DateTime.Now;
+        //                    await _context.ADMIN_COMPANY_CODEs.AddAsync(getCode);
+        //                    save = await _context.SaveChangesAsync();
+        //                }
+        //            }
+        //        }
+        //        if (save > 0)
+        //        {
+        //            var getCodes = (from c in _context.ADMIN_COMPANY_CODEs select c).ToList();
+        //            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getCodes, StatusCode = ResponseCodes.Success };
+        //        }
+        //        else
+        //        {
+        //            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : Company code details was not found.", StatusCode = ResponseCodes.Badrequest };
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+        //    }
+        //}
+
+
+
+
+
+        #endregion
+
+        #region Company Code
+
+        [HttpPost("UPLOAD_COMPANYCODE"), DisableRequestSizeLimit]
+        public async Task<WebApiResponse> Upload_CompanyCode([FromForm] dynamic dell)
+        {
+            int save = 0;
+            var excelFile = Request.Form.Files[0];
+            try
+            {
+                using (Stream inputStream = excelFile.OpenReadStream())
+                {
+                    using (ExcelEngine excelEngine = new ExcelEngine())
+                    {
+                        IApplication application = excelEngine.Excel;
+                        IWorkbook workbook = application.Workbooks.Open(inputStream);
+                        IWorksheet worksheet = workbook.Worksheets[0];
+
+                        DataTable dt = worksheet.ExportDataTable(worksheet.UsedRange, ExcelExportDataTableOptions.ColumnNames);
+                        List<ADMIN_COMPANY_CODE> codeList = new List<ADMIN_COMPANY_CODE>();
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+
+
+                            var Name_of_company = row["CompanyName"].ToString().Replace("'", "").ToUpper().Trim();
+                            Name_of_company = Regex.Replace(Name_of_company, @"\s+", " ", RegexOptions.Multiline);
+
+                            string CompanyCode = row["CompanyCode"].ToString().Replace("'", "").ToUpper().Trim();
+
+                            var getCode = (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == CompanyCode && c.IsActive == "YES" select c).FirstOrDefault();
+                            if (getCode == null)
+                            {
+                                //var company = (from c in _context.ADMIN_COMPANY_INFORMATIONs
+                                //               where c.NAME.ToLower() == CompanyName.ToLower() /*|| c.EMAIL.ToLower() == CompanyEmail.ToLower()*/
+                                //               select c).FirstOrDefault();
+                                ADMIN_COMPANY_CODE data = new ADMIN_COMPANY_CODE();
+
+                                data.CompanyName = Name_of_company;
+                                data.Created_by = WKPCompanyEmail;
+                                data.CompanyCode = CompanyCode;
+                                data.IsActive = "YES";
+                                data.Date_Created = DateTime.Now;
+                                codeList.Add(data);
+                            }
+                        }
+                        await _context.ADMIN_COMPANY_CODEs.AddRangeAsync(codeList);
+                        save = await _context.SaveChangesAsync();
+                        if (save > 0)
+                        {
+                            var getCodes = (from c in _context.ADMIN_COMPANY_CODEs select c).ToList();
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getCodes, StatusCode = ResponseCodes.Success };
+                        }
+                        else
+                        {
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : Company code details was not found.", StatusCode = ResponseCodes.Badrequest };
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+
+        }
+
+
+        [HttpGet("GET_COMPANY_CODES")]
+        public async Task<WebApiResponse> GetAllCompanyCodes()
         {
             try
             {
-                int save = 0;
-                List<string> companyCodes = new List<string> { CompanyName, CompanyCode };
-                //List<string> companyCodes = new List<string> { CompanyName, CompanyCode, CompanyEmail };
-                foreach(var companyCode in companyCodes)
+                var companycodes = await _context.ADMIN_COMPANY_CODEs.ToListAsync();
+                var codeModel = new CompanyCodeModel();
+                if (companycodes.Any()) codeModel = _mapper.Map<CompanyCodeModel>(companycodes);
+                
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = codeModel , StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+
+        // [HttpGet("UPDATE_COMPANY_CODES")]
+        // public async Task<WebApiResponse> UpdateCompanyCodes(int Id)
+        // {
+
+        //     try
+        //     {
+        //         var companycode = _context.ADMIN_COMPANY_CODEs.FirstOrDefault(x => x.Id == Id);
+
+        //         if (companycode != null)
+        //         {
+        //             var companyCodeModel = _mapper.Map<CompanyCodeModel>(companycode);
+        //                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Company Code has been updated successfully", Data = companyCodeModel, StatusCode = ResponseCodes.Success };
+           
+        //         }
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+        //     }
+
+        //     return null;
+        // }
+
+
+        [HttpPut("UPDATE_COMPANY_CODES")]
+        public async Task<WebApiResponse>UpdateCompanyCodes(int Id, string name, string status)
+        {
+           
+            try
+            {
+                var companycode = _context.ADMIN_COMPANY_CODEs.FirstOrDefault(x=>x.Id==Id);
+
+                if (companycode != null)
                 {
-                    var getCode = (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == CompanyCode && c.IsActive == "YES" select c).FirstOrDefault();
-                    if (getCode == null)
+                    companycode.IsActive =status;
+                    companycode.CompanyName = name;
+                    companycode.Updated_by = WKPCompanyEmail;
+                    companycode.Date_Updated= DateTime.Now;
+
+                    var companycodeModel = _mapper.Map<CompanyCodeModel>(companycode);
+
+                    int save = await _context.SaveChangesAsync();
+                    if (save > 0)
                     {
-                        var company = (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                       where c.NAME.ToLower() == CompanyName.ToLower() /*|| c.EMAIL.ToLower() == CompanyEmail.ToLower()*/
-                                       select c).FirstOrDefault();
-                        if (company != null)
-                        {
-                            getCode.CompanyName = CompanyName.ToUpper().Trim();
-                            getCode.Email = CompanyEmail.ToLower().Trim();
-                            //getCode.CompanyNumber = company.Id;
-                            getCode.CompanyCode = CompanyCode.Trim();
-                            getCode.IsActive = "YES";
-                            await _context.ADMIN_COMPANY_CODEs.AddAsync(getCode);
-                            save = await _context.SaveChangesAsync();
-                        }
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Company Code has been updated successfully", Data = companycodeModel, StatusCode = ResponseCodes.Success };
                     }
-                }
-                if (save > 0)
-                {
-                    var getCodes = (from c in _context.ADMIN_COMPANY_CODEs select c).ToList();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getCodes, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : Company code details was not found.", StatusCode = ResponseCodes.Badrequest };
                 }
             }
             catch (Exception e)
@@ -140,7 +288,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
+            return null;
+            
         }
+
+
 
         #endregion
 
@@ -175,15 +327,17 @@ namespace Backend_UMR_Work_Program.Controllers
                                           where c.COMPANY_NAME != GeneralModel.Admin && c.DELETED_STATUS == null
                                           select c).ToList();
                 var staffInformation = (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                          where c.COMPANY_NAME == GeneralModel.Admin && c.DELETED_STATUS == null
-                                          select c).ToList();
-                var userRoles =        _context.ROLES_s.ToList();
+                                        where c.COMPANY_NAME == GeneralModel.Admin && c.DELETED_STATUS == null
+                                        select c).ToList();
+                var userRoles = _context.ROLES_s.ToList();
 
                 var returnData = new UserModel()
                 {
-                  companiesList =  companyInformation, staffList = staffInformation, roles = userRoles
+                    companiesList = companyInformation,
+                    staffList = staffInformation,
+                    roles = userRoles
                 };
-                    
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = returnData, StatusCode = ResponseCodes.Success };
             }
             catch (Exception e)
@@ -191,8 +345,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
             }
-        }      
-        
+        }
+
         [HttpGet("GET_COMPANIES")]
         public async Task<WebApiResponse> Get_Companies()
         {
@@ -201,8 +355,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 var companyInformation = (from c in _context.ADMIN_COMPANY_INFORMATIONs
                                           where c.COMPANY_NAME != GeneralModel.Admin && c.DELETED_STATUS == null
                                           select c).ToList();
-             
-                    
+
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = companyInformation, StatusCode = ResponseCodes.Success };
             }
             catch (Exception e)
@@ -211,10 +365,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
+
+
+
+
+
+
         [HttpPost("CREATE_USER")]
-        public async Task<WebApiResponse> CreateUser(ADMIN_COMPANY_INFORMATION_Model userModel)
+        public async Task<WebApiResponse> CreateUser([FromBody] ADMIN_COMPANY_INFORMATION_Model userModel)
         {
+
             try
             {
                 var checkUser = (from c in _context.ADMIN_COMPANY_INFORMATIONs
@@ -296,7 +456,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                  where c.Id == userModel.Id
                                  select c).FirstOrDefault();
                 if (checkUser == null)
-                {   
+                {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found for {userModel.EMAIL}", StatusCode = ResponseCodes.Failure };
 
                 }
@@ -334,7 +494,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                  where c.Id == Id
                                  select c).FirstOrDefault();
                 if (checkUser == null)
-                {   
+                {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found.", StatusCode = ResponseCodes.Failure };
 
                 }
@@ -369,7 +529,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                  where c.Id == Id
                                  select c).FirstOrDefault();
                 if (checkUser == null)
-                {   
+                {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found.", StatusCode = ResponseCodes.Failure };
 
                 }
@@ -406,8 +566,9 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var data = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                          where c.DELETED_STATUS == null select c).GroupBy(x => x.Concession_Unique_ID).Select(x => x.FirstOrDefault()).ToList();
-                if(year != null)
+                            where c.DELETED_STATUS == null
+                            select c).GroupBy(x => x.Concession_Unique_ID).Select(x => x.FirstOrDefault()).ToList();
+                if (year != null)
                 {
                     data = data.Where(d => d.Year == year.Trim()).ToList();
                 }
@@ -419,15 +580,15 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-       
+
         [HttpPost("CREATE_CONCESSION")]
-        public async Task<WebApiResponse> CreateConcession(ADMIN_CONCESSIONS_INFORMATION_Model concessionModel)
+        public async Task<WebApiResponse> CreateConcession([FromBody] ADMIN_CONCESSIONS_INFORMATION_Model concessionModel)
         {
             try
             {
                 var checkConcession = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
                                        where c.Concession_Unique_ID.ToLower() == concessionModel.Concession_Unique_ID.ToLower()
-                                 select c).FirstOrDefault();
+                                       select c).FirstOrDefault();
                 if (checkConcession != null)
                 {
                     bool deleted = checkConcession.DELETED_STATUS == "DELETED" ? true : false;
@@ -441,9 +602,9 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                     var company = (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                        where c.EMAIL.ToLower() == concessionModel.COMPANY_EMAIL.ToLower()
-                                       select c).FirstOrDefault();
+                    var company = (from c in _context.ADMIN_COMPANY_INFORMATIONs
+                                   where c.COMPANY_NAME.ToLower() == concessionModel.CompanyName.ToLower()
+                                   select c).FirstOrDefault();
                     if (company != null)
                     {
                         var data = _mapper.Map<ADMIN_CONCESSIONS_INFORMATION>(concessionModel);
@@ -481,7 +642,7 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 var checkConcession = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
                                        where c.Consession_Id == id
-                                 select c).FirstOrDefault();
+                                       select c).FirstOrDefault();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found.", StatusCode = ResponseCodes.Failure };
@@ -507,8 +668,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                 where c.Consession_Id == concessionModel.Consession_Id
-                                 select c).FirstOrDefault();
+                                       where c.Consession_Id == concessionModel.Consession_Id
+                                       select c).FirstOrDefault();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found for {concessionModel.Concession_Unique_ID}", StatusCode = ResponseCodes.Failure };
@@ -543,8 +704,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                 where c.Consession_Id == Id
-                                 select c).FirstOrDefault();
+                                       where c.Consession_Id == Id
+                                       select c).FirstOrDefault();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found.", StatusCode = ResponseCodes.Failure };
@@ -578,8 +739,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                 where c.Consession_Id == Id
-                                 select c).FirstOrDefault();
+                                       where c.Consession_Id == Id
+                                       select c).FirstOrDefault();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found.", StatusCode = ResponseCodes.Failure };
@@ -616,7 +777,9 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 var data = (from c in _context.ADMIN_COMPANY_DETAILs select c).ToList();
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = data, StatusCode = ResponseCodes.Success };
+
+                var list = new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = data, StatusCode = ResponseCodes.Success };
+                return list;
             }
             catch (Exception e)
             {
@@ -640,7 +803,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-      
+
         [HttpPost("UPDATE_REPORTS")]
         public async Task<WebApiResponse> UpdateReports(List<ADMIN_WORK_PROGRAM_REPORT> reports)
         {
@@ -695,21 +858,21 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
-                var adminCategories =        _context.ADMIN_CATEGORIEs.ToList();
-                var dataTypes =              _context.Data_Types.ToList();
-                var wellCategories =         _context.ADMIN_WELL_CATEGORIEs.ToList();
-                var startEndDate =           _context.ADMIN_WP_START_END_DATEs.ToList();
-                var startEndDateUpload =     _context.ADMIN_WP_START_END_DATE_DATA_UPLOADs.ToList();
-                var penalties =              _context.ADMIN_WP_PENALTIEs.ToList();
-                var emailDays =              _context.ADMIN_EMAIL_DAYs.Where(x=> x.Deleted_status == null).ToList();
-                var superAdmins =            _context.ROLES_SUPER_ADMINs.Where(x=> x.Deleted_status == null).OrderBy(x=> x.Date_Created).ToList();
+                var adminCategories = _context.ADMIN_CATEGORIEs.ToList();
+                var dataTypes = _context.Data_Types.ToList();
+                var wellCategories = _context.ADMIN_WELL_CATEGORIEs.ToList();
+                var startEndDate = _context.ADMIN_WP_START_END_DATEs.ToList();
+                var startEndDateUpload = _context.ADMIN_WP_START_END_DATE_DATA_UPLOADs.ToList();
+                var penalties = _context.ADMIN_WP_PENALTIEs.ToList();
+                var emailDays = _context.ADMIN_EMAIL_DAYs.Where(x => x.Deleted_status == null).ToList();
+                var superAdmins = _context.ROLES_SUPER_ADMINs.Where(x => x.Deleted_status == null).OrderBy(x => x.Date_Created).ToList();
                 var presentationCategories = _context.ADMIN_PRESENTATION_CATEGORIEs.ToList();
-                var meetingRooms =           _context.ADMIN_MEETING_ROOMs.ToList();
+                var meetingRooms = _context.ADMIN_MEETING_ROOMs.ToList();
 
                 var returnData = new parameterConfigModel()
                 {
                     adminCategories = adminCategories,
-                    dataTypes = dataTypes,  
+                    dataTypes = dataTypes,
                     wellCategories = wellCategories,
                     startEndDate = startEndDate,
                     startEndDateUpload = startEndDateUpload,
@@ -729,15 +892,16 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ADMIN_CATEGORIES")]
-        public async Task<WebApiResponse> Admin_Categories(ADMIN_CATEGORy model,string action)
+        public async Task<WebApiResponse> Admin_Categories(ADMIN_CATEGORy model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
+                    switch (action)
+                    {
+                        case "INSERT":
                             var getdata = _context.ADMIN_CATEGORIEs.Where(x => x.categories.ToLower() == model.categories.Trim().ToLower()).FirstOrDefault();
                             if (getdata != null)
                             {
@@ -757,7 +921,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.ADMIN_CATEGORIEs.Where(x => x.Id == model.Id).FirstOrDefault();
                             if (checkdata == null)
@@ -775,15 +939,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.ADMIN_CATEGORIEs.Remove(checkdata);
+                                    _context.ADMIN_CATEGORIEs.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.ADMIN_CATEGORIEs.ToList();
@@ -807,15 +971,16 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("DATA_TYPES")]
-        public async Task<WebApiResponse> Data_Types(Data_Type model,string action)
+        public async Task<WebApiResponse> Data_Types(Data_Type model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
+                    switch (action)
+                    {
+                        case "INSERT":
                             var getdata = _context.Data_Types.Where(x => x.DataType.ToLower() == model.DataType.Trim().ToLower()).FirstOrDefault();
                             if (getdata != null)
                             {
@@ -825,7 +990,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             {
                                 var data = new Data_Type()
                                 {
-                                    DataType = model.DataType, 
+                                    DataType = model.DataType,
                                     Date_Created = DateTime.Now,
                                     Created_by = WKPCompanyEmail
                                 };
@@ -834,7 +999,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.Data_Types.Where(x => x.DataTypeId == model.DataTypeId).FirstOrDefault();
                             if (checkdata == null)
@@ -849,15 +1014,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.Data_Types.Remove(checkdata);
+                                    _context.Data_Types.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.Data_Types.ToList();
@@ -881,15 +1046,16 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ADMIN_WELL_CATEGORIES")]
-        public async Task<WebApiResponse> Admin_Well_Categories(ADMIN_WELL_CATEGORy model,string action)
+        public async Task<WebApiResponse> Admin_Well_Categories(ADMIN_WELL_CATEGORy model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
+                    switch (action)
+                    {
+                        case "INSERT":
                             var getdata = _context.ADMIN_WELL_CATEGORIEs.Where(x => x.welltype.ToLower() == model.welltype.Trim().ToLower()).FirstOrDefault();
                             if (getdata != null)
                             {
@@ -909,7 +1075,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.ADMIN_WELL_CATEGORIEs.Where(x => x.Id == model.Id).FirstOrDefault();
                             if (checkdata == null)
@@ -927,15 +1093,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.ADMIN_WELL_CATEGORIEs.Remove(checkdata);
+                                    _context.ADMIN_WELL_CATEGORIEs.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.ADMIN_CATEGORIEs.ToList();
@@ -959,15 +1125,16 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ADMIN_START_END_DATES")]
-        public async Task<WebApiResponse> Admin_StartEnd_Date(ADMIN_WP_START_END_DATE model,string action)
+        public async Task<WebApiResponse> Admin_StartEnd_Date(ADMIN_WP_START_END_DATE model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
+                    switch (action)
+                    {
+                        case "INSERT":
                             var getdata = _context.ADMIN_WP_START_END_DATEs.Where(x => x.start_date == model.start_date && x.end_date == model.end_date).FirstOrDefault();
                             if (getdata != null)
                             {
@@ -988,7 +1155,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.ADMIN_WP_START_END_DATEs.Where(x => x.Id == model.Id).FirstOrDefault();
                             if (checkdata == null)
@@ -1007,15 +1174,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.ADMIN_WP_START_END_DATEs.Remove(checkdata);
+                                    _context.ADMIN_WP_START_END_DATEs.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.ADMIN_WP_START_END_DATEs.ToList();
@@ -1039,15 +1206,16 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ADMIN_START_END_DATE_DATA_UPLOADS")]
-        public async Task<WebApiResponse> Admin_StartEnd_Date(ADMIN_WP_START_END_DATE_DATA_UPLOAD model,string action)
+        public async Task<WebApiResponse> Admin_StartEnd_Date(ADMIN_WP_START_END_DATE_DATA_UPLOAD model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
+                    switch (action)
+                    {
+                        case "INSERT":
                             var getdata = _context.ADMIN_WP_START_END_DATE_DATA_UPLOADs.Where(x => x.start_date == model.start_date && x.end_date == model.end_date).FirstOrDefault();
                             if (getdata != null)
                             {
@@ -1068,7 +1236,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.ADMIN_WP_START_END_DATEs.Where(x => x.Id == model.Id).FirstOrDefault();
                             if (checkdata == null)
@@ -1087,15 +1255,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.ADMIN_WP_START_END_DATEs.Remove(checkdata);
+                                    _context.ADMIN_WP_START_END_DATEs.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.ADMIN_WP_START_END_DATEs.ToList();
@@ -1119,16 +1287,17 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ADMIN_PENALTIES")]
-        public async Task<WebApiResponse> Admin_Penalties(ADMIN_WP_PENALTy model,string action)
+        public async Task<WebApiResponse> Admin_Penalties(ADMIN_WP_PENALTy model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
-                            var getdata = _context.ADMIN_WP_PENALTIEs.Where(x => x.NO_SUBMISSION == model.NO_SUBMISSION && x.NO_SHOW == model.NO_SHOW ).FirstOrDefault();
+                    switch (action)
+                    {
+                        case "INSERT":
+                            var getdata = _context.ADMIN_WP_PENALTIEs.Where(x => x.NO_SUBMISSION == model.NO_SUBMISSION && x.NO_SHOW == model.NO_SHOW).FirstOrDefault();
                             if (getdata != null)
                             {
                                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: penalty config is already existing on the portal. ", StatusCode = ResponseCodes.Failure };
@@ -1148,7 +1317,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.ADMIN_WP_PENALTIEs.Where(x => x.Id == model.Id).FirstOrDefault();
                             if (checkdata == null)
@@ -1167,15 +1336,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.ADMIN_WP_PENALTIEs.Remove(checkdata);
+                                    _context.ADMIN_WP_PENALTIEs.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.ADMIN_WP_PENALTIEs.ToList();
@@ -1199,15 +1368,16 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ADMIN_EMAIL_DAYS")]
-        public async Task<WebApiResponse> Admin_EmailDays(ADMIN_EMAIL_DAY model,string action)
+        public async Task<WebApiResponse> Admin_EmailDays(ADMIN_EMAIL_DAY model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
+                    switch (action)
+                    {
+                        case "INSERT":
                             var getdata = _context.ADMIN_EMAIL_DAYs.Where(x => x.Email_.ToLower() == model.Email_.Trim().ToLower() && x.DAYS_ == model.DAYS_ && x.Deleted_status == null).FirstOrDefault();
                             if (getdata != null)
                             {
@@ -1228,7 +1398,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.ADMIN_EMAIL_DAYs.Where(x => x.SN == model.SN && x.Deleted_status == null).FirstOrDefault();
                             if (checkdata == null)
@@ -1247,15 +1417,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.ADMIN_EMAIL_DAYs.Remove(checkdata);
+                                    _context.ADMIN_EMAIL_DAYs.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.ADMIN_EMAIL_DAYs.ToList();
@@ -1279,15 +1449,16 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ROLES_SUPER_ADMINS")]
-        public async Task<WebApiResponse> Super_Admins(ROLES_SUPER_ADMIN model,string action)
+        public async Task<WebApiResponse> Super_Admins(ROLES_SUPER_ADMIN model, string action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action) {
-                        case "INSERT":  
+                    switch (action)
+                    {
+                        case "INSERT":
                             var getdata = _context.ROLES_SUPER_ADMINs.Where(x => x.Email_.ToLower() == model.Email_.Trim().ToLower() && x.Deleted_status == null).FirstOrDefault();
                             if (getdata != null)
                             {
@@ -1297,7 +1468,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             {
                                 var data = new ROLES_SUPER_ADMIN()
                                 {
-                                    
+
                                     Email_ = model.Email_.ToLower().Trim(),
                                     Role_ = GeneralModel.SuperAdmin,
                                     Description = model.Description,
@@ -1309,7 +1480,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                             }
                             break;
-                      
+
                         default:
                             var checkdata = _context.ROLES_SUPER_ADMINs.Where(x => x.SN == model.SN && x.Deleted_status == null).FirstOrDefault();
                             if (checkdata == null)
@@ -1328,15 +1499,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else if (action == GeneralModel.Delete)
                                 {
-                                   _context.ROLES_SUPER_ADMINs.Remove(checkdata);
+                                    _context.ROLES_SUPER_ADMINs.Remove(checkdata);
                                 }
                                 save = await _context.SaveChangesAsync();
-                               
+
                             }
-                            
-                         break;
-                      }
-                   
+
+                            break;
+                    }
+
                     if (save > 0)
                     {
                         var returnModel = _context.ROLES_SUPER_ADMINs.ToList();
@@ -1359,7 +1530,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        
+
         [HttpPost("ADMIN_PRESENTATION_CATEGORIES")]
         public async Task<WebApiResponse> Admin_Presentation_Categories(ADMIN_PRESENTATION_CATEGORy model, string action)
         {

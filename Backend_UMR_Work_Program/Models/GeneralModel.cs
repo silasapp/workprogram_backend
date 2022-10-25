@@ -2312,6 +2312,21 @@ public class DRILLING_EACH_WELL_COST_Model
 
         }
 
+
+        public class CompanyCodeModel
+        {
+
+            public int Id { get; set; }
+            public string CompanyCode { get; set; }
+            public string CompanyName { get; set; }
+            public string IsActive { get; set; }
+            public string Created_by { get; set; }
+            public DateTime Date_Created { get; set; }
+            //public string? Updated_by { get; set; }
+            //public DateTime? Date_Updated { get; set; }
+
+        }
+
         public class PresentationSchedules_Model
         {
             public List<ADMIN_DATETIME_PRESENTATION> presentationSchedules { get; set; }

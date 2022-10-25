@@ -99,6 +99,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
+
                 #region Saving Concession
 
                 if (action == GeneralModel.Insert || action == GeneralModel.Insert.ToUpper())
@@ -198,6 +199,17 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
+        }
+
+
+        [HttpGet("GAS_PRODUCTION_TEXT")]
+        public async Task<object> GAS_PRODUCTION_TEXT(string year)
+        {
+            var reportText = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 5 select a.Report_Content_).FirstOrDefaultAsync();
+            var gasActivities = await (from d in _context.WP_GAS_PRODUCTION_ACTIVITIES_Percentages where d.Year_of_WP == year select d).FirstOrDefaultAsync();
+            reportText = reportText.Replace("(NO_TOTAL_GAS_PRODUCED)", gasActivities.Actual_Total_Gas_Produced.ToString()).Replace("(NO_TOTAL_GAS_UTILIZED)", gasActivities.Utilized_Gas_Produced.ToString())
+            .Replace("(NO_TOTAL_GAS_FLARED)", gasActivities.Flared_Gas_Produced.ToString()).Replace("(PERCENTAGE_TOTAL_GAS_UTILIZED)", gasActivities.Percentage_Utilized.ToString());
+            return new {reportText = reportText};
         }
 
         //[HttpPost("POST_COMPANY_FIELD")]
@@ -2407,12 +2419,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
                 #endregion
-
             }
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
 

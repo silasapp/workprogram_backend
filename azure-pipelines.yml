@@ -1,6 +1,6 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
@@ -10,30 +10,36 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  myproject: 'WorkProgram_BEnd/Backend_UMR_Work_Program\Backend_UMR_Work_Program.csproj'
 
 steps:
-- task: NuGetToolInstaller@1
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.x'
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   inputs:
-    restoreSolution: '$(solution)'
+    command: 'restore'
+    feedsToUse: 'select'
+    vstsFeed: 'my-vsts-feed' # A series of numbers and letters
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2   
+  displayName: 'dotnet build'   
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    projects: 'Backend_UMR_Work_Program/Backend_UMR_Work_Program.csproj'
 
-- task: MSBuild@1
+- task: DotNetCoreCLI@2
+  displayName: 'Publishing App...'
   inputs:
-    solution: 'WKP_Database/WKP_Database.sqlproj'
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(agent.builddirectory)'
-    Contents: '**'
-    TargetFolder: '$(build.artifactstagingdirectory)'
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**/*.csproj'
+    arguments: '-o $(Build.ArtifactStagingDirectory)/Output'
+    zipAfterPublish: true
+    modifyOutputPath: true
 - task: PublishBuildArtifacts@1
+  displayName: 'Publishing Build Artifacts...'

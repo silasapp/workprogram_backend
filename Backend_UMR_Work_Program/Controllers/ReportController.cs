@@ -377,19 +377,17 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     else
                     {
-                        return "Error : No report summary has been configured yet.";
+                        return BadRequest(new {message =  "Error : No report summary has been configured yet."});
                     }
                 }
                 else
                 {
-                    return "Error : Year wasn't passed correctly";
+                    return BadRequest(new {message =  "Error : Year wasn't passed correctly"});
                 }
             }
             catch (Exception e)
             {
-
-                return "Error : " + e.Message;
-
+                 return BadRequest(new {message =  "Error : " + e.Message});
             }
             
 
@@ -500,8 +498,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-
-             return "Error : " + e.Message;
+                return BadRequest(new {message = e.Message});
             }
 
             return WKP_Report2;
@@ -534,7 +531,7 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
 
-             return "Error : " + e.Message;
+             return BadRequest(new {message =  e.Message});
 
             }
 
@@ -559,8 +556,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-
-             return "Error : " + e.Message;
+             return BadRequest(new {message = e.Message});
             }
 
             return WKP_Report2;
@@ -938,7 +934,7 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
 
-             return "Error : " + e.Message;
+             return BadRequest(new {message =  e.Message}); 
 
             }
             
@@ -1052,7 +1048,7 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
 
-             return "Error : " + e.Message;
+             return BadRequest(new {message = e.Message});
 
             }
 
@@ -1116,10 +1112,52 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-
              return "Error : " + e.Message;
-
             }
+        }
+
+        [HttpGet("Get_Crude_Oil_Production_Report_Content")]
+        public async Task<object> Get_Crude_Oil_Production_Report_Content(string year)
+        {
+            try
+            {
+                var data = await (from a in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPEs where a.Year_of_WP == year select a).ToListAsync();
+                var no_of_barrels = Convert.ToDecimal(data.FirstOrDefault()?.Annual_Total_Production_by_year);
+                var no_of_jv = Convert.ToDecimal((from a in data where a.Contract_Type == "JVC" select a.Annual_Total_Production_by_company).FirstOrDefault());
+                var percentage_of_jv = (from a in data where a.Contract_Type == "JVC" select a.Percentage_Production).FirstOrDefault();
+                var no_of_psc = Convert.ToDecimal((from a in data where a.Contract_Type == "PSC" select a.Annual_Total_Production_by_company).FirstOrDefault());
+                var percentage_of_psc = (from a in data where a.Contract_Type == "PSC" select a.Percentage_Production).FirstOrDefault();
+                var no_of_mf = Convert.ToDecimal((from a in data where a.Contract_Type == "SC" select a.Annual_Total_Production_by_company).FirstOrDefault());
+                var percentage_of_mf = (from a in data where a.Contract_Type == "SC" select a.Percentage_Production).FirstOrDefault();
+                var no_of_sr = Convert.ToDecimal((from a in data where a.Contract_Type == "SR" select a.Annual_Total_Production_by_company).FirstOrDefault());
+                var percentage_of_sr = (from a in data where a.Contract_Type == "SR" select a.Percentage_Production).FirstOrDefault();
+
+                var terrainData = await (from a in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains where a.Year_of_WP == year select a).ToListAsync();
+
+                //var terrainData = await (from a in _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_by_Terrains where a.Year_of_WP == year && a.Terrain == "Onshore" select a).ToListAsync();
+                var no_of_onshore = Convert.ToDecimal((from a in terrainData where a.Terrain == "Onshore" select a.Annual_Total_Production_by_company).FirstOrDefault());
+                var percentage_of_onshore = (from a in terrainData where a.Terrain == "Onshore" select a.Percentage_Production).FirstOrDefault();
+                var no_of_offshore = Convert.ToDecimal((from a in terrainData where a.Terrain == "Continental Shelf" select a.Annual_Total_Production_by_company).FirstOrDefault());
+                var percentage_of_offshore = (from a in terrainData where a.Terrain == "Continental Shelf" select a.Percentage_Production).FirstOrDefault();
+                var no_of_deepoffshore = Convert.ToDecimal((from a in terrainData where a.Terrain == "Deep Offshore" select a.Annual_Total_Production_by_company).FirstOrDefault());
+                var percentage_of_deepoffshore = (from a in terrainData where a.Terrain == "Deep Offshore" select a.Percentage_Production).FirstOrDefault();
+
+                var reportText = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 4 select a.Report_Content).FirstOrDefaultAsync();
+                reportText = reportText?.Replace("(N)", year).Replace("(NO_OF_BARRELS)", (Math.Round(no_of_barrels, 2)).ToString()).Replace("(NO_OF_JV)", (Math.Round(no_of_jv, 2)).ToString()).Replace("(PERCENTAGE_OF_JV)", (Math.Round(Convert.ToDecimal(percentage_of_jv), 2)).ToString())
+                .Replace("(NO_OF_PSC)", (Math.Round(no_of_psc, 2)).ToString()).Replace("(PERCENTAGE_OF_PSC)", (Math.Round(Convert.ToDecimal(percentage_of_psc), 2)).ToString()).Replace("(NO_OF_MF)", (Math.Round(no_of_mf, 2)).ToString())
+                .Replace("(PERCENTAGE_OF_MF)", (Math.Round(Convert.ToDecimal(percentage_of_mf), 2)).ToString()).Replace("(NO_OF_SR)", (Math.Round(no_of_sr, 2)).ToString()).Replace("(PERCENTAGE_OF_SR)", (Math.Round(Convert.ToDecimal(percentage_of_sr), 2)).ToString())
+                .Replace("(NO_OF_ONSHORE)", (Math.Round(no_of_onshore, 2)).ToString()).Replace("(PERCENTAGE_OF_ONSHORE)", (Math.Round(Convert.ToDecimal(percentage_of_onshore), 2)).ToString())
+                .Replace("(NO_OF_OFFSHORE)", (Math.Round(no_of_offshore, 2)).ToString())
+                .Replace("(PERCENTAGE_OF_OFFSHORE)", (Math.Round(Convert.ToDecimal(percentage_of_offshore), 2)).ToString()).Replace("(NO_OF_DEEPOFFSHORE)", (Math.Round(no_of_deepoffshore, 2)).ToString())
+                .Replace("(PERCENTAGE_OF_DEEPOFFSHORE)", (Math.Round(Convert.ToDecimal(percentage_of_deepoffshore), 2)).ToString());
+
+                return new { text = reportText };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+
         }
         
         [HttpGet("Get_Crude_Oil_Production_Report")]
@@ -1159,7 +1197,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-             return "Error : " + e.Message;
+             return BadRequest(new { message = e.Message });
             }
 
         }
@@ -1167,17 +1205,18 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<object> Get_Gas_Production_Report(string year)
         {
             WorkProgrammeReport2_Model WKP_Report2 = new WorkProgrammeReport2_Model();
-
             try
             {
+                var Annual_Gas_Produced = await _context.WP_GAS_PRODUCTION_ACTIVITIEs.Where(x=> x.Year_of_WP == year).ToListAsync();
                 var Gas_Produced_Utilized_Flared = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flareds.Where(x=> x.Year_of_WP == year).ToListAsync();
-                var Gas_Produced_Utilized_By_Contract_Basis = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_bases.ToListAsync();
+                var Gas_Produced_Utilized_By_Contract_Basis = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_bases.Where(x=> x.Year_of_WP == year).ToListAsync();
                 var Gas_Produced_Utilized_By_Contract_Basis_Pivotted = await _context.WP_GAS_PRODUCTION_ACTIVITIES_contract_type_pivoteds.ToListAsync();
                 var Gas_Produced_Utilized_By_Terrain_Pivotted = await _context.WP_GAS_PRODUCTION_ACTIVITIES_terrain_pivotteds.ToListAsync();
                 var Gas_Flare_Penalty = await _context.WP_GAS_PRODUCTION_ACTIVITIES_penalty_payments.Where(x => x.Year_of_WP == year).ToListAsync();
 
                 return new
                 {
+                    Annual_Gas_Produced = Annual_Gas_Produced,
                     Gas_Produced_Utilized_Flared = Gas_Produced_Utilized_Flared,
                     Gas_Produced_Utilized_By_Contract_Basis = Gas_Produced_Utilized_By_Contract_Basis,
                     Gas_Produced_Utilized_By_Contract_Basis_Pivotted = Gas_Produced_Utilized_By_Contract_Basis_Pivotted,
@@ -1188,7 +1227,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-             return "Error : " + e.Message;
+             return BadRequest(new { message = e.Message });
             }
 
         }
@@ -1267,8 +1306,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     return new
                     {
-                    Nigeria_Content = Nigeria_Content,
-                    Nigeria_Content_SuccessionPlan = Nigeria_Content_SuccessionPlan
+                        Nigeria_Content = Nigeria_Content,
+                        Nigeria_Content_SuccessionPlan = Nigeria_Content_SuccessionPlan
                     };
             }
 
@@ -1324,7 +1363,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             catch (Exception e)
             {
-             return "Error : " + e.Message;
+                return "Error : " + e.Message;
             }
 
         }
@@ -2019,7 +2058,7 @@ namespace Backend_UMR_Work_Program.Controllers
         
         
         [HttpGet("GAS_PRODUCTION_ACTIVITIES")]
-        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year )
+        public async Task<WebApiResponse> GAS_PRODUCTION_ACTIVITIES(string year)
         {
             var GasProduction = new List<GAS_PRODUCTION_ACTIVITy>();
             try { 
@@ -2237,7 +2276,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 OilCondensate_Reserves =await _context.RESERVES_UPDATES_LIFE_INDices.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
             }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = OilCondensate_Reserves.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
             }
 
             catch (Exception e)
