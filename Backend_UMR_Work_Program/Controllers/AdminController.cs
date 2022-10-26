@@ -8,6 +8,12 @@ using System.Security.Claims;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using ClosedXML.Excel;
+using Syncfusion.XlsIO;
+using DocumentFormat.OpenXml.Office.Word;
+using System.Text.RegularExpressions;
+using Backend_UMR_Work_Program.Helpers;
 
 namespace Backend_UMR_Work_Program.Controllers
 {

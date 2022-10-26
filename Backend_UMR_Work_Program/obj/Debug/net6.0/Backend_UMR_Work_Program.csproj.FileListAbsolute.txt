@@ -183,3 +183,10 @@ C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Deb
 C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\ClosedXML.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\DocumentFormat.OpenXml.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\ExcelNumberFormat.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Syncfusion.Compression.Portable.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Syncfusion.Licensing.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Syncfusion.XlsIO.Portable.dll
+C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.IO.Packaging.dll
