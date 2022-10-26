@@ -40,10 +40,14 @@ namespace Backend_UMR_Work_Program.Controllers
                                                 comp
                                             }).ToListAsync();
 
-            var companyDashboard_Data = new CompanyDashboardModel();
+            var companyDashboard_Data = new CompanyReportModel();
+            var companyDashboard_Report = new CompanyDashboardModel();
+            var companyConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.CompanyNumber == WKPCompanyNumber && d.DELETED_STATUS != "DELETED" select d).ToListAsync();
+
+
             data.GroupBy(x => x.conc.OML_ID).ToList().ForEach(key =>
             {
-                     companyDashboard_Data = new CompanyDashboardModel()
+                     companyDashboard_Data = new CompanyReportModel()
                     {
                         concessionName = key.FirstOrDefault().conc.OML_Name,
                         oil_NetProduction = key.Where(x => x.year == year).Sum(x => double.Parse(x.reserve.Company_Annual_Oil)),
@@ -58,9 +62,13 @@ namespace Backend_UMR_Work_Program.Controllers
                      };
                    companyDashboard_Data.totalNetProduction = companyDashboard_Data.oil_NetProduction + companyDashboard_Data.AG_NetProduction + companyDashboard_Data.NAG_NetProduction + companyDashboard_Data.condensate_NetProduction;
                    companyDashboard_Data.totalReserves = companyDashboard_Data.oil_Reserves + companyDashboard_Data.AG_Reserves + companyDashboard_Data.NAG_Reserves + companyDashboard_Data.condensate_Reserves;
-
+                   companyDashboard_Report.CompanyReportModel.Add(companyDashboard_Data);
             });
-            return companyDashboard_Data;
+            companyDashboard_Report.OML_Count = companyConcessions.Where(x=> x.Consession_Type.ToLower() == GeneralModel.OML.ToLower()).Count();
+            companyDashboard_Report.OPL_Count = companyConcessions.Where(x=> x.Consession_Type.ToLower() == GeneralModel.OPL.ToLower()).Count();
+            companyDashboard_Report.No_Of_ProducingFields_Count = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true select d).CountAsync();
+
+            return companyDashboard_Report;
         }
 
     }
