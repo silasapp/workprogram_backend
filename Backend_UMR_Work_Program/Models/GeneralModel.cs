@@ -43,6 +43,7 @@ namespace Backend_UMR_Work_Program.Models
         public static string ProposedYear = "Proposed Year";
         public static string PaymentPending = "Payment Confirmation Pending";
         public static string PaymentCompleted = "PaymentCompleted";
+        public static string Approved = "Approved";
         public static string Processing = "Processing";
         public static string Rejected = "Rejected";
         public static string OML = "OML";
