@@ -19,7 +19,7 @@ namespace Backend_UMR_Work_Program.Controllers
             _account = account;
             _context = context;
         }
-
+        [HttpGet("Best10OPLAcquisitionIndex")]
         public async Task<object> Best10OPLAcquisitionIndex(string year)
         {
             var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
@@ -37,8 +37,8 @@ namespace Backend_UMR_Work_Program.Controllers
             acqlist.Sort();
             return acqlist.Take(10);
         }
-
-         public async Task<object> Best10OPLExploratoryIndex(string year)
+        [HttpGet("Best10OPLExploratoryIndex")]
+        public async Task<object> Best10OPLExploratoryIndex(string year)
         {
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
             var acqlist = new List<double>();
@@ -56,6 +56,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return acqlist.Take(10);
         }
 
+        [HttpGet("Best10OPLDiscoveryIndex")]
         public async Task<object> Best10OPLDiscoveryIndex(string year)
         {
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
@@ -74,6 +75,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return acqlist.Take(10);
         }
 
+        [HttpGet("Best10OPLConcessionRentalsIndex")]
         public async Task<object> Best10OPLConcessionRentalsIndex(string year)
         {
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
@@ -92,6 +94,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return acqlist.Take(10);
         }
 
+        [HttpGet("Best10OMLAcquisitionIndex")]
         public async Task<object> Best10OMLAcquisitionIndex(string year)
         {
             var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
@@ -110,6 +113,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return acqlist.Take(10);
         }
 
+        [HttpGet("Best10OMLExploratoryIndex")]
         public async Task<object> Best10OMLExploratoryIndex(string year)
         {
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
@@ -128,6 +132,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return acqlist.Take(10);
         }
 
+        [HttpGet("Best10OMLDiscoveryIndex")]
         public async Task<object> Best10OMLDiscoveryIndex(string year)
         {
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
@@ -146,6 +151,7 @@ namespace Backend_UMR_Work_Program.Controllers
             return acqlist.Take(10);
         }
 
+        [HttpGet("Best10OMLConcessionRentalsIndex")]
         public async Task<object> Best10OMLConcessionRentalsIndex(string year)
         {
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
@@ -182,6 +188,7 @@ namespace Backend_UMR_Work_Program.Controllers
         //     return acqlist.Take(10);
         // }
 
+        [HttpGet("Best10OMLReverseReplacementRatio")]
         public async Task<object> Best10OMLReverseReplacementRatio(string year)
         {
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
