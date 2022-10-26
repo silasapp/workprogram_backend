@@ -45,7 +45,8 @@ namespace Backend_UMR_Work_Program.Models
         public static string PaymentCompleted = "PaymentCompleted";
         public static string Processing = "Processing";
         public static string Rejected = "Rejected";
-        public static string Approved = "Approved";
+        public static string OML = "OML";
+        public static string OPL = "OPL";
 
         public class Concession_Index
         {
@@ -101,6 +102,14 @@ namespace Backend_UMR_Work_Program.Models
             public object WorkProgrammeReport2_Model { get; set; }
         }
         public class CompanyDashboardModel
+        {
+            public List<CompanyReportModel> CompanyReportModel { get; set; }
+
+            public int OML_Count { get; set; }
+            public int OPL_Count { get; set; }
+            public int No_Of_ProducingFields_Count { get; set; }
+        }
+        public class CompanyReportModel
         {
             public string concessionName { get; set; }
             public string fieldName { get; set; }
