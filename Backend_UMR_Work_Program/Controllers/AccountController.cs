@@ -45,6 +45,7 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("Authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] Logine logine)
         {
+            
             var tokenData = await _account.isAutheticate(logine.email, logine.password);
             string JSONString = string.Empty;
             JSONString = JsonConvert.SerializeObject(tokenData);

@@ -680,7 +680,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 string proposedYear = year != null ? (int.Parse(year) + 1).ToString() : "";
 
 
-                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x => x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatalities).ToListAsync();
+                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x => x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
 
                 WKP_Report2.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(x => x.Year_of_WP == year).ToListAsync();
 
@@ -869,7 +869,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 //error WKP_Report2.GAS_PRODUCTION_ACTIVITIES_penalty_payment = await _context.WP_GAS_PRODUCTION_ACTIVITIES_penalty_payments.ToListAsync();
 
-                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=>x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatalities).ToListAsync();
+                WKP_Report2.FATALITIES_ACCIDENT_STATISTIC_TABLE = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=>x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
 
                 //WKP_Report2.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS = await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Where(x=>x.Year_of_WP == year && x.Actual_Proposed == "Actual Year").ToListAsync();
 
@@ -1239,7 +1239,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatalities).ToListAsync();
+                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
                 var Causes_Of_Spill = await _context.HSE_CAUSES_OF_SPILLs.Where(x=> x.Year_of_WP == year).OrderBy(x=> x.CompanyName).ToListAsync();
                 return new
                 {
@@ -1260,7 +1260,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatalities).ToListAsync();
+                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
                 var Causes_Of_Spill = await _context.HSE_CAUSES_OF_SPILLs.Where(x=> x.Year_of_WP == year).OrderBy(x=> x.CompanyName).ToListAsync();
                 return new
                 {

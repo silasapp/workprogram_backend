@@ -1,5 +1,7 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
@@ -10,21 +12,26 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Models
 {
-    public class BlobService
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class BlobService 
     {
         private readonly BlobServiceClient _blobServiceClient;
         string accessKey = string.Empty;
-
-        public BlobService(BlobServiceClient blobServiceClient, IConfiguration config)
+        private WKP_DBContext _context;
+        public BlobService(BlobServiceClient blobServiceClient, IConfiguration config, WKP_DBContext context)
         {
             _blobServiceClient = blobServiceClient;
             this.accessKey = config.GetValue<string>("AzureBlobStorage");
+            _context = context;
         }
+        //private int? WKPCompanyNumber => Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
 
         public string Filenamer(IFormFile file)
         {
@@ -40,19 +47,38 @@ namespace Backend_UMR_Work_Program.Models
             return goodname;
         }
 
-        public async Task<string> UploadFileBlobAsync(string blobContainerName, Stream content, string contentType, string fileName)
-        {
-            //var storageAccount = CloudStorageAccount.Parse(accessKey);
-            //var bloClient = storageAccount.CreateCloudBlobClient();
-            //var serviceProperties = await bloClient.GetServicePropertiesAsync();
-            //serviceProperties.DefaultServiceVersion = "2020-12-06";
-            //await bloClient.SetServicePropertiesAsync(serviceProperties);
-
-
+        public async Task<string> UploadFileBlobAsync(string blobContainerName, Stream content, string contentType, string fileName, string documentCategory, int WKPUserNumber, int yearOfWKP)
+        {  
             var containerClient = GetContainerClient(blobContainerName);
             var blobClient = containerClient.GetBlobClient(fileName);
             await blobClient.UploadAsync(content, new BlobHttpHeaders { ContentType = contentType });
-
+            try
+            {
+                var checkIfDocExist = _context.SubmittedDocuments.Where(x => x.DocumentCategory == fileName && x.CreatedBy == WKPUserNumber.ToString() && x.YearOfWKP == yearOfWKP).FirstOrDefault();
+                if (checkIfDocExist != null)
+                {
+                    checkIfDocExist.DocSource = blobClient.Uri.AbsoluteUri;
+                    checkIfDocExist.UpdatedAt = DateTime.Now;
+                }
+                else
+                {
+                    var subDoc = new SubmittedDocument()
+                    {
+                        DocSource = blobClient.Uri.AbsoluteUri,
+                        CreatedAt = DateTime.Now,
+                        CreatedBy = WKPUserNumber.ToString(),
+                        DocumentName = fileName,
+                        DocumentCategory = documentCategory,
+                        YearOfWKP = yearOfWKP
+                    };
+                    _context.SubmittedDocuments.Add(subDoc);
+                    _context.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
             return blobClient.Uri.AbsoluteUri;
         }
 

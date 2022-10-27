@@ -20,17 +20,12 @@ namespace Backend_UMR_Work_Program.Helpers
         public static string _elpsAppEmail;
         public static string appHash;
         public static string public_key;
-         public static string conString;
-
-        /*
-         * Intializing AppHash for passing.
-         */
+        public static string conString;
+        
         public ElpsServices()
         {
             appHash = this.GenerateSHA512(_elpsAppEmail.Trim() + _elpsAppKey.Trim());
         }
-
-
 
         public bool CodeCheck(string email, string code)
         {
@@ -47,8 +42,6 @@ namespace Backend_UMR_Work_Program.Helpers
                 return false;
             }
         }
-
-
         public string GenerateSHA512(string inputString)
         {
             SHA512 sha512 = SHA512Managed.Create();

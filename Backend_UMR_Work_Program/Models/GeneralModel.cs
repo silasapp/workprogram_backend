@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +9,7 @@ namespace Backend_UMR_Work_Program.Models
     {
         public static string Company = "Company";
         public static string Admin = "Admin";
-        public static string SuperAdmin = "Super Admin";
+        public static string SuperAdmin = "SuperAdmin";
         public static string Presented = "Presented";
         public static string FailedToShow = "Failed to show up";
         public static string NotInvited = "Not invited";
@@ -31,31 +30,102 @@ namespace Backend_UMR_Work_Program.Models
         public static string DeepOffshore = "Deep Offshore";
         public static string Onshore = "Onshore";
         public static string Fatality = "FATALITY";
-        public static string Fatalities = "Fatalities";
         public static string Sabotage = "SABOTAGE";
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
         public static string EquipmentFailure = "EQUIPMENT_FAILURE";
-        public static string Insert = "INSERT";
+        public static string Insert = "INSERTE";
         public static string Update = "UPDATE";
         public static string Delete = "DELETE";
-        public static string ProposedYear = "Proposed Year";
+        public static string New = "New";
+        public static string Modification = "MODIFICATION";
         public static string ActualYear = "Actual Year";
+        public static string ProposedYear = "Proposed Year";
+        public static string PaymentPending = "Payment Confirmation Pending";
+        public static string PaymentCompleted = "PaymentCompleted";
+        public static string Approved = "Approved";
+        public static string Processing = "Processing";
+        public static string Rejected = "Rejected";
+        public static string OML = "OML";
+        public static string OPL = "OPL";
 
-
-
-        public class ADMIN_WORK_PROGRAM_REPORTs_Model
+        public class Concession_Index
         {
-            public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
-            public object summary_1 { get; set; }
-            public object summary_2 { get; set; }
+            public string companyName { get; set; }
+            public string concessionName { get; set; }
+            public string concessionType { get; set; }
+            public double? acquisition_Index { get; set; }
+            public double? exploratory_Index { get; set; }
+            public double? discovery_Index { get; set; }
+            public double? concessionRentals_Index { get; set; }
+            public double? compliance_Index { get; set; }
+            public double? NDR_Index { get; set; }
+            public double? royaltyPayment_Index { get; set; }
+            public double? RRR_Index { get; set; }
+            public double? IncrementInProduction_Index { get; set; }
+            public double? costEfficiency_Index { get; set; }
+            public double? CSR_Index { get; set; }
+            public double? statutoryPayment_Index { get; set; }
         }
+        public class Field_Index
+        {
+            public string fieldName { get; set; }
+            public string concessionName { get; set; }
+            public string concessionType { get; set; }
+            public double? acquisition_Index { get; set; }
+            public double? exploratory_Index { get; set; }
+            public double? discovery_Index { get; set; }
+            public double? concessionRentals_Index { get; set; }
+            public double? compliance_Index { get; set; }
+            public double? NDR_Index { get; set; }
+            public double? royaltyPayment_Index { get; set; }
+            public double? RRR_Index { get; set; }
+            public double? IncrementInProduction_Index { get; set; }
+            public double? costEfficiency_Index { get; set; }
+            public double? CSR_Index { get; set; }
+            public double? statutoryPayment_Index { get; set; }
 
+        }
+        public class Company_Index
+        {
+            public string fieldName { get; set; }
+            public string concessionName { get; set; }
+            public string concessionType { get; set; }
+            public double? acquisition_Index { get; set; }
+            public double? exploratory_Index { get; set; }
+            public double? discovery_Index { get; set; }
+            public double? concessionRentals_Index { get; set; }
+            public double? NDR_Index { get; set; }
+        }
         public class WorkProgrammeReport_Model
         {
             public object WorkProgrammeReport1_Model { get; set; }
             public object WorkProgrammeReport2_Model { get; set; }
         }
+        public class CompanyDashboardModel
+        {
+            public List<CompanyReportModel> CompanyReportModel { get; set; }
+
+            public int OML_Count { get; set; }
+            public int OPL_Count { get; set; }
+            public int No_Of_ProducingFields_Count { get; set; }
+        }
+        public class CompanyReportModel
+        {
+            public string concessionName { get; set; }
+            public string fieldName { get; set; }
+            public double oil_NetProduction { get; set; }
+            public double AG_NetProduction { get; set; }
+            public double NAG_NetProduction { get; set; }
+            public double condensate_NetProduction { get; set; }
+            public double totalNetProduction { get; set; }
+            public double oil_Reserves { get; set; }
+            public double AG_Reserves { get; set; }
+            public double NAG_Reserves { get; set; }
+            public double condensate_Reserves { get; set; }
+            public double totalReserves { get; set; }
+        }
+
         public class WorkProgrammeReport1_Model
         {
             public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
@@ -157,17 +227,207 @@ namespace Backend_UMR_Work_Program.Models
             public object RESERVES_REPLACEMENT_RATIO_VALUE_PIVOTTED { get; set; }
             public object HSE_CAUSES_OF_SPILL { get; set; }
             public string Error { get; set; }
-            public string GEOPHYSICAL_ACTIVITIES_PROCESSING_DESCRIPTION {get; set;}
+            public string GEOPHYSICAL_ACTIVITIES_PROCESSING_DESCRIPTION { get; set; }
 
         }
-        public class TOTAL_PRODUCED_WATER_Model
+        public class ADMIN_WORK_PROGRAM_REPORTs_Model
         {
-            public int TOTAL_QUANTITY_SPILLED { get; set; }
+            public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
+            public object summary_1 { get; set; }
+            public object summary_2 { get; set; }
+        }
+        public class ApplicationProcessModel
+        {
+            public int StaffId { get; set; }
+            public int FromStaffId { get; set; }
+            public int RoleId { get; set; }
+            public int? SBU_Id { get; set; }
+            public int Sort { get; set; }
+            public int ProcessId { get; set; }
+            public int DeskCount { get; set; }
+            public string RoleName { get; set; }
+        }
+        public class Application_Model
+        {
+            public int Id { get; set; }
+            public string ReferenceNo { get; set; } = null!;
+            public int? ConcessionID { get; set; }
+            public int CompanyID { get; set; }
             public string CompanyName { get; set; }
-            public string Year_of_WP { get; set; }
+            public string FieldName { get; set; }
+            public string ConcessionName { get; set; }
+            public int? FieldID { get; set; }
+            //public int? DeskID { get; set; }
+            public int CategoryID { get; set; }
+            public int YearOfWKP { get; set; }
+            public string Status { get; set; } = null!;
+            public string PaymentStatus { get; set; } = null!;
+            public int? CurrentDesk { get; set; }
+            public bool? Submitted { get; set; }
+            public string? ApprovalRef { get; set; }
+            public DateTime? CreatedAt { get; set; }
+            public DateTime? SubmittedAt { get; set; }
+            public DateTime? UpdatedAt { get; set; }
+            public int? DeletedBy { get; set; }
+            public bool? DeleteStatus { get; set; }
+            public DateTime? DeletedAt { get; set; }
+           
         }
 
-        public class WorkProgramme_Model
+        public class ApplicationDetailsModel
+        {
+            public Application Application { get; set; }
+            public COMPANY_FIELD Field { get; set; }
+            public ADMIN_COMPANY_INFORMATION Company { get; set; }
+            public ADMIN_CONCESSIONS_INFORMATION Concession { get; set; }
+            public List<Staff_Model> Staff { get; set; }
+            public List<ApplicationDeskHistory_Model> Application_History { get; set; }
+            public List<SubmittedDocument> Document { get; set; }
+        }
+        public class Staff_Model
+        {
+            public string Staff_Name { get; set; }
+            public string Staff_Email { get; set; }
+            public string Staff_SBU { get; set; }
+            public string Staff_Role { get; set; }
+            public int Sort { get; set; }
+        }
+
+        public class ApplicationDeskHistory_Model
+        {
+            public int ID { get; set; }
+            public string Staff_Name { get; set; }
+            public string Staff_Email { get; set; }
+            public string Staff_SBU { get; set; }
+            public string Staff_Role { get; set; }
+            public string Comment { get; set; }
+            public string Status { get; set; }
+            public DateTime Date { get; set; }
+       }
+ 
+            public class HSE_ACCIDENT_INCIDENCE_MODEL
+        {
+            public int id { get; set; }
+            public string? Was_there_any_accident_incidence { get; set; }
+            public string? If_YES_were_they_reported { get; set; }
+            public string? Type_of_Accident_Incidence { get; set; }
+            public string? Location { get; set; }
+            public string? Investigation { get; set; }
+            public string? Date_ { get; set; }
+            public string? Cause { get; set; }
+            public string? Consequence { get; set; }
+            public string? Lesson_Learnt { get; set; }
+            public string? Frequency { get; set; }
+
+        }
+
+        public class FileReturn
+        {
+            public string fileId { get; set; }
+            public long? fileSize { get; set; }
+            public string path { get; set; }
+        }
+
+        public class DownReturn
+        {
+            public Stream stream { get; set; }
+            public string contentType { get; set; }
+            public string name { get; set; }
+        }
+
+        public class ConcessionField
+        {
+            public int? Field_ID { get; set; }
+            public int? Concession_ID { get; set; }
+            public string Concession_Name { get; set; }
+            public string Consession_Type { get; set; }
+            public string? Field_Name { get; set; }
+            public string? Terrain { get; set; }
+        }
+        public class ADMIN_COMPANY_INFORMATION_Model
+        {
+            public int? Id { get; set; }
+            public string? COMPANY_NAME { get; set; }
+            public string? EMAIL { get; set; }
+            public string? PASSWORDS { get; set; }
+            public string? STATUS_ { get; set; }
+            public string? FLAG_PASSWORD_CHANGE { get; set; }
+            public string? CATEGORY { get; set; }
+            public string? NAME { get; set; }
+            public string? DESIGNATION { get; set; }
+            public string? PHONE_NO { get; set; }
+            public string? COMPANY_ID { get; set; }
+            public string? DELETED_STATUS { get; set; }
+            public string? DELETED_BY { get; set; }
+            public string? DELETED_DATE { get; set; }
+            public string? FLAG1 { get; set; }
+            public string? FLAG2 { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+        }
+        public partial class ADMIN_CONCESSIONS_INFORMATION_Model
+        {
+            public int Consession_Id { get; set; }
+            public string? Company_ID { get; set; }
+            public string? CompanyName { get; set; }
+            public string? Equity_distribution { get; set; }
+            public string? Concession_Held { get; set; }
+            public string? Area { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Year_of_Grant_Award { get; set; }
+            public DateTime? Date_of_Expiration { get; set; }
+            public string? Geological_location { get; set; }
+            public string? Comment { get; set; }
+            public string? Status_ { get; set; }
+            public string? Flag1 { get; set; }
+            public string? Flag2 { get; set; }
+            public string? COMPANY_EMAIL { get; set; }
+            public string? Terrain { get; set; }
+            public string? Year { get; set; }
+            public string? submitted { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? Concession_Unique_ID { get; set; }
+            public string? OPEN_DATE { get; set; }
+            public string? CLOSE_DATE { get; set; }
+            public string? EMAIL_REMARK { get; set; }
+            public int? CompanyNumber { get; set; }
+        }
+        public class UserModel
+        {
+            public List<ADMIN_COMPANY_INFORMATION> companiesList { get; set; }
+            public List<ADMIN_COMPANY_INFORMATION> staffList { get; set; }
+            public List<ROLES_> roles { get; set; }
+        }
+        public class parameterConfigModel
+        {
+            public List<ADMIN_CATEGORy> adminCategories { get; set; }
+            public List<Data_Type> dataTypes { get; set; }
+            public List<ADMIN_WELL_CATEGORy> wellCategories { get; set; }
+            public List<ADMIN_WP_START_END_DATE> startEndDate { get; set; }
+            public List<ADMIN_WP_START_END_DATE_DATA_UPLOAD> startEndDateUpload { get; set; }
+            public List<ADMIN_WP_PENALTy> penalties { get; set; }
+            public List<ADMIN_EMAIL_DAY> emailDays { get; set; }
+            public List<ROLES_SUPER_ADMIN> superAdmins { get; set; }
+            public List<ADMIN_PRESENTATION_CATEGORy> presentationCategories { get; set; }
+            public List<ADMIN_MEETING_ROOM> meetingRooms { get; set; }
+        }
+        public class PermitAPIModel
+        {
+            public int Id { get; set; }
+            public string Permit_No { get; set; }
+
+            public string OrderId { get; set; }
+
+            public int Company_Id { get; set; }
+
+            public DateTime Date_Issued { get; set; }
+
+            public DateTime Date_Expire { get; set; }
+            public string CategoryName { get; set; }
+            public string Is_Renewed { get; set; }
+            public int LicenseId { get; set; }
+        }
+
+        public class WorkProgramme_Model_1
         {
             public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
             public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
@@ -176,19 +436,19 @@ namespace Backend_UMR_Work_Program.Models
             public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
             public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
 
-            //For Form 2
-            public INITIAL_WELL_COMPLETION_JOB1 Initial_Well_Completion_Job { get; set; }
+            public string WorkProgramme_Year { get; set; }
+         
+        }
+        public class WorkProgramme_Model_2
+        {
+            public string WorkProgramme_Year { get; set; }
+            public INITIAL_WELL_COMPLETION_JOB1_Model Initial_Well_Completion_Job { get; set; }
             public WORKOVERS_RECOMPLETION_JOB1_Model WORKOVERS_RECOMPLETION_JOB1 { get; set; }
             public FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
-
             public FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
-
             public FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
-
             public RESERVES_UPDATES_LIFE_INDEX_Model RESERVES_UPDATES_LIFE_INDEX { get; set; }
-
             public FIELD_DEVELOPMENT_PLAN_Model FIELD_DEVELOPMENT_PLAN { get; set; }
-
             public OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
             public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
             public GAS_PRODUCTION_ACTIVITy_Model GAS_PRODUCTION_ACTIVITy { get; set; }
@@ -205,285 +465,189 @@ namespace Backend_UMR_Work_Program.Models
             public GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
 
         }
-        public class WorkProgramme_Model_1
+
+        public class WorkProgramme_Model_3
         {
-            public CONCESSION_SITUATION CONCESSION_SITUATION { get; set; }
+            public string WorkProgramme_Year { get; set; }
+            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
             public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
             public GEOPHYSICAL_ACTIVITIES_PROCESSING_Model GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
-            public List<DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model> DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
-            public List<DRILLING_EACH_WELL_COST_Model> DRILLING_EACH_WELL_COSTs { get; set; }
-            public List<DRILLING_EACH_WELL_COST_PROPOSED_Model> DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
+            public DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
+            public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
+            public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
 
-            public string WorkProgramme_Year { get; set; }
 
-        }
-        public class WorkProgramme_Model_2
-        {
-            public string WorkProgramme_Year { get; set; }
-            public List<INITIAL_WELL_COMPLETION_JOB1_Model> Initial_Well_Completion_Job { get; set; }
-            public List<WORKOVERS_RECOMPLETION_JOB1_Model> WORKOVERS_RECOMPLETION_JOB1 { get; set; }
-            public List<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model> FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
-            public List<FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model> FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
-            public List<FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model> FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
-            public List<RESERVES_UPDATES_LIFE_INDEX_Model> RESERVES_UPDATES_LIFE_INDEX { get; set; }
-            public List<FIELD_DEVELOPMENT_PLAN_Model> FIELD_DEVELOPMENT_PLAN { get; set; }
-            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
-            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
-            public List<GAS_PRODUCTION_ACTIVITy_Model> GAS_PRODUCTION_ACTIVITy { get; set; }
-            public List<NDR_Model> NDR { get; set; }
-            public List<RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model> RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE { get; set; }
-            public List<RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model> RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection { get; set; }
-            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION { get; set; }
-            public List<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model> RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION { get; set; }
-            public List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model> RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE { get; set; }
-            public List<RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model> RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition { get; set; }
-            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity { get; set; }
-            public List<RESERVES_REPLACEMENT_RATIO_Model> RESERVES_REPLACEMENT_RATIO { get; set; }
-            public List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model> OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED { get; set; }
-            public List<GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model> GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
-
-        }
-        public class WorkProgramme_Model3
-        {
-            public string WorkProgramme_Year { get; set; }
-            public BUDGET_ACTUAL_EXPENDITURE_Model BUDGET_ACTUAL_EXPENDITURE { get; set; }
-            public BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT { get; set; }
-            public BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy { get; set; }
-            public BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy { get; set; }
-            public BUDGET_PERFORMANCE_PRODUCTION_COST_Model BUDGET_PERFORMANCE_PRODUCTION_COST { get; set; }
-            public BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT { get; set; }
-            public OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE { get; set; }
-            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment { get; set; }
-            public OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT { get; set; }
-            public FACILITIES_PROJECT_PERFORMANCE_Model FACILITIES_PROJECT_PERFORMANCE { get; set; }
-            public BUDGET_CAPEX_OPEX_Model BUDGET_CAPEX_OPEX { get; set; }
-        }
-        public class WorkProgramme_Model4
-        {
-            public string WorkProgramme_Year { get; set; }
-            public NIGERIA_CONTENT_Training_Model NIGERIA_CONTENT_Training { get; set; }
-            public NIGERIA_CONTENT_Upload_Succession_Plan_Model NIGERIA_CONTENT_Upload_Succession_Plan { get; set; }
-            public NIGERIA_CONTENT_QUESTION_Model NIGERIA_CONTENT_QUESTION { get; set; }
-            public LEGAL_LITIGATION_Model LEGAL_LITIGATION { get; set; }
-            public LEGAL_ARBITRATION_Model LEGAL_ARBITRATION { get; set; }
-            public STRATEGIC_PLANS_ON_COMPANY_BASI_Model STRATEGIC_PLANS_ON_COMPANY_BASI { get; set; }
-        }
-
-        public class WorkProgramme_Model5
-        {
-            public string WorkProgramme_Year { get; set; }
-            public HSE_QUESTION_Model HSE_QUESTION { get; set; }
-            public HSE_FATALITy_Model HSE_FATALITy { get; set; }
-            public HSE_DESIGNS_SAFETY_Model HSE_DESIGNS_SAFETY { get; set; }
-            public HSE_SAFETY_STUDIES_NEW_Model HSE_SAFETY_STUDIES_NEW { get; set; }
-            public HSE_INSPECTION_AND_MAINTENANCE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_NEW { get; set; }
-            public HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW { get; set; }
-            public HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW { get; set; }
-            public HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set; }
-            public HSE_OIL_SPILL_REPORTING_NEW_Model HSE_OIL_SPILL_REPORTING_NEW { get; set; }
-            public HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set; }
-            public HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_NEW { get; set; }
-            public HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW { get; set; }
-            public HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW { get; set; }
-            public HSE_ENVIRONMENTAL_STUDIES_NEW_Model HSE_ENVIRONMENTAL_STUDIES_NEW { get; set; }
-            public HSE_WASTE_MANAGEMENT_NEW_Model HSE_WASTE_MANAGEMENT_NEW { get; set; }
-            public HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW { get; set; }
-            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW { get; set; }
-            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW { get; set; }
-            public HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW { get; set; }
-            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL { get; set; }
-            public HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED { get; set; }
-            public HSE_OSP_REGISTRATIONS_NEW_Model HSE_OSP_REGISTRATIONS_NEW { get; set; }
-            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED { get; set; }
-            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW { get; set; }
-            public HSE_CAUSES_OF_SPILL_Model HSE_CAUSES_OF_SPILL { get; set; }
-            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU { get; set; }
-            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME { get; set; }
-            public HSE_MANAGEMENT_POSITION_Model HSE_MANAGEMENT_POSITION { get; set; }
-            public HSE_QUALITY_CONTROL_Model HSE_QUALITY_CONTROL { get; set; }
-            public HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model HSE_CLIMATE_CHANGE_AND_AIR_QUALITY { get; set; }
-            public HSE_SAFETY_CULTURE_TRAINING_Model HSE_SAFETY_CULTURE_TRAINING { get; set; }
-            public HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model HSE_OCCUPATIONAL_HEALTH_MANAGEMENT { get; set; }
-            public HSE_WASTE_MANAGEMENT_SYSTEM_Model HSE_WASTE_MANAGEMENT_SYSTEM { get; set; }
-            public HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM { get; set; }
-            public PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT { get; set; }
         }
 
         #region FORM 1
 
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class CONCESSION_SITUATION_Model
-        {
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? CompanyName { get; set; }
-            public string? Companyemail { get; set; }
-            public string? Year { get; set; }
-            public string? Concession_Held { get; set; }
-            public string? Area { get; set; }
-            public string? No_of_discovered_field { get; set; }
-            public string? No_of_field_producing { get; set; }
-            public string? Name_of_Company { get; set; }
-            public string? Equity_distribution { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? Geological_location { get; set; }
-            public string? Has_Signature_Bonus_been_paid { get; set; }
-            public string? If_No_why_sig { get; set; }
-            public string? Has_the_Concession_Rentals_been_paid { get; set; }
-            public string? If_No_why_concession { get; set; }
-            public string? Is_there_an_application_for_renewal { get; set; }
-            public string? If_No_why_renewal { get; set; }
-            public string? Budget_actual_for_license_or_lease { get; set; }
-            public string? proposed_budget_for_each_license_lease { get; set; }
-            public string? Five_year_proposal { get; set; }
-            public string? Did_you_meet_the_minimum_work_programme { get; set; }
-            public string? Comment { get; set; }
-            public DateTime? Date_of_Grant_Expiration { get; set; }
-            public string? Terrain { get; set; }
-            public string? Consession_Type { get; set; }
-            public DateTime? Date_of_Expiration { get; set; }
-            public string? How_Much_Signature_Bonus_have_been_paid_USD { get; set; }
-            public string? How_Much_Concession_Rental_have_been_paid_USD { get; set; }
-            public string? How_Much_Renewal_Bonus_have_been_paid_USD { get; set; }
-            public string? Has_Assignment_of_Interest_Fee_been_paid { get; set; }
-            public string? relinquishment_retention { get; set; }
-            public string? area_in_square_meter_based_on_company_records { get; set; }
-        }
+{
+    public string? OML_ID { get; set; }
+    public string? OML_Name { get; set; }
+    public string? CompanyName { get; set; }
+    public string? Companyemail { get; set; }
+    public string? Year { get; set; }
+    public string? Concession_Held { get; set; }
+    public string? Area { get; set; }
+    public string? No_of_discovered_field { get; set; }
+    public string? No_of_field_producing { get; set; }
+    public string? Name_of_Company { get; set; }
+    public string? Equity_distribution { get; set; }
+    public string? Contract_Type { get; set; }
+    public string? Geological_location { get; set; }
+    public string? Has_Signature_Bonus_been_paid { get; set; }
+    public string? If_No_why_sig { get; set; }
+    public string? Has_the_Concession_Rentals_been_paid { get; set; }
+    public string? If_No_why_concession { get; set; }
+    public string? Is_there_an_application_for_renewal { get; set; }
+    public string? If_No_why_renewal { get; set; }
+    public string? Budget_actual_for_license_or_lease { get; set; }
+    public string? proposed_budget_for_each_license_lease { get; set; }
+    public string? Five_year_proposal { get; set; }
+    public string? Did_you_meet_the_minimum_work_programme { get; set; }
+    public string? Comment { get; set; }
+    public DateTime? Date_of_Grant_Expiration { get; set; }
+    public string? Terrain { get; set; }
+    public string? Consession_Type { get; set; }
+    public DateTime? Date_of_Expiration { get; set; }
+    public string? How_Much_Signature_Bonus_have_been_paid_USD { get; set; }
+    public string? How_Much_Concession_Rental_have_been_paid_USD { get; set; }
+    public string? How_Much_Renewal_Bonus_have_been_paid_USD { get; set; }
+    public string? Has_Assignment_of_Interest_Fee_been_paid { get; set; }
+    public string? relinquishment_retention { get; set; }
+    public string? area_in_square_meter_based_on_company_records { get; set; }
+}
 
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model
-        {
-            public string? Geo_acquired_geophysical_data { get; set; }
-            public string? Geo_area_of_coverage { get; set; }
-            public string? Geo_method_of_acquisition { get; set; }
-            public string? Geo_type_of_data_acquired { get; set; }
-            public string? Geo_Record_Length_of_Data { get; set; }
-            public string? Geo_Completion_Status { get; set; }
-            public string? Quantum { get; set; }
-            public string? Quantum_carry_forward { get; set; }
-            public string? Geo_Activity_Timeline { get; set; }
-            public string? Remarks { get; set; }
-            public string? Actual_year_aquired_data { get; set; }
-            public string? proposed_year_data { get; set; }
-            public string? Budeget_Allocation { get; set; }
-            public string? Actual_year { get; set; }
-            public string? proposed_year { get; set; }
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
-            public string? Budeget_Allocation_NGN { get; set; }
-            public string? Budeget_Allocation_USD { get; set; }
-            public string? Name_of_Contractor { get; set; }
-            public string? Quantum_Approved { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? Terrain { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? Quantum_Planned { get; set; }
-            public string? Gas_flare_Royalty_payment { get; set; }
-            public string? Gas_Sales_Royalty_Payment { get; set; }
-            public string? QUATER { get; set; }
-        }
+public class GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model
+{
+    public string? Geo_acquired_geophysical_data { get; set; }
+    public string? Geo_area_of_coverage { get; set; }
+    public string? Geo_method_of_acquisition { get; set; }
+    public string? Geo_type_of_data_acquired { get; set; }
+    public string? Geo_Record_Length_of_Data { get; set; }
+    public string? Geo_Completion_Status { get; set; }
+    public string? Quantum { get; set; }
+    public string? Quantum_carry_forward { get; set; }
+    public string? Geo_Activity_Timeline { get; set; }
+    public string? Remarks { get; set; }
+    public string? Actual_year_aquired_data { get; set; }
+    public string? proposed_year_data { get; set; }
+    public string? Budeget_Allocation { get; set; }
+    public string? Actual_year { get; set; }
+    public string? proposed_year { get; set; }
+    public string? OML_ID { get; set; }
+    public string? OML_Name { get; set; }
+    public string? Year_of_WP { get; set; }
+    public string? Budeget_Allocation_NGN { get; set; }
+    public string? Budeget_Allocation_USD { get; set; }
+    public string? Name_of_Contractor { get; set; }
+    public string? Quantum_Approved { get; set; }
+    public string? Contract_Type { get; set; }
+    public string? Terrain { get; set; }
+    public string? Consession_Type { get; set; }
+    public string? Quantum_Planned { get; set; }
+    public string? Gas_flare_Royalty_payment { get; set; }
+    public string? Gas_Sales_Royalty_Payment { get; set; }
+    public string? QUATER { get; set; }
+}
 
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class GEOPHYSICAL_ACTIVITIES_PROCESSING_Model
-        {
-            public string? Geo_Any_Ongoing_Processing_Project { get; set; }
-            public string? Geo_Type_of_Data_being_Processed { get; set; }
-            public string? Geo_Quantum_of_Data { get; set; }
-            public string? Geo_Quantum_of_Data_carry_over { get; set; }
-            public string? Geo_Completion_Status { get; set; }
-            public string? Geo_Activity_Timeline { get; set; }
-            public string? Remarks { get; set; }
-            public string? Actual_year_aquired_data { get; set; }
-            public string? proposed_year_data { get; set; }
-            public string? Budeget_Allocation { get; set; }
-            public string? Actual_year { get; set; }
-            public string? proposed_year { get; set; }
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
-            public string? Budeget_Allocation_USD { get; set; }
-            public string? Budeget_Allocation_NGN { get; set; }
-            public string? Processed_Actual { get; set; }
-            public string? Processed_Proposed { get; set; }
-            public string? Reprocessed_Actual { get; set; }
-            public string? Reprocessed_Proposed { get; set; }
-            public string? Interpreted_Actual { get; set; }
-            public string? Interpreted_Proposed { get; set; }
-            public string? Name_of_Contractor { get; set; }
-            public string? Quantum_Approved { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? Terrain { get; set; }
-            public string? Quantum_Planned { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? QUATER { get; set; }
-        }
+public class GEOPHYSICAL_ACTIVITIES_PROCESSING_Model
+{
+    public string? Geo_Any_Ongoing_Processing_Project { get; set; }
+    public string? Geo_Type_of_Data_being_Processed { get; set; }
+    public string? Geo_Quantum_of_Data { get; set; }
+    public string? Geo_Quantum_of_Data_carry_over { get; set; }
+    public string? Geo_Completion_Status { get; set; }
+    public string? Geo_Activity_Timeline { get; set; }
+    public string? Remarks { get; set; }
+    public string? Actual_year_aquired_data { get; set; }
+    public string? proposed_year_data { get; set; }
+    public string? Budeget_Allocation { get; set; }
+    public string? Actual_year { get; set; }
+    public string? proposed_year { get; set; }
+    public string? OML_ID { get; set; }
+    public string? OML_Name { get; set; }
+    public string? Year_of_WP { get; set; }
+    public string? Budeget_Allocation_USD { get; set; }
+    public string? Budeget_Allocation_NGN { get; set; }
+    public string? Processed_Actual { get; set; }
+    public string? Processed_Proposed { get; set; }
+    public string? Reprocessed_Actual { get; set; }
+    public string? Reprocessed_Proposed { get; set; }
+    public string? Interpreted_Actual { get; set; }
+    public string? Interpreted_Proposed { get; set; }
+    public string? Name_of_Contractor { get; set; }
+    public string? Quantum_Approved { get; set; }
+    public string? Contract_Type { get; set; }
+    public string? Terrain { get; set; }
+    public string? Quantum_Planned { get; set; }
+    public string? Consession_Type { get; set; }
+    public string? QUATER { get; set; }
+}
 
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model
-        {
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
-            public string? Category { get; set; }
-            public string? Actual_No_Drilled_in_Current_Year { get; set; }
-            public string? Proposed_No_Drilled { get; set; }
-            public string? Processing_Fees_Paid { get; set; }
-            public string? Comments { get; set; }
-            public string? No_of_wells_cored { get; set; }
-            public string? Actual_year { get; set; }
-            public string? proposed_year { get; set; }
-            public string? well_type { get; set; }
-            public string? well_trajectory { get; set; }
-            public DateTime? spud_date { get; set; }
-            public string? well_cost { get; set; }
-            public string? Number_of_Days_to_Total_Depth { get; set; }
-            public string? Well_Status_and_Depth { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? Terrain { get; set; }
-            public string? well_name { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? QUATER { get; set; }
-            public string? Any_New_Discoveries { get; set; }
-            public string? Hydrocarbon_Counts { get; set; }
-            public string? State_the_field_where_Discovery_was_made { get; set; }
-            public string? Core_Cost_USD { get; set; }
-            public string? Core_Depth_Interval { get; set; }
-            public string? Propose_well_names { get; set; }
-            public string? Actual_wells_name { get; set; }
-            public string? Terrain_Drill { get; set; }
-            public string? Water_depth { get; set; }
-            public string? True_vertical_depth { get; set; }
-            public string? Depth_refrence { get; set; }
-            public string? Rig_type { get; set; }
-            public string? Rig_Name { get; set; }
-            public string? Target_reservoir { get; set; }
-            public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
-            public string? Location_name { get; set; }
-            public string? Proposed_cost_per_well { get; set; }
-            public string? Basin { get; set; }
-            public string? Measured_depth { get; set; }
-            public string? FieldDiscoveryUploadFilePath { get; set; }
-            public string? HydrocarbonCountUploadFilePath { get; set; }
-            public string? Cored { get; set; }
-            public string? Actual_Proposed { get; set; }
-            public string? WellName { get; set; }
-        }
+public class DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model
+{
+    public string? OML_ID { get; set; }
+    public string? OML_Name { get; set; }
+    public string? Year_of_WP { get; set; }
+    public string? Category { get; set; }
+    public string? Actual_No_Drilled_in_Current_Year { get; set; }
+    public string? Proposed_No_Drilled { get; set; }
+    public string? Processing_Fees_Paid { get; set; }
+    public string? Comments { get; set; }
+    public string? No_of_wells_cored { get; set; }
+    public string? Actual_year { get; set; }
+    public string? proposed_year { get; set; }
+    public string? well_type { get; set; }
+    public string? well_trajectory { get; set; }
+    public DateTime? spud_date { get; set; }
+    public string? well_cost { get; set; }
+    public string? Number_of_Days_to_Total_Depth { get; set; }
+    public string? Well_Status_and_Depth { get; set; }
+    public string? Contract_Type { get; set; }
+    public string? Terrain { get; set; }
+    public string? well_name { get; set; }
+    public string? Consession_Type { get; set; }
+    public string? QUATER { get; set; }
+    public string? Any_New_Discoveries { get; set; }
+    public string? Hydrocarbon_Counts { get; set; }
+    public string? State_the_field_where_Discovery_was_made { get; set; }
+    public string? Core_Cost_USD { get; set; }
+    public string? Core_Depth_Interval { get; set; }
+    public string? Propose_well_names { get; set; }
+    public string? Actual_wells_name { get; set; }
+    public string? Terrain_Drill { get; set; }
+    public string? Water_depth { get; set; }
+    public string? True_vertical_depth { get; set; }
+    public string? Depth_refrence { get; set; }
+    public string? Rig_type { get; set; }
+    public string? Rig_Name { get; set; }
+    public string? Target_reservoir { get; set; }
+    public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
+    public string? Location_name { get; set; }
+    public string? Proposed_cost_per_well { get; set; }
+    public string? Basin { get; set; }
+    public string? Measured_depth { get; set; }
+    public string? FieldDiscoveryUploadFilePath { get; set; }
+    public string? HydrocarbonCountUploadFilePath { get; set; }
+    public string? Cored { get; set; }
+    public string? Actual_Proposed { get; set; }
+    public string? WellName { get; set; }
+}
 
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class DRILLING_EACH_WELL_COST_Model
-        {
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
-            public string? well_name { get; set; }
-            public string? well_cost { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? QUATER { get; set; }
-            public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
-        }
+public class DRILLING_EACH_WELL_COST_Model
+{
+    public string? OML_ID { get; set; }
+    public string? OML_Name { get; set; }
+    public string? Year_of_WP { get; set; }
+    public string? well_name { get; set; }
+    public string? well_cost { get; set; }
+    public string? Consession_Type { get; set; }
+    public string? QUATER { get; set; }
+    public string? Surface_cordinates_for_each_well_in_degrees { get; set; }
+}
 
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class DRILLING_EACH_WELL_COST_PROPOSED_Model
         {
             public string? OML_ID { get; set; }
@@ -498,7 +662,6 @@ namespace Backend_UMR_Work_Program.Models
         #endregion
 
         #region FORM 2
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class INITIAL_WELL_COMPLETION_JOB1_Model
         {
             public string? OML_ID { get; set; }
@@ -522,8 +685,6 @@ namespace Backend_UMR_Work_Program.Models
             public DateTime? Actual_Completion_Date { get; set; }
             public DateTime? Proposed_Completion_Date { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class WORKOVERS_RECOMPLETION_JOB1_Model
         {
             public string? OML_ID { get; set; }
@@ -545,9 +706,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? QUATER { get; set; }
             public string? oil_or_gas_wells { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model
+        public  class FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -561,9 +720,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Condensate { get; set; }
             public string? Consession_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model
+        public  class FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -574,20 +731,16 @@ namespace Backend_UMR_Work_Program.Models
             public string? Development_Plan_Status { get; set; }
             public string? Consession_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model
+        public  class FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
+           public string? Year_of_WP { get; set; }
             public string? Field_Name { get; set; }
             public string? Development_Plan_Status { get; set; }
             public string? Consession_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class RESERVES_UPDATES_LIFE_INDEX_Model
+        public  class RESERVES_UPDATES_LIFE_INDEX_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -600,9 +753,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? AG { get; set; }
             public string? Consession_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class FIELD_DEVELOPMENT_PLAN_Model
+        public  class FIELD_DEVELOPMENT_PLAN_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -626,9 +777,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Are_they_oil_or_gas_wells { get; set; }
             public string? FDPDocumentFilename { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model
+        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -683,9 +832,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Gas_AG { get; set; }
             public string? Gas_NAG { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model
+        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -740,9 +887,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? PUAUploadFilename { get; set; }
             public string? UUOAUploadFilename { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class GAS_PRODUCTION_ACTIVITy_Model
+        public  class GAS_PRODUCTION_ACTIVITy_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -810,9 +955,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? number_of_gas_wells_completed { get; set; }
             public string? number_of_gas_wells_tested { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class NDR_Model
+        public  class NDR_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -826,9 +969,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
             public string? Consession_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model
+        public  class RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -849,9 +990,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Company_Reserves_AnnualGasAGProduction { get; set; }
             public string? Company_Reserves_AnnualGasNAGProduction { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model
+        public  class RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -865,9 +1004,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
             public string? Consession_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model
+        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -917,9 +1054,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? ProductionOilCondensateAGNAGUploadFilePath { get; set; }
             public string? ProductionOilCondensateAGNAGUFilename { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model
+        public  class RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -933,9 +1068,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
             public string? Consession_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model
+        public  class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -950,9 +1083,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
             public string? Contract_Type { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model
+        public  class RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -963,14 +1094,12 @@ namespace Backend_UMR_Work_Program.Models
             public string? Reserves_Addition_Condensate { get; set; }
             public string? Reserves_Addition_AG { get; set; }
             public string? Reserves_Addition_NAG { get; set; }
-
+           
             public string? Contract_Type { get; set; }
             public string? Consession_Type { get; set; }
             public string? Terrain { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model
+        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -985,9 +1114,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Gas_AG { get; set; }
             public string? Gas_NAG { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class RESERVES_REPLACEMENT_RATIO_Model
+        public  class RESERVES_REPLACEMENT_RATIO_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -998,8 +1125,6 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
             public string? Trend_Year { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
         public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model
         {
             public string? OML_ID { get; set; }
@@ -1015,9 +1140,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Gas_AG { get; set; }
             public string? Gas_NAG { get; set; }
         }
-
-        [ModelBinder(BinderType = typeof(MetadataValueModelBinder))]
-        public class GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model
+        public  class GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1031,7 +1154,22 @@ namespace Backend_UMR_Work_Program.Models
         #endregion
 
         #region Form 3
-        public class BUDGET_ACTUAL_EXPENDITURE_Model
+        public class WorkProgramme_Model3
+        {
+            public string WorkProgramme_Year { get; set; }
+            public BUDGET_ACTUAL_EXPENDITURE_Model BUDGET_ACTUAL_EXPENDITURE { get; set; }
+            public BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT { get; set; }
+            public BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy { get; set; }
+            public BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy { get; set;}
+            public BUDGET_PERFORMANCE_PRODUCTION_COST_Model BUDGET_PERFORMANCE_PRODUCTION_COST { get; set;}
+            public BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT { get; set;}
+            public OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE { get; set;}
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment { get; set;}
+            public OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT { get; set;}
+            public FACILITIES_PROJECT_PERFORMANCE_Model FACILITIES_PROJECT_PERFORMANCE { get; set;}
+            public BUDGET_CAPEX_OPEX_Model BUDGET_CAPEX_OPEX { get; set;}
+        }
+        public  class BUDGET_ACTUAL_EXPENDITURE_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1052,7 +1190,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model
+        public  class BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1070,7 +1208,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model
+        public  class BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1088,36 +1226,36 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
             public string? Contract_Type { get; set; }
         }
-        public class BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model
-        {
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? DEVELOPMENT_planned { get; set; }
-            public string? DEVELOPMENT_Actual { get; set; }
-            public string? WORKOVER_planned { get; set; }
-            public string? WORKOVER_Actual { get; set; }
-            public string? COMPLETION_planned { get; set; }
-            public string? COMPLETION_Actual { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? Terrain { get; set; }
-            public string? Consession_Type { get; set; }
-        }
+        public  class BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy_Model
+            {
+                public string? OML_ID { get; set; }
+                public string? OML_Name { get; set; }
+                public string? DEVELOPMENT_planned { get; set; }
+                public string? DEVELOPMENT_Actual { get; set; }
+                public string? WORKOVER_planned { get; set; }
+                public string? WORKOVER_Actual { get; set; }
+                public string? COMPLETION_planned { get; set; }
+                public string? COMPLETION_Actual { get; set; }
+                public string? Contract_Type { get; set; }
+                public string? Terrain { get; set; }
+                public string? Consession_Type { get; set; }
+            }
 
-        public class BUDGET_PERFORMANCE_PRODUCTION_COST_Model
-        {
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
-            public string? DIRECT_COST_planned { get; set; }
-            public string? DIRECT_COST_Actual { get; set; }
-            public string? INDIRECT_COST_planned { get; set; }
-            public string? INDIRECT_COST_Actual { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? Terrain { get; set; }
-            public string? Contract_Type { get; set; }
-        }
+        public  class BUDGET_PERFORMANCE_PRODUCTION_COST_Model
+            {
+                public string? OML_ID { get; set; }
+                public string? OML_Name { get; set; }
+                public string? Year_of_WP { get; set; }
+                public string? DIRECT_COST_planned { get; set; }
+                public string? DIRECT_COST_Actual { get; set; }
+                public string? INDIRECT_COST_planned { get; set; }
+                public string? INDIRECT_COST_Actual { get; set; }
+                public string? Consession_Type { get; set; }
+                public string? Terrain { get; set; }
+                public string? Contract_Type { get; set; }
+            }
 
-        public class BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model
+        public  class BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1142,7 +1280,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model
+        public  class OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITURE_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1165,7 +1303,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model
+        public  class OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1183,7 +1321,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
         }
 
-        public class OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model
+        public  class OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1223,7 +1361,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Actual_Proposed { get; set; }
         }
 
-        public class FACILITIES_PROJECT_PERFORMANCE_Model
+        public  class FACILITIES_PROJECT_PERFORMANCE_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1237,7 +1375,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class BUDGET_CAPEX_OPEX_Model
+        public  class BUDGET_CAPEX_OPEX_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1245,7 +1383,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Item_Type { get; set; }
             public string? Item_Description { get; set; }
             public string? naira { get; set; }
-            public string? dollar { get; set; }
+            public string? dollar { get; set; }  
             public string? Dollar_equivalent { get; set; }
             public string? remarks { get; set; }
             public string? Contract_Type { get; set; }
@@ -1254,15 +1392,64 @@ namespace Backend_UMR_Work_Program.Models
         }
 
         #endregion
+        public class WorkProgramme_Model
+        {
+            public string WorkProgramme_Year { get; set; }
+            public CONCESSION_SITUATION_Model CONCESSION_SITUATION { get; set; }
+            public GEOPHYSICAL_ACTIVITIES_ACQUISITION_Model GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; }
+            public GEOPHYSICAL_ACTIVITIES_PROCESSING_Model GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; }
+            public DRILLING_OPERATIONS_CATEGORIES_OF_WELL_Model DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; }
+            public DRILLING_EACH_WELL_COST_Model DRILLING_EACH_WELL_COSTs { get; set; }
+            public DRILLING_EACH_WELL_COST_PROPOSED_Model DRILLING_EACH_WELL_COST_PROPOSEDs { get; set; }
+
+            //For Form 2
+            public INITIAL_WELL_COMPLETION_JOB1 Initial_Well_Completion_Job { get; set; }
+            public WORKOVERS_RECOMPLETION_JOB1_Model WORKOVERS_RECOMPLETION_JOB1 { get; set; }
+            public FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf_Model FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE { get; set; }
+
+            public FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP_Model FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP { get; set; }
+
+            public FIELD_DEVELOPMENT_FIELDS_AND_STATUS_Model FIELD_DEVELOPMENT_FIELDS_AND_STATUS { get; set; }
+
+            public RESERVES_UPDATES_LIFE_INDEX_Model RESERVES_UPDATES_LIFE_INDEX { get; set; }
+
+            public FIELD_DEVELOPMENT_PLAN_Model FIELD_DEVELOPMENT_PLAN { get; set; }
+
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITy_Model OIL_CONDENSATE_PRODUCTION_ACTIVITy { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION { get; set; }
+            public GAS_PRODUCTION_ACTIVITy_Model GAS_PRODUCTION_ACTIVITy { get; set; }
+            public NDR_Model NDR { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_Model RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection_Model RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION_Model RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE { get; set; }
+            public RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition_Model RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activity { get; set; }
+            public RESERVES_REPLACEMENT_RATIO_Model RESERVES_REPLACEMENT_RATIO { get; set; }
+            public OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED_Model OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED { get; set; }
+            public GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY_Model GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY { get; set; }
+
+        }
 
         #region Form 4
 
+        public class WorkProgramme_Model4
+        {
+            public string WorkProgramme_Year { get; set; }
+            public NIGERIA_CONTENT_Training_Model NIGERIA_CONTENT_Training { get; set; }
+            public NIGERIA_CONTENT_Upload_Succession_Plan_Model NIGERIA_CONTENT_Upload_Succession_Plan { get; set; }
+            public NIGERIA_CONTENT_QUESTION_Model NIGERIA_CONTENT_QUESTION { get; set; }
+            public LEGAL_LITIGATION_Model LEGAL_LITIGATION { get; set; }
+            public LEGAL_ARBITRATION_Model LEGAL_ARBITRATION { get; set; }
+            public STRATEGIC_PLANS_ON_COMPANY_BASI_Model STRATEGIC_PLANS_ON_COMPANY_BASI { get; set; }
+           }
 
-        public class NIGERIA_CONTENT_Training_Model
+        public  class NIGERIA_CONTENT_Training_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
+           public string? Year_of_WP { get; set; }
             public string? Training_ { get; set; }
             public string? Local_ { get; set; }
             public string? Foreign_ { get; set; }
@@ -1280,7 +1467,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
         }
 
-        public class NIGERIA_CONTENT_Upload_Succession_Plan_Model
+        public  class NIGERIA_CONTENT_Upload_Succession_Plan_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1296,7 +1483,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class NIGERIA_CONTENT_QUESTION_Model
+        public  class NIGERIA_CONTENT_QUESTION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1314,7 +1501,25 @@ namespace Backend_UMR_Work_Program.Models
             public string? total_no_of_top_management_staff { get; set; }
         }
 
-        public class LEGAL_LITIGATION_Model
+        public  class LEGAL_LITIGATION_Model
+        {
+            public string? OML_ID { get; set; }
+            public string? OML_Name { get; set; }
+            public string? Year_of_WP { get; set; }
+            public string? Terrain { get; set; }
+            public string? Contract_Type { get; set; }
+            public string? Consession_Type { get; set; }
+            public string? AnyLitigation { get; set; }
+            public string? Case_Number { get; set; }
+            public string? Names_of_Parties { get; set; }
+            public string? Jurisdiction { get; set; }
+            public string? Name_of_Court { get; set; }
+            public string? Summary_of_the_case { get; set; }
+            public string? Any_orders_made_so_far_by_the_court { get; set; }
+            public string? Potential_outcome { get; set; }
+          }
+
+        public  class LEGAL_ARBITRATION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1332,25 +1537,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Potential_outcome { get; set; }
         }
 
-        public class LEGAL_ARBITRATION_Model
-        {
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
-            public string? Terrain { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? AnyLitigation { get; set; }
-            public string? Case_Number { get; set; }
-            public string? Names_of_Parties { get; set; }
-            public string? Jurisdiction { get; set; }
-            public string? Name_of_Court { get; set; }
-            public string? Summary_of_the_case { get; set; }
-            public string? Any_orders_made_so_far_by_the_court { get; set; }
-            public string? Potential_outcome { get; set; }
-        }
-
-        public class STRATEGIC_PLANS_ON_COMPANY_BASI_Model
+        public  class STRATEGIC_PLANS_ON_COMPANY_BASI_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1384,6 +1571,45 @@ namespace Backend_UMR_Work_Program.Models
         #endregion
 
         #region Form 5
+        public class WorkProgramme_Model5
+        {
+            public string WorkProgramme_Year { get; set; }
+            public HSE_QUESTION_Model HSE_QUESTION{ get; set;}
+            public HSE_FATALITy_Model HSE_FATALITy { get; set;}
+            public HSE_DESIGNS_SAFETY_Model HSE_DESIGNS_SAFETY { get; set;}
+            public HSE_SAFETY_STUDIES_NEW_Model HSE_SAFETY_STUDIES_NEW { get; set;}
+            public HSE_INSPECTION_AND_MAINTENANCE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_NEW { get; set;}
+            public HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW { get; set;}
+            public HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW { get; set;}
+            public HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set;}
+            public HSE_OIL_SPILL_REPORTING_NEW_Model HSE_OIL_SPILL_REPORTING_NEW { get; set;}
+            public HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW { get; set;}
+            public HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_NEW { get; set;}
+            public HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW { get; set;}
+            public HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW { get; set;}
+            public HSE_ENVIRONMENTAL_STUDIES_NEW_Model HSE_ENVIRONMENTAL_STUDIES_NEW { get; set;}
+            public HSE_WASTE_MANAGEMENT_NEW_Model HSE_WASTE_MANAGEMENT_NEW { get; set;}
+            public HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW { get; set;}
+            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW { get; set;}
+            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW { get; set;}
+            public HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW { get; set;}
+            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL { get; set;}
+            public HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED_Model HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED { get; set;}
+            public HSE_OSP_REGISTRATIONS_NEW_Model HSE_OSP_REGISTRATIONS_NEW { get; set;}
+            public HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED { get; set;}
+            public HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW { get; set;}
+            public HSE_CAUSES_OF_SPILL_Model HSE_CAUSES_OF_SPILL { get; set;}
+            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU { get; set;}
+            public HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME { get; set;}
+            public HSE_MANAGEMENT_POSITION_Model HSE_MANAGEMENT_POSITION { get; set;}
+            public HSE_QUALITY_CONTROL_Model HSE_QUALITY_CONTROL { get; set;}
+            public HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model HSE_CLIMATE_CHANGE_AND_AIR_QUALITY { get; set;}
+            public HSE_SAFETY_CULTURE_TRAINING_Model HSE_SAFETY_CULTURE_TRAINING { get; set;}
+            public HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model HSE_OCCUPATIONAL_HEALTH_MANAGEMENT { get; set;}
+            public HSE_WASTE_MANAGEMENT_SYSTEM_Model HSE_WASTE_MANAGEMENT_SYSTEM { get; set;}
+            public HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM { get; set;}
+            public PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT { get; set;}
+        }
 
         #region
         public class HSE_QUESTION_Model
@@ -1399,7 +1625,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
         }
 
-        public class HSE_FATALITy_Model
+        public  class HSE_FATALITy_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1417,7 +1643,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_DESIGNS_SAFETY_Model
+        public  class HSE_DESIGNS_SAFETY_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1432,7 +1658,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
         }
 
-        public class HSE_SAFETY_STUDIES_NEW_Model
+        public  class HSE_SAFETY_STUDIES_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1451,7 +1677,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? DoyouhaveSMSinPlace { get; set; }
         }
 
-        public class HSE_INSPECTION_AND_MAINTENANCE_NEW_Model
+        public  class HSE_INSPECTION_AND_MAINTENANCE_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1467,7 +1693,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model
+        public  class HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1486,7 +1712,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? If_No_Give_reasonS { get; set; }
         }
 
-        public class HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model
+        public  class HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1501,7 +1727,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model
+        public  class HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1527,7 +1753,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
         }
 
-        public class HSE_OIL_SPILL_REPORTING_NEW_Model
+        public  class HSE_OIL_SPILL_REPORTING_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1577,22 +1803,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_ACCIDENT_INCIDENCE_MODEL
-        {
-            public int id { get; set; }
-            public string? Was_there_any_accident_incidence { get; set; }
-            public string? If_YES_were_they_reported { get; set; }
-            public string? Type_of_Accident_Incidence { get; set; }
-            public string? Location { get; set; }
-            public string? Investigation { get; set; }
-            public string? Date_ { get; set; }
-            public string? Cause { get; set; }
-            public string? Consequence { get; set; }
-            public string? Lesson_Learnt { get; set; }
-            public string? Frequency { get; set; }
-
-        }
-        public class HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model
+        public  class HSE_ACCIDENT_INCIDENCE_REPORTING_NEW_Model 
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1604,10 +1815,9 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
             public string? Terrain { get; set; }
             public string? Consession_Type { get; set; }
-
         }
 
-        public class HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model
+        public  class HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1627,7 +1837,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
         }
 
-        public class HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model
+        public  class HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1679,7 +1889,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
         }
 
-        public class HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model
+        public  class HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW_Model
         {
             public int Id { get; set; }
             public string? OML_ID { get; set; }
@@ -1724,7 +1934,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? COMPANY_ID { get; set; }
         }
 
-        public class HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model
+        public  class HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1743,7 +1953,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model
+        public  class HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1757,7 +1967,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1771,7 +1981,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1789,7 +1999,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? MOUResponderInPlace { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1806,7 +2016,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1824,7 +2034,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Contract_Type { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1857,7 +2067,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
         }
 
-        public class HSE_OSP_REGISTRATIONS_NEW_Model
+        public  class HSE_OSP_REGISTRATIONS_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1870,7 +2080,7 @@ namespace Backend_UMR_Work_Program.Models
 
         }
 
-        public class HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model
+        public  class HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1887,7 +2097,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model
+        public  class HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1905,7 +2115,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Terrain { get; set; }
         }
 
-        public class HSE_CAUSES_OF_SPILL_Model
+        public  class HSE_CAUSES_OF_SPILL_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1926,7 +2136,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? Consession_Type { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1945,7 +2155,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? MOUUploadFilename { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1962,7 +2172,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? SSUploadFilename { get; set; }
         }
 
-        public class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME_Model
+        public  class HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -1993,7 +2203,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? PromotionLetterFilename { get; set; }
         }
 
-        public class HSE_QUALITY_CONTROL_Model
+        public  class HSE_QUALITY_CONTROL_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -2006,20 +2216,20 @@ namespace Backend_UMR_Work_Program.Models
             public string? QualityControlFilename { get; set; }
         }
 
-        public class HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model
+        public  class HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
             public string? Year_of_WP { get; set; }
             public string? DoyouhaveGHG { get; set; }
-            public FormFile? GHGFilePath { get; set; }
+            public string? GHGFilePath { get; set; }
             public string? Consession_Type { get; set; }
             public string? Terrain { get; set; }
             public string? Contract_Type { get; set; }
             public string? GHGFilename { get; set; }
         }
 
-        public class HSE_SAFETY_CULTURE_TRAINING_Model
+        public  class HSE_SAFETY_CULTURE_TRAINING_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -2032,23 +2242,23 @@ namespace Backend_UMR_Work_Program.Models
             public string? SafetyCurrentYearFilename { get; set; }
             public string? SafetyLast2YearsFilename { get; set; }
         }
+        
+        public  class HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model
+            {
+                public string? OML_ID { get; set; }
+                public string? OML_Name { get; set; }
+                public string? Year_of_WP { get; set; }
+                public string? OHMplanFilePath { get; set; }
+                public string? OHMplanCommunicationFilePath { get; set; }
+                public string? Consession_Type { get; set; }
+                public string? Terrain { get; set; }
+                public string? Contract_Type { get; set; }
+                public string? OHMplanFilename { get; set; }
+                public string? OHMplanCommunicationFilename { get; set; }
+                public string? SMSFileUploadname { get; set; }
+            }
 
-        public class HSE_OCCUPATIONAL_HEALTH_MANAGEMENT_Model
-        {
-            public string? OML_ID { get; set; }
-            public string? OML_Name { get; set; }
-            public string? Year_of_WP { get; set; }
-            public string? OHMplanFilePath { get; set; }
-            public string? OHMplanCommunicationFilePath { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? Terrain { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? OHMplanFilename { get; set; }
-            public string? OHMplanCommunicationFilename { get; set; }
-            public string? SMSFileUploadname { get; set; }
-        }
-
-        public class HSE_WASTE_MANAGEMENT_SYSTEM_Model
+        public  class HSE_WASTE_MANAGEMENT_SYSTEM_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -2062,7 +2272,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? DecomCertificateFilename { get; set; }
         }
 
-        public class HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model
+        public  class HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -2076,7 +2286,7 @@ namespace Backend_UMR_Work_Program.Models
             public string? AUDITFilename { get; set; }
         }
 
-        public class PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model
+        public  class PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT_Model
         {
             public string? OML_ID { get; set; }
             public string? OML_Name { get; set; }
@@ -2089,7 +2299,6 @@ namespace Backend_UMR_Work_Program.Models
 
         #endregion
         #endregion
-
         public class UploadedDocument
         {
             public string filePath { get; set; }
@@ -2139,7 +2348,9 @@ namespace Backend_UMR_Work_Program.Models
             public object Subject { get; set; }
             public object Content { get; set; }
             public object RefNo { get; set; }
-
+            public object Year { get; set; }
+            public object Concession { get; set; }
+            public object Field { get; set; }
             public object Status { get; set; }
             public object Stage { get; set; }
             public object TotalAmount { get; set; }
@@ -2155,73 +2366,6 @@ namespace Backend_UMR_Work_Program.Models
             public object ApplicationPeriod { get; set; }
             public object DateSubmitted { get; set; }
 
-        }
-        public class UserModel
-        {
-            public List<ADMIN_COMPANY_INFORMATION> companiesList { get; set; }
-            public List<ADMIN_COMPANY_INFORMATION> staffList { get; set; }
-            public List<ROLES_> roles { get; set; }
-        }
-        public class parameterConfigModel
-        {
-            public List<ADMIN_CATEGORy> adminCategories { get; set; }
-            public List<Data_Type> dataTypes { get; set; }
-            public List<ADMIN_WELL_CATEGORy> wellCategories { get; set; }
-            public List<ADMIN_WP_START_END_DATE> startEndDate { get; set; }
-            public List<ADMIN_WP_START_END_DATE_DATA_UPLOAD> startEndDateUpload { get; set; }
-            public List<ADMIN_WP_PENALTy> penalties { get; set; }
-            public List<ADMIN_EMAIL_DAY> emailDays { get; set; }
-            public List<ROLES_SUPER_ADMIN> superAdmins { get; set; }
-            public List<ADMIN_PRESENTATION_CATEGORy> presentationCategories { get; set; }
-            public List<ADMIN_MEETING_ROOM> meetingRooms { get; set; }
-        }
-        public class ADMIN_COMPANY_INFORMATION_Model
-        {
-            public int? Id { get; set; }
-            public string? COMPANY_NAME { get; set; }
-            public string? EMAIL { get; set; }
-            public string? PASSWORDS { get; set; }
-            public string? STATUS_ { get; set; }
-            public string? FLAG_PASSWORD_CHANGE { get; set; }
-            public string? CATEGORY { get; set; }
-            public string? NAME { get; set; }
-            public string? DESIGNATION { get; set; }
-            public string? PHONE_NO { get; set; }
-            public string? COMPANY_ID { get; set; }
-            public string? DELETED_STATUS { get; set; }
-            public string? DELETED_BY { get; set; }
-            public string? DELETED_DATE { get; set; }
-            public string? FLAG1 { get; set; }
-            public string? FLAG2 { get; set; }
-            public string? EMAIL_REMARK { get; set; }
-        }
-
-        public partial class ADMIN_CONCESSIONS_INFORMATION_Model
-        {
-            public int Consession_Id { get; set; }
-            public string? Company_ID { get; set; }
-            public string? CompanyName { get; set; }
-            public string? Equity_distribution { get; set; }
-            public string? Concession_Held { get; set; }
-            public string? Area { get; set; }
-            public string? Contract_Type { get; set; }
-            public string? Year_of_Grant_Award { get; set; }
-            public DateTime? Date_of_Expiration { get; set; }
-            public string? Geological_location { get; set; }
-            public string? Comment { get; set; }
-            public string? Status_ { get; set; }
-            public string? Flag1 { get; set; }
-            public string? Flag2 { get; set; }
-            public string? COMPANY_EMAIL { get; set; }
-            public string? Terrain { get; set; }
-            public string? Year { get; set; }
-            public string? submitted { get; set; }
-            public string? Consession_Type { get; set; }
-            public string? Concession_Unique_ID { get; set; }
-            public string? OPEN_DATE { get; set; }
-            public string? CLOSE_DATE { get; set; }
-            public string? EMAIL_REMARK { get; set; }
-            public int? CompanyNumber { get; set; }
         }
 
         public class WebApiResponse
@@ -2262,30 +2406,6 @@ namespace Backend_UMR_Work_Program.Models
             public const int RecordNotFound = 404;
             public const int Duplicate = 409;
             public const int InternalError = 500;
-        }
-
-        public class FileReturn
-        {
-            public string fileId { get; set; }
-            public long? fileSize { get; set; }
-            public string path { get; set; }
-        }
-
-        public class DownReturn
-        {
-            public Stream stream { get; set; }
-            public string contentType { get; set; }
-            public string name { get; set; }
-        }
-
-        public class ConcessionField
-        {
-            public int? Field_ID { get; set; }
-            public int? Concession_ID { get; set; }
-            public string Concession_Name { get; set; }
-            public string Consession_Type { get; set; }
-            public string? Field_Name { get; set; }
-            public string? Terrain { get; set; }
         }
     }
 }

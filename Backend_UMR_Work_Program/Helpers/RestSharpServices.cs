@@ -101,7 +101,7 @@ namespace Backend_UMR_Work_Program.Helpers
             }
             else
             {
-                return "A network related error has occured. Message : " + restResponse.ErrorException.Source.ToString() + " - " + restResponse.ErrorException.InnerException.Message.ToString() + " --- Error Code : " + restResponse.ErrorException.HResult;
+                return "A network related error has occured. Message : " + restResponse.ErrorException.ToString() + " - " + restResponse.ErrorException.InnerException?.Message.ToString() + " --- Error Code : " + restResponse.ErrorException.HResult;
 
             }
         }

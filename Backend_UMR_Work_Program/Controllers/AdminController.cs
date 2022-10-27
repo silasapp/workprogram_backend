@@ -13,10 +13,11 @@ using ClosedXML.Excel;
 using Syncfusion.XlsIO;
 using DocumentFormat.OpenXml.Office.Word;
 using System.Text.RegularExpressions;
+using Backend_UMR_Work_Program.Helpers;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
 
     public class AdminController : Controller
@@ -27,6 +28,7 @@ namespace Backend_UMR_Work_Program.Controllers
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        RestSharpServices _restSharpServices = new RestSharpServices();
 
         public AdminController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, IMapper mapper)
         {
@@ -301,6 +303,26 @@ namespace Backend_UMR_Work_Program.Controllers
         #endregion
 
         #region User Administration
+        [HttpGet("GET_ELPS_STAFF")]
+        public async Task<WebApiResponse> GetAllElpsStaff()
+        {
+            var response = _restSharpServices.Response("api/Accounts/Staff/{email}/{apiHash}");
+
+            if (response.Result.ErrorException != null)
+            {
+                return new WebApiResponse
+                {
+                    Data = _restSharpServices.ErrorResponse(response.Result),
+                };
+            }
+            else
+            {
+                return new WebApiResponse
+                {
+                    Data = JsonConvert.DeserializeObject<List<LpgLicense.Models.Staff>>(response.Result.Content),
+                };
+            }
+        }
 
         [HttpGet("GET_USERS")]
         public async Task<WebApiResponse> Get_Users()
