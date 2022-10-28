@@ -23,6 +23,7 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("Best10_OPLAcquisitionIndex")]
         public async Task<object> Best10_OPLAcquisitionIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -37,11 +38,17 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpGet("Best10_OPLExploratoryIndex")]
         public async Task<object> Best10OPLExploratoryIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -56,10 +63,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OPLDiscoveryIndex")]
         public async Task<object> Best10OPLDiscoveryIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -74,10 +87,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OPLConcessionRentalsIndex")]
         public async Task<object> Best10OPLConcessionRentalsIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -92,6 +111,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OMLAcquisitionIndex")]
         public async Task<object> Best10OMLAcquisitionIndex(string year)

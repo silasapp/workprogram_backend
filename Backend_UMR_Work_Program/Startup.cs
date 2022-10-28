@@ -53,7 +53,7 @@ namespace Backend_UMR_Work_Program
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddMvc();
-            //.AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
+            //AddJsonOptions(opt => { opt.JsonSerializerOptions.IgnoreNullValues = true; });
             services.AddControllers();
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);

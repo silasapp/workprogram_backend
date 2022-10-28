@@ -59,7 +59,7 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
             string email = login?.email;
             string code = login?.code;
             var isSuccess = elpsServices.CodeCheck(email, code);
-
+            try { 
                 var log = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
 
@@ -269,12 +269,17 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
                     }
                 }
             return Ok(elpsResponse.message);
-            
-         }
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
 
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
+            try { 
             string publicKey = _configuration.GetSection("ElpsKeys").GetSection("PK").Value.ToString();
             var elpsLogoff = ElpsServices._elpsBaseUrl + "Account/RemoteLogOff";
             var returnUrl = Url.Action("Index", "Home", null, Request.Scheme);
@@ -288,12 +293,17 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
                 var log = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
                 return Content(frm, "text/html");
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
         }
         [HttpPost("ChangePasswordAction")]
         public async Task<IActionResult> ChangePasswordAction(string email, string OldPassword, string NewPassword, string ConfirmPassword)
         {
             string result = "";
-
+            try { 
             LpgLicense.Models.ChangePassword changePassword = new ChangePassword()
             {
                 oldPassword = OldPassword,
@@ -325,7 +335,11 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
             //_helpersController.LogMessages("Result for user changing password " + result, _helpersController.getSessionEmail());
 
             return Json(result);
-
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
         }
 
     }
