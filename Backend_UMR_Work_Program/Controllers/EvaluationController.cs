@@ -23,6 +23,7 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("Best10_OPLAcquisitionIndex")]
         public async Task<object> Best10_OPLAcquisitionIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year && a.OML_Name.ToLower().Contains("opl") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -37,11 +38,17 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpGet("Best10_OPLExploratoryIndex")]
         public async Task<object> Best10OPLExploratoryIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -56,10 +63,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OPLDiscoveryIndex")]
         public async Task<object> Best10OPLDiscoveryIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -74,10 +87,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OPLConcessionRentalsIndex")]
         public async Task<object> Best10OPLConcessionRentalsIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -92,10 +111,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OMLAcquisitionIndex")]
         public async Task<object> Best10OMLAcquisitionIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where a.Year_of_WP == year && a.OML_Name.ToLower().Contains("oml") select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -110,10 +135,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OMLExploratoryIndex")]
         public async Task<object> Best10OMLExploratoryIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -128,10 +159,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OMLDiscoveryIndex")]
         public async Task<object> Best10OMLDiscoveryIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -146,10 +183,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Best10_OMLConcessionRentalsIndex")]
         public async Task<object> Best10OMLConcessionRentalsIndex(string year)
         {
+            try { 
             var reel = await (from a in _context.CONCESSION_SITUATIONs where a.Year == year select a).ToListAsync();
             var acqlist = new List<double>();
             long value = 0;
@@ -164,12 +207,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         //By Adeola
         [HttpGet("Best10_Concession_RoyaltyPayment_Index")]
         public async Task<object> Best10_OML_RoyaltyPayment_Index(string year, string type)
         {
+            try { 
             var data = await (from a in _context.CONCESSION_SITUATIONs
                               join comp in _context.ADMIN_COMPANY_INFORMATIONs on a.CompanyNumber equals comp.Id
                               join ry in _context.Royalties on a.Id equals ry.Concession_ID
@@ -197,11 +246,17 @@ namespace Backend_UMR_Work_Program.Controllers
 
             acqlist.Sort();
             return acqlist.Take(10);
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpGet("Concession_RRR_Index")]
         public async Task<object> Concession_RRR_Index(string year, string type)
         {
+            try { 
             //variable declaration
             int N = int.Parse(year);
             double NetProduction_PY;
@@ -256,11 +311,17 @@ namespace Backend_UMR_Work_Program.Controllers
                 });
             });
             return acqlist;
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpGet("Concession_IncrementInProduction_Index")]
         public async Task<object> Concession_IncrementInProduction_Index(string year, string type)
         {
+            try { 
             //variable declaration
             int N = int.Parse(year);
             double NetProduction_PY;
@@ -305,10 +366,16 @@ namespace Backend_UMR_Work_Program.Controllers
                 });
             });
             return acqlist;
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Concession_CostEfficieny_Index")]
         public async Task<object> Concession_CostEfficieny_Index(string year, string type)
         {
+            try { 
             int N = int.Parse(year);
             double NetProduction_CY;
             var netProduction_Data = await (from conc in _context.CONCESSION_SITUATIONs
@@ -351,10 +418,16 @@ namespace Backend_UMR_Work_Program.Controllers
                 });
             });
             return acqlist;
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Concession_CSR_Index")]
         public async Task<object> Concession_CSR_Index(string year, string type)
         {
+            try { 
             int N = int.Parse(year);
             var data = await (from conc in _context.CONCESSION_SITUATIONs
                               join comp in _context.ADMIN_COMPANY_INFORMATIONs on conc.COMPANY_ID equals comp.COMPANY_ID
@@ -387,10 +460,16 @@ namespace Backend_UMR_Work_Program.Controllers
                 });
             });
             return acqlist;
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("Concession_StatutoryPayment_Index")]
         public async Task<object> Concession_StatutoryPayment_Index(string year, string type)
         {
+            try { 
             int N = int.Parse(year);
             var data = await (from conc in _context.CONCESSION_SITUATIONs
                               join comp in _context.ADMIN_COMPANY_INFORMATIONs on conc.COMPANY_ID equals comp.COMPANY_ID
@@ -423,6 +502,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 });
             });
             return acqlist;
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
     }
 }

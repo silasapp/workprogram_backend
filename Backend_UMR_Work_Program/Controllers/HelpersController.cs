@@ -2778,6 +2778,7 @@ namespace Backend_UMR_Work_Program.Controllers
         private Object lockThis = new object();
         public int RecordStaffDesk(int appID, ApplicationProcessModel appProcess)
         {
+            try { 
             if (appProcess != null)
             {
                 MyDesk drop = new MyDesk()
@@ -2809,9 +2810,15 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
             }
             return 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
         public async Task<List<ApplicationProcessModel>> GetApplicationProccess(string appType, int sortID)
         {
+            try { 
             var applicationProcess =  (from ap in _context.ApplicationProccesses
                                       join cat in _context.ApplicationCategories on ap.CategoryID equals cat.Id
                                       where cat.Name == appType && ap.DeleteStatus != true && cat.DeleteStatus != true
@@ -2847,6 +2854,11 @@ namespace Backend_UMR_Work_Program.Controllers
             }
 
             return null;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
         public void SaveHistory(int appid, int staffid, string status, string comment)
         {

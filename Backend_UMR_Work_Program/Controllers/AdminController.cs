@@ -1701,25 +1701,42 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_ADMIN_CONCESSIONS_INFORMATIONs")]
         public async Task<object> GET_ADMIN_CONCESSIONS_INFORMATIONs(int companyNumber)
         {
+            try { 
             int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
             var companyConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.CompanyNumber == companyID && d.DELETED_STATUS != "true" select d).ToListAsync();
             return new { CompanyConcessions = companyConcessions };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpGet("GET_COMPANY_FIELDS")]
         public async Task<object> GET_COMPANY_FIELDS(int companyNumber)
         {
+            try { 
             int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
             var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
             return new { ConcessionFields = concessionFields };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpGet("GET_CONCESSIONS_FIELDS")]
         public async Task<object> GET_CONCESSIONS_FIELDS(int concessionID)
         {
+            try { 
             var companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concessionID && d.DeletedStatus != true select d).ToListAsync();
             return new { CompanyFields = companyFields };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
-
 
         [HttpPost("POST_COMPANY_FIELD")]
         public async Task<WebApiResponse> POST_COMPANY_FIELD([FromBody] COMPANY_FIELD company_field_model, string actionToDo = null)
