@@ -38,6 +38,118 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
         private int? WKPCompanyNumber => Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
 
+        [HttpGet("GETCOMPLETEDPAGES")]
+        public async Task<object> GETCOMPLETEDPAGES(string omlname)
+        {
+            bool isStep1;
+            bool isStep2;
+            bool isStep3;
+            bool isStep4;
+            bool isStep5;
+
+            var step1 = await (from a in _context.CONCESSION_SITUATIONs
+                               join b in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs on a.OML_Name equals b.OML_Name
+                               join c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs on a.OML_Name equals c.OML_Name
+                               join d in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs on a.OML_Name equals d.OML_Name
+                               where a.OML_Name == omlname
+                               select new
+                               {
+                                   noOfFields = a.No_of_field_producing,
+                                   geoData = b.Geo_acquired_geophysical_data,
+                                   geoDataProcessed = c.Geo_Any_Ongoing_Processing_Project,
+                                   wellType = d.well_type
+
+                               }).FirstOrDefaultAsync();
+            if (step1?.geoData != null && step1?.geoDataProcessed != null && step1?.wellType != null && step1?.noOfFields != null)
+            {
+                isStep1 = true;
+            }
+            else
+            {
+                isStep1 = false;
+            }
+
+            var step2 = await (from a in _context.INITIAL_WELL_COMPLETION_JOBs1
+                               join b in _context.WORKOVERS_RECOMPLETION_JOBs1 on a.OML_Name equals b.OML_Name
+                               join c in _context.GAS_PRODUCTION_ACTIVITIEs on a.OML_Name equals c.OML_Name
+                               join d in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs on a.OML_Name equals d.OML_Name
+                               join e in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs on a.OML_Name equals e.OML_Name
+                               join f in _context.FIELD_DEVELOPMENT_PLANs on a.OML_Name equals f.OML_Name
+                               where a.OML_Name == omlname
+                               select new
+                               {
+                                   currentdata = a.Current_year_Actual_Number,
+                                   approvalWorkover = b.Do_you_have_approval_for_the_workover_recompletion,
+                                   gasRoyalty = c.Gas_Sales_Royalty_Payment,
+                                   oilRoyalty = d.Oil_Royalty_Payment,
+                                   oilReserve = e.Company_Reserves_Oil,
+                                   wellDrilled = f.No_of_wells_drilled_in_current_year
+                               }).FirstOrDefaultAsync();
+            if (step2?.currentdata != null && step2?.approvalWorkover != null && step2?.gasRoyalty != null && step2?.oilRoyalty != null && step2?.oilReserve != null && step2?.wellDrilled != null)
+            {
+                isStep2 = true;
+            }
+            else
+            {
+                isStep2 = false;
+            }
+
+            var step3 = await (from a in _context.BUDGET_ACTUAL_EXPENDITUREs
+                               join b in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs on a.OML_Name equals b.OML_Name
+                               join c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs on a.OML_Name equals c.OML_Name
+                               where a.OML_Name == omlname
+                               select new
+                               {
+                                   exploratoryBudget = a.Budget_for_Direct_Exploration_and_Production_Activities_USD,
+                                   proposalBudget = b.Budget_for_Direct_Exploration_and_Production_Activities_Dollars,
+                                   majorProjects = c.Major_Projects
+                               }).FirstOrDefaultAsync();
+            if (step3?.exploratoryBudget != null && step3?.proposalBudget != null && step3?.majorProjects != null)
+            {
+                isStep3 = true;
+            }
+            else
+            {
+                isStep3 = false;
+            }
+
+            var step4 = await (from a in _context.NIGERIA_CONTENT_Trainings
+                               join b in _context.STRATEGIC_PLANS_ON_COMPANY_BAses on a.OML_Name equals b.OML_Name
+                               join c in _context.LEGAL_LITIGATIONs on a.OML_Name equals c.OML_Name
+                               where a.OML_Name == omlname
+                               select new
+                               {
+                                   actual_proposed = a.Actual_Proposed,
+                                   activities = b.ACTIVITIES,
+                                   anyLitigation = c.AnyLitigation
+                               }).FirstOrDefaultAsync();
+            if (step4?.actual_proposed != null && step4?.activities != null && step4?.anyLitigation != null)
+            {
+                isStep4 = true;
+            }
+            else
+            {
+                isStep4 = false;
+            }
+
+            var step5 = await (from a in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs
+                               where a.OML_Name == omlname
+                               select new
+                               {
+                                   facility = a.facility
+                               }).FirstOrDefaultAsync();
+            if (step5?.facility != null)
+            {
+                isStep5 = true;
+            }
+            else
+            {
+                isStep5 = false;
+            }
+
+            return new {step1 = isStep1, step2 = isStep2, step3 = isStep3, step4 = isStep4, step5 = isStep5};
+        }
+
         #region company concessions and fields management
         [HttpGet("GET_COMPANY_CONCESSIONS")]
         public async Task<object> GET_COMPANY_CONCESSIONS(int companyNumber)

@@ -39,6 +39,8 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
         private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 
+        
+
 
         #region General Report Section
         [HttpGet("GENERAL_WORKPROGRAMME_REPORT")]
