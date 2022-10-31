@@ -6,7 +6,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -1701,11 +1700,18 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("REPORTS_YEARLIST")]
         public async Task<object> REPORTS_YEARLIST()
         {
-            int portalDate =int.Parse( _configuration.GetSection("AppSettings").GetSection("portalDate").Value.ToString()); 
-            var yearList = from n in Enumerable.Range(0, (DateTime.Now.Year - portalDate) + 1)
-                             select (DateTime.Now.Year -  n).ToString();
+            try
+            {
+                int portalDate = int.Parse(_configuration.GetSection("AppSettings").GetSection("portalDate").Value.ToString());
+                var yearList = from n in Enumerable.Range(0, (DateTime.Now.Year - portalDate) + 1)
+                               select (DateTime.Now.Year - n).ToString();
 
-            return yearList;
+                return yearList;
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError }; ;
+            }
         }
 
         [HttpGet("CONCESSIONSITUATION")]
