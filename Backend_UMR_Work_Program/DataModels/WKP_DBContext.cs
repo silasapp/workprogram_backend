@@ -4276,7 +4276,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<DRILLING_EACH_WELL_COST>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("DRILLING_EACH_WELL_COST");
 
@@ -4341,7 +4340,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<DRILLING_EACH_WELL_COST_PROPOSED>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("DRILLING_EACH_WELL_COST_PROPOSED");
 
