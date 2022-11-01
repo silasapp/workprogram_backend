@@ -1223,7 +1223,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try { 
             var concessionField = GET_CONCESSION_FIELD(omlName, "");
-            var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Field_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
+            var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
             return new { royalty = royalty };
             }
             catch (Exception e)
