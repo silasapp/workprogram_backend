@@ -1219,11 +1219,11 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("GET_ROYALTY")]
-        public async Task<object> GET_ROYALTY(string omlName, string myyear)
+        public async Task<object> GET_ROYALTY(string myyear, string omlName)
         {
             try { 
             var concessionField = GET_CONCESSION_FIELD(omlName, "");
-            var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Field_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
+            var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
             return new { royalty = royalty };
             }
             catch (Exception e)
@@ -1251,7 +1251,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     var getData = (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == year select d).FirstOrDefault();
                     royalty_model.CompanyNumber = WKPCompanyNumber;
-                    royalty_model.Field_ID = concessionField.Concession_ID;
+                    royalty_model.Concession_ID = concessionField.Concession_ID;
+                    royalty_model.Year = year;
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null)
