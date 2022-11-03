@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+vlxglYB0m0oP3O8mUKJTGKDqUSZOPz1Avr3L7H/mB3vRY7Q0LmLAJ6uCcN6x1u64kxetMfv8JY0x3kVvaM5bg==",
+  "dgSpecHash": "Gd2eZDAFZtXQRooDriVRtM2wK1CIEhhqYHCZmNiWg3dMsKpJ1JrKWUKTbR8iGZBmfWUsOlR6ELG6Eh+bzseSlw==",
   "success": true,
-  "projectFilePath": "C:\\Workcode\\WORKPROGRAMV2\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+  "projectFilePath": "C:\\Workcode\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\prisc\\.nuget\\packages\\automapper\\11.0.1\\automapper.11.0.1.nupkg.sha512",
     "C:\\Users\\prisc\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
