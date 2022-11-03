@@ -17,6 +17,5 @@ namespace Backend_UMR_Work_Program.Models
         public string? Year { get; set; }
         public string? Status { get; set; }
         public DateTime? Date_Created { get; set; }
-
     }
 }

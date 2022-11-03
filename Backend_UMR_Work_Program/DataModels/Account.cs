@@ -407,7 +407,7 @@ namespace Backend_UMR_Work_Program.Models
             else
             {
 
-                await Insert_ADMIN_COMPANY_INFORMATION(compName, compCode, name, designation, phone, email, password);
+                await Insert_ADMIN_COMPANY_INFORMATION(compName, compCode, name, designation, phone, email, password, 0);
                 var resourceData = await GetCompanyResource(compCode);
                 Send_Email_to_Profiled_User(compName, compCode, name, designation, phone, email, password);
                 myPopText = "User Created";
@@ -415,9 +415,9 @@ namespace Backend_UMR_Work_Program.Models
             }
         }
 
-        private async Task<int> Insert_ADMIN_COMPANY_INFORMATION(string compName, string compCode, string name, string designation, string phone, string email, string password)
+        public async Task<int> Insert_ADMIN_COMPANY_INFORMATION(string compName, string compCode, string name, string designation, string phone, string email, string password, int elpsID)
         {
-            var newInfo = new ADMIN_COMPANY_INFORMATION {COMPANY_NAME = compName, COMPANY_ID = compCode, EMAIL = email, PASSWORDS = Encrypt(password), NAME = name, DESIGNATION = designation, PHONE_NO = phone, STATUS_ = "Activated",  Created_by = compName, Date_Created = DateTime.Now};
+            var newInfo = new ADMIN_COMPANY_INFORMATION {ELPS_ID= elpsID, COMPANY_NAME = compName, COMPANY_ID = compCode, EMAIL = email, PASSWORDS = Encrypt(password), NAME = name, DESIGNATION = designation, PHONE_NO = phone, STATUS_ = "Activated",  Created_by = compName, Date_Created = DateTime.Now};
             try
             {
                 await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(newInfo);

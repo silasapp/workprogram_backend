@@ -7,8 +7,8 @@ namespace Backend_UMR_Work_Program.Models
     {
         public string? CompanyName { get; set; }
         public string? Year_of_WP { get; set; }
-        public int? Flared { get; set; }
-        public int? penaltyfeepaid { get; set; }
-        public int? Amount_Paid { get; set; }
+        public decimal? Flared { get; set; }
+        public decimal? penaltyfeepaid { get; set; }
+        public decimal? Amount_Paid { get; set; }
     }
 }

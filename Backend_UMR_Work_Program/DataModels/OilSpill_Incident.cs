@@ -17,5 +17,8 @@ namespace Backend_UMR_Work_Program.Models
         public int? Nbr_of_Fatality { get; set; }
         public int? Cost_Involved { get; set; }
         public string? Action_Plan { get; set; }
+        public string? Proof_Of_Submission_Of_Valid_OSCP { get; set; }
+        public string? Evidence_Of_QuaterlySubmissions_Of_OilField_Chemicals { get; set; }
+        public string? Evidence_Of_MOUs_With_CAN { get; set; }
     }
 }

@@ -41,27 +41,42 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKPUserName => User.FindFirstValue(ClaimTypes.Name);
         private string? WKPUserEmail => User.FindFirstValue(ClaimTypes.Email);
         private string? WKPUserRole => User.FindFirstValue(ClaimTypes.Role);
+        private int? WKPUserNumber => Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
 
 
 
         [HttpGet("GetCompanyDetails")]
-        public CompanyDetail CompanyDetails(string companyName, string companyEmail, string companyId)
+        public object CompanyDetails(string companyName, string companyEmail, string companyId)
         {
-            var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
+            try
+            {
+                var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
 
-            return details;
+                return details;
+            }
+            catch (Exception ex)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpPost("EditCompanyDetails")]
-        public IActionResult EditCompanyDetails([FromBody] CompanyDetail myDetail)
+        public object EditCompanyDetails([FromBody] CompanyDetail myDetail)
         {
+            try { 
             _presentation.Insert_Company_Details_Contact_Person(myDetail.CompanyName, myDetail.CompanyEmail, myDetail.Address_of_Company, myDetail.Name_of_MD_CEO, myDetail.Phone_NO_of_MD_CEO, myDetail.Contact_Person, myDetail.Phone_No, myDetail.Email_Address);
             return Ok(myDetail);
+            }
+            catch (Exception ex)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpPost("SCHEDULEPRESENTATION")]
         public async Task<WebApiResponse> SCHEDULE_PRESENTATION_DATETIME(string time, DateTime date)
-        {   
+        {
+            try { 
             var CurrentYear = DateTime.Now.Year.ToString();
             var checkCompanySchedule = _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.COMPANY_ID == WKPUserId && c.YEAR == CurrentYear).FirstOrDefault();
 
@@ -111,11 +126,16 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 }
             }
+            }
+            catch (Exception ex)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
         [HttpPost("UPLOADPRESENTATION")]
         public async Task<WebApiResponse> UPLOAD_PRESENTATION_DOCUMENT(string year, IFormFile document)
-        {   
-            
+        {
+            try { 
             var CurrentYear = DateTime.Now.Year.ToString();
             var checkCompanyPresentation = _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == WKPUserId && c.Year_of_WP == year).FirstOrDefault();
 
@@ -129,12 +149,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 //check if date has been scheduled by another company
                 var system_date = DateTime.Now.ToString(); // 
-
-
                 if (document != null)
                 {
+                   
                     var blobname1 = blobService.Filenamer(document);
-                    var uploadedDocument = await blobService.UploadFileBlobAsync("documents", document.OpenReadStream(), document.ContentType, $"Presentations/{blobname1}");
+                    var uploadedDocument = await blobService.UploadFileBlobAsync("documents", document.OpenReadStream(), document.ContentType, $"Presentations/{blobname1}", "PRESENTATION", (int)WKPUserNumber, int.Parse(year));
                     if (uploadedDocument == null)
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to upload presentation document.", StatusCode = ResponseCodes.Failure };
@@ -176,7 +195,13 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 }
             }
-        }
+            
+           }
+            catch (Exception ex)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError};
+            }
+           }
 
 
         [HttpPost("PRESENTATION_SCRIBES")]
@@ -209,7 +234,6 @@ namespace Backend_UMR_Work_Program.Controllers
                     else
                     {
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
-
                     }
                     save = await _context.SaveChangesAsync();
                     if (save > 0)
@@ -221,7 +245,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 catch (Exception ex)
                 {
 
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.Badrequest };
                 }
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
             }
@@ -234,8 +258,14 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpGet("SCRIBES_YEARLIST")]
         public async Task<object> Get_Scribes_And_Chairmen_Yearlist() {
+            try { 
             var yearlist = await (from a in _context.ADMIN_DATETIME_PRESENTATIONs where a.YEAR != "" orderby a.YEAR select a.YEAR).Distinct().ToListAsync();
             return yearlist;
+            }
+            catch (Exception ex)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpGet("SCRIBES_&_CHAIRMEN")]
@@ -248,21 +278,20 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 if (WKPUserRole == GeneralModel.Admin)
                 {
-
                     details =await _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.YEAR == year).ToListAsync();
                 }
                 else
                 {
                     details =await _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.YEAR == year && c.COMPANY_ID == WKPUserId).ToListAsync();
                 }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
             }
             catch (Exception ex)
             {
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.Success };
             }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
 
         }
 
@@ -274,14 +303,14 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                     details = await (from a in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs select a).ToListAsync();
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.YEAR), StatusCode = ResponseCodes.Success };
             }
             catch (Exception ex)
             {
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.Success };
             }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.YEAR), StatusCode = ResponseCodes.Success };
 
         }
 
@@ -293,14 +322,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                     details = await (from a in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs where a.YEAR == year select a).ToListAsync();
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.YEAR), StatusCode = ResponseCodes.Success };
+
             }
             catch (Exception ex)
             {
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : " + ex.Message, StatusCode = ResponseCodes.Success };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.Success };
             }
 
-            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details.OrderBy(x => x.YEAR), StatusCode = ResponseCodes.Success };
 
         }
 
@@ -320,7 +350,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = ex.Message, StatusCode = ResponseCodes.InternalError };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = ex.Message, StatusCode = ResponseCodes.InternalError };
                 }
             }
             return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "No data found", StatusCode = ResponseCodes.RecordNotFound };
@@ -328,14 +358,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpGet("DIVISIONAL_YEARLIST")]
         public async Task<object> Get_Divisional_Yearlist() {
-            var yearlist = await (from a in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs where a.YEAR != "" orderby a.YEAR select a.YEAR).Distinct().ToListAsync();
-            return yearlist;
+            try
+            {
+                var yearlist = await (from a in _context.ADMIN_DIVISIONAL_REPS_PRESENTATIONs where a.YEAR != "" orderby a.YEAR select a.YEAR).Distinct().ToListAsync();
+                return yearlist;
+             }
+            catch (Exception ex)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError
+                };
+            }
         }
 
         [HttpGet("COMPANY_REPS")]
         public async Task<object> Get_Company_Replist()
         {
             return await _context.ADMIN_DIVISION_REP_LISTs.ToListAsync();
+
         }
         [HttpPost("UPDATE_COMPANY_REP")]
         public async Task<WebApiResponse> UpdateRep(int Id, int UpdateId)
@@ -361,7 +400,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = ex.Message, StatusCode = ResponseCodes.Failure };
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = ex.Message, StatusCode = ResponseCodes.InternalError };
                     }
                 }
             }
@@ -404,10 +443,9 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.UserNotFound, Message = "Error Occured", StatusCode = ResponseCodes.RecordNotFound };
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error:" + ex.Message, StatusCode = ResponseCodes.InternalError };
 
                 }
 
@@ -420,9 +458,6 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("UPLOAD_MOM")]
         public async Task<WebApiResponse> UPLOADMOM(int compId, IFormFile document)
         {
-            //var userRole = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionRoleName));
-            //var userEmail = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionEmail));
-            //var companyID = _helpersController.Decrypt(_httpContextAccessor.HttpContext.Session.GetString(Authentications.AuthController.sessionUserID));
 
             var userRole = WKPUserRole;
             var userName = WKPUserName;
@@ -431,66 +466,73 @@ namespace Backend_UMR_Work_Program.Controllers
             var CurrentYear = DateTime.Now.Year.ToString();
             string folderToSave = "";
             var checkUploadedMom = _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.Id == compId).FirstOrDefault();
-
-            if (checkUploadedMom.MOM_UPLOAD_DATE != null)
+            try
             {
-                //schedule already exist for company
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "You have already uploaded minutes for the selected year, kindly delete an existing document to upload another.", StatusCode = ResponseCodes.Failure };
-            }
-            else
-            {
-                //check if date has been scheduled by another company
-                var system_date = DateTime.Now.ToString(); // 
-
-                var uniqueFileName = "";
-                var FileExtension = "";
-                var newFileName = "";
-                var documentPath = "";
-                var fileName = "";
-                var save = 0;
-
-                if (document != null)
+                if (checkUploadedMom.MOM_UPLOAD_DATE != null)
                 {
-                    if (document.Length > 0)
-                    {
-                        var up = Path.Combine(Directory.GetCurrentDirectory(), "Documents");
-                        var uploads = Path.Combine(up, "UploadMOMs");
-                        fileName = document.FileName.Split(".")[0].Trim();
-                        uniqueFileName = Convert.ToString(Guid.NewGuid());
-                        FileExtension = document.FileName.Split(".")[1].Trim();
-
-                        newFileName = fileName + "." + FileExtension;
-
-
-                        documentPath = "//Documents/UploadMOMs/" + newFileName;
-                        using (var s = new FileStream(Path.Combine(uploads, newFileName),
-                             FileMode.Create))
-                        {
-                            document.CopyTo(s);
-                        }
-                    }
-                    checkUploadedMom.MOM = documentPath;
-                    checkUploadedMom.MOM_UPLOADED_BY = userEmail;
-                    checkUploadedMom.MOM_UPLOAD_DATE = DateTime.Now;
-                    save = _context.SaveChanges();
-                    if (save > 0)
-                    {
-                        var companyUploadedmom = _context.ADMIN_DATETIME_PRESENTATIONs.Where(x => x.Id == compId).ToList();
-
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "File uploaded successfully.", Data = companyUploadedmom, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to upload this minutes.", StatusCode = ResponseCodes.Failure };
-
-                    }
+                    //schedule already exist for company
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "You have already uploaded minutes for the selected year, kindly delete an existing document to upload another.", StatusCode = ResponseCodes.Failure };
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, document is empty.", StatusCode = ResponseCodes.Failure };
+                    //check if date has been scheduled by another company
+                    var system_date = DateTime.Now.ToString(); // 
 
+                    var uniqueFileName = "";
+                    var FileExtension = "";
+                    var newFileName = "";
+                    var documentPath = "";
+                    var fileName = "";
+                    var save = 0;
+
+                    if (document != null)
+                    {
+                        if (document.Length > 0)
+                        {
+                            var up = Path.Combine(Directory.GetCurrentDirectory(), "Documents");
+                            var uploads = Path.Combine(up, "UploadMOMs");
+                            fileName = document.FileName.Split(".")[0].Trim();
+                            uniqueFileName = Convert.ToString(Guid.NewGuid());
+                            FileExtension = document.FileName.Split(".")[1].Trim();
+
+                            newFileName = fileName + "." + FileExtension;
+
+
+                            documentPath = "//Documents/UploadMOMs/" + newFileName;
+                            using (var s = new FileStream(Path.Combine(uploads, newFileName),
+                                 FileMode.Create))
+                            {
+                                document.CopyTo(s);
+                            }
+                        }
+                        checkUploadedMom.MOM = documentPath;
+                        checkUploadedMom.MOM_UPLOADED_BY = userEmail;
+                        checkUploadedMom.MOM_UPLOAD_DATE = DateTime.Now;
+                        save = _context.SaveChanges();
+                        if (save > 0)
+                        {
+                            var companyUploadedmom = _context.ADMIN_DATETIME_PRESENTATIONs.Where(x => x.Id == compId).ToList();
+
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "File uploaded successfully.", Data = companyUploadedmom, StatusCode = ResponseCodes.Success };
+                        }
+                        else
+                        {
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to upload this minutes.", StatusCode = ResponseCodes.Failure };
+
+                        }
+                    }
+                    else
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, document is empty.", StatusCode = ResponseCodes.Failure };
+
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error:" + ex.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
         }
-    }
+        }
 }
