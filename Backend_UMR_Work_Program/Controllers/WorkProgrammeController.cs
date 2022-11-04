@@ -922,7 +922,8 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_FORM_FOUR_NIGERIA_CONTENT")]
         public async Task<object> GET_FORM_FOUR_NIGERIA_CONTENT(string omlName, string fieldName, string year)
         {
-            try {
+            try
+            {
                 var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
                 if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
                 {
@@ -939,9 +940,9 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    var NigeriaContent = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    var NigeriaContentUploadSuccession = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    var NigeriaContentQuestion = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                    var NigeriaContent = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                    var NigeriaContentUploadSuccession = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                    var NigeriaContentQuestion = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
 
                     return new
                     {
@@ -950,6 +951,19 @@ namespace Backend_UMR_Work_Program.Controllers
                         NigeriaContentQuestion = NigeriaContentQuestion
                     };
                 }
+                // else
+                // {
+                //     var NigeriaContent = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                //     var NigeriaContentUploadSuccession = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                //     var NigeriaContentQuestion = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                //     return new
+                //     {
+                //         NigeriaContent = NigeriaContent,
+                //         NigeriaContentUploadSuccession = NigeriaContentUploadSuccession,
+                //         NigeriaContentQuestion = NigeriaContentQuestion
+                //     };
+                // }
             }
             catch (Exception e)
             {
@@ -3144,75 +3158,6 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-            }
-        }
-
-        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_Addition")]
-        public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_Addition([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition reserve_update_addition_model, string omlName, string fieldName, string year, string actionToDo)
-        {
-            int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionFields = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition data
-                if (reserve_update_addition_model != null)  
-                {
-                    var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    reserve_update_addition_model.Companyemail = WKPCompanyEmail;
-                    reserve_update_addition_model.CompanyName = WKPCompanyName;
-                    reserve_update_addition_model.COMPANY_ID = WKPCompanyId;
-                    reserve_update_addition_model.CompanyNumber = WKPCompanyNumber;
-                    reserve_update_addition_model.Date_Updated = DateTime.Now;
-                    reserve_update_addition_model.Updated_by = WKPCompanyId;
-                    reserve_update_addition_model.Year_of_WP = year;
-                    reserve_update_addition_model.OML_Name = omlName;
-                    reserve_update_addition_model.Field_ID = concessionFields.Field_ID;
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            reserve_update_addition_model.Date_Created = DateTime.Now;
-                            reserve_update_addition_model.Created_by = WKPCompanyId;
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.AddAsync(reserve_update_addition_model);
-                        }
-                        else
-                        {
-                            reserve_update_addition_model.Date_Created = getData.Date_Created;
-                            reserve_update_addition_model.Created_by = getData.Created_by;
-                            reserve_update_addition_model.Date_Updated = DateTime.Now;
-                            reserve_update_addition_model.Updated_by = WKPCompanyId;
-                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Remove(getData);
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.AddAsync(reserve_update_addition_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                    if (save > 0)
-                    {
-                        string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-                    }
-
-                }
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                #endregion
-            }
-            catch (Exception e)
-            {
-
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
         }
 
