@@ -1,4 +1,6 @@
 ﻿using Backend_UMR_Work_Program.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -6,7 +8,9 @@ using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
     {
-        [Route("api/[controller]")]
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
         public class DashboardController : ControllerBase
         {
             public WKP_DBContext _context;
