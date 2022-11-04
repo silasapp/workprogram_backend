@@ -1,4 +1,6 @@
 ﻿using Backend_UMR_Work_Program.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -6,7 +8,9 @@ using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
     {
-        [Route("api/[controller]")]
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
         public class DashboardController : ControllerBase
         {
             public WKP_DBContext _context;
@@ -24,7 +28,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpGet("Company_Dashboard_Report")]
         public async Task<object> Company_Dashboard(string year)
-        {            
+        {
+            try { 
             var data = await (from conc in _context.CONCESSION_SITUATIONs
                                             join comp in _context.ADMIN_COMPANY_INFORMATIONs on conc.COMPANY_ID equals comp.COMPANY_ID
                                             join reserve in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs on conc.Id.ToString() equals reserve.OML_ID
@@ -69,6 +74,11 @@ namespace Backend_UMR_Work_Program.Controllers
             companyDashboard_Report.No_Of_ProducingFields_Count = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true select d).CountAsync();
 
             return companyDashboard_Report;
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
     }

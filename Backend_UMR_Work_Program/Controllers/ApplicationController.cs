@@ -38,7 +38,7 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GetDashboardStuff")]
         public async Task<object> GetDashboardStuff()
         {
-        
+            try { 
             var deskCount = await _context.MyDesks.Where(x => x.StaffID == WKPCompanyNumber && x.HasWork != true).CountAsync();
             var allApplicationsCount = await _context.Applications.Where(x => x.Status == GeneralModel.Processing).CountAsync();
             var allProcessingCount = await _context.Applications.CountAsync();
@@ -50,6 +50,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 allProcessingCount = allProcessingCount,
                 allApprovalsCount = allApprovalsCount
             };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
         }
 
         [HttpGet("GetAppsOnMyDesk")] 
