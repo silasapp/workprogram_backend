@@ -922,26 +922,14 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_FORM_FOUR_NIGERIA_CONTENT")]
         public async Task<object> GET_FORM_FOUR_NIGERIA_CONTENT(string omlName, string fieldName, string year)
         {
-            try {
+            try
+            {
                 var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
                 if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
                 {
-<<<<<<< HEAD
-                    NigeriaContent = NigeriaContent,
-                    NigeriaContentUploadSuccession = NigeriaContentUploadSuccession,
-                    NigeriaContentQuestion = NigeriaContentQuestion
-                };
-            }
-            else
-            {
-                var NigeriaContent = await(from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
-                var NigeriaContentUploadSuccession = await(from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
-                var NigeriaContentQuestion = await(from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
-=======
                     var NigeriaContent = await (from c in _context.NIGERIA_CONTENT_Trainings where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var NigeriaContentUploadSuccession = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var NigeriaContentQuestion = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
->>>>>>> e5b4a9976f84dcd41bc7c3020bb48ea1aee73182
 
                     return new
                     {
@@ -952,9 +940,9 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    var NigeriaContent = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    var NigeriaContentUploadSuccession = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    var NigeriaContentQuestion = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                    var NigeriaContent = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                    var NigeriaContentUploadSuccession = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                    var NigeriaContentQuestion = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
 
                     return new
                     {
@@ -963,6 +951,19 @@ namespace Backend_UMR_Work_Program.Controllers
                         NigeriaContentQuestion = NigeriaContentQuestion
                     };
                 }
+                // else
+                // {
+                //     var NigeriaContent = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                //     var NigeriaContentUploadSuccession = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                //     var NigeriaContentQuestion = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                //     return new
+                //     {
+                //         NigeriaContent = NigeriaContent,
+                //         NigeriaContentUploadSuccession = NigeriaContentUploadSuccession,
+                //         NigeriaContentQuestion = NigeriaContentQuestion
+                //     };
+                // }
             }
             catch (Exception e)
             {
