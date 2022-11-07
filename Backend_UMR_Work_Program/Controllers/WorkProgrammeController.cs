@@ -16,7 +16,6 @@ namespace Backend_UMR_Work_Program.Controllers
     [Route("api/[controller]")]
     public class WorkProgrammeController : ControllerBase
     {
-       
         private Account _account;
         public WKP_DBContext _context;
         public IConfiguration _configuration;
