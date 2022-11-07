@@ -109,6 +109,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
         }
+
+        
         [HttpGet("Get_General_SummaryReport")]
         public async Task<object> Get_General_SummaryReport(string year)
         {
@@ -390,9 +392,8 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                  return BadRequest(new {message =  "Error : " + e.Message});
             }
-            
-
         }
+
         [HttpGet("GET_SEISMIC_DATA_REPORT")]
         public async Task<object> GET_SEISMIC_DATA_REPORT(string year)
         {
@@ -429,7 +430,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 var text3data = await (from a in _context.WP_GEOPHYSICAL_ACTIVITIES_PROCESSINGs where a.Year_of_WP == year && a.Geo_Type_of_Data_being_Processed == "3D" select a).FirstOrDefaultAsync();
                 var text3 = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 3 select a.Report_Content).FirstOrDefaultAsync();
-                var text3Modified = text3.Replace("(N)", year).Replace("(NO_OF_PROCESSED)", text3data.Processed_Actual.ToString()).Replace("(NO_OF_REPROCESSED)", text3data.Reprocessed_Actual.ToString() + " ");
+                var text3Modified = text3?.Replace("(N)", year).Replace("(NO_OF_PROCESSED)", text3data?.Processed_Actual.ToString()).Replace("(NO_OF_REPROCESSED)", text3data?.Reprocessed_Actual.ToString() + " ");
                 WKP_Report2.GEOPHYSICAL_ACTIVITIES_PROCESSING_DESCRIPTION = text3Modified;
                 WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                            where o.Year_of_WP == year
@@ -504,6 +505,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
             return WKP_Report2;
         }
+
+        
         [HttpGet("GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT")]
         public async Task<object> GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT(string year)
         {
