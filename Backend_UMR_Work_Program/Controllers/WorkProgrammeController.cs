@@ -704,6 +704,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     var ReservesDecline = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                     var ReservesReplacementRatio = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                     var OilCondensateFiveYears = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReserveDepletionRate = await (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReserveLifeIndices = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
                     return new
                     {
@@ -715,7 +717,9 @@ namespace Backend_UMR_Work_Program.Controllers
                         ReservesAddition = ReservesAddition,
                         ReservesDecline = ReservesDecline,
                         ReservesReplacementRatio = ReservesReplacementRatio,
-                        OilCondensateFiveYears = OilCondensateFiveYears
+                        OilCondensateFiveYears = OilCondensateFiveYears,
+                        ReserveDepletionRate = ReserveDepletionRate,
+                        ReserveLifeIndices = ReserveLifeIndices
                     };
                 }
             }
