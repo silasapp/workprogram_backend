@@ -1857,20 +1857,30 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.OML_Name = omlName.ToUpper();
                     field_development_plan_model.Field_ID = concessionField.Field_ID;
                     #region file section
-                    UploadedDocument approved_FDP_Document = null;
+                    string approved_FDP_Document = null;
                     var file1 = Request.Form.Files[0];
+                    var blobname1 = blobService.Filenamer(file1);
+                    field_development_plan_model.FDPDocumentFilename = blobname1;
 
                     if (file1 != null)
                     {
                         string docName = "Approved FDP";
-                        approved_FDP_Document = _helpersController.UploadDocument(file1, "FDPDocuments");
-                        if (approved_FDP_Document == null)
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+                        field_development_plan_model.Uploaded_approved_FDP_Document = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FDPDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+                        if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
                     }
+
+                    // if (file1 != null)
+                    // {
+                    //     string docName = "Approved FDP";
+                    //     approved_FDP_Document = _helpersController.UploadDocument(file1, "FDPDocuments");
+                    //     if (approved_FDP_Document == null)
+                    //         return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+                    // }
                     #endregion
 
-                    field_development_plan_model.Uploaded_approved_FDP_Document = file1 != null ? approved_FDP_Document.filePath : null;
-                    field_development_plan_model.FDPDocumentFilename = file1 != null ? approved_FDP_Document.fileName : null;
+                    // field_development_plan_model.Uploaded_approved_FDP_Document = file1 != null ? approved_FDP_Document.filePath : null;
+                    // field_development_plan_model.FDPDocumentFilename = file1 != null ? approved_FDP_Document.fileName : null;
 
                     if (action == GeneralModel.Insert)
                     {
