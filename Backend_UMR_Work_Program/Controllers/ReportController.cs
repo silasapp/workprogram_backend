@@ -2774,7 +2774,53 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        
+        [HttpGet("UPLOADED_PRESENTATIONS")]
+        public async Task<WebApiResponse> UPLOADED_PRESENTATIONS(string year )
+        {
+            var ResultData = new List<PRESENTATION_UPLOAD>();
+            try { 
+            if (WKUserRole == GeneralModel.Admin)
+            {
+                ResultData =await _context.PRESENTATION_UPLOADs.Where(c => c.Year_of_WP == year).ToListAsync();
+            }
+
+            else
+            {
+                ResultData =await _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
+        }
+
+        [HttpGet("UPLOADED_COMMUNITY_DEVELOPMENT_PROJECTS")]
+        public async Task<WebApiResponse> UPLOADED_COMMUNITY_DEVELOPMENT_PROJECTS(string year)
+        {
+            var ResultData = new List<PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT>();
+            try { 
+            if (WKUserRole == GeneralModel.Admin)
+            {
+                ResultData =await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Where(c => c.Year_of_WP == year).ToListAsync();
+            }
+
+            else
+            {
+                ResultData =await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
+        }
 
         [HttpGet("EXECUTIVE_SUMMARY_REPORT2")]
         public async Task<WebApiResponse> EXECUTIVE_SUMMARY(string year)
