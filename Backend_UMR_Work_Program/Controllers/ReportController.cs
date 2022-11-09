@@ -2769,7 +2769,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-
+        [HttpGet("HSE_OIL_SPILL_REPORTING")]
         public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING (string year)
         {
             var ResultData = new List<HSE_OIL_SPILL_REPORTING_NEW>();
@@ -2793,7 +2793,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-
+        [HttpGet("HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
         public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW (string year)
         {
             var Resultdata = new List<HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW>();
