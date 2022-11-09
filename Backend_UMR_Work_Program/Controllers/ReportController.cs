@@ -2648,8 +2648,174 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
             }
         }
-        
-        
+
+        [HttpGet("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM (string year)
+        {
+            var ResultData = new List<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+        [HttpGet("HSE_WASTE_MANAGEMENT_NEW")]
+        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_NEW(string year)
+        {
+            var ResultData = new List<HSE_WASTE_MANAGEMENT_NEW>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+        [HttpGet("HSE_OSP_REGISTRATIONS_NEW")]
+        public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW (string year)
+        {
+            var ResultData = new List<HSE_OSP_REGISTRATIONS_NEW>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_OSP_REGISTRATIONS_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_OSP_REGISTRATIONS_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+
+        [HttpGet("HSE_OIL_SPILL_INCIDENT")]
+        public async Task<WebApiResponse> HSE_OIL_SPILL_INCIDENT (string year)
+        {
+            var ResultData = new List<HSE_OIL_SPILL_INCIDENT>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_OIL_SPILL_INCIDENTs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_OIL_SPILL_INCIDENTs.Where(c => c.CompanyName == WKPCompanyName && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+        [HttpGet("HSE_CAUSES_OF_SPILL")]
+        public async Task<WebApiResponse> HSE_CAUSES_OF_SPILL (string year)
+        {
+            var ResultData = new List<HSE_CAUSES_OF_SPILL>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_CAUSES_OF_SPILLs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_CAUSES_OF_SPILLs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+
+
+        public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING (string year)
+        {
+            var ResultData = new List<HSE_OIL_SPILL_REPORTING_NEW>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_OIL_SPILL_REPORTING_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_OIL_SPILL_REPORTING_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+
+
+        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW (string year)
+        {
+            var Resultdata = new List<HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    Resultdata = await _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    Resultdata = await _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = Resultdata.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
         [HttpGet("HSE_SAFETY_CULTURE_TRAINING")]
         public async Task<WebApiResponse> HSE_SAFETY_CULTURE_TRAINING(string year )
         {
@@ -2866,6 +3032,9 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
         }
+
+
+       
 
         [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW")]
         public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW(string year )
