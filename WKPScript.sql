@@ -64,6 +64,17 @@ ALTER TABLE [dbo].[LEGAL_ARBITRATION]
 ADD CONSTRAINT PK_LEGAL_ARBITRATION_Id PRIMARY KEY NONCLUSTERED (Id);
 GO
 
+ALTER TABLE [dbo].[RESERVES_UPDATES_LIFE_INDEX]
+ADD CONSTRAINT PK_RESERVES_UPDATES_LIFE_INDEX_ID PRIMARY KEY NONCLUSTERED (Id);
+GO
+
+ALTER TABLE [dbo].[FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES]
+ADD CONSTRAINT PK_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES_ID PRIMARY KEY NONCLUSTERED (Id);
+GO
+
+ALTER TABLE [dbo].[RESERVES_UPDATES_DEPLETION_RATE]
+ADD CONSTRAINT PK_RESERVES_UPDATES_DEPLETION_RATE_ID PRIMARY KEY NONCLUSTERED (Id);
+GO
 
 ALTER TABLE [dbo].[HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW] ADD [CompanyNumber] int NULL;
 ALTER TABLE [dbo].[ADMIN_WELL_CATEGORIES] ADD [CompanyNumber] int NULL;
@@ -292,80 +303,5 @@ ALTER TABLE [dbo].[ADMIN_TYPE_OF_TEST] ADD [CompanyNumber] int NULL;
 ALTER TABLE [dbo].[HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR] ADD [CompanyNumber] int NULL;
 ALTER TABLE [dbo].[ADMIN_WASTE_MANAGEMENT_FACILITY] ADD [CompanyNumber] int NULL;
 ALTER TABLE [dbo].[RESERVES_REPLACEMENT_RATIO] ADD [CompanyNumber] int NULL;
+ALTER TABLE FIELD_DEVELOPMENT_PLAN ADD Status varchar(50)
 
-
-
-
-
-
-<tr *ngFor="let row of backendData; index as i;"  class="hover-highlight">
-
-          <td class="benchmark_name">
-             {{row.name}}
-          </td>
-          <td>
-            {{row.value}}
-          </td>
-          <td>
-            {{row.description}}
-          </td>
-          <td>
-              <button *ngIf="enableEdit && enableEditIndex == i" (click)="enableEdit=false" class="btn page-secondary-action-btn" ng-click="cancel()">Cancel</button>
-              <button *ngIf="enableEdit && enableEditIndex == i" id="saveBtn" class="btn page-primary-action-btn" (click)="saveSegment()" type="submit">Save</button>
-              <a href="#" class="table-row-action edit-action" *ngIf="!enableEdit" (click)="enableEditMethod($event, i)">
-                edit
-        </a>
-          </td>
-          <td>
-
-          </td>
-        </tr>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'my-app',
-  templateUrl: './app.component.html',
-  styleUrls: [ './app.component.css' ]
-})
-export class AppComponent  {
-  name = 'Angular';
-  enableEdit = false;
-  enableEditIndex = null;
-  backendData = [{
-    "name": 'Target',
-    "value": '100',
-    "description": 'abc'
-  },
-  {
-    "name": 'Size',
-    "value": '20',
-    "description": 'def'
-  },
-  {
-    "name": 'Industry',
-    "value": '40',
-    "description": 'ghi'
-  }]
-
-  enableEditMethod(e, i) {
-    this.enableEdit = true;
-    this.enableEditIndex = i;
-    console.log(i, e);
-  }
-}

@@ -5225,8 +5225,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -12593,7 +12591,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<RESERVES_UPDATES_DEPLETION_RATE>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("RESERVES_UPDATES_DEPLETION_RATE");
 
@@ -12658,7 +12655,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<RESERVES_UPDATES_LIFE_INDEX>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("RESERVES_UPDATES_LIFE_INDEX");
 

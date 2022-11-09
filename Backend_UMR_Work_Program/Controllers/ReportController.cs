@@ -109,6 +109,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };
             }
         }
+
+        
         [HttpGet("Get_General_SummaryReport")]
         public async Task<object> Get_General_SummaryReport(string year)
         {
@@ -390,9 +392,8 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                  return BadRequest(new {message =  "Error : " + e.Message});
             }
-            
-
         }
+
         [HttpGet("GET_SEISMIC_DATA_REPORT")]
         public async Task<object> GET_SEISMIC_DATA_REPORT(string year)
         {
@@ -504,6 +505,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
             return WKP_Report2;
         }
+
+        
         [HttpGet("GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT")]
         public async Task<object> GET_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS_REPORT(string year)
         {
@@ -2771,7 +2774,96 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        
+        [HttpGet("UPLOADED_PRESENTATIONS")]
+        public async Task<WebApiResponse> UPLOADED_PRESENTATIONS(string year )
+        {
+            var ResultData = new List<PRESENTATION_UPLOAD>();
+            try { 
+            if (WKUserRole == GeneralModel.Admin)
+            {
+                ResultData =await _context.PRESENTATION_UPLOADs.Where(c => c.Year_of_WP == year).ToListAsync();
+            }
+
+            else
+            {
+                ResultData =await _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
+        }
+
+        [HttpGet("UPLOADED_COMMUNITY_DEVELOPMENT_PROJECTS")]
+        public async Task<WebApiResponse> UPLOADED_COMMUNITY_DEVELOPMENT_PROJECTS(string year)
+        {
+            var ResultData = new List<PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT>();
+            try { 
+            if (WKUserRole == GeneralModel.Admin)
+            {
+                ResultData =await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Where(c => c.Year_of_WP == year).ToListAsync();
+            }
+            else
+            {
+                ResultData =await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+            }
+
+            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
+        }
+
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_SKILL_ACQUISITION")]
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_SKILL_ACQUISITION(string year )
+        {
+            var ResultData = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition>();
+            try { 
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData =await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData =await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
+        }
+
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW")]
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW(string year )
+        {
+            var ResultData = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW>();
+            try { 
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData =await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData =await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error :  " + e.Message, StatusCode = ResponseCodes.InternalError };;
+            }
+        }
 
         [HttpGet("EXECUTIVE_SUMMARY_REPORT2")]
         public async Task<WebApiResponse> EXECUTIVE_SUMMARY(string year)
@@ -2802,18 +2894,18 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                              }).ToListAsync();
 
             var reportText = get_ReportContent_2.Report_Content
-                            .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString() ?? "0")
-                            .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString() ?? "0")
-                            .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString() ?? "0")
-                            .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString() ?? "0")
-                            .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString() ?? "0")
-                            .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString() ?? "0")
-                            .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString() ?? "0")
-                            .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString() ?? "0")
+                            .Replace("(NO_OF_JV)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_JV_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.JV)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_PSC)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.PSC)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_MF_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_MF)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.MF)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
+                            .Replace("(NO_OF_INDIGENOUS_COMPANIES)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Count_Contract_Type.ToString())
+                            .Replace("(NO_OF_INDIGENOUS)", GEO_ACTIVITIES.Where(x => x.Contract_Type == GeneralModel.SR)?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
                             .Replace("(N)", year)
                             .Replace("(N + 1)", (int.Parse(year) + 1).ToString())
                             .Replace("(N - 1)", previousYear)
-                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString() ?? "0");
+                            .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString());
             //var data = await (from a in _context.ADMIN_WORK_PROGRAM_REPORTs where a.Id == 2 select a.Report_Content).FirstOrDefaultAsync();
 
             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = reportText, StatusCode = ResponseCodes.Success };
