@@ -9972,7 +9972,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<LEGAL_LITIGATION>(entity =>
             {
-                entity.HasNoKey();
+
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("LEGAL_LITIGATION");
 
