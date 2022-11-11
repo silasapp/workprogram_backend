@@ -16,6 +16,7 @@ namespace Backend_UMR_Work_Program.Controllers
         public IConfiguration _configuration;
         HelpersController _helpersController;
         IHttpContextAccessor _httpContextAccessor;
+        
         private readonly IMapper _mapper;
 
         public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper)
