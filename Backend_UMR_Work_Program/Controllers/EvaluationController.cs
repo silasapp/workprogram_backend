@@ -29,6 +29,7 @@ namespace Backend_UMR_Work_Program.Controllers
             long value = 0;
             int i = 0;
 
+
             while (i < reel.Count())
             {
                 double acq = (Convert.ToInt64(reel[i].Quantum) / Convert.ToInt64(reel[i].Quantum_Planned)) * 100;
