@@ -2697,6 +2697,53 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(string year)
+        {
+            var ResultData = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+
+        [HttpGet("HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
+        public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW(string year)
+        {
+            var ResultData = new List<HSE_PRODUCED_WATER_MANAGEMENT_NEW>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Where(c => c.Year_of_WP == year && c.COMPANY_ID == WKPCompanyId).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+            }
+        }
+
         [HttpGet("HSE_OSP_REGISTRATIONS_NEW")]
         public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW (string year)
         {
