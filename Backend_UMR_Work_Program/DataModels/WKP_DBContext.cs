@@ -9883,8 +9883,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<LEGAL_ARBITRATION>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("LEGAL_ARBITRATION");
 
                 entity.Property(e => e.AnyLitigation)
@@ -9972,9 +9970,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<LEGAL_LITIGATION>(entity =>
             {
-
-                entity.HasKey(e => e.Id);
-
                 entity.ToTable("LEGAL_LITIGATION");
 
                 entity.Property(e => e.AnyLitigation)
