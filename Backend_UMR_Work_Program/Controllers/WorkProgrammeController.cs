@@ -1896,6 +1896,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             field_development_plan_model.Created_by = getData.Created_by;
                             field_development_plan_model.Date_Updated = DateTime.Now;
                             field_development_plan_model.Updated_by = WKPCompanyId;
+                            _context.FIELD_DEVELOPMENT_PLANs.Remove(getData);
                             await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
                         }
                     }
