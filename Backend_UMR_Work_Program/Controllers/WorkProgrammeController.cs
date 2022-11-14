@@ -4511,7 +4511,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -4520,7 +4520,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving NIGERIA_CONTENT_Trainings data
                 if (nigeria_content_training_model != null)
                 {
-                    var getData = (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Actual_Proposed == nigeria_content_training_model.Actual_Proposed select c).FirstOrDefaultAsync();
 
                     nigeria_content_training_model.Companyemail = WKPCompanyEmail;
                     nigeria_content_training_model.CompanyName = WKPCompanyName;
