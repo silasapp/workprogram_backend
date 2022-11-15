@@ -4679,7 +4679,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     nigeria_content_question_model.Date_Updated = DateTime.Now;
                     nigeria_content_question_model.Updated_by = WKPCompanyId;
                     nigeria_content_question_model.Year_of_WP = year;
-                    nigeria_content_question_model.OML_Name = nigeria_content_question_model.OML_Name.ToUpper();
+                    nigeria_content_question_model.OML_Name = omlName.ToUpper();
                     nigeria_content_question_model.OML_Name = omlName;
                     nigeria_content_question_model.Field_ID = concessionField.Field_ID;
                     
