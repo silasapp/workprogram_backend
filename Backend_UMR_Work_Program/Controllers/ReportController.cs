@@ -2673,6 +2673,30 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpGet("HSE_WASTE_MANAGEMENT_UPLOAD")]
+        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_UPLOAD(string year)
+        {
+            var ResultData = new List<HSE_WASTE_MANAGEMENT_SYSTEM>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
         [HttpGet("HSE_WASTE_MANAGEMENT_NEW")]
         public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_NEW(string year)
         {
