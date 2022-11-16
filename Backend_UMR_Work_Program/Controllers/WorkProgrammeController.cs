@@ -1846,7 +1846,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving FDP data
                 if (field_development_plan_model != null)
                 {
-                    var getData = (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
 
                     field_development_plan_model.Companyemail = WKPCompanyEmail;
                     field_development_plan_model.CompanyName = WKPCompanyName;
@@ -1858,7 +1858,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.OML_Name = omlName.ToUpper();
                     field_development_plan_model.Field_ID = concessionField.Field_ID;
                     #region file section
-                    string approved_FDP_Document = null;
+                    //string approved_FDP_Document = null;
                     var file1 = Request.Form.Files[0];
                     var blobname1 = blobService.Filenamer(file1);
                     field_development_plan_model.FDPDocumentFilename = blobname1;
@@ -1885,7 +1885,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (action == GeneralModel.Insert)
                     {
-                        if (getData == null)
+                        if (getData == null || getData.Count == 0)
                         {
                             field_development_plan_model.Date_Created = DateTime.Now;
                             field_development_plan_model.Created_by = WKPCompanyId;
@@ -1893,11 +1893,11 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            field_development_plan_model.Date_Created = getData.Date_Created;
-                            field_development_plan_model.Created_by = getData.Created_by;
+                            field_development_plan_model.Date_Created = getData.FirstOrDefault().Date_Created;
+                            field_development_plan_model.Created_by = getData.FirstOrDefault().Created_by;
                             field_development_plan_model.Date_Updated = DateTime.Now;
                             field_development_plan_model.Updated_by = WKPCompanyId;
-                            _context.FIELD_DEVELOPMENT_PLANs.Remove(getData);
+                            _context.FIELD_DEVELOPMENT_PLANs.RemoveRange(getData);
                             await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
                         }
                     }
@@ -1911,7 +1911,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
-                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
@@ -4511,7 +4511,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -4520,7 +4520,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving NIGERIA_CONTENT_Trainings data
                 if (nigeria_content_training_model != null)
                 {
-                    var getData = (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = await (from c in _context.NIGERIA_CONTENT_Trainings where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Actual_Proposed == nigeria_content_training_model.Actual_Proposed select c).FirstOrDefaultAsync();
 
                     nigeria_content_training_model.Companyemail = WKPCompanyEmail;
                     nigeria_content_training_model.CompanyName = WKPCompanyName;
@@ -4679,7 +4679,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     nigeria_content_question_model.Date_Updated = DateTime.Now;
                     nigeria_content_question_model.Updated_by = WKPCompanyId;
                     nigeria_content_question_model.Year_of_WP = year;
-                    nigeria_content_question_model.OML_Name = nigeria_content_question_model.OML_Name.ToUpper();
+                    nigeria_content_question_model.OML_Name = omlName.ToUpper();
                     nigeria_content_question_model.OML_Name = omlName;
                     nigeria_content_question_model.Field_ID = concessionField.Field_ID;
                     
