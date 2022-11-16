@@ -1241,7 +1241,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
+                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type.ToLower() == GeneralModel.Fatality.ToLower()).ToListAsync();
                 var Causes_Of_Spill = await _context.HSE_CAUSES_OF_SPILLs.Where(x=> x.Year_of_WP == year).OrderBy(x=> x.CompanyName).ToListAsync();
                 return new
                 {
@@ -1256,6 +1256,29 @@ namespace Backend_UMR_Work_Program.Controllers
             }
 
         }
+
+        [HttpGet("Get_Accident_Statistics_Content_Report")]
+        public async Task<object> Get_Accident_Statistics_Content_Report(string year)
+        {
+
+            try
+            {
+                var acrep = await _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequences.Where(x=> x.Year_of_WP == year && x.Consequence == "FATALITY").ToListAsync();
+                var actotal = await _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accidents.Where(x=> x.Year_of_WP == year).ToListAsync();
+                return new
+                {
+                        acrep = acrep,
+                        actotal = actotal
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+
         [HttpGet("Get_Facilities_Report")]
         public async Task<object> Get_Facilities_Report(string year)
         {

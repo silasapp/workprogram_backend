@@ -29,7 +29,7 @@ namespace Backend_UMR_Work_Program.Models
         public static string ContinentalShelf = "Continental Shelf";
         public static string DeepOffshore = "Deep Offshore";
         public static string Onshore = "Onshore";
-        public static string Fatality = "FATALITY";
+        public static string Fatality = "FATALITIES";
         public static string Sabotage = "SABOTAGE";
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
