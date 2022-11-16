@@ -104,7 +104,7 @@ namespace Backend_UMR_Work_Program.Models
         }
         public class CompanyDashboardModel
         {
-            public List<CompanyReportModel> CompanyReportModel { get; set; }
+            public List<CompanyReportModel>? CompanyReportModel { get; set; }
 
             public int OML_Count { get; set; }
             public int OPL_Count { get; set; }
@@ -113,7 +113,7 @@ namespace Backend_UMR_Work_Program.Models
         public class CompanyReportModel
         {
             public string concessionName { get; set; }
-            public string fieldName { get; set; }
+            public string? fieldName { get; set; }
             public double oil_NetProduction { get; set; }
             public double AG_NetProduction { get; set; }
             public double NAG_NetProduction { get; set; }
