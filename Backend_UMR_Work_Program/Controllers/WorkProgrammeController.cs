@@ -4595,7 +4595,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving NIGERIA_CONTENT_Upload_Succession_Plans data
                 if (nigeria_content_succession_model != null)
                 {
-                    var getData = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Actual_proposed == nigeria_content_succession_model.Actual_proposed select c).FirstOrDefault();
 
                     nigeria_content_succession_model.Companyemail = WKPCompanyEmail;
                     nigeria_content_succession_model.CompanyName = WKPCompanyName;
