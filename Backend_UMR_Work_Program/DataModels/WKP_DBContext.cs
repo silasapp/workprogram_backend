@@ -8559,8 +8559,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SAFETY_CULTURE_TRAINING>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("HSE_SAFETY_CULTURE_TRAINING");
 
                 entity.Property(e => e.COMPANY_ID)
