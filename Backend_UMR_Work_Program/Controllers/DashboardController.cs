@@ -37,7 +37,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                   join reserveStatus in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs on conc.OML_ID equals reserveStatus.OML_ID
                                   where reserve.Year_of_WP == year && (reserve.Created_by == WKPCompanyEmail || reserve.CompanyNumber == WKPCompanyNumber)
                                   && (reserveStatus.Created_by == WKPCompanyEmail || reserveStatus.CompanyNumber == WKPCompanyNumber)
-                                
+
                                   select new
                                   {
                                       year = reserve.Year_of_WP,
@@ -52,7 +52,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 var companyDashboard_Report = new CompanyDashboardModel();
                 var companyConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.DELETED_STATUS != "DELETED" select d).ToListAsync();
 
-                //  var test = data.GroupBy(x => x.conc.OML_ID).ToList();
+
 
                 data.GroupBy(x => x.conc.OML_ID).ToList().ForEach(key =>
                 {
@@ -73,27 +73,9 @@ namespace Backend_UMR_Work_Program.Controllers
                     companyDashboard_Data.totalReserves = companyDashboard_Data.oil_Reserves + companyDashboard_Data.AG_Reserves + companyDashboard_Data.NAG_Reserves + companyDashboard_Data.condensate_Reserves;
                     companyDashboard_DataList.Add(companyDashboard_Data);
                 });
-                companyDashboard_Report.CompanyReportModel = companyDashboard_DataList;
+                companyDashboard_Report.CompanyReportModels = companyDashboard_DataList;
 
-                //data.ForEach(a =>
-                //{
-                //    companyDashboard_Data = new CompanyReportModel()
-                //    {
-                //        concessionName = a.conc.OML_Name,
-                //        oil_NetProduction = double.Parse(a.reserve.Company_Annual_Oil),
-                //        AG_NetProduction = key.Where(x => x.year == year).Sum(x => double.Parse(x.reserve.Company_Annual_AG)),
-                //        NAG_NetProduction = key.Where(x => x.year == year).Sum(x => double.Parse(x.reserve.Company_Annual_NAG)),
-                //        condensate_NetProduction = key.Where(x => x.year == year).Sum(x => double.Parse(x.reserve.Company_Annual_Condensate)),
-                //        oil_Reserves = key.Where(x => x.year == year && x.reserveStatus.Company_Reserves_AnnualOilProduction != null).Sum(x => double.Parse(x.reserveStatus?.Company_Reserves_AnnualOilProduction)),
-                //        AG_Reserves = key.Where(x => x.year == year && x.reserveStatus.Company_Reserves_AnnualGasAGProduction != null).Sum(x => double.Parse(x.reserveStatus?.Company_Reserves_AnnualOilProduction)),
-                //        NAG_Reserves = key.Where(x => x.year == year && x.reserveStatus.Company_Reserves_AnnualGasNAGProduction != null).Sum(x => double.Parse(x.reserveStatus?.Company_Reserves_AnnualOilProduction)),
-                //        condensate_Reserves = key.Where(x => x.year == year && x.reserveStatus.Company_Reserves_AnnualCondensateProduction != null).Sum(x => double.Parse(x.reserveStatus?.Company_Reserves_AnnualCondensateProduction)),
 
-                //    };
-                //    companyDashboard_Data.totalNetProduction = companyDashboard_Data.oil_NetProduction + companyDashboard_Data.AG_NetProduction + companyDashboard_Data.NAG_NetProduction + companyDashboard_Data.condensate_NetProduction;
-                //    companyDashboard_Data.totalReserves = companyDashboard_Data.oil_Reserves + companyDashboard_Data.AG_Reserves + companyDashboard_Data.NAG_Reserves + companyDashboard_Data.condensate_Reserves;
-                //    companyDashboard_Report.CompanyReportModel.Add(companyDashboard_Data);
-                //});
                 companyDashboard_Report.OML_Count = companyConcessions.Where(x => x.Consession_Type.ToLower() == GeneralModel.OML.ToLower()).Count();
                 companyDashboard_Report.OPL_Count = companyConcessions.Where(x => x.Consession_Type.ToLower() == GeneralModel.OPL.ToLower()).Count();
                 companyDashboard_Report.No_Of_ProducingFields_Count = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true select d).CountAsync();
@@ -106,17 +88,21 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("DASHBOARD_TOTAL_GAS_PRODUCTION_UTILIZED_FLARED")]
-        public async Task<object> DASHBOARD_TOTAL_GAS_PRODUCTION_UTILIZED_FLARED()
-        {
+        [HttpGet("DASHBOARD_TOTAL_GAS_BUDGET_RESERVES_DETAILS")]
+        public async Task<object> DASHBOARD_TOTAL_GAS_BUDGET_RESERVES_DETAILS(string year)
+       {
 
             try
             {
-                var TGPUF = await (from c in _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flareds where c.CompanyName == WKPCompanyName select c).FirstOrDefaultAsync();
-                var TBPPCT = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyName == WKPCompanyName select c).FirstOrDefaultAsync();
-                var TROC = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATEs where c.CompanyName == WKPCompanyName select c).FirstOrDefaultAsync();
+                var GasProduction = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                var TBPPCT = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                var TROC = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                var gasPlantCapacity = GasProduction.Sum(a=>double.Parse(a.Gas_plant_capacity));
+                var gasFlareds = GasProduction.Sum(a => double.Parse(a.Flared));
+                var directProdCost = TBPPCT.Sum(a => double.Parse(a.DIRECT_COST_Actual));
+                var oilCondensate = TROC.Sum(a => double.Parse(a.Company_Annual_Oil)) + TROC.Sum(a => double.Parse(a.Company_Annual_Condensate));
 
-                return new { TGPUF = TGPUF, TBP = TBPPCT, TR = TROC };
+                return new { gasPlantCapacity = gasPlantCapacity, gasFlareds = gasFlareds, directProdCost = directProdCost, oilCondensate = oilCondensate };
             }
             catch (Exception e)
             {

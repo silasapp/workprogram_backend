@@ -104,7 +104,7 @@ namespace Backend_UMR_Work_Program.Models
         }
         public class CompanyDashboardModel
         {
-            public List<CompanyReportModel>? CompanyReportModel { get; set; }
+            public List<CompanyReportModel>? CompanyReportModels { get; set; }
 
             public int OML_Count { get; set; }
             public int OPL_Count { get; set; }
