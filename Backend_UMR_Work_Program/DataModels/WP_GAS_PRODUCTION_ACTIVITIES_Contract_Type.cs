@@ -7,8 +7,8 @@ namespace Backend_UMR_Work_Program.Models
     {
         public string? Year_of_WP { get; set; }
         public string? Contract_Type { get; set; }
-        public int? Actual_Total_Gas_Produced { get; set; }
-        public int? Utilized_Gas_Produced { get; set; }
-        public int? Flared_Gas_Produced { get; set; }
+        public decimal? Actual_Total_Gas_Produced { get; set; }
+        public decimal? Utilized_Gas_Produced { get; set; }
+        public decimal? Flared_Gas_Produced { get; set; }
     }
 }
