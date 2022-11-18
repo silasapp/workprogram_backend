@@ -109,13 +109,23 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("DASHBOARD_TOTAL_GAS_PRODUCTION_UTILIZED_FLARED")]
         public async Task<object> DASHBOARD_TOTAL_GAS_PRODUCTION_UTILIZED_FLARED()
         {
-
+            var TGPUF = new List<WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNED>();
+            var TBPPCT = new List<BUDGET_PERFORMANCE_PRODUCTION_COST>();
+            var TROC = new List<RESERVES_UPDATES_OIL_CONDENSATE>();
             try
-            {
-                var TGPUF = await (from c in _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flareds where c.CompanyName == WKPCompanyName select c).FirstOrDefaultAsync();
-                var TBPPCT = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyName == WKPCompanyName select c).FirstOrDefaultAsync();
-                var TROC = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATEs where c.CompanyName == WKPCompanyName select c).FirstOrDefaultAsync();
-
+            {               
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    TGPUF = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNEDs.Where(c => c.CompanyName == WKPCompanyName).ToListAsync();
+                    TBPPCT = await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Where(c => c.CompanyName == WKPCompanyName).ToListAsync();
+                    TROC = await _context.RESERVES_UPDATES_OIL_CONDENSATEs.Where(c => c.CompanyName == WKPCompanyName).ToListAsync();
+                }
+                else
+                {
+                    TGPUF = await _context.WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared_PLANNEDs.Where(c => c.CompanyName == WKPCompanyName).ToListAsync();
+                    TBPPCT = await _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Where(c => c.CompanyName == WKPCompanyName).ToListAsync();
+                    TROC = await _context.RESERVES_UPDATES_OIL_CONDENSATEs.Where(c => c.CompanyName == WKPCompanyName).ToListAsync();
+                }
                 return new { TGPUF = TGPUF, TBP = TBPPCT, TR = TROC };
             }
             catch (Exception e)
