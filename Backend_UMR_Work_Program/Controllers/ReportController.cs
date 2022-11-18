@@ -1241,7 +1241,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type == GeneralModel.Fatality).ToListAsync();
+                var Accident_Statistics_Facility = await _context.WP_HSE_FATALITIES_accident_statistic_tables.Where(x=> x.Year_of_WP == year && x.Fatalities_Type.ToLower() == GeneralModel.Fatality.ToLower()).ToListAsync();
                 var Causes_Of_Spill = await _context.HSE_CAUSES_OF_SPILLs.Where(x=> x.Year_of_WP == year).OrderBy(x=> x.CompanyName).ToListAsync();
                 return new
                 {
@@ -1256,6 +1256,29 @@ namespace Backend_UMR_Work_Program.Controllers
             }
 
         }
+
+        [HttpGet("Get_Accident_Statistics_Content_Report")]
+        public async Task<object> Get_Accident_Statistics_Content_Report(string year)
+        {
+
+            try
+            {
+                var acrep = await _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_by_consequences.Where(x=> x.Year_of_WP == year && x.Consequence == "FATALITY").ToListAsync();
+                var actotal = await _context.WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_total_accidents.Where(x=> x.Year_of_WP == year).ToListAsync();
+                return new
+                {
+                        acrep = acrep,
+                        actotal = actotal
+                };
+            }
+
+            catch (Exception e)
+            {
+             return "Error : " + e.Message;
+            }
+
+        }
+
         [HttpGet("Get_Facilities_Report")]
         public async Task<object> Get_Facilities_Report(string year)
         {
@@ -2649,8 +2672,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM (string year)
+        [HttpGet("ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> ENVIRONMENTAL_MANAGEMENT_SYSTEM (string year)
         {
             var ResultData = new List<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>();
             try
@@ -2673,8 +2696,32 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_WASTE_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_NEW(string year)
+        [HttpGet("WASTE_MANAGEMENT_UPLOAD")]
+        public async Task<WebApiResponse> WASTE_MANAGEMENT_UPLOAD(string year)
+        {
+            var ResultData = new List<HSE_WASTE_MANAGEMENT_SYSTEM>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+        [HttpGet("HSE_WASTE_MANAGEMENT")]
+        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT(string year)
         {
             var ResultData = new List<HSE_WASTE_MANAGEMENT_NEW>();
             try
@@ -2697,8 +2744,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
-        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(string year)
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM")]
+        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM(string year)
         {
             var ResultData = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL>();
             try
@@ -2721,8 +2768,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet("HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW(string year)
+        [HttpGet("WATER_MANAGEMENT")]
+        public async Task<WebApiResponse> WATER_MANAGEMENT(string year)
         {
             var ResultData = new List<HSE_PRODUCED_WATER_MANAGEMENT_NEW>();
             try
@@ -2744,8 +2791,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_OSP_REGISTRATIONS_NEW")]
-        public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW (string year)
+        [HttpGet("OSP_REGISTRATION")]
+        public async Task<WebApiResponse> OSP_REGISTRATION (string year)
         {
             var ResultData = new List<HSE_OSP_REGISTRATIONS_NEW>();
             try
@@ -2769,8 +2816,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet("HSE_OIL_SPILL_INCIDENT")]
-        public async Task<WebApiResponse> HSE_OIL_SPILL_INCIDENT (string year)
+        [HttpGet("incident_reporting")]
+        public async Task<WebApiResponse> INCIDENT_REPORTING (string year)
         {
             var ResultData = new List<HSE_OIL_SPILL_INCIDENT>();
             try
@@ -2792,8 +2839,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_CAUSES_OF_SPILL")]
-        public async Task<WebApiResponse> HSE_CAUSES_OF_SPILL (string year)
+        [HttpGet("causes_of_oil_spill")]
+        public async Task<WebApiResponse> CAUSES_OF_OIL_SPILL (string year)
         {
             var ResultData = new List<HSE_CAUSES_OF_SPILL>();
             try
@@ -2816,8 +2863,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet("HSE_OIL_SPILL_REPORTING")]
-        public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING (string year)
+        [HttpGet("oil_spill_reporting")]
+        public async Task<WebApiResponse> OIL_SPILL_REPORTING (string year)
         {
             var ResultData = new List<HSE_OIL_SPILL_REPORTING_NEW>();
             try
@@ -2840,8 +2887,8 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpGet("HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
-        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW (string year)
+        [HttpGet("rbi")]
+        public async Task<WebApiResponse> RBI (string year)
         {
             var Resultdata = new List<HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW>();
             try

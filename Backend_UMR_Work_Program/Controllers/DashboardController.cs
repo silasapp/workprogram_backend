@@ -129,6 +129,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     return companyDashboard_Report;
                 }
+
+                
             }
             catch (Exception e)
             {
@@ -139,6 +141,10 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("DASHBOARD_TOTAL_GAS_BUDGET_RESERVES_DETAILS")]
         public async Task<object> DASHBOARD_TOTAL_GAS_BUDGET_RESERVES_DETAILS(string year)
         {
+            var GasProduction = new List<GAS_PRODUCTION_ACTIVITy>();
+            var TBPPCT = new List<BUDGET_PERFORMANCE_PRODUCTION_COST>();
+            var TROC = new List<RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION>();
+            double directProdCost, gasFlareds, oilCondensate, gasPlantCapacity = 0;
 
             try
             {
@@ -146,33 +152,27 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (WKUserRole == GeneralModel.Admin)
                 {
 
-                    var GasProduction = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.Year_of_WP == year select c).ToListAsync();
-                    var TBPPCT = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Year_of_WP == year select c).ToListAsync();
-                    var TROC = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.Year_of_WP == year select c).ToListAsync();
-                    var gasPlantCapacity = GasProduction.Sum(a => double.Parse(a.Gas_plant_capacity));
-                    var gasFlareds = GasProduction.Sum(a => double.Parse(a.Flared));
-                    var directProdCost = TBPPCT.Sum(a => double.Parse(a.DIRECT_COST_Actual));
-                    var oilCondensate = TROC.Sum(a => double.Parse(a.Company_Annual_Oil)) + TROC.Sum(a => double.Parse(a.Company_Annual_Condensate));
-
-                    return new { gasPlantCapacity = gasPlantCapacity, gasFlareds = gasFlareds, directProdCost = directProdCost, oilCondensate = oilCondensate };
+                    GasProduction = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.Year_of_WP == year select c).ToListAsync();
+                    TBPPCT = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Year_of_WP == year select c).ToListAsync();
+                    TROC = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.Year_of_WP == year select c).ToListAsync();
 
                 }
                 else
                 {
 
-                    var GasProduction = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
-                    var TBPPCT = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
-                    var TROC = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
-                    var gasPlantCapacity = GasProduction.Sum(a => double.Parse(a.Gas_plant_capacity));
-                    var gasFlareds = GasProduction.Sum(a => double.Parse(a.Flared));
-                    var directProdCost = TBPPCT.Sum(a => double.Parse(a.DIRECT_COST_Actual));
-                    var oilCondensate = TROC.Sum(a => double.Parse(a.Company_Annual_Oil)) + TROC.Sum(a => double.Parse(a.Company_Annual_Condensate));
-
-                    return new { gasPlantCapacity = gasPlantCapacity, gasFlareds = gasFlareds, directProdCost = directProdCost, oilCondensate = oilCondensate };
+                    GasProduction = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                    TBPPCT = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
+                    TROC = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.Companyemail == WKPCompanyEmail && c.Year_of_WP == year select c).ToListAsync();
 
                 }
 
 
+                gasPlantCapacity = GasProduction.Sum(a => double.Parse(a.Gas_plant_capacity));
+                gasFlareds = GasProduction.Sum(a => double.Parse(a.Flared));
+                directProdCost = TBPPCT.Sum(a => double.Parse(a.DIRECT_COST_Actual));
+                oilCondensate = TROC.Sum(a => double.Parse(a.Company_Annual_Oil)) + TROC.Sum(a => double.Parse(a.Company_Annual_Condensate));
+
+                return new { gasPlantCapacity = gasPlantCapacity, gasFlareds = gasFlareds, directProdCost = directProdCost, oilCondensate = oilCondensate };
 
 
 
