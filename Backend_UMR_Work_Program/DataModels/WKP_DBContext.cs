@@ -6657,7 +6657,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY");
 
@@ -9023,7 +9023,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU");
 
@@ -9266,7 +9266,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME");
 
@@ -9602,7 +9602,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_WASTE_MANAGEMENT_SYSTEM>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("HSE_WASTE_MANAGEMENT_SYSTEM");
 
