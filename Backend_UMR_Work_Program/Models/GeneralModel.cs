@@ -29,7 +29,7 @@ namespace Backend_UMR_Work_Program.Models
         public static string ContinentalShelf = "Continental Shelf";
         public static string DeepOffshore = "Deep Offshore";
         public static string Onshore = "Onshore";
-        public static string Fatality = "FATALITY";
+        public static string Fatality = "FATALITIES";
         public static string Sabotage = "SABOTAGE";
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
@@ -104,7 +104,7 @@ namespace Backend_UMR_Work_Program.Models
         }
         public class CompanyDashboardModel
         {
-            public List<CompanyReportModel> CompanyReportModel { get; set; }
+            public List<CompanyReportModel>? CompanyReportModel { get; set; }
 
             public int OML_Count { get; set; }
             public int OPL_Count { get; set; }
@@ -113,7 +113,7 @@ namespace Backend_UMR_Work_Program.Models
         public class CompanyReportModel
         {
             public string concessionName { get; set; }
-            public string fieldName { get; set; }
+            public string? fieldName { get; set; }
             public double oil_NetProduction { get; set; }
             public double AG_NetProduction { get; set; }
             public double NAG_NetProduction { get; set; }
