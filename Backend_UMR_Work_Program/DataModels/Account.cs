@@ -143,10 +143,7 @@ namespace Backend_UMR_Work_Program.Models
             {
               return false;
             }
-            else
-            {
-               return true;
-            }
+            return true;
         }
 
         public object GetData()
