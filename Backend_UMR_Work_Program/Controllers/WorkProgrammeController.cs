@@ -39,6 +39,18 @@ namespace Backend_UMR_Work_Program.Controllers
         private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
         private int? WKPCompanyNumber => Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
 
+
+        [HttpGet("GETWORKPROGRAMYEARS")]
+        public async Task<object> GETWORKPROGRAMYEARS() {
+            var now = DateTime.UtcNow.Year;
+            var yearlist = new List<int>();
+            for (int i = 0; i < 5; i++)
+            {
+                yearlist.Add((now - i));
+            }
+            return yearlist;
+        }
+
         [HttpGet("GETCOMPLETEDPAGES")]
         public async Task<object> GETCOMPLETEDPAGES(string omlname)
         {
@@ -5371,12 +5383,12 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_technical_safety_model.Created_by = getData.FirstOrDefault().Created_by;
                             hse_technical_safety_model.Date_Updated = DateTime.Now;
                             hse_technical_safety_model.Updated_by = WKPCompanyId;
-                            getData.ForEach(x =>
-                            {
-                                _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(x);
-                                save += _context.SaveChanges();
+                            // getData.ForEach(x =>
+                            // {
+                            //     _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(x);
+                            //     save += _context.SaveChanges();
 
-                            });
+                            // });
                             await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
                         }
                     }
@@ -5902,14 +5914,13 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
+
 
         [HttpPost("POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
         public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_NEW hse_accident_model, string omlName, string fieldName,  string year, string id, string actionToDo)
         {
-
             int save = 0;
             string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
@@ -5985,7 +5996,6 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
 
@@ -6061,7 +6071,6 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
                 return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
             }
         }
 
