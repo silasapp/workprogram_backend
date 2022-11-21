@@ -2684,8 +2684,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
-        public async Task<WebApiResponse> HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM(string year)
+        [HttpGet("ENVIRONMENTAL_MANAGEMENT_SYSTEM")]
+        public async Task<WebApiResponse> ENVIRONMENTAL_MANAGEMENT_SYSTEM (string year)
         {
             var ResultData = new List<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>();
             try
@@ -2708,8 +2708,32 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_WASTE_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT_NEW(string year)
+        [HttpGet("WASTE_MANAGEMENT_UPLOAD")]
+        public async Task<WebApiResponse> WASTE_MANAGEMENT_UPLOAD(string year)
+        {
+            var ResultData = new List<HSE_WASTE_MANAGEMENT_SYSTEM>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Where(c => c.Year_of_WP == year).ToListAsync();
+                }
+                else
+                {
+                    ResultData = await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+        [HttpGet("WASTE_MANAGEMENT")]
+        public async Task<WebApiResponse> WASTE_MANAGEMENT(string year)
         {
             var ResultData = new List<HSE_WASTE_MANAGEMENT_NEW>();
             try
@@ -2732,7 +2756,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("PLANNED_&_ACTUAL_PROJECTS")]
+        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
         public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL(string year)
         {
             var ResultData = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL>();
@@ -2755,9 +2779,33 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpGet("PRESCRIPTIONS")]
+        public async Task<WebApiResponse> PRESCRIPTIONS(string year)
+        {
+            var ResultData = new List<HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW>();
+            try
+            {
+                if (WKUserRole == GeneralModel.Admin)
+                {
+                    ResultData = await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Where(c => c.Year_of_WP == year).ToListAsync();
 
-        [HttpGet("HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
-        public async Task<WebApiResponse> HSE_PRODUCED_WATER_MANAGEMENT_NEW(string year)
+                }
+                else
+                {
+                    ResultData = await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                }
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ResultData.OrderBy(x => x.Year_of_WP), StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
+        }
+
+
+        [HttpGet("WATER_MANAGEMENT")]
+        public async Task<WebApiResponse> WATER_MANAGEMENT(string year)
         {
             var ResultData = new List<HSE_PRODUCED_WATER_MANAGEMENT_NEW>();
             try
@@ -2780,7 +2828,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("HSE_OSP_REGISTRATIONS_NEW")]
-        public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW(string year)
+        public async Task<WebApiResponse> HSE_OSP_REGISTRATIONS_NEW (string year)
         {
             var ResultData = new List<HSE_OSP_REGISTRATIONS_NEW>();
             try
@@ -2805,7 +2853,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("HSE_OIL_SPILL_INCIDENT")]
-        public async Task<WebApiResponse> HSE_OIL_SPILL_INCIDENT(string year)
+        public async Task<WebApiResponse> HSE_OIL_SPILL_INCIDENT (string year)
         {
             var ResultData = new List<HSE_OIL_SPILL_INCIDENT>();
             try
@@ -2828,7 +2876,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("HSE_CAUSES_OF_SPILL")]
-        public async Task<WebApiResponse> HSE_CAUSES_OF_SPILL(string year)
+        public async Task<WebApiResponse> HSE_CAUSES_OF_SPILL (string year)
         {
             var ResultData = new List<HSE_CAUSES_OF_SPILL>();
             try
@@ -2850,8 +2898,9 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+
         [HttpGet("HSE_OIL_SPILL_REPORTING")]
-        public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING(string year)
+        public async Task<WebApiResponse> HSE_OIL_SPILL_REPORTING (string year)
         {
             var ResultData = new List<HSE_OIL_SPILL_REPORTING_NEW>();
             try
@@ -2875,7 +2924,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
-        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW(string year)
+        public async Task<WebApiResponse> HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW (string year)
         {
             var Resultdata = new List<HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW>();
             try
