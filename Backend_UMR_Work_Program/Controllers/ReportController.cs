@@ -2720,8 +2720,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_WASTE_MANAGEMENT")]
-        public async Task<WebApiResponse> HSE_WASTE_MANAGEMENT(string year)
+        [HttpGet("WASTE_MANAGEMENT")]
+        public async Task<WebApiResponse> WASTE_MANAGEMENT(string year)
         {
             var ResultData = new List<HSE_WASTE_MANAGEMENT_NEW>();
             try
@@ -2744,8 +2744,8 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpGet("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM")]
-        public async Task<WebApiResponse> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM(string year)
+        [HttpGet("PLANNED_AND_ACTUAL_PROJECTS")]
+        public async Task<WebApiResponse> PLANNED_AND_ACTUAL_PROJECTS(string year)
         {
             var ResultData = new List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL>();
             try
