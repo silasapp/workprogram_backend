@@ -126,7 +126,6 @@ namespace Backend_UMR_Work_Program.Controllers
                     var WP_COUNT = await _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_YEAR_PRESENTED_CATEGORies.Where(x => x.Year == year).ToListAsync();
                     var E_and_P_companies = await _context.WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies.Where(x => x.YEAR == year).ToListAsync();
 
-
                     var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
                                                                              where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
                                                                              group o by new
@@ -287,7 +286,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     #region GENERAL REPORT DATA POPULATION
                     var get_ReportContent_1 = WKP_Report.Where(x => x.Id == 1)?.FirstOrDefault();
                     var get_ReportContent_2 = WKP_Report.Where(x => x.Id == 2)?.FirstOrDefault();
-
+                    var getGasFlare_ReportContent = WKP_Report.Where(x => x.Id == 5)?.FirstOrDefault();
+                    
                     if (get_ReportContent_1 != null && get_ReportContent_2 != null)
                     {
                         string NO_OF_COMPANY_PRESENTED = WP_COUNT.Where(x => x.PRESENTED == GeneralModel.Presented).Count().ToString();
@@ -366,6 +366,12 @@ namespace Backend_UMR_Work_Program.Controllers
                         //     .Replace("(ACQUIRED_3D)", WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION?.FirstOrDefault()?.Actual_year_aquired_data.ToString())
                         //     ;
 
+                        getGasFlare_ReportContent.Report_Content = getGasFlare_ReportContent.Report_Content
+                             .Replace("(TOTAL_GAS_PRODUCED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Actual_Total_Gas_Produced.ToString())
+                             .Replace("(PERCENTAGE_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Percentage_Utilized.ToString())
+                             .Replace("(TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Utilized_Gas_Produced.ToString())
+                             .Replace("(TOTAL_GAS_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Flared_Gas_Produced.ToString());
+                                 
                         var summaryReport = new ADMIN_WORK_PROGRAM_REPORTs_Model()
                         {
                             summary_1 = get_ReportContent_1.Report_Content
