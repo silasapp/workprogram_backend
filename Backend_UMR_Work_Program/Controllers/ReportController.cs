@@ -274,19 +274,33 @@ namespace Backend_UMR_Work_Program.Controllers
                                                 into g
                                            select new
                                            {
-                                               Frequency = g.Min(x => x.Frequency),
+                                               Frequency = g.Select(x => x.Frequency),
                                                Highest_1st = g.Min(x => x.Frequency),
                                                Highest_2nd = g.Min(x => x.Frequency),
                                                Highest_3rd = g.Min(x => x.Frequency),
                                                TOTAL_QUANTITY_SPILLED = g.Sum(x => x.Total_Quantity_Spilled),
                                                CompanyName = g.Key,
                                                Year_of_WP = g.FirstOrDefault().Year_of_WP,
-                                           }).OrderBy(x => x.Frequency).Take(5).ToListAsync();
+                                           }).OrderByDescending(x => x.Frequency);
+                    
+                    var Produced_water_volumes = (from o in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs
+                                           where o.Year_of_WP == year
+                                           group o by new
+                                           {
+                                               o.Year_of_WP
+                                           }
+                                                into g
+                                           select new
+                                           {
+                                               Produced_water_volumes = g.Sum(x =>int.Parse(x.Produced_water_volumes)),
+                                               Year_of_WP = g.FirstOrDefault().Year_of_WP,
+                                           });
 
                     #region GENERAL REPORT DATA POPULATION
                     var get_ReportContent_1 = WKP_Report.Where(x => x.Id == 1)?.FirstOrDefault();
                     var get_ReportContent_2 = WKP_Report.Where(x => x.Id == 2)?.FirstOrDefault();
                     var getGasFlare_ReportContent = WKP_Report.Where(x => x.Id == 5)?.FirstOrDefault();
+                    var getOilContigencyPlan_ReportContent = WKP_Report.Where(x => x.Id == 6)?.FirstOrDefault();
                     
                     if (get_ReportContent_1 != null && get_ReportContent_2 != null)
                     {
@@ -371,12 +385,36 @@ namespace Backend_UMR_Work_Program.Controllers
                              .Replace("(PERCENTAGE_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Percentage_Utilized.ToString())
                              .Replace("(TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Utilized_Gas_Produced.ToString())
                              .Replace("(TOTAL_GAS_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Flared_Gas_Produced.ToString());
-                                 
+
+                       // var contigencyPlan_Data = new SqlCommand(" select MIN(Frequency) Highest_1st , SUM(Total_Quantity_Spilled) TOTAL_QUANTITY_SPILLED, CompanyName, Year_of_WP from( SELECT TOP 1  CompanyName, Year_of_WP, CAST(Frequency AS int) AS Frequency, Total_Quantity_Spilled   FROM         dbo.WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED  order by Frequency desc) b   WHERE Year_of_WP = '" + DropDownList1.SelectedItem.Text + "'   GROUP BY CompanyName, Year_of_WP ", con);
+                        getOilContigencyPlan_ReportContent.Report_Content = getOilContigencyPlan_ReportContent.Report_Content
+                             .Replace("(NO_OF_OPERATING_COMPANIES)", E_and_P_companies.FirstOrDefault().TOTAL_COUNT_YEARLY.ToString())
+                             .Replace("(TOTAL_NO_OF_SPILLS)", OILSPILL_REPORT.FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_5)", OILSPILL_REPORT.Take(5).FirstOrDefault().Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_5)", OILSPILL_REPORT.Take(5).FirstOrDefault().CompanyName.ToString())
+                                          .Replace("(NO_OF_HIGHEST_bbls_5)", OILSPILL_REPORT.Take(5).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_4)", OILSPILL_REPORT.Take(4).FirstOrDefault().Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_4)", OILSPILL_REPORT.Take(4).FirstOrDefault().CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_4)", OILSPILL_REPORT.Take(4).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_3)", OILSPILL_REPORT.Take(3).FirstOrDefault().Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_3)", OILSPILL_REPORT.Take(3).FirstOrDefault().CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_3)", OILSPILL_REPORT.Take(3).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_2)", OILSPILL_REPORT.Take(2).FirstOrDefault().Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_2)", OILSPILL_REPORT.Take(2).FirstOrDefault().CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_2)", OILSPILL_REPORT.Take(2).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_1)", OILSPILL_REPORT.Take(1).FirstOrDefault().Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_1)", OILSPILL_REPORT.Take(1).FirstOrDefault().CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_1)", OILSPILL_REPORT.Take(1).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(TOTAL_PRODUCED_WATER_FORMATION)", Produced_water_volumes.FirstOrDefault().ToString());
+
+                            
+
                         var summaryReport = new ADMIN_WORK_PROGRAM_REPORTs_Model()
                         {
-                            summary_1 = get_ReportContent_1.Report_Content
-
-                            //summary_2 = get_ReportContent_2.Report_Content,
+                            summary_1 = get_ReportContent_1.Report_Content,
+                            //summary_2 = get_ReportContent_2.re,
+                            GasFlare_ReportContent = getGasFlare_ReportContent.Report_Content,
+                            OilContigencyPlan_ReportContent = getGasFlare_ReportContent.Report_Content,
                         };
 
                         #endregion
