@@ -573,17 +573,24 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
-                var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
-                var field = (from d in _context.COMPANY_FIELDs where d.Field_Name == fieldName && d.DeletedStatus != true select d).FirstOrDefault();
-                return new ConcessionField
+                if (omlName != "undefined")
                 {
-                    Concession_ID = concession.Consession_Id,
-                    Concession_Name = concession.ConcessionName,
-                    Consession_Type = concession.Consession_Type,
-                    Terrain = concession.Terrain,
-                    Field_Name = field?.Field_Name,
-                    Field_ID = field?.Field_ID,
-                };
+                    var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
+                    var field = (from d in _context.COMPANY_FIELDs where d.Field_Name == fieldName && d.DeletedStatus != true select d).FirstOrDefault();
+                    return new ConcessionField
+                    {
+                        Concession_ID = concession.Consession_Id,
+                        Concession_Name = concession.ConcessionName,
+                        Consession_Type = concession.Consession_Type,
+                        Terrain = concession.Terrain,
+                        Field_Name = field?.Field_Name,
+                        Field_ID = field?.Field_ID,
+                    };
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception e)
             {
@@ -6970,8 +6977,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
         }
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL"), DisableRequestSizeLimitAttribute]
-        public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
+        public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
         {
 
             int save = 0;
@@ -6979,7 +6986,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
             try
             {
-
 
                 if (!string.IsNullOrEmpty(id))
                 {
@@ -7073,7 +7079,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else if (hse_sustainable_model != null)
                 {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
                     hse_sustainable_model.Companyemail = WKPCompanyEmail;
                     hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -7248,7 +7254,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else if (hse_sustainable_model != null)
                 {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
                     hse_sustainable_model.Companyemail = WKPCompanyEmail;
                     hse_sustainable_model.CompanyName = WKPCompanyName;
