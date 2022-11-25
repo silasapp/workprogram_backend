@@ -41,10 +41,10 @@ namespace Backend_UMR_Work_Program.Controllers
             try {
                 var deskCount = 0;
                 var getStaff = (from stf in _context.staff
-                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
-                                where stf.AdminCompanyInfo_ID == int.Parse(WKPCompanyId) && stf.DeleteStatus != true
+                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
                                 select stf).FirstOrDefault();
-                if (getStaff == null)
+                if (getStaff != null)
                 {
                     deskCount = await _context.MyDesks.Where(x => x.StaffID == getStaff.StaffID && x.HasWork != true).CountAsync();
                 }
@@ -262,12 +262,21 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 int yearID = Convert.ToInt32(year);
-                var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.ConcessionName.ToLower() == omlName.ToLower() select d).FirstOrDefaultAsync();
+                var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Concession_Held.ToLower() == omlName.ToLower() select d).FirstOrDefaultAsync();
                 var field = await (from d in _context.COMPANY_FIELDs where d.Field_Name.ToLower() == fieldName.ToLower() || d.Field_ID.ToString() == fieldName select d).FirstOrDefaultAsync();
-                var checkApplication = (from ap in _context.Applications where ap.YearOfWKP == yearID && ap.ConcessionID == concession.Consession_Id 
-                                        && ap.FieldID == field.Field_ID && ap.DeleteStatus != true select ap).FirstOrDefault();
+                var checkApplication = (from ap in _context.Applications
+                                        where ap.YearOfWKP == yearID && ap.ConcessionID == concession.Consession_Id
+                                         && ap.DeleteStatus != true
+                                        select ap).FirstOrDefault();
+                if (field != null)
+                {
+                    checkApplication = (from ap in _context.Applications
+                                            where ap.YearOfWKP == yearID && ap.ConcessionID == concession.Consession_Id
+                                                            && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
+                                            select ap).FirstOrDefault();
 
-                if(checkApplication != null)
+                }
+                if (checkApplication != null)
                 {
               return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, this application details could not be found.", StatusCode = ResponseCodes.Failure };
                 }
