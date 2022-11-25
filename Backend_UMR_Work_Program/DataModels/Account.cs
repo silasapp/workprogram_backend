@@ -122,10 +122,10 @@ namespace Backend_UMR_Work_Program.Models
                                     UpdatedBy = 0,
                                     AdminCompanyInfo_ID= getUser.Id,
                                     StaffEmail = getUser.EMAIL.Trim(),
-                                    FirstName = getUser.NAME.ToUpper(),
-                                    LastName = getUser.NAME.ToUpper(),
+                                    FirstName = getUser.COMPANY_NAME.ToUpper(),
+                                    LastName = getUser.COMPANY_NAME.ToUpper(),
                                     CreatedAt = DateTime.Now,
-                                    ActiveStatus = false,
+                                    ActiveStatus = true,
                                     DeleteStatus = false,
                                 };
 
