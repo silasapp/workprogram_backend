@@ -100,7 +100,40 @@ namespace Backend_UMR_Work_Program.Models
                         var concessionInfo = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.COMPANY_EMAIL == email.Trim() select c).FirstOrDefaultAsync();
                         var contractType = concessionInfo?.Contract_Type ?? "";
                         var companyName = getUser?.COMPANY_NAME == "Admin" ? "Admin" : "Company";
+                        #region add staff to staff table for application process flow
+                        if(companyName == GeneralModel.Admin)
+                        {
+                            var getStaff = (from stf in _context.staff where (stf.AdminCompanyInfo_ID == getUser.Id || stf.StaffEmail == getUser.EMAIL) && stf.DeleteStatus != true
+                                            select stf).FirstOrDefault();
+                            if (getStaff != null)
+                            {
+                                getStaff.AdminCompanyInfo_ID = getStaff.AdminCompanyInfo_ID;
+                                int saved = await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                staff staff = new staff()
+                                {
 
+                                    StaffElpsID = "123456",
+                                    Staff_SBU = 0,
+                                    RoleID = 0,
+                                    LocationID = 0,
+                                    UpdatedBy = 0,
+                                    AdminCompanyInfo_ID= getUser.Id,
+                                    StaffEmail = getUser.EMAIL.Trim(),
+                                    FirstName = getUser.NAME.ToUpper(),
+                                    LastName = getUser.NAME.ToUpper(),
+                                    CreatedAt = DateTime.Now,
+                                    ActiveStatus = false,
+                                    DeleteStatus = false,
+                                };
+
+                                _context.staff.Add(staff);
+                                int saved = await _context.SaveChangesAsync();
+                            }
+                        }
+                        #endregion
                         var tokenHandler = new JwtSecurityTokenHandler();
                         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                         var tokenDescriptor = new SecurityTokenDescriptor

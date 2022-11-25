@@ -38,18 +38,26 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GetDashboardStuff")]
         public async Task<object> GetDashboardStuff()
         {
-            try { 
-            var deskCount = await _context.MyDesks.Where(x => x.StaffID == WKPCompanyNumber && x.HasWork != true).CountAsync();
-            var allApplicationsCount = await _context.Applications.Where(x => x.Status == GeneralModel.Processing).CountAsync();
-            var allProcessingCount = await _context.Applications.CountAsync();
-            var allApprovalsCount = await _context.PermitApprovals.CountAsync();
-            return new
-            {
-                deskCount = deskCount,
-                allApplicationsCount = allApplicationsCount,
-                allProcessingCount = allProcessingCount,
-                allApprovalsCount = allApprovalsCount
-            };
+            try {
+                var deskCount = 0;
+                var getStaff = (from stf in _context.staff
+                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                where stf.AdminCompanyInfo_ID == int.Parse(WKPCompanyId) && stf.DeleteStatus != true
+                                select stf).FirstOrDefault();
+                if (getStaff == null)
+                {
+                    deskCount = await _context.MyDesks.Where(x => x.StaffID == getStaff.StaffID && x.HasWork != true).CountAsync();
+                }
+                var allApplicationsCount = await _context.Applications.Where(x => x.Status == GeneralModel.Processing).CountAsync();
+                var allProcessingCount = await _context.Applications.CountAsync();
+                var allApprovalsCount = await _context.PermitApprovals.CountAsync();
+                return new
+                {
+                    deskCount = deskCount,
+                    allApplicationsCount = allApplicationsCount,
+                    allProcessingCount = allProcessingCount,
+                    allApprovalsCount = allApprovalsCount
+                };
             }
             catch (Exception e)
             {
@@ -138,6 +146,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 var company = await _context.ADMIN_COMPANY_INFORMATIONs.Where(x => x.Id == application.CompanyID).FirstOrDefaultAsync();
                 var appHistory = await (from his in _context.ApplicationDeskHistories
                                         join stf in _context.staff on his.StaffID equals stf.StaffID
+                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on his.StaffID equals admin.Id
                                         join rol in _context.Roles on stf.RoleID equals rol.id
                                         join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                         select new ApplicationDeskHistory_Model
@@ -151,6 +160,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                         }).ToListAsync();
                 var staffDesk = (from dsk in _context.MyDesks
                                  join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
                                  join rol in _context.Roles on stf.RoleID equals rol.id
                                  join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                  where dsk.HasWork!= true && stf.ActiveStatus != false && stf.DeleteStatus != true
@@ -197,6 +207,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 var company = await _context.ADMIN_COMPANY_INFORMATIONs.Where(x => x.Id == application.CompanyID).FirstOrDefaultAsync();
                 var appHistory = await (from his in _context.ApplicationDeskHistories
                                         join stf in _context.staff on his.StaffID equals stf.StaffID
+                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
                                         join rol in _context.Roles on stf.RoleID equals rol.id
                                         join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                         select new ApplicationDeskHistory_Model
@@ -211,6 +222,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 var staffDesk = (from dsk in _context.MyDesks
                                  join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
                                  join rol in _context.Roles on stf.RoleID equals rol.id
                                  join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                  where dsk.StaffID == WKPCompanyNumber && dsk.HasWork != true && stf.ActiveStatus != false && stf.DeleteStatus != true
@@ -295,7 +307,11 @@ namespace Backend_UMR_Work_Program.Controllers
                             _helpersController.SaveHistory(application.Id, staff.StaffId, "Submitted", "Application submitted and landed on staff desk");
 
                             //send mail to staff
-                            var getStaff = (from stf in _context.staff where stf.StaffID == staff.StaffId select stf).FirstOrDefault();
+                            //var getStaff = (from stf in _context.staff where stf.StaffID == staff.StaffId select stf).FirstOrDefault();
+                            var getStaff = (from stf in _context.staff
+                                         join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                         where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
+                                         select stf).FirstOrDefault();
                             string content2 = $"{WKPCompanyName} have submitted their WORK PROGRAM application for year {year}.";
                             var emailMsg2 = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject2, content2, "Staff");
                             var sendEmail2 = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg2, null);
@@ -364,7 +380,11 @@ namespace Backend_UMR_Work_Program.Controllers
                                     _helpersController.SaveHistory(application.Id, staff.StaffId, "Moved", "Application was pushed to staff desk");
 
                                     //send mail to staff
-                                    var getStaff = (from stf in _context.staff where stf.StaffID == staff.StaffId select stf).FirstOrDefault();
+                                    var getStaff = (from stf in _context.staff
+                                                    join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                                    where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
+                                                    select stf).FirstOrDefault();
+                                    
                                     string subject = $"Push for WORK PROGRAM application with ref: {application.ReferenceNo} ({field.Field_Name} - {application.YearOfWKP}).";
                                     string content = $"{WKPCompanyName} have submitted their WORK PROGRAM application for year {application.YearOfWKP}.";
                                     var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
@@ -426,9 +446,13 @@ namespace Backend_UMR_Work_Program.Controllers
                     var p = _helpersController.CreatePermit(application);
 
                         responseMessage += "You have APPROVED this application (" + application.ReferenceNo + ")  and approval has been generated. Approval No: " + p + Environment.NewLine;
-                        var staff = _context.staff.Where(x => x.StaffID == int.Parse(WKPCompanyId) && x.DeleteStatus != true).FirstOrDefault();
-                    
-                        if (!p.ToLower().Contains("error"))
+                        //var staff = _context.staff.Where(x => x.StaffID == int.Parse(WKPCompanyId) && x.DeleteStatus != true).FirstOrDefault();
+                        var staff =(from stf in _context.staff
+                                     join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                     where stf.StaffID == int.Parse(WKPCompanyId) && stf.DeleteStatus != true
+                                    select stf).FirstOrDefault();
+
+                    if (!p.ToLower().Contains("error"))
                         {
                             
                                 string body = "";
