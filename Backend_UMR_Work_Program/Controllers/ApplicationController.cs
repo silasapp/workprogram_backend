@@ -73,16 +73,17 @@ namespace Backend_UMR_Work_Program.Controllers
                 var applications = await (from dsk in _context.MyDesks 
                                     join app in _context.Applications on dsk.AppId equals app.Id
                                     join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
-                                    join field in _context.COMPANY_FIELDs on app.FieldID equals field.Field_ID
-                                    join con in _context.ADMIN_CONCESSIONS_INFORMATIONs on app.ConcessionID equals con.Consession_Id
-                                    where dsk.StaffID == WKPCompanyNumber && dsk.HasWork != true
+                                          join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                          join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                          join con in _context.ADMIN_CONCESSIONS_INFORMATIONs on app.ConcessionID equals con.Consession_Id
+                                    where admin.Id == WKPCompanyNumber && dsk.HasWork != true
                                     select new Application_Model
                                     {
                                         Id= app.Id,
                                         FieldID = app.FieldID,
                                         ConcessionID = app.ConcessionID,
-                                        ConcessionName = con.ConcessionName,
-                                        FieldName = field.Field_Name,
+                                        ConcessionName = con.Concession_Held,
+                                        FieldName = _context.COMPANY_FIELDs.Where(x=> x.Field_ID == app.FieldID).FirstOrDefault().Field_Name,
                                         ReferenceNo = app.ReferenceNo,
                                         CreatedAt = app.CreatedAt,
                                         SubmittedAt = app.SubmittedAt,
@@ -146,7 +147,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 var company = await _context.ADMIN_COMPANY_INFORMATIONs.Where(x => x.Id == application.CompanyID).FirstOrDefaultAsync();
                 var appHistory = await (from his in _context.ApplicationDeskHistories
                                         join stf in _context.staff on his.StaffID equals stf.StaffID
-                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on his.StaffID equals admin.Id
+                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                         join rol in _context.Roles on stf.RoleID equals rol.id
                                         join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                         select new ApplicationDeskHistory_Model
@@ -160,7 +161,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                         }).ToListAsync();
                 var staffDesk = (from dsk in _context.MyDesks
                                  join stf in _context.staff on dsk.StaffID equals stf.StaffID
-                                 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                  join rol in _context.Roles on stf.RoleID equals rol.id
                                  join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                  where dsk.HasWork!= true && stf.ActiveStatus != false && stf.DeleteStatus != true
@@ -207,7 +208,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 var company = await _context.ADMIN_COMPANY_INFORMATIONs.Where(x => x.Id == application.CompanyID).FirstOrDefaultAsync();
                 var appHistory = await (from his in _context.ApplicationDeskHistories
                                         join stf in _context.staff on his.StaffID equals stf.StaffID
-                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                         join rol in _context.Roles on stf.RoleID equals rol.id
                                         join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                         select new ApplicationDeskHistory_Model
@@ -222,7 +223,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 var staffDesk = (from dsk in _context.MyDesks
                                  join stf in _context.staff on dsk.StaffID equals stf.StaffID
-                                 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                  join rol in _context.Roles on stf.RoleID equals rol.id
                                  join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                  where dsk.StaffID == WKPCompanyNumber && dsk.HasWork != true && stf.ActiveStatus != false && stf.DeleteStatus != true
@@ -292,7 +293,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 application.ReferenceNo = _helpersController.Generate_Reference_Number();
                 application.YearOfWKP = yearID;
                 application.ConcessionID = concession.Consession_Id;
-                application.FieldID = field.Field_ID;
+                application.FieldID = field?.Field_ID;
                 application.CompanyID = (int)WKPCompanyNumber;
                 application.CategoryID = _context.ApplicationCategories.Where(x => x.Name == GeneralModel.New).FirstOrDefault().Id;
                 application.Status = GeneralModel.Processing;
@@ -318,7 +319,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             //send mail to staff
                             //var getStaff = (from stf in _context.staff where stf.StaffID == staff.StaffId select stf).FirstOrDefault();
                             var getStaff = (from stf in _context.staff
-                                         join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                         join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                          where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
                                          select stf).FirstOrDefault();
                             string content2 = $"{WKPCompanyName} have submitted their WORK PROGRAM application for year {year}.";
@@ -338,8 +339,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     string content = $"You have successfully submitted your WORK PROGRAM application for year {year}, and it is currently being reviewed.";
                     var emailMsg = _helpersController.SaveMessage(application.Id, (int)WKPCompanyNumber, subject, content, "Company");
                     var sendEmail = _helpersController.SendEmailMessage(WKPCompanyEmail, WKPCompanyName, emailMsg, null);
-                   
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"{year} Application for field {field?.Field_Name} has been submitted successfully.", StatusCode = ResponseCodes.Success };
+                    var responseMsg = field != null ? $"{year} Application for field {field?.Field_Name} has been submitted successfully." : $"{year} Application for concession: ({concession.ConcessionName}) has been submitted successfully.";
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMsg, StatusCode = ResponseCodes.Success };
 
                 }
                 else
@@ -390,7 +391,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                     //send mail to staff
                                     var getStaff = (from stf in _context.staff
-                                                    join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                                    join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                                     where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
                                                     select stf).FirstOrDefault();
                                     
@@ -457,7 +458,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         responseMessage += "You have APPROVED this application (" + application.ReferenceNo + ")  and approval has been generated. Approval No: " + p + Environment.NewLine;
                         //var staff = _context.staff.Where(x => x.StaffID == int.Parse(WKPCompanyId) && x.DeleteStatus != true).FirstOrDefault();
                         var staff =(from stf in _context.staff
-                                     join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.StaffID equals admin.Id
+                                     join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                      where stf.StaffID == int.Parse(WKPCompanyId) && stf.DeleteStatus != true
                                     select stf).FirstOrDefault();
 

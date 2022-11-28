@@ -2791,7 +2791,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     AppId = appID,
 
-                    StaffID = appProcess.ProcessId,
+                    StaffID = appProcess.StaffId,
 
                     FromStaffID = appProcess.FromStaffId,
 
