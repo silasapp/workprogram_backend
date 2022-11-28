@@ -47,11 +47,11 @@
 
 
         //Added by Musa for Testing
-        public static string CompanyId { get; set; }
-        public static string WKPCompanyName { get; set; }
-        public static string WKPCompanyEmail { get; set; }
-        public static string WKUserRole { get; set; }
-        public static string WKPCompanyNumber { get; set; }
+        //public static string CompanyId { get; set; }
+        //public static string WKPCompanyName { get; set; }
+        //public static string WKPCompanyEmail { get; set; }
+        //public static string WKUserRole { get; set; }
+        //public static string WKPCompanyNumber { get; set; }
 
         public class Concession_Index
         {

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -7,7 +9,7 @@ using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class WorkProgrammeController : ControllerBase
     {
@@ -28,9 +30,9 @@ namespace Backend_UMR_Work_Program.Controllers
             blobService = blobservice;
         }
         //Added by Musa for Testing
-        private string WKPCompanyId = GeneralModel.CompanyId;
+        //private string WKPCompanyId = GeneralModel.CompanyId;
 
-        //private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 
         private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);

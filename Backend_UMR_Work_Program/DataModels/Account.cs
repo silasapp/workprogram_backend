@@ -116,7 +116,7 @@ namespace Backend_UMR_Work_Program.Models
                         };
 
                         //Added by Musa for Testing
-                        GeneralModel.CompanyId=getUser.COMPANY_ID;
+                        //GeneralModel.CompanyId=getUser.COMPANY_ID;
 
                         var token = tokenHandler.CreateToken(tokenDescriptor);
                         UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, CompanyNumber = getUser.CompanyNumber, Name = getUser.NAME, ContractType = contractType, token = tokenHandler.WriteToken(token), code = 1 };
