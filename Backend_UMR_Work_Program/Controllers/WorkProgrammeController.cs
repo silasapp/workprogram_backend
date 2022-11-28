@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -9,7 +7,7 @@ using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class WorkProgrammeController : ControllerBase
     {
@@ -29,8 +27,12 @@ namespace Backend_UMR_Work_Program.Controllers
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
             blobService = blobservice;
         }
+        //Added by Musa for Testing
+        private string WKPCompanyId = GeneralModel.CompanyId;
 
-        private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
         private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
         private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
         private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
@@ -38,7 +40,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpGet("GETWORKPROGRAMYEARS")]
-        public async Task<object> GETWORKPROGRAMYEARS() {
+        public async Task<object> GETWORKPROGRAMYEARS()
+        {
             var now = DateTime.UtcNow.Year;
             var yearlist = new List<int>();
             for (int i = 0; i < 5; i++)
@@ -573,8 +576,19 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
+
+                //Added By Musa For Testing
+                //var WKPCompId = GeneralModel.CompanyId;
+
+
+                //var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
+
                 var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
-                var field = (from d in _context.COMPANY_FIELDs where d.Field_Name == fieldName && d.DeletedStatus != true select d).FirstOrDefault();
+
+
+                var field = (from d in _context.COMPANY_FIELDs where d.Field_Name == fieldName && d.DeletedStatus != true select d)?.FirstOrDefault();
+
+
                 return new ConcessionField
                 {
                     Concession_ID = concession.Consession_Id,
@@ -1070,6 +1084,7 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
                 if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
                 {
                     var HSEQuestion = (from c in _context.HSE_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -1086,6 +1101,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     var HSEAccidentIncidence = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
                     var HSEAccidentIncidenceType = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
                     var accidentModel = (from a1 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs
                                          join a2 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs on a1.COMPANY_ID equals a2.COMPANY_ID
                                          where a1.COMPANY_ID == WKPCompanyId && a1.OML_Name == omlName && a1.Year_of_WP == year
@@ -5077,7 +5093,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_fatality_model.Updated_by = WKPCompanyId;
                     hse_fatality_model.Year_of_WP = year;
                     hse_fatality_model.OML_Name = omlName;
-                    hse_fatality_model.Field_ID = concessionField.Field_ID;
+                    hse_fatality_model.Field_ID = concessionField?.Field_ID;
 
                     if (action == GeneralModel.Insert)
                     {
@@ -5207,7 +5223,8 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -5260,11 +5277,11 @@ namespace Backend_UMR_Work_Program.Controllers
                         var All_Data = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
-                    else
-                    {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+                    //else
+                    //{
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
-                    }
+                    //}
                 }
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
@@ -5319,6 +5336,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_IM_facility_model.Created_by = getData.Created_by;
                             hse_IM_facility_model.Date_Updated = DateTime.Now;
                             hse_IM_facility_model.Updated_by = WKPCompanyId;
+
                             _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.Remove(getData);
                             await _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs.AddAsync(hse_IM_facility_model);
                         }
@@ -5498,8 +5516,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            hse_safety_studies_model.Date_Created = getData.FirstOrDefault().Date_Created;
-                            hse_safety_studies_model.Created_by = getData.FirstOrDefault().Created_by;
+                            hse_safety_studies_model.Date_Created = getData?.FirstOrDefault().Date_Created;
+                            hse_safety_studies_model.Created_by = getData?.FirstOrDefault().Created_by;
                             hse_safety_studies_model.Date_Updated = DateTime.Now;
                             hse_safety_studies_model.Updated_by = WKPCompanyId;
                             getData.ForEach(x =>
@@ -5541,7 +5559,9 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+
+            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -5575,7 +5595,9 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_asset_register_model.Created_by = getData.Created_by;
                             hse_asset_register_model.Date_Updated = DateTime.Now;
                             hse_asset_register_model.Updated_by = WKPCompanyId;
+
                             _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getData);
+
                             await _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs.AddAsync(hse_asset_register_model);
                         }
                     }
@@ -5589,7 +5611,9 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         string successMsg = "Form has been " + action + "D successfully.";
+
                         var All_Data = await (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
                         return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                     }
                     else
@@ -5780,23 +5804,33 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
             var HSE_Accident_Incidence = new HSE_ACCIDENT_INCIDENCE_REPORTING_NEW();
+
             var HSE_Accident_Incidence_Type = new HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW();
+
             try
             {
                 if (!string.IsNullOrEmpty(id))
                 {
                     var getData = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
+                    if (getData ==null)
+                    {
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.RecordNotFound, Message = "Records not Found", Data = null, StatusCode = ResponseCodes.RecordNotFound };
+                    }
+
                     if (action == GeneralModel.Delete)
                         _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs.Remove(getData);
                     save += _context.SaveChanges();
                 }
-                else
-                if (hse_accident_model != null)
+
+                else if (hse_accident_model != null)
                 {
                     #region Saving HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs data
+
                     var getData = await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                     HSE_Accident_Incidence.Was_there_any_accident_incidence = hse_accident_model.Was_there_any_accident_incidence;
@@ -5809,6 +5843,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     HSE_Accident_Incidence.Updated_by = WKPCompanyId;
                     HSE_Accident_Incidence.Year_of_WP = year;
                     HSE_Accident_Incidence.OML_Name = omlName;
+
                     if (action == GeneralModel.Insert)
                     {
                         if (getData.Count() <= 0)
@@ -5865,6 +5900,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     HSE_Accident_Incidence_Type.Updated_by = WKPCompanyId;
                     HSE_Accident_Incidence_Type.Year_of_WP = year;
                     HSE_Accident_Incidence_Type.OML_Name = omlName;
+
                     if (action == GeneralModel.Insert)
                     {
                         if (getData2.Count() <= 0)
@@ -7001,7 +7037,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_sustainable_model.Updated_by = WKPCompanyId;
                     hse_sustainable_model.Year_of_WP = year;
                     hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField.Field_ID;
+                    hse_sustainable_model.Field_ID = concessionField?.Field_ID;
                     hse_sustainable_model.ACTUAL_year = year;
                     hse_sustainable_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -7329,8 +7365,15 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (action == GeneralModel.Delete)
                         _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
                     save += _context.SaveChanges();
+                    //Added by Musa
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
                 }
-                else if (hse_environmental_studies_new_model != null)
+                if (hse_environmental_studies_new_model != null)
                 {
                     var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -7828,100 +7871,20 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
                     if (action == GeneralModel.Delete)
                         _context.HSE_MANAGEMENT_POSITIONs.Remove(getData);
                     save += _context.SaveChanges();
+                    //Added By Musa
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
                 }
-                else if (hse_management_model != null)
+                if (hse_management_model != null)
                 {
                     var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
@@ -7976,12 +7939,14 @@ namespace Backend_UMR_Work_Program.Controllers
                             hse_management_model.Created_by = getData.FirstOrDefault().Created_by;
                             hse_management_model.Date_Updated = DateTime.Now;
                             hse_management_model.Updated_by = WKPCompanyId;
+
                             getData.ForEach(x =>
                             {
                                 _context.HSE_MANAGEMENT_POSITIONs.Remove(x);
                                 save += _context.SaveChanges();
 
                             });
+
                             await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
                         }
                     }
@@ -7999,10 +7964,10 @@ namespace Backend_UMR_Work_Program.Controllers
                     var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                 }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-                }
+                //else
+                //{
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+                //}
             }
             catch (Exception e)
             {
@@ -8536,8 +8501,15 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (action == GeneralModel.Delete)
                         _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
                     save += _context.SaveChanges();
+
+                    if (save > 0)
+                    {
+                        string successMsg = "Form has been " + action + "D successfully.";
+                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+                    }
                 }
-                else if (hse_EMS_model != null)
+                if (hse_EMS_model != null)
                 {
                     var getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
