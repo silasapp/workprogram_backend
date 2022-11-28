@@ -239,6 +239,8 @@
             public List<ADMIN_WORK_PROGRAM_REPORT> ADMIN_WORK_PROGRAM_REPORT_Model { get; set; }
             public object summary_1 { get; set; }
             public object summary_2 { get; set; }
+            public object GasFlare_ReportContent { get; set; }
+            public object OilContigencyPlan_ReportContent { get; set; }
         }
         public class ApplicationProcessModel
         {
