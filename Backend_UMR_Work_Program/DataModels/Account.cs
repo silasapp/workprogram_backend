@@ -1,17 +1,14 @@
-using System;
+using Backend_UMR_Work_Program.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
-using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using Backend_UMR_Work_Program.Services;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using static Backend_UMR_Work_Program.Models.ViewModel;
-using Microsoft.EntityFrameworkCore;
-using System.Net.Mail;
 
 namespace Backend_UMR_Work_Program.Models
 {
@@ -150,6 +147,10 @@ namespace Backend_UMR_Work_Program.Models
                             Expires = DateTime.UtcNow.AddDays(7),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                         };
+
+                        //Added by Musa for Testing
+                        //GeneralModel.CompanyId=getUser.COMPANY_ID;
+
                         var token = tokenHandler.CreateToken(tokenDescriptor);
                         UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, CompanyNumber = getUser.CompanyNumber, Name = getUser.NAME, ContractType = contractType, token = tokenHandler.WriteToken(token), code = 1 };
                         return tok;
@@ -174,7 +175,7 @@ namespace Backend_UMR_Work_Program.Models
 
             if (getUser == null)
             {
-              return false;
+                return false;
             }
             return true;
         }
@@ -218,15 +219,15 @@ namespace Backend_UMR_Work_Program.Models
             var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == companycode.Trim() && c.IsActive == "YES" select c).FirstOrDefaultAsync();
             if (getCode == null)
             {
-                return new {isValid = false, errorText = "Verification Code does not exist in our database..Please contact NUPRC Admin" };
+                return new { isValid = false, errorText = "Verification Code does not exist in our database..Please contact NUPRC Admin" };
             }
             else
             {
                 if (string.IsNullOrEmpty(getCode.GUID))
                 {
-                    return new { isValid = true, isGuid = false};
+                    return new { isValid = true, isGuid = false };
                 }
-                return new {isValid = true, isGuid = true, companyName = getCode.CompanyName, companyCode = getCode.CompanyCode};
+                return new { isValid = true, isGuid = true, companyName = getCode.CompanyName, companyCode = getCode.CompanyCode };
             }
         }
 
@@ -242,23 +243,23 @@ namespace Backend_UMR_Work_Program.Models
                 if (isVerified)
                 {
                     return new { isValid = true, popText = myPopText, companyCode = myNewCompanyCode, companyName = CompanyName };
-                } 
+                }
                 else
                 {
                     return new { isValid = false, popText = myPopText };
                 }
-                
+
             }
             else
             {
                 myPopText = "Please try another new company code";
-                return new {isValid = false, popText = myPopText};
+                return new { isValid = false, popText = myPopText };
             }
         }
 
         private async Task<bool> VerifyCompanyCode_GenerateUniqueCode(string oldCompanycode, string email, string newCompanyCode)
         {
-            var getCode = await(from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == oldCompanycode.Trim() && c.IsActive == "YES" select c).FirstOrDefaultAsync();
+            var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == oldCompanycode.Trim() && c.IsActive == "YES" select c).FirstOrDefaultAsync();
             //SqlCommand spcmd = new SqlCommand(" Select * from ADMIN_COMPANY_CODE  WHERE  CompanyCode =  '" + TextBox1.Text.Trim() + "' AND IsActive = 'YES' ", con);
 
             if (getCode != null)
@@ -268,11 +269,11 @@ namespace Backend_UMR_Work_Program.Models
                 await Update_ADMIN_CONCESSIONS_INFORMATION(oldCompanycode, newCompanyCode);
 
                 await Send_New_Company_Code(newCompanyCode);
-                
+
                 myPopText = " Your New Company Code have been sent to the email address you provided";
                 return true;
                 //Server.Transfer("companyresource.aspx");
-            } 
+            }
             else
             {
                 myPopText = "Company Code does not exist ... Please contact NUPRC Admin";
@@ -282,15 +283,15 @@ namespace Backend_UMR_Work_Program.Models
 
         private async Task<int> Update_GUID(string oldCompanycode, string email, string newCompanyCode)
         {
-             string GUID = Guid.NewGuid().ToString();
-             var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == oldCompanycode.Trim() select c).FirstOrDefaultAsync();
-             getCode.Email = email.Trim();
-             getCode.GUID = GUID;
-             getCode.Date_Updated = DateTime.Now;
-             getCode.CompanyCode = newCompanyCode;
-             _context.Entry(getCode).State = EntityState.Modified;
-             return await _context.SaveChangesAsync();
-             //cmd.CommandText = "Update ADMIN_COMPANY_CODE  SET  GUID = '" + GUID + "' ,  Email  = '" + TextBox2.Text.Trim() + "' , CompanyCode  = '" + TextBox3.Text.Trim() + "' , Date_Updated = '" + system_date + "'    WHERE  CompanyCode  = '" + TextBox1.Text.Trim() + "' ";
+            string GUID = Guid.NewGuid().ToString();
+            var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == oldCompanycode.Trim() select c).FirstOrDefaultAsync();
+            getCode.Email = email.Trim();
+            getCode.GUID = GUID;
+            getCode.Date_Updated = DateTime.Now;
+            getCode.CompanyCode = newCompanyCode;
+            _context.Entry(getCode).State = EntityState.Modified;
+            return await _context.SaveChangesAsync();
+            //cmd.CommandText = "Update ADMIN_COMPANY_CODE  SET  GUID = '" + GUID + "' ,  Email  = '" + TextBox2.Text.Trim() + "' , CompanyCode  = '" + TextBox3.Text.Trim() + "' , Date_Updated = '" + system_date + "'    WHERE  CompanyCode  = '" + TextBox1.Text.Trim() + "' ";
         }
 
         private async Task<int> Update_ADMIN_CONCESSIONS_INFORMATION(string oldCompanycode, string newCompanyCode)
@@ -447,7 +448,7 @@ namespace Backend_UMR_Work_Program.Models
 
         public async Task<int> Insert_ADMIN_COMPANY_INFORMATION(string compName, string compCode, string name, string designation, string phone, string email, string password, int elpsID)
         {
-            var newInfo = new ADMIN_COMPANY_INFORMATION {ELPS_ID= elpsID, COMPANY_NAME = compName, COMPANY_ID = compCode, EMAIL = email, PASSWORDS = Encrypt(password), NAME = name, DESIGNATION = designation, PHONE_NO = phone, STATUS_ = "Activated",  Created_by = compName, Date_Created = DateTime.Now};
+            var newInfo = new ADMIN_COMPANY_INFORMATION { ELPS_ID= elpsID, COMPANY_NAME = compName, COMPANY_ID = compCode, EMAIL = email, PASSWORDS = Encrypt(password), NAME = name, DESIGNATION = designation, PHONE_NO = phone, STATUS_ = "Activated", Created_by = compName, Date_Created = DateTime.Now };
             try
             {
                 await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(newInfo);
@@ -560,10 +561,11 @@ namespace Backend_UMR_Work_Program.Models
 
         public async Task<List<ADMIN_COMPANY_INFORMATION?>> DeleteUser(string compCode, string Id)
         {
-            
+
             var getInfo = await (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.COMPANY_ID == compCode select c).FirstOrDefaultAsync();
             //System.Data.SqlClient.SqlCommand cmd2 = new SqlCommand("Select * from  ADMIN_COMPANY_INFORMATION  WHERE  COMPANY_ID = '" + compCode.ToString() + "' ", cnn2);
-            if (getInfo != null) {
+            if (getInfo != null)
+            {
                 var compInfo = await _context.ADMIN_COMPANY_INFORMATIONs.FindAsync(Convert.ToInt32(Id));
                 _context.ADMIN_COMPANY_INFORMATIONs.Remove(compInfo);
                 await _context.SaveChangesAsync();
@@ -579,22 +581,23 @@ namespace Backend_UMR_Work_Program.Models
 
             try
             {
-                if (getInfo != null) {
+                if (getInfo != null)
+                {
                     var myPassword = Decrypt(getInfo.PASSWORDS);
                     Work_Program_Email_Notification_When_Password_is_Changed(email, myPassword, getInfo.COMPANY_NAME);
                     myPopText = " Your Password have been sent to email address specified .. Please login and change your password";
-                    return new {isValid = true, popText = myPopText};
+                    return new { isValid = true, popText = myPopText };
                 }
-                else 
+                else
                 {
                     myPopText = "Email does not exist in our database .. Please check and try again";
-                    return new {isValid = false, popText = myPopText};
+                    return new { isValid = false, popText = myPopText };
                 }
             }
             catch (Exception ex)
             {
                 string myMsgErr = ex.Message;
-                return new {isValid = false, popText = myMsgErr};
+                return new { isValid = false, popText = myMsgErr };
             }
         }
 
