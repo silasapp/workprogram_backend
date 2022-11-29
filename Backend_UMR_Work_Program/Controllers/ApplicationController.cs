@@ -166,6 +166,8 @@ namespace Backend_UMR_Work_Program.Controllers
                                  where dsk.HasWork!= true && stf.ActiveStatus != false && stf.DeleteStatus != true
                                  select new Staff_Model
                                  {
+                                     Desk_ID = dsk.DeskID,
+                                     Sort = dsk.Sort,
                                      Staff_Name = stf.FirstName +" "+ stf.LastName,
                                      Staff_Email = stf.StaffEmail,
                                      Staff_SBU = sbu.SBU_Name,
@@ -225,9 +227,10 @@ namespace Backend_UMR_Work_Program.Controllers
                                  join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                  join rol in _context.Roles on stf.RoleID equals rol.id
                                  join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
-                                 where dsk.StaffID == WKPCompanyNumber && dsk.HasWork != true && stf.ActiveStatus != false && stf.DeleteStatus != true
+                                 where admin.Id == WKPCompanyNumber && dsk.AppId == appID && dsk.HasWork != true && stf.ActiveStatus != false && stf.DeleteStatus != true
                                  select new Staff_Model
                                  {
+                                     Desk_ID = dsk.DeskID,
                                      Staff_Name = stf.FirstName + " " + stf.LastName,
                                      Staff_Email = stf.StaffEmail,
                                      Staff_SBU = sbu.SBU_Name,
