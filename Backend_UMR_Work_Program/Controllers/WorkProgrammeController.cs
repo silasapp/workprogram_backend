@@ -54,7 +54,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("GETCOMPLETEDPAGES")]
-        public async Task<object> GETCOMPLETEDPAGES(string omlname)
+        public async Task<object> GETCOMPLETEDPAGES(string omlname, string year)
         {
             bool isStep1;
             bool isStep2;
@@ -110,9 +110,9 @@ namespace Backend_UMR_Work_Program.Controllers
             }
 
             var step3 = await (from a in _context.BUDGET_ACTUAL_EXPENDITUREs
-                               join b in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs on a.OML_Name equals b.OML_Name
-                               join c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs on a.OML_Name equals c.OML_Name
-                               where a.OML_Name == omlname
+                               join b in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs on a.COMPANY_ID equals b.COMPANY_ID
+                               join c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs on a.COMPANY_ID equals c.COMPANY_ID
+                               where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year
                                select new
                                {
                                    exploratoryBudget = a.Budget_for_Direct_Exploration_and_Production_Activities_USD,
@@ -129,9 +129,9 @@ namespace Backend_UMR_Work_Program.Controllers
             }
 
             var step4 = await (from a in _context.NIGERIA_CONTENT_Trainings
-                               join b in _context.STRATEGIC_PLANS_ON_COMPANY_BAses on a.OML_Name equals b.OML_Name
-                               join c in _context.LEGAL_LITIGATIONs on a.OML_Name equals c.OML_Name
-                               where a.OML_Name == omlname
+                               join b in _context.STRATEGIC_PLANS_ON_COMPANY_BAses on a.COMPANY_ID equals b.COMPANY_ID
+                               join c in _context.LEGAL_LITIGATIONs on a.COMPANY_ID equals c.COMPANY_ID
+                               where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year
                                select new
                                {
                                    actual_proposed = a.Actual_Proposed,
@@ -148,7 +148,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
 
             var step5 = await (from a in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs
-                               where a.OML_Name == omlname
+                               where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year
                                select new
                                {
                                    facility = a.facility
