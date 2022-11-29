@@ -1,19 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Backend_UMR_Work_Program.Models;
-using static Backend_UMR_Work_Program.Models.GeneralModel;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
-using ClosedXML.Excel;
-using Syncfusion.XlsIO;
-using DocumentFormat.OpenXml.Office.Word;
-using System.Text.RegularExpressions;
+﻿using AutoMapper;
 using Backend_UMR_Work_Program.Helpers;
+using Backend_UMR_Work_Program.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Syncfusion.XlsIO;
+using System.Data;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
+using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -50,7 +45,7 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var getCodes = await (from c in _context.ADMIN_COMPANY_CODEs
-                                select c).ToListAsync();
+                                      select c).ToListAsync();
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = getCodes, StatusCode = ResponseCodes.Success };
             }
@@ -230,8 +225,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 var companycodes = await _context.ADMIN_COMPANY_CODEs.ToListAsync();
                 var codeModel = new CompanyCodeModel();
                 if (companycodes.Any()) codeModel = _mapper.Map<CompanyCodeModel>(companycodes);
-                
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = codeModel , StatusCode = ResponseCodes.Success };
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = codeModel, StatusCode = ResponseCodes.Success };
             }
             catch (Exception e)
             {
@@ -252,7 +247,7 @@ namespace Backend_UMR_Work_Program.Controllers
         //         {
         //             var companyCodeModel = _mapper.Map<CompanyCodeModel>(companycode);
         //                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Company Code has been updated successfully", Data = companyCodeModel, StatusCode = ResponseCodes.Success };
-           
+
         //         }
         //     }
         //     catch (Exception e)
@@ -266,12 +261,12 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
         [HttpPut("UPDATE_COMPANY_CODES")]
-        public async Task<WebApiResponse>UpdateCompanyCodes(int Id, string name, string status)
+        public async Task<WebApiResponse> UpdateCompanyCodes(int Id, string name, string status)
         {
-           
+
             try
             {
-                var companycode = _context.ADMIN_COMPANY_CODEs.FirstOrDefault(x=>x.Id==Id);
+                var companycode = _context.ADMIN_COMPANY_CODEs.FirstOrDefault(x => x.Id==Id);
 
                 if (companycode != null)
                 {
@@ -295,7 +290,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             }
             return null;
-            
+
         }
 
 
@@ -330,11 +325,11 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var companyInformation = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                          where c.COMPANY_NAME != GeneralModel.Admin && c.DELETED_STATUS == null
-                                          select c).ToListAsync();
+                                                where c.COMPANY_NAME != GeneralModel.Admin && c.DELETED_STATUS == null
+                                                select c).ToListAsync();
                 var staffInformation = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                        where c.COMPANY_NAME == GeneralModel.Admin && c.DELETED_STATUS == null
-                                        select c).ToListAsync();
+                                              where c.COMPANY_NAME == GeneralModel.Admin && c.DELETED_STATUS == null
+                                              select c).ToListAsync();
                 var userRoles = await _context.ROLES_s.ToListAsync();
 
                 var returnData = new UserModel()
@@ -359,8 +354,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var companyInformation = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                          where c.COMPANY_NAME != GeneralModel.Admin && c.DELETED_STATUS == null
-                                          select c).ToListAsync();
+                                                where c.COMPANY_NAME != GeneralModel.Admin && c.DELETED_STATUS == null
+                                                select c).ToListAsync();
 
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = companyInformation, StatusCode = ResponseCodes.Success };
@@ -433,8 +428,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkUser = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                 where c.Id == id
-                                 select c).FirstOrDefaultAsync();
+                                       where c.Id == id
+                                       select c).FirstOrDefaultAsync();
                 if (checkUser == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found.", StatusCode = ResponseCodes.Failure };
@@ -459,8 +454,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkUser = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                 where c.Id == userModel.Id
-                                 select c).FirstOrDefaultAsync();
+                                       where c.Id == userModel.Id
+                                       select c).FirstOrDefaultAsync();
                 if (checkUser == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found for {userModel.EMAIL}", StatusCode = ResponseCodes.Failure };
@@ -497,8 +492,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkUser = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                 where c.Id == Id
-                                 select c).FirstOrDefaultAsync();
+                                       where c.Id == Id
+                                       select c).FirstOrDefaultAsync();
                 if (checkUser == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found.", StatusCode = ResponseCodes.Failure };
@@ -532,8 +527,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkUser = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                 where c.Id == Id
-                                 select c).FirstOrDefaultAsync();
+                                       where c.Id == Id
+                                       select c).FirstOrDefaultAsync();
                 if (checkUser == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found.", StatusCode = ResponseCodes.Failure };
@@ -572,8 +567,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var data = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                            where c.DELETED_STATUS == null
-                            select c).GroupBy(x => x.Concession_Unique_ID).Select(x => x.FirstOrDefault()).ToListAsync();
+                                  where c.DELETED_STATUS == null
+                                  select c).GroupBy(x => x.Concession_Unique_ID).Select(x => x.FirstOrDefault()).ToListAsync();
                 if (year != null)
                 {
                     data = data.Where(d => d.Year == year.Trim()).ToList();
@@ -593,8 +588,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                       where c.Concession_Unique_ID.ToLower() == concessionModel.Concession_Unique_ID.ToLower()
-                                       select c).FirstOrDefaultAsync();
+                                             where c.Concession_Unique_ID.ToLower() == concessionModel.Concession_Unique_ID.ToLower()
+                                             select c).FirstOrDefaultAsync();
                 if (checkConcession != null)
                 {
                     bool deleted = checkConcession.DELETED_STATUS == "DELETED" ? true : false;
@@ -609,8 +604,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 else
                 {
                     var company = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
-                                   where c.COMPANY_NAME.ToLower() == concessionModel.CompanyName.ToLower()
-                                   select c).FirstOrDefaultAsync();
+                                         where c.COMPANY_NAME.ToLower() == concessionModel.CompanyName.ToLower()
+                                         select c).FirstOrDefaultAsync();
                     if (company != null)
                     {
                         var data = _mapper.Map<ADMIN_CONCESSIONS_INFORMATION>(concessionModel);
@@ -647,8 +642,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                       where c.Consession_Id == id
-                                       select c).FirstOrDefaultAsync();
+                                             where c.Consession_Id == id
+                                             select c).FirstOrDefaultAsync();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found.", StatusCode = ResponseCodes.Failure };
@@ -674,8 +669,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                       where c.Consession_Id == concessionModel.Consession_Id
-                                       select c).FirstOrDefaultAsync();
+                                             where c.Consession_Id == concessionModel.Consession_Id
+                                             select c).FirstOrDefaultAsync();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found for {concessionModel.Concession_Unique_ID}", StatusCode = ResponseCodes.Failure };
@@ -710,8 +705,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                       where c.Consession_Id == Id
-                                       select c).FirstOrDefaultAsync();
+                                             where c.Consession_Id == Id
+                                             select c).FirstOrDefaultAsync();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found.", StatusCode = ResponseCodes.Failure };
@@ -745,8 +740,8 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var checkConcession = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs
-                                       where c.Consession_Id == Id
-                                       select c).FirstOrDefaultAsync();
+                                             where c.Consession_Id == Id
+                                             select c).FirstOrDefaultAsync();
                 if (checkConcession == null)
                 {
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: Concession information was not found.", StatusCode = ResponseCodes.Failure };
@@ -820,8 +815,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     foreach (var x in reports)
                     {
                         var checkReport = await (from c in _context.ADMIN_WORK_PROGRAM_REPORTs
-                                           where c.Id == x.Id
-                                           select c).FirstOrDefaultAsync();
+                                                 where c.Id == x.Id
+                                                 select c).FirstOrDefaultAsync();
                         if (checkReport == null)
                         {
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error: Report details could not found on the portal.", StatusCode = ResponseCodes.Failure };
@@ -1701,10 +1696,11 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_ADMIN_CONCESSIONS_INFORMATIONs")]
         public async Task<object> GET_ADMIN_CONCESSIONS_INFORMATIONs(int companyNumber)
         {
-            try { 
-            int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
-            var companyConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.CompanyNumber == companyID && d.DELETED_STATUS != "true" select d).ToListAsync();
-            return new { CompanyConcessions = companyConcessions };
+            try
+            {
+                int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
+                var companyConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.CompanyNumber == companyID && d.DELETED_STATUS != "true" select d).ToListAsync();
+                return new { CompanyConcessions = companyConcessions };
             }
             catch (Exception e)
             {
@@ -1715,10 +1711,11 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_COMPANY_FIELDS")]
         public async Task<object> GET_COMPANY_FIELDS(int companyNumber)
         {
-            try { 
-            int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
-            var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
-            return new { ConcessionFields = concessionFields };
+            try
+            {
+                int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
+                var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
+                return new { ConcessionFields = concessionFields };
             }
             catch (Exception e)
             {
@@ -1728,9 +1725,10 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("GET_CONCESSIONS_FIELDS")]
         public async Task<object> GET_CONCESSIONS_FIELDS(int concessionID)
         {
-            try { 
-            var companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concessionID && d.DeletedStatus != true select d).ToListAsync();
-            return new { CompanyFields = companyFields };
+            try
+            {
+                var companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concessionID && d.DeletedStatus != true select d).ToListAsync();
+                return new { CompanyFields = companyFields };
             }
             catch (Exception e)
             {

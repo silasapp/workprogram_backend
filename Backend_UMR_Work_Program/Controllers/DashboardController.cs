@@ -205,7 +205,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         companyDashboard_Data.totalReserves = companyDashboard_Data.oil_Reserves + companyDashboard_Data.AG_Reserves + companyDashboard_Data.NAG_Reserves + companyDashboard_Data.condensate_Reserves;
                         companyDashboard_DataList.Add(companyDashboard_Data);
                     });
-                    companyDashboard_Report.CompanyReportModel = companyDashboard_DataList;
+                    companyDashboard_Report.CompanyReportModels = companyDashboard_DataList;
 
 
                     companyDashboard_Report.OML_Count = companyConcessions.Where(x => x.Consession_Type.ToLower() == GeneralModel.OML.ToLower()).Count();
@@ -258,7 +258,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         companyDashboard_Data.totalReserves = companyDashboard_Data.oil_Reserves + companyDashboard_Data.AG_Reserves + companyDashboard_Data.NAG_Reserves + companyDashboard_Data.condensate_Reserves;
                         companyDashboard_DataList.Add(companyDashboard_Data);
                     });
-                    companyDashboard_Report.CompanyReportModel = companyDashboard_DataList;
+                    companyDashboard_Report.CompanyReportModels = companyDashboard_DataList;
 
 
                     companyDashboard_Report.OML_Count = companyConcessions.Where(x => x.Consession_Type.ToLower() == GeneralModel.OML.ToLower()).Count();

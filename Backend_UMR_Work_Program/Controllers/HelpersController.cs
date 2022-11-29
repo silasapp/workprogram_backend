@@ -2791,7 +2791,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     AppId = appID,
 
-                    StaffID = appProcess.ProcessId,
+                    StaffID = appProcess.StaffId,
 
                     FromStaffID = appProcess.FromStaffId,
 
@@ -2828,12 +2828,19 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 var getSBUs = applicationProcess.Select(x=> x.SBU_ID).Distinct();
 
-                var getStaff = (from sbu in getSBUs
+                    var SBU = (from sbu in getSBUs
+                               join s in _context.StrategicBusinessUnits on sbu equals s.Id
+                               select s
+                               ).ToList();
+                        
+                        
+                        var getStaff = (from sbu in getSBUs
                                 join stf in _context.staff on sbu equals stf.Staff_SBU
+                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                 //join sbu in applicationProcess.AsEnumerable() on stf.Staff_SBU equals sbu.SBU_ID
                                 join role in _context.Roles on stf.RoleID equals role.id
                                 where role.id == applicationProcess.FirstOrDefault().RoleID 
-                                && stf.DeleteStatus != true && stf.ActiveStatus != false
+                                //&& stf.DeleteStatus != true && stf.ActiveStatus != false
                                 select new ApplicationProcessModel
                                 {
                                     SBU_Id= stf.Staff_SBU,
