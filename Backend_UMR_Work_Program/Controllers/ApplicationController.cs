@@ -634,15 +634,13 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-                var getData = _context.HSE_MinimumRequirements.FirstOrDefault(d => d.CompanyNumber==WKPCompanyNumber && d.Year==int.Parse(year) && d.ConcessionID==concessionField.Result.Concession_ID);
 
 
-
-                //var getData = await (from d in _context.HSE_MinimumRequirements
-                //                     where
-                //                    d.CompanyNumber == WKPCompanyNumber && d.Year == int.Parse(year) &&
-                //                    d.ConcessionID == concessionField.Result.Concession_ID
-                //                     select d).FirstOrDefaultAsync();
+                var getData = await (from d in _context.HSE_MinimumRequirements
+                                     where
+                                    d.CompanyNumber == WKPCompanyNumber && d.Year == int.Parse(year) &&
+                                    d.ConcessionID == concessionField.Result.Concession_ID
+                                     select d).FirstOrDefaultAsync();
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = getData, StatusCode = ResponseCodes.Success };
             }
