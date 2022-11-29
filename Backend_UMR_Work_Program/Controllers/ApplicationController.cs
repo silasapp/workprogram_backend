@@ -633,11 +633,15 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+
+
                 var getData = await (from d in _context.HSE_MinimumRequirements
                                      where
                                     d.CompanyNumber == WKPCompanyNumber && d.Year == int.Parse(year) &&
                                     d.ConcessionID == concessionField.Result.Concession_ID
                                      select d).FirstOrDefaultAsync();
+
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = getData, StatusCode = ResponseCodes.Success };
             }
             catch (Exception ex)
@@ -652,12 +656,14 @@ namespace Backend_UMR_Work_Program.Controllers
 
             int save = 0;
             var concessionField = GET_CONCESSION_FIELD(omlName, "");
+
             string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert : actionToDo;
             try
             {
                 #region Saving Field
 
                 model.ConcessionID = concessionField.Result.Concession_ID;
+
                 model.CompanyNumber = WKPCompanyNumber;
                 model.Year = int.Parse(year);
 
@@ -667,7 +673,12 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (data != null)
                     {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This data is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+
+                        _context.HSE_MinimumRequirements.Remove(data);
+                        model.DateCreated = DateTime.Now;
+                        await _context.HSE_MinimumRequirements.AddAsync(model);
+
+                        //return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This data is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
                     }
                     else
                     {
@@ -705,6 +716,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Data has been " + action + "D successfully.";
+
                     var allData = await (from d in _context.HSE_MinimumRequirements
                                          where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
                                          select d).ToListAsync();
@@ -925,6 +937,7 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefaultAsync();
                 var field = await (from d in _context.COMPANY_FIELDs where d.Field_Name == fieldName && d.DeletedStatus != true select d).FirstOrDefaultAsync();
+
                 return new ConcessionField
                 {
                     Concession_ID = concession.Consession_Id,
