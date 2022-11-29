@@ -297,6 +297,7 @@
             public string Staff_SBU { get; set; }
             public string Staff_Role { get; set; }
             public int Sort { get; set; }
+            public int Desk_ID { get; set; }
         }
 
         public class ApplicationDeskHistory_Model
