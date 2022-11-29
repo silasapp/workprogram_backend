@@ -29,7 +29,7 @@
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
         public static string EquipmentFailure = "EQUIPMENT_FAILURE";
-        public static string Insert = "INSERTE";
+        public static string Insert = "INSERT";
         public static string Update = "UPDATE";
         public static string Delete = "DELETE";
         public static string New = "New";
