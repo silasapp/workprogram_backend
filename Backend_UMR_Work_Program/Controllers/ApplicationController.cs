@@ -564,9 +564,10 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 foreach (var b in selectedApps)
                 {
-                    int appId = Convert.ToInt16(b);
+                    string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
+                    int appId = int.Parse(appID);
                     //get current staff desk
-                    var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId && a.StaffID == int.Parse(WKPCompanyId)).FirstOrDefault();
+                    var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId ).FirstOrDefault();
 
                     var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
                     var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
@@ -576,6 +577,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     staffDesk.HasPushed = true;
                     staffDesk.HasWork = true;
                     staffDesk.UpdatedAt = DateTime.Now;
+                    application.Status = GeneralModel.Approved;
                     _context.SaveChanges();
 
                     var p = _helpersController.CreatePermit(application);
@@ -590,13 +592,13 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (!p.ToLower().Contains("error"))
                     {
 
-                        string body = "";
-                        var up = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                        string file = up + @"\\Templates\" + "InternalMemo.txt";
-                        using (var sr = new StreamReader(file))
-                        {
-                            body = sr.ReadToEnd();
-                        }
+                        //string body = "";
+                        //var up = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                        //string file = up + @"\\Templates\" + "InternalMemo.txt";
+                        //using (var sr = new StreamReader(file))
+                        //{
+                        //    body = sr.ReadToEnd();
+                        //}
 
                         //send email to staff approver
                         string subject = $"Approval For Application With REF: {application.ReferenceNo}";
@@ -609,7 +611,6 @@ namespace Backend_UMR_Work_Program.Controllers
                         _helpersController.SaveHistory(appId, staff.StaffID, GeneralModel.Approved, staff.StaffEmail + "Final Approval For Application With Ref: " + application.ReferenceNo);
 
                         responseMessage = "Application(s) has been approved and permit approval generated successfully.";
-
                     }
                     else
                     {
