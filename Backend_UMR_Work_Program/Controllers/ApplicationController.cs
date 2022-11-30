@@ -365,19 +365,24 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     foreach (var b in selectedApps)
                     {
-                        int appId = Convert.ToInt16(b);
+                        string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
+                        int appId = int.Parse(appID);
                         //get current staff desk
-                        var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId && a.StaffID == int.Parse(WKPCompanyId)).FirstOrDefault();
+                        var get_CurrentStaff = (from stf in _context.staff
+                                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
+                                                select stf).FirstOrDefault();
+                        var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId).FirstOrDefault();
                         var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
                         var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
-                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID && d.CompanyNumber == WKPCompanyNumber select d).FirstOrDefaultAsync();
+                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID select d).FirstOrDefaultAsync();
 
                         if (application.FieldID != null)
                         {
                             var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
                         }
                        
-                        Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, 0);
+                        Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, staffDesk.Sort, (int)get_CurrentStaff.Staff_SBU);
 
                         if (getApplicationProcess.Result.Count > 0)
                         {
@@ -387,7 +392,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                 if (saveStaffDesk > 0)
                                 {
-                                    _helpersController.SaveHistory(application.Id, staff.StaffId, "Moved", "Application was pushed to staff desk");
+                                    _helpersController.SaveHistory(application.Id, staff.StaffId, "Moved", comment);
                                     
                                     //update staff desk
                                     staffDesk.HasPushed = true;
@@ -446,17 +451,18 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     foreach (var b in selectedApps)
                     {
-                        int appId = Convert.ToInt16(b);
+                        string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
+                        int appId = int.Parse(appID);
                         //get current staff desk
                         var get_CurrentStaff = (from stf in _context.staff
-                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
-                                        where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
-                                        select stf).FirstOrDefault();
+                                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
+                                                select stf).FirstOrDefault();
 
-                        var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId && a.StaffID == int.Parse(WKPCompanyId)).FirstOrDefault();
+                        var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId).FirstOrDefault();
                         var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
                         var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
-                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID && d.CompanyNumber == WKPCompanyNumber select d).FirstOrDefaultAsync();
+                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID select d).FirstOrDefaultAsync();
 
                         if (application.FieldID != null)
                         {
@@ -465,7 +471,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                         if (staffDesk.Sort == 1) //Rejection to company
                         {
-                         
+
                             _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", "Application was rejected to company");
 
                             //update staff desk
@@ -481,7 +487,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                             join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
                                             where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
                                             select stf).FirstOrDefault();
-                            
+
                             string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
                             string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
                             var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
@@ -493,49 +499,45 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, 0);
+                            var prevDesk = (from dsk in _context.MyDesks
+                                            join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                            where stf.Staff_SBU == get_CurrentStaff.Staff_SBU && dsk.Sort == staffDesk.Sort-1 && stf.DeleteStatus != true
+                                            select dsk).FirstOrDefault();
 
-                            if (getApplicationProcess.Result.Count > 0)
+
+                            if (prevDesk != null)
                             {
-                                foreach (var staff in getApplicationProcess.Result.ToList())
-                                {
-                                    int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, staff);
+                                //update staff desk
+                                staffDesk.HasPushed = true;
+                                staffDesk.HasWork = true;
+                                staffDesk.UpdatedAt = DateTime.Now;
 
-                                    if (saveStaffDesk > 0)
-                                    {
-                                        //update staff desk
-                                        staffDesk.HasPushed = true;
-                                        staffDesk.HasWork = true;
-                                        staffDesk.UpdatedAt = DateTime.Now;
-                                        _context.SaveChanges();
+                                prevDesk.HasPushed = false;
+                                prevDesk.HasWork = false; 
+                                prevDesk.UpdatedAt = DateTime.Now;
+                                _context.SaveChanges();
 
-                                        _helpersController.SaveHistory(application.Id, staff.StaffId, "Rejection", "Application was rejected");
+                                _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
 
-                                        //send mail to staff
-                                        var getStaff = (from stf in _context.staff
-                                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
-                                                        where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
-                                                        select stf).FirstOrDefault();
+                                //send mail to staff
+                                var getStaff = (from stf in _context.staff
+                                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                where stf.StaffID == prevDesk.StaffID && stf.DeleteStatus != true
+                                                select stf).FirstOrDefault();
 
-                                        string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
-                                        string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
-                                        var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
-                                        var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
+                                string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                                string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
+                                var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
+                                var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
 
-                                        _helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
-                                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
-                                    }
-                                    else
-                                    {
-                                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to submit this application to a staff.", StatusCode = ResponseCodes.Failure };
-                                    }
-
-                                }
+                                _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+                                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been rejected successfully.", StatusCode = ResponseCodes.Success };
                             }
                             else
                             {
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to get process flow for this application.", StatusCode = ResponseCodes.Failure };
+                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to reject this application.", StatusCode = ResponseCodes.Failure };
                             }
+
                         }
                     }
                 }
@@ -549,7 +551,7 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception x)
             {
                 _helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = $"An error occured while pushing application to staff."+ x.Message.ToString(), StatusCode = ResponseCodes.InternalError };
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = $"An error occured while rejecting application."+ x.Message.ToString(), StatusCode = ResponseCodes.InternalError };
             }
 
         }
