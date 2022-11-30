@@ -359,7 +359,6 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("PushApplication")]
         public async Task<WebApiResponse> PushApplication(int deskID, string comment, string[] selectedApps)
         {
-            var responseMessage = "";
             try
             {
                 if (selectedApps != null)
@@ -371,14 +370,13 @@ namespace Backend_UMR_Work_Program.Controllers
                         var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId && a.StaffID == int.Parse(WKPCompanyId)).FirstOrDefault();
                         var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
                         var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
-                        var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
+                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID && d.CompanyNumber == WKPCompanyNumber select d).FirstOrDefaultAsync();
 
-                        //update staff desk
-                        staffDesk.HasPushed = true;
-                        staffDesk.HasWork = true;
-                        staffDesk.UpdatedAt = DateTime.Now;
-                        _context.SaveChanges();
-
+                        if (application.FieldID != null)
+                        {
+                            var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
+                        }
+                       
                         Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, 0);
 
                         if (getApplicationProcess.Result.Count > 0)
@@ -390,6 +388,12 @@ namespace Backend_UMR_Work_Program.Controllers
                                 if (saveStaffDesk > 0)
                                 {
                                     _helpersController.SaveHistory(application.Id, staff.StaffId, "Moved", "Application was pushed to staff desk");
+                                    
+                                    //update staff desk
+                                    staffDesk.HasPushed = true;
+                                    staffDesk.HasWork = true;
+                                    staffDesk.UpdatedAt = DateTime.Now;
+                                    _context.SaveChanges();
 
                                     //send mail to staff
                                     var getStaff = (from stf in _context.staff
@@ -397,13 +401,13 @@ namespace Backend_UMR_Work_Program.Controllers
                                                     where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
                                                     select stf).FirstOrDefault();
 
-                                    string subject = $"Push for WORK PROGRAM application with ref: {application.ReferenceNo} ({field.Field_Name} - {application.YearOfWKP}).";
+                                    string subject = $"Push for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
                                     string content = $"{WKPCompanyName} have submitted their WORK PROGRAM application for year {application.YearOfWKP}.";
                                     var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
                                     var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
 
                                     _helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
-                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for field {field?.Field_Name} has been pushed successfully.", StatusCode = ResponseCodes.Success };
+                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
                                 }
                                 else
                                 {
@@ -432,7 +436,124 @@ namespace Backend_UMR_Work_Program.Controllers
             }
 
         }
+        [HttpPost("RejectApplication")]
+        public async Task<WebApiResponse> RejectApplication(int deskID, string comment, string[] selectedApps)
+        {
+            var responseMessage = "";
+            try
+            {
+                if (selectedApps != null)
+                {
+                    foreach (var b in selectedApps)
+                    {
+                        int appId = Convert.ToInt16(b);
+                        //get current staff desk
+                        var get_CurrentStaff = (from stf in _context.staff
+                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                        where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
+                                        select stf).FirstOrDefault();
 
+                        var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId && a.StaffID == int.Parse(WKPCompanyId)).FirstOrDefault();
+                        var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
+                        var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
+                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID && d.CompanyNumber == WKPCompanyNumber select d).FirstOrDefaultAsync();
+
+                        if (application.FieldID != null)
+                        {
+                            var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
+                        }
+
+                        if (staffDesk.Sort == 1) //Rejection to company
+                        {
+                         
+                            _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", "Application was rejected to company");
+
+                            //update staff desk
+                            staffDesk.HasPushed = true;
+                            staffDesk.HasWork = true;
+                            staffDesk.UpdatedAt = DateTime.Now;
+
+                            application.Status = GeneralModel.Rejected;
+                            _context.SaveChanges();
+
+                            //send mail to staff
+                            var getStaff = (from stf in _context.staff
+                                            join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                            where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
+                                            select stf).FirstOrDefault();
+                            
+                            string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                            string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
+                            var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
+                            var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+
+                            _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
+
+                        }
+                        else
+                        {
+                            Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, 0);
+
+                            if (getApplicationProcess.Result.Count > 0)
+                            {
+                                foreach (var staff in getApplicationProcess.Result.ToList())
+                                {
+                                    int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, staff);
+
+                                    if (saveStaffDesk > 0)
+                                    {
+                                        //update staff desk
+                                        staffDesk.HasPushed = true;
+                                        staffDesk.HasWork = true;
+                                        staffDesk.UpdatedAt = DateTime.Now;
+                                        _context.SaveChanges();
+
+                                        _helpersController.SaveHistory(application.Id, staff.StaffId, "Rejection", "Application was rejected");
+
+                                        //send mail to staff
+                                        var getStaff = (from stf in _context.staff
+                                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                        where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
+                                                        select stf).FirstOrDefault();
+
+                                        string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                                        string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
+                                        var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
+                                        var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
+
+                                        _helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+                                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
+                                    }
+                                    else
+                                    {
+                                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to submit this application to a staff.", StatusCode = ResponseCodes.Failure };
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to get process flow for this application.", StatusCode = ResponseCodes.Failure };
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error: No application ID was passed for this action to be completed.", StatusCode = ResponseCodes.InternalError };
+                }
+
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error: No application ID was passed for this action to be completed.", StatusCode = ResponseCodes.InternalError };
+            }
+            catch (Exception x)
+            {
+                _helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = $"An error occured while pushing application to staff."+ x.Message.ToString(), StatusCode = ResponseCodes.InternalError };
+            }
+
+        }
+        
         [HttpPost("ApproveApplication")]
         public async Task<WebApiResponse> ApproveApplication(int deskID, string comment, string[] selectedApps)
         {
