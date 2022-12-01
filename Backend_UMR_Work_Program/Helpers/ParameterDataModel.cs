@@ -37,10 +37,10 @@ namespace Backend_UMR_Work_Program.Helpers
         public string GetMACAddress()
         {
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-            String sMacAddress = string.Empty;
+            string sMacAddress = string.Empty;
             foreach (NetworkInterface adapter in nics)
             {
-                if (sMacAddress == String.Empty)// only return MAC Address from first card  
+                if (sMacAddress == string.Empty)// only return MAC Address from first card  
                 {
                     IPInterfaceProperties properties = adapter.GetIPProperties();
                     properties.GetIPv4Properties();

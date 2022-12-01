@@ -9347,8 +9347,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME>(entity =>
             {
-                entity.HasNoKey();
-
+                entity.HasKey(e => e.Id);
+                
                 entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME");
 
                 entity.Property(e => e.Actual_Budget_Total_Dollars)
