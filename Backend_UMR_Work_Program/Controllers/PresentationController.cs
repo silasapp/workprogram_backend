@@ -50,9 +50,13 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
-                var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
+               
+                var details = _context.ADMIN_COMPANY_DETAILs.Where(q=>q.COMPANY_NAME==companyName).FirstOrDefault();
+                //var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
 
-                return details;
+                
+                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = details, StatusCode = ResponseCodes.Success };
+
             }
             catch (Exception ex)
             {
@@ -63,9 +67,37 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpPost("EditCompanyDetails")]
         public object EditCompanyDetails([FromBody] CompanyDetail myDetail)
         {
-            try { 
-            _presentation.Insert_Company_Details_Contact_Person(myDetail.CompanyName, myDetail.CompanyEmail, myDetail.Address_of_Company, myDetail.Name_of_MD_CEO, myDetail.Phone_NO_of_MD_CEO, myDetail.Contact_Person, myDetail.Phone_No, myDetail.Email_Address);
-            return Ok(myDetail);
+            try {
+
+                var details = _context.ADMIN_COMPANY_DETAILs.Where(a => a.COMPANY_NAME == myDetail.CompanyName).FirstOrDefault();
+                if (details != null)
+                {
+
+
+//Contact Person's Number
+//dami
+//Contact Person's Email
+                    details.Address_of_Company=myDetail.Address_of_Company;
+                    details.Phone_NO_of_MD_CEO= myDetail.Phone_NO_of_MD_CEO;
+                    details.Name_of_MD_CEO = myDetail.Name_of_MD_CEO;
+                    details.Contact_Person=myDetail.Contact_Person;
+                    details.Email_Address=myDetail.Email_Address;
+                    details.Phone_No = myDetail.Phone_No;
+
+                   
+                    // _context.ADMIN_COMPANY_DETAILs.Remove(details);
+                    //_context.SaveChanges();
+                    // _context.ADMIN_COMPANY_DETAILs.Add(_detail);
+                    //    _presentation.Insert_Company_Details_Contact_Person(myDetail.CompanyName, myDetail.CompanyEmail, myDetail.Address_of_Company, myDetail.Name_of_MD_CEO, myDetail.Phone_NO_of_MD_CEO, myDetail.Contact_Person, myDetail.Phone_No, myDetail.Email_Address);
+                    if (_context.SaveChanges() > 0)
+                    {
+                        return Ok(details);
+
+                    }
+                }
+
+                return null;
+          
             }
             catch (Exception ex)
             {

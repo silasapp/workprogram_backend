@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using static Backend_UMR_Work_Program.Models.ViewModel;
 using AutoMapper;
+using System.Security.Claims;
 //using static Backend_UMR_Work_Program.Helpers.GeneralClass;
 
 namespace Backend_UMR_Work_Program.Controllers
@@ -28,6 +29,8 @@ namespace Backend_UMR_Work_Program.Controllers
             _mapper = mapper;
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
+
+        private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
 
         [HttpGet("GetData")]
         public object GetData()
@@ -140,11 +143,11 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("ResetPassword")]
-        public async Task<WebApiResponse> ResetPassword(string email, string currentPassword, string newPassword)
+        public async Task<WebApiResponse> ResetPassword(string? email, string currentPassword, string newPassword)
         {
             try { 
             string encryptCP = _helpersController.Encrypt(currentPassword);
-
+                email = WKPCompanyEmail;
             var getUser = (from u in _context.ADMIN_COMPANY_INFORMATIONs where u.EMAIL == email.Trim() && u.PASSWORDS == encryptCP select u).FirstOrDefault();
             if (getUser != null)
             {
