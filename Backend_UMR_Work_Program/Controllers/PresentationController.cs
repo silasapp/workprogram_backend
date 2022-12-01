@@ -86,10 +86,14 @@ namespace Backend_UMR_Work_Program.Controllers
 
                    
                     // _context.ADMIN_COMPANY_DETAILs.Remove(details);
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
                     // _context.ADMIN_COMPANY_DETAILs.Add(_detail);
                     //    _presentation.Insert_Company_Details_Contact_Person(myDetail.CompanyName, myDetail.CompanyEmail, myDetail.Address_of_Company, myDetail.Name_of_MD_CEO, myDetail.Phone_NO_of_MD_CEO, myDetail.Contact_Person, myDetail.Phone_No, myDetail.Email_Address);
-                    return Ok(details);
+                    if (_context.SaveChanges() > 0)
+                    {
+                        return Ok(details);
+
+                    }
                 }
 
                 return null;
