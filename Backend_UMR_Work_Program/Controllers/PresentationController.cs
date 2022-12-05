@@ -73,6 +73,14 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [HttpGet("GET_PRESENTATION_DATETIME")]
+        public async Task<object> GET_PRESENTATION_DATETIME()
+        {
+            var schedule = await _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.COMPANY_ID == WKPUserId && c.YEAR == DateTime.Now.Year.ToString()).FirstOrDefaultAsync();
+            return schedule;
+        }
+
+
         [HttpPost("SCHEDULEPRESENTATION")]
         public async Task<WebApiResponse> SCHEDULE_PRESENTATION_DATETIME(string time, DateTime date)
         {
