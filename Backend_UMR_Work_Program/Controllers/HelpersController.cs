@@ -2843,7 +2843,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                             SBU_Id = stf.Staff_SBU,
                                             StaffId = stf.StaffID,
                                             RoleId = applicationProcess.FirstOrDefault().RoleID,
-                                            RoleName = role.Description,
+                                            RoleName = role.RoleName,
                                             Sort = applicationProcess.FirstOrDefault().Sort,
                                             ProcessId = applicationProcess.FirstOrDefault().ProccessID,
                                             DeskCount = _context.MyDesks.Where(x => x.StaffID == stf.StaffID && x.HasWork != true).Count(),

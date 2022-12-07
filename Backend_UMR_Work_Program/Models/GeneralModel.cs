@@ -259,6 +259,7 @@
             public string ReferenceNo { get; set; } = null!;
             public int? ConcessionID { get; set; }
             public int CompanyID { get; set; }
+            public string? Last_SBU { get; set; }
             public string CompanyName { get; set; }
             public string FieldName { get; set; }
             public string ConcessionName { get; set; }
