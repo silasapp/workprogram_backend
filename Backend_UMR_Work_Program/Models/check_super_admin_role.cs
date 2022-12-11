@@ -1,17 +1,14 @@
 ﻿using Backend_UMR_Work_Program.Models;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace Backend_UMR_Work_Program
 {
     public class check_super_admin_role
     {
         private Connection cn2;
-        public check_super_admin_role(Connection connection) {
+        public check_super_admin_role(Connection connection)
+        {
             cn2 = connection;
         }
 
@@ -27,13 +24,13 @@ namespace Backend_UMR_Work_Program
             try
             {
                 cnn2.Open();
-                System.Data.SqlClient.SqlDataReader rd = cmd2.ExecuteReader();
+                SqlDataReader rd = cmd2.ExecuteReader();
 
                 if (rd.Read())
                 { }
                 else
                 {
-                   // ScriptManager.RegisterClientScriptBlock(this, typeof(Page), "Hi", "alert('Access Denied !! You need Super Admin Right..'); ", true);
+                    // ScriptManager.RegisterClientScriptBlock(this, typeof(Page), "Hi", "alert('Access Denied !! You need Super Admin Right..'); ", true);
                     return;
                 }
 
