@@ -60,12 +60,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
             }
         }
 
         [HttpGet("GetAppsOnMyDesk")]
-        public async Task<WebApiResponse> GetAppsOnMyDesk()
+        public async Task<object> GetAppsOnMyDesk()
         {
             try
             {
@@ -95,17 +95,17 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
             }
         }
         [HttpGet("All-Applications")] //For general application view
-        public async Task<WebApiResponse> AllApplications()
+        public async Task<object> AllApplications()
         {
             try
             {
                 var applications = await (from app in _context.Applications
                                           join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
-                                          join field in _context.COMPANY_FIELDs on app.FieldID equals field.Field_ID
+                                          //join field in _context.COMPANY_FIELDs on app.FieldID equals field.Field_ID
                                           join con in _context.ADMIN_CONCESSIONS_INFORMATIONs on app.ConcessionID equals con.Consession_Id
                                           select new Application_Model
                                           {
@@ -113,7 +113,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                               FieldID = app.FieldID,
                                               ConcessionID = app.ConcessionID,
                                               ConcessionName = con.ConcessionName,
-                                              FieldName = field.Field_Name,
+                                              FieldName = app.FieldID != null ? _context.COMPANY_FIELDs.Where(x => x.Field_ID == app.FieldID).FirstOrDefault().Field_Name : "",
                                               ReferenceNo = app.ReferenceNo,
                                               CreatedAt = app.CreatedAt,
                                               SubmittedAt = app.SubmittedAt,
@@ -126,12 +126,103 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        } 
+        [HttpGet("RejectedApplications")] //For general application view
+        public async Task<object> RejectedApplications()
+        {
+            try
+            {
+                var applications = await (from app in _context.Applications
+                                          join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
+                                          join dsk in _context.MyDesks on app.Id equals dsk.AppId into desks
+                                          join con in _context.ADMIN_CONCESSIONS_INFORMATIONs on app.ConcessionID equals con.Consession_Id
+                                          join SBU in _context.StrategicBusinessUnits on desks.OrderByDescending(x=> x.DeskID).FirstOrDefault().FromSBU equals SBU.Id.ToString()
+                                          where app.DeleteStatus != true && app.Status == GeneralModel.Rejected
+                                          select new Application_Model
+                                          {
+                                              Last_SBU = SBU.SBU_Name,
+                                              Id= app.Id,
+                                              FieldID = app.FieldID,
+                                              ConcessionID = app.ConcessionID,
+                                              ConcessionName = con.ConcessionName,
+                                              FieldName = app.FieldID != null ? _context.COMPANY_FIELDs.Where(x=> x.Field_ID == app.FieldID).FirstOrDefault().Field_Name : "",
+                                              ReferenceNo = app.ReferenceNo,
+                                              CreatedAt = app.CreatedAt,
+                                              SubmittedAt = app.SubmittedAt,
+                                              CompanyName = comp.COMPANY_NAME,
+                                              Status = app.Status,
+                                              PaymentStatus = app.PaymentStatus,
+                                              YearOfWKP = app.YearOfWKP
+                                          }).ToListAsync();
+                return new WebApiResponse { Data= applications, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message });
             }
         }
+        [HttpPost("ApproveRejection")]
+        public async Task<object> ApproveRejection(int SBU_ID, string comment, string[] selectedApps )
+        {
+            try
+            {
+                if (selectedApps != null)
+                {
+                    foreach (var b in selectedApps)
+                    {
+                        string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
+                        int appId = int.Parse(appID);
+                        //get current staff desk
+                        var dsk = await _context.MyDesks.Where(x => x.AppId == appId).OrderByDescending(x => x.DeskID).FirstOrDefaultAsync();
+                        var get_CurrentStaff = (from stf in _context.staff
+                                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                where stf.StaffID == dsk.StaffID && stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
+                                                select stf).FirstOrDefault();
+                        var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
+                        var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
+                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID select d).FirstOrDefaultAsync();
 
-        [HttpGet("ViewApplication")] //For general application view
-        public async Task<WebApiResponse> ViewApplication(int appID)
+                        if (application.FieldID != null)
+                        {
+                            var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
+                        }
+                        _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection Approval", "Planning approves SBU rejection to company.");
+
+                        //send mail to staff that initiates rejection
+                        string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                        string content = $"Planning approves WORK PROGRAM application rejection to company for year {application.YearOfWKP}.";
+                        var emailMsg = _helpersController.SaveMessage(application.Id, get_CurrentStaff.StaffID, subject, content, "Staff");
+                        var sendEmail = _helpersController.SendEmailMessage(get_CurrentStaff.StaffEmail, get_CurrentStaff.FirstName, emailMsg, null);
+                        //send mail to company
+                        string subject2 = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                            string content2 = $"Rejected WORK PROGRAM application for year {application.YearOfWKP} with comment{dsk.Comment}.";
+                            var emailMsg2 = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
+                            var sendEmail2 = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+
+                            _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
+
+                        }
+                    }
+                else
+                {
+                    return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
+                }
+
+                return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
+            }
+            catch (Exception x)
+            {
+                _helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
+                return BadRequest(new { message = $"An error occured while rejecting application." + x.Message.ToString() });
+            }
+
+        }
+
+        [HttpGet("ViewApplication")] //For specific application view
+        public async Task<object> ViewApplication(int appID)
         {
             try
             {
@@ -139,7 +230,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 if (application == null)
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, this application details could not be found.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = "Sorry, this application details could not be found."});
                 }
                 var field = await _context.COMPANY_FIELDs.Where(x => x.Field_ID == application.FieldID).FirstOrDefaultAsync();
                 var concession = await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(x => x.Consession_Id == application.ConcessionID).FirstOrDefaultAsync();
@@ -189,12 +280,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
             }
         }
 
         [HttpGet("ProcessApplication")] //For processing application view
-        public async Task<WebApiResponse> ProcessApplication(int appID)
+        public async Task<object> ProcessApplication(int appID)
         {
             try
             {
@@ -202,7 +293,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 if (application == null)
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, this application details could not be found.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = "Sorry, this application details could not be found."});
                 }
                 var field = await _context.COMPANY_FIELDs.Where(x => x.Field_ID == application.FieldID).FirstOrDefaultAsync();
                 var concession = await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(x => x.Consession_Id == application.ConcessionID).FirstOrDefaultAsync();
@@ -253,14 +344,14 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
             }
         }
 
         //year: year, omlName: omlName, fieldName: fieldName
-        //public async Task<WebApiResponse> SubmitApplication(string year, int concessionID, int fieldID)
+        //public async Task<object> SubmitApplication(string year, int concessionID, int fieldID)
         [HttpPost("SubmitApplication")]
-        public async Task<WebApiResponse> SubmitApplication(string year, string omlName, string fieldName)
+        public async Task<object> SubmitApplication(string year, string omlName, string fieldName)
         {
             try
             {
@@ -281,14 +372,14 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 if (checkApplication != null)
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, this application details could not be found.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = "Sorry, this application details could not be found."});
                 }
 
                 Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, 0);
 
                 if (getApplicationProcess.Result.Count <= 0)
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to get process flow for this application.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = "An error occured while trying to get process flow for this application."});
                 }
 
                 Application application = new Application();
@@ -333,7 +424,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to submit this application to a staff.", StatusCode = ResponseCodes.Failure };
+                            return BadRequest(new { message = "An error occured while trying to submit this application to a staff."});
                         }
                     }
                     //send mail to company
@@ -347,17 +438,17 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to save this application record.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = "An error occured while trying to save this application record."});
                 }
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
             }
         }
 
         [HttpPost("PushApplication")]
-        public async Task<WebApiResponse> PushApplication(int deskID, string comment, string[] selectedApps)
+        public async Task<object> PushApplication(int deskID, string comment, string[] selectedApps)
         {
             try
             {
@@ -416,33 +507,33 @@ namespace Backend_UMR_Work_Program.Controllers
                                 }
                                 else
                                 {
-                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to submit this application to a staff.", StatusCode = ResponseCodes.Failure };
+                                    return BadRequest(new { message = "An error occured while trying to submit this application to a staff."});
                                 }
 
                             }
                         }
                         else
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to get process flow for this application.", StatusCode = ResponseCodes.Failure };
+                            return BadRequest(new { message = "An error occured while trying to get process flow for this application."});
                         }
                     }
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error: No application ID was passed for this action to be completed.", StatusCode = ResponseCodes.InternalError };
+                    return BadRequest(new { message = "Error: No application ID was passed for this action to be completed."});
                 }
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error: No application ID was passed for this action to be completed.", StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error: No application ID was passed for this action to be completed."});
             }
             catch (Exception x)
             {
                 _helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = $"An error occured while pushing application to staff."+ x.Message.ToString(), StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = $"An error occured while pushing application to staff."+ x.Message.ToString()});
             }
 
         }
         [HttpPost("RejectApplication")]
-        public async Task<WebApiResponse> RejectApplication(int deskID, string comment, string[] selectedApps)
+        public async Task<object> RejectApplication(int deskID, string comment, string[] selectedApps, int SBU_ID)
         {
             var responseMessage = "";
             try
@@ -488,10 +579,10 @@ namespace Backend_UMR_Work_Program.Controllers
                                             where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
                                             select stf).FirstOrDefault();
 
-                            string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
-                            string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
-                            var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
-                            var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+                            //string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                            //string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
+                            //var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
+                            //var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
 
                             _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
@@ -501,17 +592,22 @@ namespace Backend_UMR_Work_Program.Controllers
                         {
                             var prevDesk = (from dsk in _context.MyDesks
                                             join stf in _context.staff on dsk.StaffID equals stf.StaffID
-                                            where stf.Staff_SBU == get_CurrentStaff.Staff_SBU && dsk.Sort == staffDesk.Sort-1 && stf.DeleteStatus != true
+                                            where stf.Staff_SBU == get_CurrentStaff.Staff_SBU && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
                                             select dsk).FirstOrDefault();
 
-
+                            if (SBU_ID > 0) //planning rejecting back to a particular SBU
+                            {
+                                 prevDesk = (from dsk in _context.MyDesks
+                                                join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                                where stf.Staff_SBU == SBU_ID && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
+                                                select dsk).FirstOrDefault();
+                            }
                             if (prevDesk != null)
                             {
                                 //update staff desk
                                 staffDesk.HasPushed = true;
                                 staffDesk.HasWork = true;
                                 staffDesk.UpdatedAt = DateTime.Now;
-
                                 prevDesk.HasPushed = false;
                                 prevDesk.HasWork = false; 
                                 prevDesk.UpdatedAt = DateTime.Now;
@@ -535,7 +631,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             }
                             else
                             {
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "An error occured while trying to reject this application.", StatusCode = ResponseCodes.Failure };
+                                return BadRequest(new { message = "An error occured while trying to reject this application."});
                             }
 
                         }
@@ -543,21 +639,21 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error: No application ID was passed for this action to be completed.", StatusCode = ResponseCodes.InternalError };
+                    return BadRequest(new { message = "Error: No application ID was passed for this action to be completed."});
                 }
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error: No application ID was passed for this action to be completed.", StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error: No application ID was passed for this action to be completed."});
             }
             catch (Exception x)
             {
                 _helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = $"An error occured while rejecting application."+ x.Message.ToString(), StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = $"An error occured while rejecting application."+ x.Message.ToString()});
             }
 
         }
         
         [HttpPost("ApproveApplication")]
-        public async Task<WebApiResponse> ApproveApplication(int deskID, string comment, string[] selectedApps)
+        public async Task<object> ApproveApplication(int deskID, string comment, string[] selectedApps)
         {
             var responseMessage = "";
             try
@@ -622,20 +718,20 @@ namespace Backend_UMR_Work_Program.Controllers
                         staffDesk.UpdatedAt = DateTime.Now;
                         _context.SaveChanges();
                     }
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = responseMessage, StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = responseMessage});
                 }
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
             }
             catch (Exception x)
             {
                 _helpersController.LogMessages($"Approve Error:: {x.ToString()}");
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = $"An error occured while approving application(s).", StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = $"An error occured while approving application(s)."});
             }
 
         }
 
         [HttpGet("All-Companies")]
-        public async Task<WebApiResponse> AllCompanies()
+        public async Task<object> AllCompanies()
         {
             try
             {
@@ -645,7 +741,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
             }
         }
 
@@ -665,12 +761,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception ex)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + ex.Message});
             }
         }
 
         [HttpPost("Post_Planning_Requirement")]
-        public async Task<WebApiResponse> Post_Planning_Requirement([FromBody] Planning_MinimumRequirement model, string year, string omlName, string id, string actionToDo)
+        public async Task<object> Post_Planning_Requirement([FromBody] Planning_MinimumRequirement model, string year, string omlName, string id, string actionToDo)
         {
 
             int save = 0;
@@ -697,7 +793,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         await _context.Planning_MinimumRequirements.AddAsync(model);
 
 
-                        //return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This data is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+                        //return BadRequest(new { message = $"Error : This data is already existing and can not be duplicated."});
                     }
                     else
                     {
@@ -715,7 +811,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     {
                         if (data == null)
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This details could not be found.", StatusCode = ResponseCodes.Failure };
+                            return BadRequest(new { message = $"Error : This details could not be found."});
                         }
                         else
                         {
@@ -743,13 +839,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : An error occured while trying to {actionToDo} this form.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = $"Error : An error occured while trying to {actionToDo} this form."});
 
                 }
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
 
             }
         }
@@ -773,12 +869,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception ex)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + ex.Message});
             }
         }
 
         [HttpPost("Post_HSE_Requirement")]
-        public async Task<WebApiResponse> Post_HSE_Requirement([FromBody] HSE_MinimumRequirement model, string year, string omlName, string id, string actionToDo)
+        public async Task<object> Post_HSE_Requirement([FromBody] HSE_MinimumRequirement model, string year, string omlName, string id, string actionToDo)
         {
 
             int save = 0;
@@ -805,7 +901,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         model.DateCreated = DateTime.Now;
                         await _context.HSE_MinimumRequirements.AddAsync(model);
 
-                        //return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This data is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+                        //return BadRequest(new { message = $"Error : This data is already existing and can not be duplicated."});
                     }
                     else
                     {
@@ -823,7 +919,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     {
                         if (data == null)
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This details could not be found.", StatusCode = ResponseCodes.Failure };
+                            return BadRequest(new { message = $"Error : This details could not be found."});
                         }
                         else
                         {
@@ -852,13 +948,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : An error occured while trying to {actionToDo} this form.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = $"Error : An error occured while trying to {actionToDo} this form."});
 
                 }
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
 
             }
         }
@@ -878,12 +974,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception ex)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + ex.Message});
             }
         }
 
         [HttpPost("Post_DecommisioningAbandonment")]
-        public async Task<WebApiResponse> Post_DecommisioningAbandonment([FromBody] DecommissioningAbandonment model, string year, string omlName, string id, string actionToDo)
+        public async Task<object> Post_DecommisioningAbandonment([FromBody] DecommissioningAbandonment model, string year, string omlName, string id, string actionToDo)
         {
 
             int save = 0;
@@ -903,7 +999,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (data != null)
                     {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This data is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+                        return BadRequest(new { message = $"Error : This data is already existing and can not be duplicated."});
                     }
                     else
                     {
@@ -921,7 +1017,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     {
                         if (data == null)
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This details could not be found.", StatusCode = ResponseCodes.Failure };
+                            return BadRequest(new { message = $"Error : This details could not be found."});
                         }
                         else
                         {
@@ -949,13 +1045,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : An error occured while trying to {actionToDo} this form.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = $"Error : An error occured while trying to {actionToDo} this form."});
 
                 }
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
 
             }
         }
@@ -975,12 +1071,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             catch (Exception ex)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + ex.Message});
             }
         }
 
         [HttpPost("Post_Development_Production")]
-        public async Task<WebApiResponse> Post_Development_Production([FromBody] Development_And_Production model, string year, string omlName, string id, string actionToDo)
+        public async Task<object> Post_Development_Production([FromBody] Development_And_Production model, string year, string omlName, string id, string actionToDo)
         {
 
             int save = 0;
@@ -1000,7 +1096,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (data != null)
                     {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This data is already existing and can not be duplicated.", StatusCode = ResponseCodes.Failure };
+                        return BadRequest(new { message = $"Error : This data is already existing and can not be duplicated."});
                     }
                     else
                     {
@@ -1018,7 +1114,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     {
                         if (data == null)
                         {
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : This details could not be found.", StatusCode = ResponseCodes.Failure };
+                            return BadRequest(new { message = $"Error : This details could not be found."});
                         }
                         else
                         {
@@ -1046,13 +1142,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : An error occured while trying to {actionToDo} this form.", StatusCode = ResponseCodes.Failure };
+                    return BadRequest(new { message = $"Error : An error occured while trying to {actionToDo} this form."});
 
                 }
             }
             catch (Exception e)
             {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                return BadRequest(new { message = "Error : " + e.Message});
 
             }
         }
@@ -1078,6 +1174,477 @@ namespace Backend_UMR_Work_Program.Controllers
             catch (Exception e)
             {
                 return null;
+            }
+        }
+
+        #endregion
+
+        #region Configuration
+        [HttpGet("GetProcessFlow")]
+        public async Task<object> GetProcessFlow()
+        {
+            try
+            {
+                var processes = await (from prc in _context.ApplicationProccesses
+                                join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
+                                join role in _context.Roles on prc.RoleID equals role.id
+                                where prc.DeleteStatus != true 
+                                select new
+                                {
+                                    Type = "New",
+                                    Sort = prc.Sort,
+                                    Role = role.RoleName,
+                                    SBU = sbu.SBU_Name,
+                                    Process = prc.Sort,
+                                }).ToListAsync();
+                var roles = await _context.Roles.ToListAsync(); 
+                var SBUs = await _context.StrategicBusinessUnits.ToListAsync(); 
+
+               return new
+                {
+                   Processes = processes,
+                   Roles = roles,
+                   SBUs = SBUs,
+               };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("CreateProcess")]
+        public async Task<object> CreateProcess(int roleID, int sbuID, int sort)
+        {
+            try
+            {
+                var process = await (from prc in _context.ApplicationProccesses
+                                where prc.RoleID == roleID && prc.SBU_ID == sbuID && prc.Sort == sort && prc.DeleteStatus != true 
+                               select prc).FirstOrDefaultAsync();
+                if (process != null)
+                {
+                    return BadRequest(new { message = $"Error : Process is already existing and can not be duplicated."});
+                }
+                else
+                {
+                    var nProcess = new ApplicationProccess()
+                    {
+                        Sort = sort,
+                        RoleID = roleID,
+                        SBU_ID = sbuID,
+                        CreatedAt = DateTime.Now,
+                        DeleteStatus = false,
+                        CategoryID = 1 //Default for new applications
+                    };
+                    await _context.ApplicationProccesses.AddAsync(nProcess);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var processes = await (from prc in _context.ApplicationProccesses
+                                               join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
+                                               join role in _context.Roles on prc.RoleID equals role.id
+                                               where prc.DeleteStatus != true
+                                               select new
+                                               {
+                                                   Type = "New",
+                                                   Sort = prc.Sort,
+                                                   Role = role.RoleName,
+                                                   SBU = sbu.SBU_Name,
+                                                   Process = prc.Sort,
+                                               }).ToListAsync();
+                        var roles = await _context.Roles.ToListAsync();
+                        var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                        return new
+                        {
+                            Processes = processes,
+                            Roles = roles,
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this process."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("EditProcess")]
+        public async Task<object> EditProcess(int id, int roleID, int sbuID, int sort)
+        {
+            try
+            {
+                var process = await (from prc in _context.ApplicationProccesses
+                                where prc.ProccessID == id && prc.DeleteStatus != true 
+                               select prc).FirstOrDefaultAsync();
+                if (process == null)
+                {
+                    return BadRequest(new { message = $"Error : Process details could not be found or an invalid ID was supplied."});
+                }
+                else
+                {
+                    var nProcess = new ApplicationProccess()
+                    {
+                        Sort = sort,
+                        RoleID = roleID,
+                        SBU_ID = sbuID,
+                        CreatedAt = DateTime.Now,
+                        DeleteStatus = false,
+                        CategoryID = 1 //Default for new applications
+                    };
+                    await _context.ApplicationProccesses.AddAsync(nProcess);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var processes = await (from prc in _context.ApplicationProccesses
+                                               join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
+                                               join role in _context.Roles on prc.RoleID equals role.id
+                                               where prc.DeleteStatus != true
+                                               select new
+                                               {
+                                                   Type = "New",
+                                                   Sort = prc.Sort,
+                                                   Role = role.RoleName,
+                                                   SBU = sbu.SBU_Name,
+                                                   Process = prc.Sort,
+                                               }).ToListAsync();
+                        var roles = await _context.Roles.ToListAsync();
+                        var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                        return new
+                        {
+                            Processes = processes,
+                            Roles = roles,
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this process."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("DeleteProcess")]
+        public async Task<object> DeleteProcess(int id)
+        {
+            try
+            {
+                var process = await (from prc in _context.ApplicationProccesses
+                                where prc.ProccessID == id && prc.DeleteStatus != true 
+                               select prc).FirstOrDefaultAsync();
+                if (process == null)
+                {
+                    return BadRequest(new { message = $"Error : Process details could not be found or an invalid ID was supplied."});
+                }
+                else
+                {
+                    _context.ApplicationProccesses.Remove(process);
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var processes = await (from prc in _context.ApplicationProccesses
+                                               join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
+                                               join role in _context.Roles on prc.RoleID equals role.id
+                                               where prc.DeleteStatus != true
+                                               select new
+                                               {
+                                                   Type = "New",
+                                                   Sort = prc.Sort,
+                                                   Role = role.RoleName,
+                                                   SBU = sbu.SBU_Name,
+                                                   Process = prc.Sort,
+                                               }).ToListAsync();
+                        var roles = await _context.Roles.ToListAsync();
+                        var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                        return new
+                        {
+                            Processes = processes,
+                            Roles = roles,
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this process."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+
+
+        [HttpGet("GetSBUs")]
+        public async Task<object> GetSBUs()
+        {
+            try
+            {
+                var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                return new
+                {
+                    SBUs = SBUs,
+                };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("CreateSBU")]
+        public async Task<object> CreateSBU(string name, string code)
+        {
+            try
+            {
+                var SBU = await (from sb in _context.StrategicBusinessUnits
+                                where sb.SBU_Name.ToLower() == name.ToLower() 
+                               select sb).FirstOrDefaultAsync();
+                if (SBU != null)
+                {
+                    return BadRequest(new { message = $"Error : SBU is already existing and can not be duplicated."});
+                }
+                else
+                {
+                    var nSBU = new StrategicBusinessUnit()
+                    {
+                        SBU_Name = name,
+                        SBU_Code = code
+                    };
+                    await _context.StrategicBusinessUnits.AddAsync(nSBU);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {  
+                        var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                        return new
+                        {
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this SBU."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("EditSBU")]
+        public async Task<object> EditSBU(int id, string name, string code)
+        {
+            try
+            {
+                var SBU = await (from sb in _context.StrategicBusinessUnits
+                                 where sb.SBU_Name.ToLower() == name.ToLower()
+                                 select sb).FirstOrDefaultAsync();
+                if (SBU == null)
+                {
+                    return BadRequest(new { message = $"Error : SBU details could not be found or an invalid ID was supplied."});
+                }
+                else
+                {
+                    SBU.SBU_Name = name.ToUpper();
+                    SBU.SBU_Code = code.ToUpper();
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var SBUs = await (from sb in _context.StrategicBusinessUnits
+                                         where sb.SBU_Name.ToLower() == name.ToLower()
+                                         select sb).ToListAsync();
+                        return new
+                        {
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this SBU."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("DeleteSBU")]
+        public async Task<object> DeleteSBU(int id)
+        {
+            try
+            {
+                var SBU = await (from sb in _context.StrategicBusinessUnits
+                                 where sb.Id == id
+                                 select sb).FirstOrDefaultAsync();
+                if (SBU == null)
+                {
+                    return BadRequest(new { message = $"Error : SBU details could not be found or an invalid ID was supplied."});
+                }
+                else
+                {
+                    _context.StrategicBusinessUnits.Remove(SBU);
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var SBUs = await (from sb in _context.StrategicBusinessUnits
+                                         where sb.Id == id
+                                         select sb).FirstOrDefaultAsync();
+                        
+                        return new
+                        {
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this SBU."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }  
+        
+        [HttpGet("GetRoles")]
+        public async Task<object> GetRoles()
+        {
+            try
+            {
+                var Roles = await _context.Roles.ToListAsync();
+
+                return new
+                {
+                    Roles = Roles,
+                };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("CreateRole")]
+        public async Task<object> CreateRole(string name)
+        {
+            try
+            {
+                var Role = await (from sb in _context.Roles
+                                where sb.RoleName.ToLower() == name.ToLower() 
+                               select sb).FirstOrDefaultAsync();
+                if (Role != null)
+                {
+                    return BadRequest(new { message = $"Error : Role is already existing and can not be duplicated."});
+                }
+                else
+                {
+                    var nRole = new Role()
+                    {
+                        RoleName = name
+                    };
+                    await _context.Roles.AddAsync(nRole);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {  
+                        var Roles = await _context.Roles.ToListAsync();
+
+                        return new
+                        {
+                            Roles = Roles,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this Role."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("EditRole")]
+        public async Task<object> EditRole(int id, string name)
+        {
+            try
+            {
+                var Role = await (from sb in _context.Roles
+                                 where sb.RoleName.ToLower() == name.ToLower()
+                                 select sb).FirstOrDefaultAsync();
+                if (Role == null)
+                {
+                    return BadRequest(new { message = $"Error : Role details could not be found or an invalid ID was supplied."});
+                }
+                else
+                {
+                    Role.RoleName = name.ToUpper();
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var Roles = await (from sb in _context.Roles
+                                         where sb.RoleName.ToLower() == name.ToLower()
+                                         select sb).ToListAsync();
+                        return new
+                        {
+                            Roles = Roles,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this Role."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("DeleteRole")]
+        public async Task<object> DeleteRole(int id)
+        {
+            try
+            {
+                var Role = await (from sb in _context.StrategicBusinessUnits
+                                 where sb.Id == id
+                                 select sb).FirstOrDefaultAsync();
+                if (Role == null)
+                {
+                    return BadRequest(new { message = $"Error : Role details could not be found or an invalid ID was supplied."});
+                }
+                else
+                {
+                    _context.StrategicBusinessUnits.Remove(Role);
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var Roles = await (from sb in _context.StrategicBusinessUnits
+                                         where sb.Id == id
+                                         select sb).FirstOrDefaultAsync();
+                        
+                        return new
+                        {
+                            Roles = Roles,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this Role."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
             }
         }
 
