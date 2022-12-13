@@ -329,7 +329,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     reserveOilCondensate = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_Oil) + Convert.ToDouble(a.Company_Reserves_Condensate)).ToListAsync()).Sum();
                     reserveAGNAG = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_AG) + Convert.ToDouble(a.Company_Reserves_NAG)).ToListAsync()).Sum();
-                    prodCost = await (from a in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where a.Year_of_WP == year select Convert.ToDouble(a.INDIRECT_COST_Actual) + Convert.ToDouble(a.DIRECT_COST_Actual)).FirstOrDefaultAsync();
+                    prodCost = (await (from a in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where a.Year_of_WP == year select Convert.ToDouble(a.INDIRECT_COST_Actual) + Convert.ToDouble(a.DIRECT_COST_Actual)).ToListAsync()).Sum();
                 }
                 else
                 {
