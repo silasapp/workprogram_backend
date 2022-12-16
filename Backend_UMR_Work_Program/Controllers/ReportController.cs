@@ -381,31 +381,33 @@ namespace Backend_UMR_Work_Program.Controllers
                         //     ;
 
                         getGasFlare_ReportContent.Report_Content = getGasFlare_ReportContent.Report_Content
-                             .Replace("(TOTAL_GAS_PRODUCED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Actual_Total_Gas_Produced.ToString())
-                             .Replace("(PERCENTAGE_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Percentage_Utilized.ToString())
-                             .Replace("(TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Utilized_Gas_Produced.ToString())
-                             .Replace("(TOTAL_GAS_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault().Flared_Gas_Produced.ToString());
+                             .Replace("(TOTAL_GAS_PRODUCED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault()?.Actual_Total_Gas_Produced.ToString())
+                             .Replace("(PERCENTAGE_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault()?.Percentage_Utilized.ToString())
+                             .Replace("(TOTAL_GAS_UTILIZED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault()?.Utilized_Gas_Produced.ToString())
+                             .Replace("(TOTAL_GAS_FLARED)", WP_GAS_PRODUCTION_ACTIVITIES_Percentages_CY.FirstOrDefault()?.Flared_Gas_Produced.ToString());
 
                        // var contigencyPlan_Data = new SqlCommand(" select MIN(Frequency) Highest_1st , SUM(Total_Quantity_Spilled) TOTAL_QUANTITY_SPILLED, CompanyName, Year_of_WP from( SELECT TOP 1  CompanyName, Year_of_WP, CAST(Frequency AS int) AS Frequency, Total_Quantity_Spilled   FROM         dbo.WP_TOTAL_INCIDENCE_AND_OIL_SPILL_AND_RECOVERED  order by Frequency desc) b   WHERE Year_of_WP = '" + DropDownList1.SelectedItem.Text + "'   GROUP BY CompanyName, Year_of_WP ", con);
-                        getOilContigencyPlan_ReportContent.Report_Content = getOilContigencyPlan_ReportContent.Report_Content
-                             .Replace("(NO_OF_OPERATING_COMPANIES)", E_and_P_companies.FirstOrDefault().TOTAL_COUNT_YEARLY.ToString())
-                             .Replace("(TOTAL_NO_OF_SPILLS)", OILSPILL_REPORT.FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
-                             .Replace("(NO_OF_HIGHEST_INCIDENCE_5)", OILSPILL_REPORT.Take(5).FirstOrDefault().Highest_1st.ToString())
-                             .Replace("(NAME_OF_HIGHEST_COMPANY_5)", OILSPILL_REPORT.Take(5).FirstOrDefault().CompanyName.ToString())
-                                          .Replace("(NO_OF_HIGHEST_bbls_5)", OILSPILL_REPORT.Take(5).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
-                             .Replace("(NO_OF_HIGHEST_INCIDENCE_4)", OILSPILL_REPORT.Take(4).FirstOrDefault().Highest_1st.ToString())
-                             .Replace("(NAME_OF_HIGHEST_COMPANY_4)", OILSPILL_REPORT.Take(4).FirstOrDefault().CompanyName.ToString())
-                                                          .Replace("(NO_OF_HIGHEST_bbls_4)", OILSPILL_REPORT.Take(4).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
-                             .Replace("(NO_OF_HIGHEST_INCIDENCE_3)", OILSPILL_REPORT.Take(3).FirstOrDefault().Highest_1st.ToString())
-                             .Replace("(NAME_OF_HIGHEST_COMPANY_3)", OILSPILL_REPORT.Take(3).FirstOrDefault().CompanyName.ToString())
-                                                          .Replace("(NO_OF_HIGHEST_bbls_3)", OILSPILL_REPORT.Take(3).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
-                             .Replace("(NO_OF_HIGHEST_INCIDENCE_2)", OILSPILL_REPORT.Take(2).FirstOrDefault().Highest_1st.ToString())
-                             .Replace("(NAME_OF_HIGHEST_COMPANY_2)", OILSPILL_REPORT.Take(2).FirstOrDefault().CompanyName.ToString())
-                                                          .Replace("(NO_OF_HIGHEST_bbls_2)", OILSPILL_REPORT.Take(2).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
-                             .Replace("(NO_OF_HIGHEST_INCIDENCE_1)", OILSPILL_REPORT.Take(1).FirstOrDefault().Highest_1st.ToString())
-                             .Replace("(NAME_OF_HIGHEST_COMPANY_1)", OILSPILL_REPORT.Take(1).FirstOrDefault().CompanyName.ToString())
-                                                          .Replace("(NO_OF_HIGHEST_bbls_1)", OILSPILL_REPORT.Take(1).FirstOrDefault().TOTAL_QUANTITY_SPILLED.ToString())
-                             .Replace("(TOTAL_PRODUCED_WATER_FORMATION)", Produced_water_volumes.FirstOrDefault().ToString());
+                        if (getOilContigencyPlan_ReportContent != null) {
+                            getOilContigencyPlan_ReportContent.Report_Content = getOilContigencyPlan_ReportContent?.Report_Content
+                             .Replace("(NO_OF_OPERATING_COMPANIES)", E_and_P_companies.FirstOrDefault()?.TOTAL_COUNT_YEARLY.ToString())
+                             .Replace("(TOTAL_NO_OF_SPILLS)", OILSPILL_REPORT.FirstOrDefault()?.TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_5)", OILSPILL_REPORT.Take(5).FirstOrDefault()?.Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_5)", OILSPILL_REPORT.Take(5).FirstOrDefault()?.CompanyName.ToString())
+                                          .Replace("(NO_OF_HIGHEST_bbls_5)", OILSPILL_REPORT.Take(5).FirstOrDefault()?.TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_4)", OILSPILL_REPORT.Take(4).FirstOrDefault()?.Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_4)", OILSPILL_REPORT.Take(4).FirstOrDefault()?.CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_4)", OILSPILL_REPORT.Take(4).FirstOrDefault()?.TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_3)", OILSPILL_REPORT.Take(3).FirstOrDefault()?.Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_3)", OILSPILL_REPORT.Take(3).FirstOrDefault()?.CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_3)", OILSPILL_REPORT.Take(3).FirstOrDefault()?.TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_2)", OILSPILL_REPORT.Take(2).FirstOrDefault()?.Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_2)", OILSPILL_REPORT.Take(2).FirstOrDefault()?.CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_2)", OILSPILL_REPORT.Take(2).FirstOrDefault()?.TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(NO_OF_HIGHEST_INCIDENCE_1)", OILSPILL_REPORT.Take(1).FirstOrDefault()?.Highest_1st.ToString())
+                             .Replace("(NAME_OF_HIGHEST_COMPANY_1)", OILSPILL_REPORT.Take(1).FirstOrDefault()?.CompanyName.ToString())
+                                                          .Replace("(NO_OF_HIGHEST_bbls_1)", OILSPILL_REPORT.Take(1).FirstOrDefault()?.TOTAL_QUANTITY_SPILLED.ToString())
+                             .Replace("(TOTAL_PRODUCED_WATER_FORMATION)", Produced_water_volumes.FirstOrDefault()?.ToString());
+                        }
 
                             
 
@@ -3240,15 +3242,12 @@ namespace Backend_UMR_Work_Program.Controllers
         [HttpGet("EXECUTIVE_SUMMARY_REPORT2")]
         public async Task<WebApiResponse> EXECUTIVE_SUMMARY(string year)
         {
-
             try
             {
                 string previousYear = year !=null ? (int.Parse(year) - 1).ToString() : "";
                 var WKP_Report = await _context.ADMIN_WORK_PROGRAM_REPORTs.Where(x => x.Id <= 5).ToListAsync();
                 var get_ReportContent_2 = WKP_Report.Where(x => x.Id == 2)?.FirstOrDefault();
-                var GEO_ACTIVITIES = await (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts
-                                            where u.Year_of_WP == year
-                                            select u).GroupBy(x => x.Contract_Type).Select(x => x.FirstOrDefault()).ToListAsync();
+                var GEO_ACTIVITIES = await (from u in _context.WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_counts where u.Year_of_WP == year select u).ToListAsync();
 
                 var WP_COUNT_GEOPHYSICAL_ACTIVITIES_ACQUISITION = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
                                                                          where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
