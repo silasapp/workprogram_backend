@@ -337,7 +337,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserveAGNAG = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.COMPANY_ID == WKPCompanyId && a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_AG) + Convert.ToDouble(a.Company_Reserves_NAG)).ToListAsync()).Sum();
                     prodCost = (await (from a in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year select Convert.ToDouble(a.INDIRECT_COST_Actual) + Convert.ToDouble(a.DIRECT_COST_Actual)).ToListAsync()).Sum();
                 }
-                return new { reserveOilCondensate = reserveOilCondensate, reserveAGNAG = reserveAGNAG, prodCost = prodCost };
+                return new { reserveOilCondensate = Decimal.Round(Convert.ToDecimal(reserveOilCondensate)), reserveAGNAG = Decimal.Round(Convert.ToDecimal(reserveAGNAG)), prodCost = prodCost.ToString("0.00") };
             }
             catch (Exception e)
             {
