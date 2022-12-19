@@ -29,7 +29,7 @@
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
         public static string EquipmentFailure = "EQUIPMENT_FAILURE";
-        public static string Insert = "INSERTE";
+        public static string Insert = "INSERT";
         public static string Update = "UPDATE";
         public static string Delete = "DELETE";
         public static string New = "New";
@@ -259,6 +259,7 @@
             public string ReferenceNo { get; set; } = null!;
             public int? ConcessionID { get; set; }
             public int CompanyID { get; set; }
+            public string? Last_SBU { get; set; }
             public string CompanyName { get; set; }
             public string FieldName { get; set; }
             public string ConcessionName { get; set; }
@@ -297,6 +298,7 @@
             public string Staff_SBU { get; set; }
             public string Staff_Role { get; set; }
             public int Sort { get; set; }
+            public int Desk_ID { get; set; }
         }
 
         public class ApplicationDeskHistory_Model
