@@ -222,7 +222,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						CompanyName = WKPUserName,
 						Companyemail = WKPUserEmail,
 						COMPANY_ID = WKPUserId,
-						Year_of_WP = CurrentYear,
+						Year_of_WP = year,
 						uploaded_presentation = uploadedDocument,
 						upload_extension = "." + document_FileExtension,
 						original_filemane = document.Name,
@@ -234,7 +234,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (await _context.SaveChangesAsync() > 0)
 					{
-						var companyPresentations = _context.PRESENTATION_UPLOADs.Where(x => x.COMPANY_ID == WKPUserId /*&& x.Year_of_WP == CurrentYear*/).ToListAsync();
+						var companyPresentations = await _context.PRESENTATION_UPLOADs.Where(x => x.COMPANY_ID == WKPUserId /*&& x.Year_of_WP == CurrentYear*/).ToListAsync();
 
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "File uploaded successfully.", Data = companyPresentations, StatusCode = ResponseCodes.Success };
 					}
