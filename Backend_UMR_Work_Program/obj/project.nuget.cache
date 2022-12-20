@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "+bQgV79Bcb2yct8apnzuaERL3qL1QMVooteMlsYuTXQyBi50zgiIQMnUL7toz6HENy8XXC/2ugf0+7QlafGHAw==",
   "success": true,
   "projectFilePath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+=======
+  "dgSpecHash": "q5GaPWOSHYvK7Zg3EGt7/XtAQRYDM9wMlRWCg7HKKy3FgMrLni+0n+pBoE6v6FSaNnPCKPFy/+ZD7j/WwjeVnQ==",
+  "success": true,
+  "projectFilePath": "C:\\Sandbox\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+>>>>>>> origin/main
   "expectedPackageFiles": [
     "C:\\Users\\suppo\\.nuget\\packages\\automapper\\11.0.1\\automapper.11.0.1.nupkg.sha512",
     "C:\\Users\\suppo\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
