@@ -1191,6 +1191,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                 where prc.DeleteStatus != true 
                                 select new
                                 {
+                                    Id= prc.ProccessID,
                                     Type = "New",
                                     Sort = prc.Sort,
                                     Role = role.RoleName,
@@ -1217,12 +1218,17 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
+                if (roleID <= 0 || sbuID <= 0 || sort <= 0)
+                {
+                    return BadRequest(new { message = $"Error : Role/SBU/Sort ID was not passed correctly." });
+                }
+
                 var process = await (from prc in _context.ApplicationProccesses
                                 where prc.RoleID == roleID && prc.SBU_ID == sbuID && prc.Sort == sort && prc.DeleteStatus != true 
                                select prc).FirstOrDefaultAsync();
                 if (process != null)
                 {
-                    return BadRequest(new { message = $"Error : Process is already existing and can not be duplicated."});
+                    return BadRequest(new { message = $"Error : Process is already existing and can not be duplicated." });
                 }
                 else
                 {
