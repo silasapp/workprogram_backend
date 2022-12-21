@@ -1238,7 +1238,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpPost("ADMIN_START_END_DATE_DATA_UPLOADS")]
-		public async Task<WebApiResponse> Admin_StartEnd_Date(ADMIN_WP_START_END_DATE_DATA_UPLOAD model, string _action)
+		public async Task<WebApiResponse> Admin_StartEnd_Date([FromBody] ADMIN_WP_START_END_DATE_DATA_UPLOAD model, string _action)
 		{
 			try
 			{
