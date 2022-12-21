@@ -8,9 +8,17 @@ build_property.PlatformNeutralAssembly =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Backend_UMR_Work_Program
 build_property.RootNamespace = Backend_UMR_Work_Program
+<<<<<<< HEAD
+build_property.ProjectDir = c:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = c:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program
+=======
 build_property.ProjectDir = C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
 build_property.MSBuildProjectDirectory = C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program
+>>>>>>> b9061c39c7089e74e6bf18c80ef6e10f14a96fbc
 build_property._RazorSourceGeneratorDebug = 
