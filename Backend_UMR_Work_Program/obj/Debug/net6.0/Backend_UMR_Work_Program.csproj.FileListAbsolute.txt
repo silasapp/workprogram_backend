@@ -286,6 +286,7 @@ C:\Users\Kenisank\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6
 C:\Users\Kenisank\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Users\Kenisank\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Users\Kenisank\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+<<<<<<< HEAD
 C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.AssemblyReference.cache
 C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfoInputs.cache
@@ -387,3 +388,101 @@ C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\
 C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+=======
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.Development.json
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.json
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.exe
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.deps.json
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.runtimeconfig.json
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.pdb
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Azure.Core.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Azure.Identity.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Azure.Storage.Blobs.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Azure.Storage.Common.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Azure.Storage.Queues.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\ClosedXML.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\DocumentFormat.OpenXml.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\ExcelNumberFormat.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Humanizer.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\MailKit.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Azure.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Identity.Client.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Identity.Client.Extensions.Msal.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.OpenApi.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\MimeKit.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\BouncyCastle.Crypto.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Quartz.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\RestSharp.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Syncfusion.Compression.Portable.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Syncfusion.Licensing.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Syncfusion.XlsIO.Portable.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Data.OracleClient.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Data.SqlClient.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.IO.Hashing.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.IO.Packaging.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Memory.Data.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Runtime.Caching.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Security.Permissions.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.WindowsAzure.Storage.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\YamlDotNet.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.AssemblyReference.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfoInputs.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfo.cs
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CoreCompileInputs.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\scopedcss\bundle\Backend_UMR_Work_Program.styles.css
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CopyComplete
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\refint\Backend_UMR_Work_Program.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+>>>>>>> b9061c39c7089e74e6bf18c80ef6e10f14a96fbc
