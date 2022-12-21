@@ -1126,14 +1126,14 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("ADMIN_START_END_DATES")]
-        public async Task<WebApiResponse> Admin_StartEnd_Date(ADMIN_WP_START_END_DATE model, string action)
+        public async Task<WebApiResponse> Admin_StartEnd_Date([FromBody] ADMIN_WP_START_END_DATE model, string _action)
         {
             try
             {
                 int save = 0;
                 if (model != null)
                 {
-                    switch (action)
+                    switch (_action)
                     {
                         case "INSERT":
                             var getdata = _context.ADMIN_WP_START_END_DATEs.Where(x => x.start_date == model.start_date && x.end_date == model.end_date).FirstOrDefault();
@@ -1165,7 +1165,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             }
                             else
                             {
-                                if (action == GeneralModel.Update)
+                                if (_action == GeneralModel.Update)
                                 {
                                     checkdata.start_date = model.start_date;
                                     checkdata.end_date = model.end_date;
@@ -1173,7 +1173,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     checkdata.Date_Updated = DateTime.Now;
                                     checkdata.Updated_by = WKPCompanyEmail;
                                 }
-                                else if (action == GeneralModel.Delete)
+                                else if (_action == GeneralModel.Delete)
                                 {
                                     _context.ADMIN_WP_START_END_DATEs.Remove(checkdata);
                                 }
@@ -1187,11 +1187,11 @@ namespace Backend_UMR_Work_Program.Controllers
                     if (save > 0)
                     {
                         var returnModel = _context.ADMIN_WP_START_END_DATEs.ToList();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"WKP start & end dates have been {action}D successfully", Data = returnModel, StatusCode = ResponseCodes.Success };
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"WKP start & end dates have been {_action}D successfully", Data = returnModel, StatusCode = ResponseCodes.Success };
                     }
                     else
                     {
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: An error occured while trying to {action} start & end dates.", StatusCode = ResponseCodes.Failure };
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: An error occured while trying to {_action} start & end dates.", StatusCode = ResponseCodes.Failure };
                     }
                 }
                 else
