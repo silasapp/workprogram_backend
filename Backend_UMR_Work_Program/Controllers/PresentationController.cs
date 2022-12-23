@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -113,7 +114,40 @@ namespace Backend_UMR_Work_Program.Controllers
 			return schedule;
 		}
 
+		[HttpGet("GET_PRESENTATION_DATETIMES")]
+		public async Task<object> GET_PRESENTATION_DATETIMES()
+		{
+			var schedule = await _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.COMPANY_ID == WKPUserId && c.YEAR == DateTime.Now.Year.ToString()).ToListAsync();
+			return schedule;
+		}
+		//Added by Musa 
+		[HttpGet("Get_StartAndEndDates")]
+		public async Task<StartAndEndDateDto> Get_StartAndEndDates()
+		{
+			try
+			{
+				var data = await _context.ADMIN_WP_START_END_DATEs.Where(x => x.Created_by == WKPUserEmail)?.FirstOrDefaultAsync();
 
+				if (data==null)
+				{
+					return null;
+				}
+
+				var startnEndDate = new StartAndEndDateDto()
+				{
+					start_date=data.start_date,
+					end_date=data.end_date
+				};
+				//var response = new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = data, StatusCode = ResponseCodes.Success };
+				return startnEndDate;
+			}
+			catch (Exception e)
+			{
+				throw e;
+				//return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Failure : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
 		[HttpPost("SCHEDULEPRESENTATION")]
 		public async Task<WebApiResponse> SCHEDULE_PRESENTATION_DATETIME(string time, DateTime date)
 		{
