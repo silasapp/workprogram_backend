@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend_UMR_Work_Program.Models
 {
     public partial class WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy
     {
+        [Key]
         public string? CompanyName { get; set; }
         public string? INDEX_TYPE { get; set; }
         public decimal? Unscaled_Score { get; set; }
