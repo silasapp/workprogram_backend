@@ -790,7 +790,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 WKP_Report2.Seismic_Data_Approved_and_Acquired = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == year && x.Geo_type_of_data_acquired == GeneralModel.ThreeD).ToListAsync();
 
-                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
+                WKP_Report2.Seismic_Data_Approved_and_Acquired_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs
                                                                           where o.Year_of_WP == year && o.Geo_type_of_data_acquired == GeneralModel.ThreeD
                                                                           group o by new { o.Year_of_WP } into g
                                                                           select new
@@ -813,7 +813,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 WKP_Report2.Seismic_Data_Approved_and_Acquired_TWO_YEARS_AG0 = await _context.Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs.Where(x => x.Year_of_WP == twoYearsAgo).ToListAsync();
 
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                            where o.Year_of_WP == year
                                                                                            group o by new { o.CompanyName } into g
                                                                                            select new
@@ -829,7 +829,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                                                                            }).ToListAsync();
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_CURRENT_PLANNED = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                                    where o.Year_of_WP == proposedYear
                                                                                                    group o by new { o.CompanyName } into g
                                                                                                    select new
@@ -845,7 +845,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                                                                                    }).ToListAsync();
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_PREVIOUS = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                             where o.Year_of_WP == previousYear
                                                                                             group o by new { o.CompanyName } into g
                                                                                             select new
@@ -862,7 +862,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                                                                             }).ToListAsync();
 
 
-                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
+                WKP_Report2.Seismic_Data_Processing_and_Reprocessing_Activities_TWO_YEARS_AGO = await (from o in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs
                                                                                                  where o.Year_of_WP == twoYearsAgo
                                                                                                  group o by new { o.CompanyName } into g
                                                                                                  select new
@@ -961,7 +961,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 WKP_Report2.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNED = await _context.WP_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT_PLANNEDs.Where(x => x.Fiveyear_Projection_Year == proposedYear).ToListAsync();
 
-                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED =       _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
+                WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSED =  await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
 
                 WKP_Report2.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_C_TYPE_PROPOSED = await _context.WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_OIL_PRODUCTION_CONTRACT_TYPE_PROPOSEDs.Where(x => x.Year_of_WP == proposedYear).ToListAsync();
 
