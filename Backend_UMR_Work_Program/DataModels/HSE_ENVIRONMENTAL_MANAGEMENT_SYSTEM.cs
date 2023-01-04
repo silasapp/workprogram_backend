@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Backend_UMR_Work_Program.Models
 {
     public partial class HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM
     {
-        [Key]
         public int Id { get; set; }
         public string? OML_ID { get; set; }
         public string? OML_Name { get; set; }
