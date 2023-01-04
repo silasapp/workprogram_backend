@@ -420,7 +420,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     Company = company,
                     Staff = staffDesk,
                     Application_History = appHistory.OrderByDescending(x => x.ID).Take(3).ToList(),
-                    Document = documents
+                    Document = documents,
+                    SBU = await _context.StrategicBusinessUnits.ToListAsync()
                 };
                 return new WebApiResponse { Data = appDetails, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
 
@@ -2001,7 +2002,6 @@ namespace Backend_UMR_Work_Program.Controllers
                                     HSEOSPRegistrations = HSEOSPRegistrations,
                                     HSEAccidentIncidenceType = HSEAccidentIncidenceType,
                                     HSECommunityDisturbance = HSECommunityDisturbance,
-
                                     HSESustainableDevProjProgramCsr = HSESustainableDevProgramCsr,
 
                                     HSEQuestion = HSEQuestion,
@@ -2027,7 +2027,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             break;
 
                         default:
-                            return BadRequest(new { message = "Error : Application ID was not passed correctly." });
+                            return BadRequest(new { message = "Error : User SBU was not specified." });
 
                     }
                  }
@@ -2066,7 +2066,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         var getStaffSBU =  (from stf in _context.staff
                                                  join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
                                                  join record in _context.SBU_Records on stf.Staff_SBU equals record.SBU_Id
-                                                 where stf.StaffEmail == "allamin.m@dpr.gov.ng"
+                                                 where stf.StaffEmail == WKPCompanyEmail
                                                  select record).ToList();
                         //var context = new WKP_DBContext();
                         if (getStaffSBU.Count() > 0)
