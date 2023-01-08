@@ -7,7 +7,7 @@ namespace Backend_UMR_Work_Program.Models
     {
         public string? CompanyName { get; set; }
         public string? Year_of_WP { get; set; }
-        public decimal Current_Actual_Year { get; set; }
+        public decimal? Current_Actual_Year { get; set; }
         public decimal? Utilized { get; set; }
         public decimal? Flared { get; set; }
         public decimal? Percentage_FLARED { get; set; }

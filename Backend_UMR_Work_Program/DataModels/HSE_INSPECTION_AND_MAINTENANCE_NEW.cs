@@ -1,4 +1,7 @@
-﻿namespace Backend_UMR_Work_Program.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Backend_UMR_Work_Program.Models
 {
     public partial class HSE_INSPECTION_AND_MAINTENANCE_NEW
     {
