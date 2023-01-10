@@ -257,6 +257,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION> Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; } = null!;
         public virtual DbSet<Sum_GEOPHYSICAL_ACTIVITIES_PROCESSING> Sum_GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; } = null!;
         public virtual DbSet<Table_1> Table_1s { get; set; } = null!;
+        public virtual DbSet<Table_Detail> Table_Details { get; set; } = null!;
         public virtual DbSet<TrainingForStaff> TrainingForStaffs { get; set; } = null!;
         public virtual DbSet<UserLogin> UserLogins { get; set; } = null!;
         public virtual DbSet<UserMaster> UserMasters { get; set; } = null!;
@@ -429,7 +430,6 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPE> WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANy> WP_OPL_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_COMPLIANCE_INDEX_CALCULATION> WP_OPL_COMPLIANCE_INDEX_CALCULATIONs { get; set; } = null!;
-        public virtual DbSet<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy> WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE> WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR> WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEARs { get; set; } = null!;
         public virtual DbSet<WP_OPL_DISCOVERY_INDEX_WEIGHTED_SCORE> WP_OPL_DISCOVERY_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
@@ -13751,6 +13751,10 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.SBU_Comment).IsUnicode(false);
+
+                entity.Property(e => e.SBU_Tables)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<SBU_Record>(entity =>
@@ -14080,6 +14084,23 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.name)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Table_Detail>(entity =>
+            {
+                entity.HasKey(e => e.TableId);
+
+                entity.Property(e => e.SBU_ID)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TableName)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TableSchema)
+                    .HasMaxLength(250)
                     .IsUnicode(false);
             });
 
