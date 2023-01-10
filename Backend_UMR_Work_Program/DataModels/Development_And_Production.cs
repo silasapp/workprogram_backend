@@ -20,7 +20,7 @@ namespace Backend_UMR_Work_Program.Models
         public int? CompanyNumber { get; set; }
         public int? ConcessionID { get; set; }
         public int? FieldID { get; set; }
-        public int? Year { get; set; }
         public DateTime? DateCreated { get; set; }
+        public int? Year { get; set; }
     }
 }

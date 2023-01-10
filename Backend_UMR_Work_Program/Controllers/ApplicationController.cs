@@ -148,7 +148,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                           join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
                                           join cmt in _context.SBU_ApplicationComments on app.Id equals cmt.AppID 
                                           join sbu in _context.StrategicBusinessUnits on cmt.SBU_ID equals sbu.Id
-                                          where app.DeleteStatus != true && app.Status == GeneralModel.Rejected && cmt.ActionStatus == GeneralModel.Initiated
+                                          where app.DeleteStatus != true && cmt.ActionStatus == GeneralModel.Initiated
                                           select new Application_Model
                                           {
                                               Last_SBU = sbu.SBU_Name,
@@ -172,7 +172,49 @@ namespace Backend_UMR_Work_Program.Controllers
                 return BadRequest(new { message = "Error : " + e.Message });
             }
         }
+        [HttpGet("CompanyRejectedApplication")] //For specific application view
+        public async Task<object> CompanyRejectedApplication(string omlName, string fieldName, string year)
+        {
+            try
+            {
+                var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.ConcessionName == omlName select d).FirstOrDefaultAsync();
+                var application = await (from d in _context.Applications where d.ConcessionID == concession.Consession_Id && d.YearOfWKP == int.Parse(year) && d.CompanyID == WKPCompanyNumber select d).ToListAsync();
 
+                if (fieldName != null)
+                {
+                    var field = _context.COMPANY_FIELDs.Where(p => p.Field_Name == fieldName).FirstOrDefault();
+                    application = application.Where(ap => ap.FieldID == field.Field_ID).ToList();
+                }
+                
+                var applications = (from app in application
+                                          join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
+                                          join cmt in _context.SBU_ApplicationComments on app.Id equals cmt.AppID 
+                                          join sbu in _context.StrategicBusinessUnits on cmt.SBU_ID equals sbu.Id
+                                          where app.DeleteStatus != true && cmt.ActionStatus == GeneralModel.Initiated
+                                          select new Application_Model
+                                          {
+                                              Last_SBU = sbu.SBU_Name,
+                                              Id = app.Id,
+                                              FieldID = app.FieldID,
+                                              RejectId = cmt.Id,
+                                              ConcessionID = app.ConcessionID,
+                                              ConcessionName = omlName,
+                                              FieldName = fieldName, 
+                                              SBU_Comment = cmt.SBU_Comment,
+                                              ReferenceNo = app.ReferenceNo,
+                                              CreatedAt = app.CreatedAt,
+                                              SubmittedAt = app.SubmittedAt,
+                                              Status = app.Status,
+                                              YearOfWKP = app.YearOfWKP
+                                          }).ToList();
+                return new WebApiResponse { Data= applications, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message });
+            }
+        }
+        
         [HttpPost("Resubmit_RejectedApplication")] //For general application view
         public async Task<object> Resubmit_RejectedApplication(int appID, int rejectID)
         {
@@ -412,6 +454,14 @@ namespace Backend_UMR_Work_Program.Controllers
                                      Sort = dsk.Sort
                                  }).ToList();
                 var documents = await _context.SubmittedDocuments.Where(x => x.CreatedBy == application.CompanyID.ToString() && x.YearOfWKP == application.YearOfWKP).Take(10).ToListAsync();
+                var getStaffSBU = (from stf in _context.staff
+                                   join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
+                                   where stf.StaffEmail == WKPCompanyEmail
+                                   select sbu).FirstOrDefault();
+
+                var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.SBU_ID.Contains(getStaffSBU.Id.ToString())).ToListAsync();
+                
+                
                 var appDetails = new ApplicationDetailsModel
                 {
                     Application = application,
@@ -421,6 +471,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     Staff = staffDesk,
                     Application_History = appHistory.OrderByDescending(x => x.ID).Take(3).ToList(),
                     Document = documents,
+                    SBU_TableDetails=getSBU_TablesToDisplay,
                     SBU = await _context.StrategicBusinessUnits.ToListAsync()
                 };
                 return new WebApiResponse { Data = appDetails, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
@@ -617,7 +668,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
         [HttpPost("RejectApplication")]
-        public async Task<object> RejectApplication(int deskID, string comment, string[] selectedApps, int SBU_ID)
+        public async Task<object> RejectApplication(int deskID, string comment, string[] selectedApps, int SBU_ID, int[] selectedTables)
         {
             try
             {
@@ -649,12 +700,27 @@ namespace Backend_UMR_Work_Program.Controllers
                             var NRejectApp = _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated);
                             if (NRejectApp == null)
                             {
+                                List<string> RejectedForms = new List<string>();
+                                string RejectedTables = "";
+                                if (selectedTables.Count() > 0)
+                                {
+                                    foreach (int table in selectedTables) {
+                                        var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId ==  table).FirstOrDefaultAsync();
+                                       
+                                        if (getSBU_TablesToDisplay != null)
+                                            RejectedTables = $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}";
+
+                                      }
+                                } 
+
+
                                 var nReject = new SBU_ApplicationComment()
                                 {
                                     SBU_Comment = comment,
                                     SBU_ID = getStaff.Staff_SBU,
                                     Staff_ID = getStaff.StaffID,
                                     ActionStatus = GeneralModel.Initiated,
+                                    SBU_Tables = RejectedTables,
                                     AppID = appId,
                                     DateCreated = DateTime.Now,
                                 };

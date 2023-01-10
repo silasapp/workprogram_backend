@@ -1,4 +1,4 @@
-﻿namespace Backend_UMR_Work_Program.DataModels
+﻿namespace Backend_UMR_Work_Program.Models
 {
 	public class StartAndEndDateDto
 	{

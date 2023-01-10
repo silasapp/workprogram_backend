@@ -294,6 +294,7 @@
             public List<ApplicationDeskHistory_Model> Application_History { get; set; }
             public List<SubmittedDocument> Document { get; set; }
             public List<StrategicBusinessUnit> SBU { get; set; }
+            public List<Table_Detail> SBU_TableDetails { get; set; }
         }
         public class Staff_Model
         {

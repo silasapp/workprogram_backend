@@ -9426,11 +9426,11 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 if (WKUserRole == GeneralModel.Admin)
                 {
-                    details = await _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
+                    //details = await _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
                 }
                 else
                 {
-                    details = await _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPCompanyName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+                   // details = await _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPCompanyName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
                 }
             }
             catch (Exception ex)
