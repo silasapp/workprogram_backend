@@ -323,21 +323,22 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             double prodCost, reserveOilCondensate, reserveAGNAG = 0;
 
+
             try
             {
                 if (WKUserRole == GeneralModel.Admin)
                 {
-                    reserveOilCondensate = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.COMPANY_ID == WKPCompanyId && a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_Oil) + Convert.ToDouble(a.Company_Reserves_Condensate)).ToListAsync()).Sum();
-                    reserveAGNAG = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.COMPANY_ID == WKPCompanyId && a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_AG) + Convert.ToDouble(a.Company_Reserves_NAG)).ToListAsync()).Sum();
-                    prodCost = await (from a in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year select Convert.ToDouble(a.INDIRECT_COST_Actual) + Convert.ToDouble(a.DIRECT_COST_Actual)).FirstOrDefaultAsync();
+                    reserveOilCondensate = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_Oil) + Convert.ToDouble(a.Company_Reserves_Condensate)).ToListAsync()).Sum();
+                    reserveAGNAG = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_AG) + Convert.ToDouble(a.Company_Reserves_NAG)).ToListAsync()).Sum();
+                    prodCost = (await (from a in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where a.Year_of_WP == year select Convert.ToDouble(a.INDIRECT_COST_Actual) + Convert.ToDouble(a.DIRECT_COST_Actual)).ToListAsync()).Sum();
                 }
                 else
                 {
                     reserveOilCondensate = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.COMPANY_ID == WKPCompanyId && a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_Oil) + Convert.ToDouble(a.Company_Reserves_Condensate)).ToListAsync()).Sum();
                     reserveAGNAG = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.COMPANY_ID == WKPCompanyId && a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_AG) + Convert.ToDouble(a.Company_Reserves_NAG)).ToListAsync()).Sum();
-                    prodCost = await (from a in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year select Convert.ToDouble(a.INDIRECT_COST_Actual) + Convert.ToDouble(a.DIRECT_COST_Actual)).FirstOrDefaultAsync();
+                    prodCost = (await (from a in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year select Convert.ToDouble(a.INDIRECT_COST_Actual) + Convert.ToDouble(a.DIRECT_COST_Actual)).ToListAsync()).Sum();
                 }
-                return new { reserveOilCondensate = reserveOilCondensate, reserveAGNAG = reserveAGNAG, prodCost = prodCost} ;
+                return new { reserveOilCondensate = Math.Round(reserveOilCondensate), reserveAGNAG = Math.Round(reserveAGNAG), prodCost = Math.Round(prodCost)} ;
             }
             catch (Exception e)
             {
@@ -393,6 +394,71 @@ namespace Backend_UMR_Work_Program.Controllers
             }
             return ProdList;
         }
+
+
+        [HttpGet("TOTAL_MONTHLY_PRODUCTION")]
+        public async Task<object> TOTAL_MONTHLY_PRODUCTION(string year)
+        {
+            var ProdList = new List<object>();
+            var months = (await (from a in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where a.Year_of_WP == year select a.Production_month).ToListAsync()).Distinct();
+            foreach (var month in months) {
+                var prodMonth = (await (from a in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where a.Production_month == month && a.Year_of_WP == year select Convert.ToDouble(a.Production)).ToListAsync()).Sum();
+                ProdList.Add(new {prodMonth = prodMonth, month = month});
+            }
+            return ProdList;
+        }
+
+        [HttpGet("TOTAL_MONTHLY_PRODUCTION_BY_TERRAIN")]
+        public async Task<object> TOTAL_MONTHLY_PRODUCTION_BY_TERRAIN(string year)
+        {
+            var ProdList = new List<object>();
+            var terrains = (await (from a in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where a.Year_of_WP == year select a.Terrain).ToListAsync()).Distinct();
+            foreach (var terrain in terrains) {
+                var prodMonth = (await (from a in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where a.Terrain == terrain && a.Year_of_WP == year select Convert.ToDouble(a.Production)).ToListAsync()).Sum();
+                ProdList.Add(new {prodMonth = prodMonth, terrain = terrain});
+            }
+            return ProdList;
+        }
+
+
+        [HttpGet("TOTAL_CONCESSION_RESERVE_BY_TERRAIN")]
+        public async Task<object> TOTAL_CONCESSION_RESERVE(string year)
+        {
+            var ProdList = new List<object>();
+            var terrains = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.Company_Reserves_Year == year select a.Terrain).ToListAsync()).Distinct();
+            foreach (var terrain in terrains) {
+                var reserve = (await (from a in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where a.Terrain == terrain && a.Company_Reserves_Year == year select Convert.ToDouble(a.Company_Reserves_Oil) + Convert.ToDouble(a.Company_Reserves_Condensate)).ToListAsync()).Sum();
+                ProdList.Add(new {terrain = terrain, reserve = reserve});
+            }
+            return ProdList;
+        }
+
+        [HttpGet("TOTAL_CONCESSION_RESERVE_BY_CONTRACTTYPE")]
+        public async Task<object> TOTAL_CONCESSION_RESERVE_BY_CONTRACTTYPE(string year)
+        {
+            var ProdList = new List<object>();
+            var contractTypes = (await (from a in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where a.Year_of_WP == year select a.Contract_Type).ToListAsync()).Distinct();
+            foreach (var contractType in contractTypes) {
+                var reserve = (await (from a in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where a.Contract_Type == contractType && a.Year_of_WP == year select Convert.ToDouble(a.Production)).ToListAsync()).Sum();
+                ProdList.Add(new {contractType = contractType, prod = reserve});
+            }
+            return ProdList;
+        }
+
+        [HttpGet("GET_ADMIN_CHARTDATA")]
+        public async Task<object> GET_ADMIN_CHARTDATA(string year)
+        {
+            var prodByMonth = await TOTAL_MONTHLY_PRODUCTION(year);
+            var prodByTerrain = await TOTAL_MONTHLY_PRODUCTION_BY_TERRAIN(year);
+            var reserveByTerrain = await TOTAL_CONCESSION_RESERVE(year);
+            var reserveByContract = await TOTAL_CONCESSION_RESERVE_BY_CONTRACTTYPE(year);
+
+            return new {prodByMonth = prodByMonth, prodByTerrain = prodByTerrain, reserveByTerrain = reserveByTerrain, reserveByContract = reserveByContract};
+        }
+
+
+        
+
     }
 }
 
