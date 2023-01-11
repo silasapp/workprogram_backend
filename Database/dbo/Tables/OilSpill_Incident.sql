@@ -13,7 +13,7 @@
     [Action_Plan]                                           VARCHAR (MAX) NULL,
     [Proof_Of_Submission_Of_Valid_OSCP]                     VARCHAR (300) NULL,
     [Evidence_Of_QuaterlySubmissions_Of_OilField_Chemicals] VARCHAR (500) NULL,
-    [Evidence_Of_MOUs_With_CAN]                             VARCHAR (300) NULL,
+    [Evidence_Of_MOUs_With_CAN]                             VARCHAR (500) NULL,
     CONSTRAINT [PK_OilSpill_Incident] PRIMARY KEY CLUSTERED ([Oil_Spill_IncidentId] ASC)
 );
 
