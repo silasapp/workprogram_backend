@@ -668,7 +668,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
         [HttpPost("RejectApplication")]
-        public async Task<object> RejectApplication(int deskID, string comment, string[] selectedApps, int SBU_ID, int[] selectedTables)
+        public async Task<object> RejectApplication(int deskID, string comment, string[] selectedApps, int[] SBU_IDs, int[] selectedTables)
         {
             try
             {
@@ -704,14 +704,15 @@ namespace Backend_UMR_Work_Program.Controllers
                                 string RejectedTables = "";
                                 if (selectedTables.Count() > 0)
                                 {
-                                    foreach (int table in selectedTables) {
-                                        var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId ==  table).FirstOrDefaultAsync();
-                                       
+                                    foreach (int table in selectedTables)
+                                    {
+                                        var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId == table).FirstOrDefaultAsync();
+
                                         if (getSBU_TablesToDisplay != null)
                                             RejectedTables = $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}";
 
-                                      }
-                                } 
+                                    }
+                                }
 
 
                                 var nReject = new SBU_ApplicationComment()
@@ -741,52 +742,57 @@ namespace Backend_UMR_Work_Program.Controllers
                                             join stf in _context.staff on dsk.StaffID equals stf.StaffID
                                             where stf.Staff_SBU == get_CurrentStaff.Staff_SBU && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
                                             select dsk).FirstOrDefault();
-
-                            if (SBU_ID > 0) //planning rejecting back to a particular SBU
+                            
+                            if (SBU_IDs.Count() > 0)
                             {
-                                 prevDesk = (from dsk in _context.MyDesks
-                                                join stf in _context.staff on dsk.StaffID equals stf.StaffID
-                                                where stf.Staff_SBU == SBU_ID && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
-                                                select dsk).FirstOrDefault();
+                                foreach (int SBU_ID in SBU_IDs)
+                                {
+                                    if (SBU_ID > 0) //planning rejecting back to a particular SBU
+                                    {
+                                        prevDesk = (from dsk in _context.MyDesks
+                                                    join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                                    where stf.Staff_SBU == SBU_ID && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
+                                                    select dsk).FirstOrDefault();
+                                    }
+                                    if (prevDesk != null)
+                                    {
+                                        //update staff desk
+                                        staffDesk.HasPushed = true;
+                                        staffDesk.HasWork = true;
+                                        staffDesk.UpdatedAt = DateTime.Now;
+                                        prevDesk.HasPushed = false;
+                                        prevDesk.HasWork = false;
+                                        prevDesk.UpdatedAt = DateTime.Now;
+                                        _context.SaveChanges();
+
+                                        _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
+
+                                        //send mail to staff
+                                        var getStaff = (from stf in _context.staff
+                                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                        where stf.StaffID == prevDesk.StaffID && stf.DeleteStatus != true
+                                                        select stf).FirstOrDefault();
+
+                                        string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                                        string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
+                                        var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
+                                        var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
+
+                                        _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+                                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been rejected successfully.", StatusCode = ResponseCodes.Success };
+                                    }
+                                    else
+                                    {
+                                        return BadRequest(new { message = "An error occured while trying to reject this application." });
+                                    }
+                                }
                             }
-                            if (prevDesk != null)
-                            {
-                                //update staff desk
-                                staffDesk.HasPushed = true;
-                                staffDesk.HasWork = true;
-                                staffDesk.UpdatedAt = DateTime.Now;
-                                prevDesk.HasPushed = false;
-                                prevDesk.HasWork = false; 
-                                prevDesk.UpdatedAt = DateTime.Now;
-                                _context.SaveChanges();
-
-                                _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
-
-                                //send mail to staff
-                                var getStaff = (from stf in _context.staff
-                                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
-                                                where stf.StaffID == prevDesk.StaffID && stf.DeleteStatus != true
-                                                select stf).FirstOrDefault();
-
-                                string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
-                                string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
-                                var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
-                                var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
-
-                                _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been rejected successfully.", StatusCode = ResponseCodes.Success };
-                            }
-                            else
-                            {
-                                return BadRequest(new { message = "An error occured while trying to reject this application."});
-                            }
-
                         }
                     }
                 }
                 else
                 {
-                    return BadRequest(new { message = "Error: No application ID was passed for this action to be completed."});
+                    return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
                 }
 
                 return BadRequest(new { message = "Error: No action was carried out on this application."});
