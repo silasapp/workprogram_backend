@@ -8640,8 +8640,10 @@ namespace Backend_UMR_Work_Program.Controllers
 					#region file section
 					var file1 = Request.Form.Files[0];
 					var file2 = Request.Form.Files[1];
+					var file3 = Request.Form.Files[2];
 					var blobname1 = blobService.Filenamer(file1);
 					var blobname2 = blobService.Filenamer(file2);
+					var blobname3 = blobService.Filenamer(file3);
 
 					if (file1 != null)
 					{
@@ -8660,6 +8662,15 @@ namespace Backend_UMR_Work_Program.Controllers
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
 							hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
+					}
+					if (file3 != null)
+					{
+						string docName = "Evidence Of Training Plan";
+						hse_safety_culture_model.EvidenceOfTrainingPlanPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfTrainingPlanDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_safety_culture_model.EvidenceOfTrainingPlanPath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
 					}
 					#endregion
 
@@ -8937,8 +8948,10 @@ namespace Backend_UMR_Work_Program.Controllers
 					#region file section
 					var file1 = Request.Form.Files[0];
 					var file2 = Request.Form.Files[1];
+					var file3 = Request.Form.Files[2];
 					var blobname1 = blobService.Filenamer(file1);
 					var blobname2 = blobService.Filenamer(file2);
+					var blobname3 = blobService.Filenamer(file3);
 
 					if (file1 != null)
 					{
@@ -8957,6 +8970,16 @@ namespace Backend_UMR_Work_Program.Controllers
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
 							hse_occupational_model.OHMplanCommunicationFilename = blobname2;
+					}
+					if (file3 != null)
+					{
+						string docName = "Reason why OHM was not Communicated to Staff";
+						hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"FieldDiscoveryDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+						if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname3;
 					}
 					#endregion
 
