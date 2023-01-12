@@ -1197,8 +1197,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
 					{
 						var HSEQuestion = (from c in _context.HSE_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSEFatality = (from c in _context.HSE_FATALITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSEDesignSafety = (from c in _context.HSE_DESIGNS_SAFETies where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSEInspectionMaintenance = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -6473,6 +6476,23 @@ namespace Backend_UMR_Work_Program.Controllers
 					HSE_Accident_Incidence.Updated_by = WKPCompanyId;
 					HSE_Accident_Incidence.Year_of_WP = year;
 					HSE_Accident_Incidence.OML_Name = omlName;
+
+
+					#region File Upload
+					var file1 = Request.Form.Files[0];
+					var blobname1 = blobService.Filenamer(file1);
+					if (file1 != null)
+					{
+						string docName = "Accident Incidence Report";
+						HSE_Accident_Incidence.UploadIncidentStatisticsPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"AccidentIncidenceReportDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (HSE_Accident_Incidence.UploadIncidentStatisticsPath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							HSE_Accident_Incidence.UploadIncidentStatisticsFilename = blobname1;
+					}
+					#endregion
+
+
 
 					if (action == GeneralModel.Insert)
 					{
