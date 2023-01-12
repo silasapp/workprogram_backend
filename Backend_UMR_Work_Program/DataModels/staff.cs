@@ -6,7 +6,6 @@ namespace Backend_UMR_Work_Program.Models
     public partial class staff
     {
         public int StaffID { get; set; }
-        public int? AdminCompanyInfo_ID { get; set; }
         public string? StaffElpsID { get; set; }
         public int? Staff_SBU { get; set; }
         public int? RoleID { get; set; }
@@ -24,5 +23,6 @@ namespace Backend_UMR_Work_Program.Models
         public int? UpdatedBy { get; set; }
         public string? SignaturePath { get; set; }
         public string? SignatureName { get; set; }
+        public int? AdminCompanyInfo_ID { get; set; }
     }
 }

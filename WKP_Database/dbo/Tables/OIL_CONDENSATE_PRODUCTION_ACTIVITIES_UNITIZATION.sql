@@ -60,15 +60,7 @@
     [UUOAUploadFilename]                             VARCHAR (100) NULL,
     [COMPANY_ID]                                     VARCHAR (100) NULL,
     [CompanyNumber]                                  INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                                       INT           NULL,
     CONSTRAINT [PK_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

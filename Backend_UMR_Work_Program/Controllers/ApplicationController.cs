@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.Models;
+//using LinqToDB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
@@ -27,6 +31,12 @@ namespace Backend_UMR_Work_Program.Controllers
             _mapper = mapper;
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
+        //private int? WKPCompanyNumber=> 21;
+        //private string? WKPCompanyId=> "221";
+        //private string? WKPCompanyName => "Name";
+        //private string? WKPCompanyEmail => "adeola.kween123@gmail.com";
+        //private string? WKUserRole => "Admin";
+
         private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
         private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
         private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
@@ -129,7 +139,121 @@ namespace Backend_UMR_Work_Program.Controllers
                 return BadRequest(new { message = "Error : " + e.Message});
             }
         } 
-        [HttpGet("RejectedApplications")] //For general application view
+        [HttpGet("CompanyRejectedApplications")] //For general application view
+        public async Task<object> CompanyRejectedApplications()
+        {
+            try
+            {
+                var applications = await (from app in _context.Applications
+                                          join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
+                                          join cmt in _context.SBU_ApplicationComments on app.Id equals cmt.AppID 
+                                          join sbu in _context.StrategicBusinessUnits on cmt.SBU_ID equals sbu.Id
+                                          where app.DeleteStatus != true && cmt.ActionStatus == GeneralModel.Initiated
+                                          select new Application_Model
+                                          {
+                                              Last_SBU = sbu.SBU_Name,
+                                              Id = app.Id,
+                                              FieldID = app.FieldID,
+                                              RejectId = cmt.Id,
+                                              ConcessionID = app.ConcessionID,
+                                              ConcessionName =  _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(x=> x.Consession_Id == app.ConcessionID).FirstOrDefault().Concession_Held,
+                                              FieldName = app.FieldID != null ? _context.COMPANY_FIELDs.Where(x=> x.Field_ID == app.FieldID).FirstOrDefault().Field_Name : "",
+                                              SBU_Comment = cmt.SBU_Comment,
+                                              ReferenceNo = app.ReferenceNo,
+                                              CreatedAt = app.CreatedAt,
+                                              SubmittedAt = app.SubmittedAt,
+                                              Status = app.Status,
+                                              YearOfWKP = app.YearOfWKP
+                                          }).ToListAsync();
+                return new WebApiResponse { Data= applications, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message });
+            }
+        }
+        [HttpGet("CompanyRejectedApplication")] //For specific application view
+        public async Task<object> CompanyRejectedApplication(string omlName, string fieldName, string year)
+        {
+            try
+            {
+                var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.ConcessionName == omlName select d).FirstOrDefaultAsync();
+                var application = await (from d in _context.Applications where d.ConcessionID == concession.Consession_Id && d.YearOfWKP == int.Parse(year) && d.CompanyID == WKPCompanyNumber select d).ToListAsync();
+
+                if (fieldName != null)
+                {
+                    var field = _context.COMPANY_FIELDs.Where(p => p.Field_Name == fieldName).FirstOrDefault();
+                    application = application.Where(ap => ap.FieldID == field.Field_ID).ToList();
+                }
+                
+                var applications = (from app in application
+                                          join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
+                                          join cmt in _context.SBU_ApplicationComments on app.Id equals cmt.AppID 
+                                          join sbu in _context.StrategicBusinessUnits on cmt.SBU_ID equals sbu.Id
+                                          where app.DeleteStatus != true && cmt.ActionStatus == GeneralModel.Initiated
+                                          select new Application_Model
+                                          {
+                                              Last_SBU = sbu.SBU_Name,
+                                              Id = app.Id,
+                                              FieldID = app.FieldID,
+                                              RejectId = cmt.Id,
+                                              ConcessionID = app.ConcessionID,
+                                              ConcessionName = omlName,
+                                              FieldName = fieldName, 
+                                              SBU_Comment = cmt.SBU_Comment,
+                                              ReferenceNo = app.ReferenceNo,
+                                              CreatedAt = app.CreatedAt,
+                                              SubmittedAt = app.SubmittedAt,
+                                              Status = app.Status,
+                                              YearOfWKP = app.YearOfWKP
+                                          }).ToList();
+                return new WebApiResponse { Data= applications, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message });
+            }
+        }
+        
+        [HttpPost("Resubmit_RejectedApplication")] //For general application view
+        public async Task<object> Resubmit_RejectedApplication(int appID, int rejectID)
+        {
+            try
+            {
+                var NRejectApp = _context.SBU_ApplicationComments.Where(x => x.AppID == appID && x.Id == rejectID).FirstOrDefault();
+                if (NRejectApp != null)
+                {
+                    NRejectApp.ActionStatus = GeneralModel.Completed;
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var application = await (from app in _context.Applications
+                                                  join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
+                                                  join con in _context.ADMIN_CONCESSIONS_INFORMATIONs on app.ConcessionID equals con.Consession_Id
+                                                  select new {app, comp, con}).FirstOrDefaultAsync();
+
+
+                        var getStaff = (from stf in _context.staff where stf.StaffID == NRejectApp.Staff_ID select stf).FirstOrDefault();
+
+                        var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == getStaff.Staff_SBU select sb).FirstOrDefaultAsync();
+                        string subject = $"Company response to rejected WORK PROGRAM application with ref: {application.app.ReferenceNo} ({application.con.Concession_Held} - {application.app.YearOfWKP}).";
+                        string content = $"{application.comp.COMPANY_NAME} has responded to rejected WORK PROGRAM application for year {application.app.YearOfWKP}";
+                        var emailMsg = _helpersController.SaveMessage(application.app.Id, getStaff.StaffID, subject, content, "Staff");
+                        var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
+
+                        return new WebApiResponse {ResponseCode = AppResponseCodes.Success, Message = "Application feedback has been sent successfully.", StatusCode = ResponseCodes.Success };
+
+                    }
+                }
+                return BadRequest(new { message = "Error : Rejected/Commented application could not be found." });
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+
+       [HttpGet("RejectedApplications")] //For general application view
         public async Task<object> RejectedApplications()
         {
             try
@@ -163,6 +287,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 return BadRequest(new { message = "Error : " + e.Message });
             }
         }
+       
         [HttpPost("ApproveRejection")]
         public async Task<object> ApproveRejection(int SBU_ID, string comment, string[] selectedApps )
         {
@@ -329,6 +454,14 @@ namespace Backend_UMR_Work_Program.Controllers
                                      Sort = dsk.Sort
                                  }).ToList();
                 var documents = await _context.SubmittedDocuments.Where(x => x.CreatedBy == application.CompanyID.ToString() && x.YearOfWKP == application.YearOfWKP).Take(10).ToListAsync();
+                var getStaffSBU = (from stf in _context.staff
+                                   join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
+                                   where stf.StaffEmail == WKPCompanyEmail
+                                   select sbu).FirstOrDefault();
+
+                var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.SBU_ID.Contains(getStaffSBU.Id.ToString())).ToListAsync();
+                
+                
                 var appDetails = new ApplicationDetailsModel
                 {
                     Application = application,
@@ -337,7 +470,9 @@ namespace Backend_UMR_Work_Program.Controllers
                     Company = company,
                     Staff = staffDesk,
                     Application_History = appHistory.OrderByDescending(x => x.ID).Take(3).ToList(),
-                    Document = documents
+                    Document = documents,
+                    SBU_TableDetails=getSBU_TablesToDisplay,
+                    SBU = await _context.StrategicBusinessUnits.ToListAsync()
                 };
                 return new WebApiResponse { Data = appDetails, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
 
@@ -533,7 +668,145 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
         [HttpPost("RejectApplication")]
-        public async Task<object> RejectApplication(int deskID, string comment, string[] selectedApps, int SBU_ID)
+        public async Task<object> RejectApplication(int deskID, string comment, string[] selectedApps, int[] SBU_IDs, int[] selectedTables)
+        {
+            try
+            {
+                if (selectedApps != null)
+                {
+                    foreach (var b in selectedApps)
+                    {
+                        string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
+                        int appId = int.Parse(appID);
+                        //get current staff desk
+                        var get_CurrentStaff = (from stf in _context.staff
+                                                join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
+                                                select stf).FirstOrDefault();
+
+                        var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId).FirstOrDefault();
+                        var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
+                        var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
+                        var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID select d).FirstOrDefaultAsync();
+
+                        if (application.FieldID != null)
+                        {
+                            var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
+                        }
+
+                        if (staffDesk.Sort == 1) //Rejection to company
+                        {
+                            var getStaff = (from stf in _context.staff where stf.StaffID == staffDesk.StaffID select stf).FirstOrDefault();
+                            var NRejectApp = _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated);
+                            if (NRejectApp == null)
+                            {
+                                List<string> RejectedForms = new List<string>();
+                                string RejectedTables = "";
+                                if (selectedTables.Count() > 0)
+                                {
+                                    foreach (int table in selectedTables)
+                                    {
+                                        var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId == table).FirstOrDefaultAsync();
+
+                                        if (getSBU_TablesToDisplay != null)
+                                            RejectedTables = $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}";
+
+                                    }
+                                }
+
+
+                                var nReject = new SBU_ApplicationComment()
+                                {
+                                    SBU_Comment = comment,
+                                    SBU_ID = getStaff.Staff_SBU,
+                                    Staff_ID = getStaff.StaffID,
+                                    ActionStatus = GeneralModel.Initiated,
+                                    SBU_Tables = RejectedTables,
+                                    AppID = appId,
+                                    DateCreated = DateTime.Now,
+                                };
+                                await _context.SBU_ApplicationComments.AddAsync(nReject);
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == getStaff.Staff_SBU select sb).FirstOrDefaultAsync();
+                                    string subject = $"Comment for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                                    string content = $"{SBU?.SBU_Name} made comment on your WORK PROGRAM application for year {application.YearOfWKP}. See comment :- " + comment;
+                                    var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
+                                    var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var prevDesk = (from dsk in _context.MyDesks
+                                            join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                            where stf.Staff_SBU == get_CurrentStaff.Staff_SBU && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
+                                            select dsk).FirstOrDefault();
+                            
+                            if (SBU_IDs.Count() > 0)
+                            {
+                                foreach (int SBU_ID in SBU_IDs)
+                                {
+                                    if (SBU_ID > 0) //planning rejecting back to a particular SBU
+                                    {
+                                        prevDesk = (from dsk in _context.MyDesks
+                                                    join stf in _context.staff on dsk.StaffID equals stf.StaffID
+                                                    where stf.Staff_SBU == SBU_ID && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
+                                                    select dsk).FirstOrDefault();
+                                    }
+                                    if (prevDesk != null)
+                                    {
+                                        //update staff desk
+                                        staffDesk.HasPushed = true;
+                                        staffDesk.HasWork = true;
+                                        staffDesk.UpdatedAt = DateTime.Now;
+                                        prevDesk.HasPushed = false;
+                                        prevDesk.HasWork = false;
+                                        prevDesk.UpdatedAt = DateTime.Now;
+                                        _context.SaveChanges();
+
+                                        _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
+
+                                        //send mail to staff
+                                        var getStaff = (from stf in _context.staff
+                                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                                        where stf.StaffID == prevDesk.StaffID && stf.DeleteStatus != true
+                                                        select stf).FirstOrDefault();
+
+                                        string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+                                        string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
+                                        var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
+                                        var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
+
+                                        _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+                                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been rejected successfully.", StatusCode = ResponseCodes.Success };
+                                    }
+                                    else
+                                    {
+                                        return BadRequest(new { message = "An error occured while trying to reject this application." });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
+                }
+
+                return BadRequest(new { message = "Error: No action was carried out on this application."});
+            }
+            catch (Exception x)
+            {
+                _helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
+                return BadRequest(new { message = $"An error occured while rejecting application."+ x.Message.ToString()});
+            }
+
+        }
+
+        [HttpPost("Old_RejectApplication")]
+        public async Task<object> Old_RejectApplication(int deskID, string comment, string[] selectedApps, int SBU_ID)
         {
             var responseMessage = "";
             try
@@ -585,7 +858,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             //var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
 
                             _helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
+                            return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been rejected successfully.", StatusCode = ResponseCodes.Success };
 
                         }
                         else
@@ -1654,6 +1927,274 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        #endregion
+
+        #region SBU Report
+        [HttpGet("GetSBU_Report")]
+        public async Task<object> GetSBU_Report(int appID )
+        {
+
+            try
+            {
+                var application = (from ap in _context.Applications where ap.Id == appID select ap).FirstOrDefault();
+
+                if (application != null)
+                {
+                    int? fieldID = 0;
+                    if (application.FieldID != null)
+                    {
+                     fieldID = (int)application.FieldID;
+                    }
+                        var getStaffSBU = (from stf in _context.staff
+                                       join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
+                                       where stf.StaffEmail == WKPCompanyEmail
+                                       //"allamin.m@dpr.gov.ng" 
+                                       select sbu).FirstOrDefault();
+
+                    string year = application.YearOfWKP.ToString();
+
+                    switch (getStaffSBU.SBU_Code)
+                    {
+
+                        case "E&P":
+                           
+                                var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.CompanyNumber == application.CompanyID && d.Year_of_WP == year select d).FirstOrDefaultAsync();
+                                var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.CompanyNumber == application.CompanyID && d.Year_of_WP == year select d).FirstOrDefaultAsync();
+                                var drillEachCost = await (from d in _context.DRILLING_EACH_WELL_COSTs where d.CompanyNumber == application.CompanyID && d.Year_of_WP == year select d).FirstOrDefaultAsync();
+                                var drillEachCostProposed = await (from d in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where d.CompanyNumber == application.CompanyID && d.Year_of_WP == year select d).FirstOrDefaultAsync();
+                                var drillOperationCategoriesWell = await (from d in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where d.CompanyNumber == application.CompanyID && d.Year_of_WP == year select d).FirstOrDefaultAsync();
+                                return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing, drillEachCost = drillEachCost, drillEachCostProposed = drillEachCostProposed, drillOperationCategoriesWell = drillOperationCategoriesWell };
+                           
+                            break;
+                        case "PLN":
+                          
+                                var BudgetActualExpenditure = await (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var BudgetPerformanceExploratory = await (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var BudgetPerformanceDevelopment = await (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var BudgetPerformanceProductionCost = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var BudgetPerformanceFacilityDevProjects = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var BudgetProposalComponents = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var BudgetCapexOpex = await (from c in _context.BUDGET_CAPEX_OPices where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+                                return new
+                                {
+                                    BudgetActualExpenditure = BudgetActualExpenditure,
+                                    BudgetPerformanceExploratory = BudgetPerformanceExploratory,
+                                    BudgetPerformanceDevelopment = BudgetPerformanceDevelopment,
+                                    BudgetPerformanceProductionCost = BudgetPerformanceProductionCost,
+                                    BudgetPerformanceFacilityDevProjects = BudgetPerformanceFacilityDevProjects,
+                                    BudgetProposalComponents = BudgetProposalComponents,
+                                    BudgetCapexOpex = BudgetCapexOpex
+                                };
+                         
+                        case "LGL":
+                           
+                                var LegalLitigation = await (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var LegalArbitration = await (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                return new
+                                {
+                                    LegalLitigation = LegalLitigation,
+                                    LegalArbitration = LegalArbitration
+                                };
+                           
+                        case "HSE":
+                          
+                                var HSEQuestion = await (from c in _context.HSE_QUESTIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEFatality = await (from c in _context.HSE_FATALITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEDesignSafety = await (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEInspectionMaintenance = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEInspectionMaintenanceFacility = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSETechnicalSafety = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSESafetyStudies = await (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+                                var HSEAssetRegister = await (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEOilSpill = await (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEAssetRegisterRBI = await (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+                                var HSEAccidentIncidence = await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEAccidentIncidenceType = (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var accidentModel = await (from a1 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs
+                                                           join a2 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs on a1.COMPANY_ID equals a2.COMPANY_ID
+                                                           where a1.CompanyNumber == application.CompanyID && a1.Year_of_WP == year
+                                                           && a2.CompanyNumber == application.CompanyID && a2.Year_of_WP == year
+                                                           select new HSE_ACCIDENT_INCIDENCE_MODEL
+                                                           {
+                                                               Was_there_any_accident_incidence = a1.Was_there_any_accident_incidence,
+                                                               If_YES_were_they_reported = a1.If_YES_were_they_reported,
+                                                               Cause = a2.Cause,
+                                                               Type_of_Accident_Incidence = a2.Type_of_Accident_Incidence,
+                                                               Consequence = a2.Consequence,
+                                                               Frequency = a2.Frequency,
+                                                               Investigation = a2.Investigation,
+                                                               Lesson_Learnt = a2.Lesson_Learnt,
+                                                               Location = a2.Location,
+                                                               Date_ = a2.Date_
+                                                           }).FirstOrDefaultAsync();
+
+                                var HSECommunityDisturbance = await (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEEnvironmentalStudies = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEWasteManagement = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEWasteManagementType = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEProducedWaterMgt = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEEnvironmentalCompliance = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+
+                                var HSEEnvironmentalFiveYears = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSESustainableDev = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEEnvironmentalStudiesUpdated = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEOSPRegistrations = await (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEProducedWaterMgtUpdated = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEEnvironmentalComplianceChemical = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSECausesOfSpill = await (from c in _context.HSE_CAUSES_OF_SPILLs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSESustainableDevMOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+                                var HSESustainableDevProgramCsr = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+                                var HSESustainableDevScheme = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEManagementPosition = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEQualityControl = await (from c in _context.HSE_QUALITY_CONTROLs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEClimateChange = await (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSESafetyCulture = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEOccupationalHealth = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEWasteManagementSystems = await (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                                var HSEEnvironmentalManagementSystems = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+                                return new
+                                {
+                                    HSETechnicalSafety = HSETechnicalSafety,
+                                    HSESafetyStudies = HSESafetyStudies,
+                                    HSEQualityControl = HSEQualityControl,
+                                    HSEInspectionMaintenance = HSEInspectionMaintenance,
+                                    HSEAssetRegister = HSEAssetRegister,
+                                    HSEOilSpill = HSEOilSpill,
+                                    HSECausesOfSpill = HSECausesOfSpill,
+                                    HSEAssetRegisterRBI = HSEAssetRegisterRBI,
+                                    HSEAccidentModel = accidentModel,
+                                    HSEAccidentIncidence = HSEAccidentIncidence,
+                                    HSEOSPRegistrations = HSEOSPRegistrations,
+                                    HSEAccidentIncidenceType = HSEAccidentIncidenceType,
+                                    HSECommunityDisturbance = HSECommunityDisturbance,
+                                    HSESustainableDevProjProgramCsr = HSESustainableDevProgramCsr,
+
+                                    HSEQuestion = HSEQuestion,
+                                    HSEFatality = HSEFatality,
+                                    HSEDesignSafety = HSEDesignSafety,
+                                    HSEInspectionMaintenanceFacility = HSEInspectionMaintenanceFacility,
+                                    HSEEnvironmentalStudies = HSEEnvironmentalStudies,
+                                    HSEWasteManagement = HSEWasteManagement,
+                                    HSEWasteManagementType = HSEWasteManagementType,
+                                    HSEProducedWaterMgt = HSEProducedWaterMgt,
+                                    HSEEnvironmentalCompliance = HSEEnvironmentalCompliance,
+                                    HSEEnvironmentalFiveYears = HSEEnvironmentalFiveYears,
+                                    HSEEnvironmentalStudiesUpdated = HSEEnvironmentalStudiesUpdated,
+                                    HSEProducedWaterMgtUpdated = HSEProducedWaterMgtUpdated,
+                                    HSEEnvironmentalComplianceChemical = HSEEnvironmentalComplianceChemical,
+                                    HSEManagementPosition = HSEManagementPosition,
+                                    HSEClimateChange = HSEClimateChange,
+                                    HSESafetyCulture = HSESafetyCulture,
+                                    HSEOccupationalHealth = HSEOccupationalHealth,
+                                    HSEWasteManagementSystems = HSEWasteManagementSystems,
+                                    HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
+                                };                           
+                            break;
+
+                        default:
+                            return BadRequest(new { message = "Error : User SBU was not specified." });
+
+                    }
+                 }
+                else
+                {
+                    return BadRequest(new { message = "Error : Application ID was not passed correctly." });
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+
+            }
+        }
+
+
+        [HttpGet("GetSBU_Report_Old")]
+        public async Task<object> GetSBU_Report_Old(int appID )
+        {
+            var mycon = _configuration["Data:Wkpconnect:ConnectionString"];
+            SqlConnection con = new SqlConnection(mycon);
+            List<object> Records = new List<object>();
+
+            try
+            {
+                var application = (from ap in _context.Applications where ap.Id == appID select ap).FirstOrDefault();
+
+                if (application != null)
+                {
+                    object report = new object();
+                  
+                    con.Open();
+
+                    if (application.FieldID != null)
+                    {
+                        var getStaffSBU =  (from stf in _context.staff
+                                                 join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
+                                                 join record in _context.SBU_Records on stf.Staff_SBU equals record.SBU_Id
+                                                 where stf.StaffEmail == WKPCompanyEmail
+                                                 select record).ToList();
+                        //var context = new WKP_DBContext();
+                        if (getStaffSBU.Count() > 0)
+                        {
+                            foreach (var record in getStaffSBU) {
+
+                                string sql = $"Select * from {record.Records} where Field_ID = {application.FieldID}";
+                                using (var command = _context.Database.GetDbConnection().CreateCommand())
+                                {
+                                    command.CommandText = sql;
+                                    _context.Database.OpenConnection();
+                                    using (var result = command.ExecuteReader())
+                                    {
+                                        DataTable schemaTable = result.GetSchemaTable();
+
+                                        foreach (DataRow row in schemaTable.Rows)
+                                        {
+                                            foreach (DataColumn column in schemaTable.Columns)
+                                            {
+                                                Records.Add(String.Format("{0} = {1}",
+                                                   row[column].ToString(), row[column].ToString()));
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        SqlCommand ConcessionReport = new SqlCommand("SELECT * FROM [dbo].[BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIES] WHERE Field_ID = " + application.ConcessionID);
+                        ConcessionReport.CommandType = CommandType.Text;
+                        ConcessionReport.Connection = con;
+                        SqlDataReader rd = ConcessionReport.ExecuteReader();
+                        report = rd.Read() ? rd : report;
+                    }
+
+                    return ( report );
+                    
+                }
+                return BadRequest(new { message = "Error : Application ID was not passed correctly." });
+            }
+            catch (Exception e)
+            {
+                con.Close();
+                return BadRequest(new { message = "Error : " + e.Message });
+            }
+            finally
+            {
+                //con.Close();
+            }
+        }
+       
+       
         #endregion
 
     }

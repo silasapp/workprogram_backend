@@ -16,10 +16,11 @@ namespace Backend_UMR_Work_Program.Models
         public int? How_Many_ShutIn_Wells_Are_Planned_To_Reactivate { get; set; }
         public int? How_Many_Wells_Do_You_Plan_To_Complete { get; set; }
         public int? How_Many_Wells_Do_You_Plan_To_Abandon { get; set; }
+        public int? Number_Of_Well_Interventions_Planned_For_The_Year { get; set; }
         public int? CompanyNumber { get; set; }
         public int? ConcessionID { get; set; }
         public int? FieldID { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime? DateCreated { get; set; }
         public int? Year { get; set; }
     }
 }

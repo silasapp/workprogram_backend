@@ -8640,10 +8640,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					#region file section
 					var file1 = Request.Form.Files[0];
 					var file2 = Request.Form.Files[1];
-					var file3 = Request.Form.Files[2];
 					var blobname1 = blobService.Filenamer(file1);
 					var blobname2 = blobService.Filenamer(file2);
-					var blobname3 = blobService.Filenamer(file3);
 
 					if (file1 != null)
 					{
@@ -8663,15 +8661,6 @@ namespace Backend_UMR_Work_Program.Controllers
 						else
 							hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
 					}
-					if (file3 != null)
-					{
-						string docName = "Evidence Of Training Plan";
-						hse_safety_culture_model.EvidenceOfTrainingPlanPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfTrainingPlan/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_safety_culture_model.EvidenceOfTrainingPlanPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
-					}
 					#endregion
 
 					if (action == GeneralModel.Insert)
@@ -8684,8 +8673,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						}
 						else
 						{
-							hse_safety_culture_model.Date_Created = getData.FirstOrDefault()?.Date_Created;
-							hse_safety_culture_model.Created_by = getData.FirstOrDefault()?.Created_by;
+							hse_safety_culture_model.Date_Created = getData.FirstOrDefault().Date_Created;
+							hse_safety_culture_model.Created_by = getData.FirstOrDefault().Created_by;
 							hse_safety_culture_model.Date_Updated = DateTime.Now;
 							hse_safety_culture_model.Updated_by = WKPCompanyId;
 							hse_safety_culture_model.CompanyNumber = WKPCompanyNumber;
@@ -8948,10 +8937,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					#region file section
 					var file1 = Request.Form.Files[0];
 					var file2 = Request.Form.Files[1];
-					var file3 = Request.Form.Files[2];
 					var blobname1 = blobService.Filenamer(file1);
 					var blobname2 = blobService.Filenamer(file2);
-					var blobname3 = blobService.Filenamer(file3);
 
 					if (file1 != null)
 					{
@@ -8970,15 +8957,6 @@ namespace Backend_UMR_Work_Program.Controllers
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
 							hse_occupational_model.OHMplanCommunicationFilename = blobname2;
-					}
-					if (file3 != null)
-					{
-						string docName = "Reason why OHM was not communicated to staff";
-						hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"FieldDiscoveryDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname3;
 					}
 					#endregion
 
@@ -9457,11 +9435,11 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				if (WKUserRole == GeneralModel.Admin)
 				{
-					details = await _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
+					//details = await _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.Year_of_WP == year).ToListAsync();
 				}
 				else
 				{
-					details = await _context.WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPCompanyName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
+					// details = await _context.WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs.Where(c => c.CompanyName.Trim().ToUpper() == WKPCompanyName.Trim().ToUpper() && c.Year_of_WP == year).ToListAsync();
 				}
 			}
 			catch (Exception ex)

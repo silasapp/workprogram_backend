@@ -246,6 +246,8 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<Reserve_Update_Oil_Condensate> Reserve_Update_Oil_Condensates { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Royalty> Royalties { get; set; } = null!;
+        public virtual DbSet<SBU_ApplicationComment> SBU_ApplicationComments { get; set; } = null!;
+        public virtual DbSet<SBU_Record> SBU_Records { get; set; } = null!;
         public virtual DbSet<STRATEGIC_PLANS_ON_COMPANY_BASI> STRATEGIC_PLANS_ON_COMPANY_BAses { get; set; } = null!;
         public virtual DbSet<SafetyManagement> SafetyManagements { get; set; } = null!;
         public virtual DbSet<StrategicBusinessUnit> StrategicBusinessUnits { get; set; } = null!;
@@ -255,6 +257,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION> Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; } = null!;
         public virtual DbSet<Sum_GEOPHYSICAL_ACTIVITIES_PROCESSING> Sum_GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; } = null!;
         public virtual DbSet<Table_1> Table_1s { get; set; } = null!;
+        public virtual DbSet<Table_Detail> Table_Details { get; set; } = null!;
         public virtual DbSet<TrainingForStaff> TrainingForStaffs { get; set; } = null!;
         public virtual DbSet<UserLogin> UserLogins { get; set; } = null!;
         public virtual DbSet<UserMaster> UserMasters { get; set; } = null!;
@@ -290,6 +293,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<VW_SEISMIC_DATA_QUANTUM> VW_SEISMIC_DATA_QUANTa { get; set; } = null!;
         public virtual DbSet<VW_SEISMIC_DATA_QUANTUM_SUM_BY_YEAR> VW_SEISMIC_DATA_QUANTUM_SUM_BY_YEARs { get; set; } = null!;
         public virtual DbSet<VW_company_and_contract_type> VW_company_and_contract_types { get; set; } = null!;
+        public virtual DbSet<View_2> View_2s { get; set; } = null!;
         public virtual DbSet<WORKOVERS_RECOMPLETION_JOB1> WORKOVERS_RECOMPLETION_JOBs1 { get; set; } = null!;
         public virtual DbSet<WORK_PROGRAM_FLOW> WORK_PROGRAM_FLOWs { get; set; } = null!;
         public virtual DbSet<WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLY> WP_COUNT_ADMIN_DATETIME_PRESENTATION_BY_TOTAL_COUNT_YEARLies { get; set; } = null!;
@@ -359,7 +363,6 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE> WP_OML_ACQUSITION_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD> WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD2021> WP_OML_ACQUSITION_INDEX_WEIGHTED_SCORE_OLD2021s { get; set; } = null!;
-        public virtual DbSet<WP_OML_Aggregated_Score_ALL_COMPANy> WP_OML_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OML_COMPLIANCE_INDEX_CALCULATION> WP_OML_COMPLIANCE_INDEX_CALCULATIONs { get; set; } = null!;
         public virtual DbSet<WP_OML_COMPLIANCE_INDEX_WEIGHTED_SCORE> WP_OML_COMPLIANCE_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OML_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE> WP_OML_CONCESSION_RENTALS_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
@@ -419,7 +422,6 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE> WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD> WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD2021> WP_OML_Top_Management_Staff_INDEX_WEIGHTED_SCORE_OLD2021s { get; set; } = null!;
-        public virtual DbSet<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy> WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR> WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEARs { get; set; } = null!;
         public virtual DbSet<WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLD> WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR_OLDs { get; set; } = null!;
         public virtual DbSet<WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCORE> WP_OPL_ACQUSITION_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
@@ -625,6 +627,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
             {
+                entity.HasNoKey();
 
                 entity.ToTable("ADMIN_COMPANY_CODE");
 
@@ -3247,13 +3250,17 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<Application>(entity =>
             {
-                entity.Property(e => e.ApprovalRef).HasMaxLength(50);
+                entity.Property(e => e.ApprovalRef)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.DeletedAt).HasColumnType("datetime");
 
-                entity.Property(e => e.PaymentStatus).HasMaxLength(25);
+                entity.Property(e => e.PaymentStatus)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ReferenceNo)
                     .HasMaxLength(50)
@@ -4276,6 +4283,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<DRILLING_EACH_WELL_COST>(entity =>
             {
+                entity.HasNoKey();
 
                 entity.ToTable("DRILLING_EACH_WELL_COST");
 
@@ -4340,6 +4348,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<DRILLING_EACH_WELL_COST_PROPOSED>(entity =>
             {
+                entity.HasNoKey();
 
                 entity.ToTable("DRILLING_EACH_WELL_COST_PROPOSED");
 
@@ -4765,9 +4774,19 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Accrued_DA_Annual_Payment)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.CAPEX)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Cumulative_DA_Annual_Payment)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateCreated).HasColumnType("date");
 
                 entity.Property(e => e.Decommissioning)
                     .HasMaxLength(500)
@@ -4798,6 +4817,8 @@ namespace Backend_UMR_Work_Program.Models
             modelBuilder.Entity<Development_And_Production>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.DateCreated).HasColumnType("date");
 
                 entity.Property(e => e.Do_You_Have_Any_SubsurfacePlan)
                     .HasMaxLength(10)
@@ -5225,6 +5246,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -6655,7 +6678,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                entity.HasNoKey();
 
                 entity.ToTable("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY");
 
@@ -7974,6 +7997,10 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.DateCreated).HasColumnType("date");
 
+                entity.Property(e => e.Is_Company_ISO45001_Certified)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Provide_ISO45001_Certification_No)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -8559,6 +8586,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SAFETY_CULTURE_TRAINING>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("HSE_SAFETY_CULTURE_TRAINING");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -9019,7 +9048,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                entity.HasNoKey();
 
                 entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU");
 
@@ -9262,7 +9291,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                entity.HasNoKey();
 
                 entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME");
 
@@ -9347,8 +9376,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                
+                entity.HasNoKey();
+
                 entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME");
 
                 entity.Property(e => e.Actual_Budget_Total_Dollars)
@@ -9598,7 +9627,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_WASTE_MANAGEMENT_SYSTEM>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                entity.HasNoKey();
 
                 entity.ToTable("HSE_WASTE_MANAGEMENT_SYSTEM");
 
@@ -9881,6 +9910,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<LEGAL_ARBITRATION>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("LEGAL_ARBITRATION");
 
                 entity.Property(e => e.AnyLitigation)
@@ -9968,6 +9999,8 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<LEGAL_LITIGATION>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("LEGAL_LITIGATION");
 
                 entity.Property(e => e.AnyLitigation)
@@ -12513,6 +12546,8 @@ namespace Backend_UMR_Work_Program.Models
             {
                 entity.ToTable("Planning_MinimumRequirement");
 
+                entity.Property(e => e.DateCreated).HasColumnType("date");
+
                 entity.Property(e => e.ReservesRevenue_GrossProduction)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -12585,6 +12620,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<RESERVES_UPDATES_DEPLETION_RATE>(entity =>
             {
+                entity.HasNoKey();
 
                 entity.ToTable("RESERVES_UPDATES_DEPLETION_RATE");
 
@@ -12649,6 +12685,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<RESERVES_UPDATES_LIFE_INDEX>(entity =>
             {
+                entity.HasNoKey();
 
                 entity.ToTable("RESERVES_UPDATES_LIFE_INDEX");
 
@@ -13699,6 +13736,36 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<SBU_ApplicationComment>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.ActionStatus)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateCreated).HasColumnType("datetime");
+
+                entity.Property(e => e.DateUpdated).HasColumnType("datetime");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.SBU_Comment).IsUnicode(false);
+
+                entity.Property(e => e.SBU_Tables)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<SBU_Record>(entity =>
+            {
+                entity.Property(e => e.DateCreated).HasColumnType("datetime");
+
+                entity.Property(e => e.DateUpdated).HasColumnType("datetime");
+
+                entity.Property(e => e.Records).IsUnicode(false);
+            });
+
             modelBuilder.Entity<STRATEGIC_PLANS_ON_COMPANY_BASI>(entity =>
             {
                 entity.ToTable("STRATEGIC_PLANS_ON_COMPANY_BASIS");
@@ -14017,6 +14084,23 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.name)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Table_Detail>(entity =>
+            {
+                entity.HasKey(e => e.TableId);
+
+                entity.Property(e => e.SBU_ID)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TableName)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TableSchema)
+                    .HasMaxLength(250)
                     .IsUnicode(false);
             });
 
@@ -15191,6 +15275,17 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<View_2>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("View_2");
+
+                entity.Property(e => e.name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<WORKOVERS_RECOMPLETION_JOB1>(entity =>
             {
                 entity.ToTable("WORKOVERS_RECOMPLETION_JOBS");
@@ -15547,9 +15642,13 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS");
 
+                entity.Property(e => e.Actual_No_Drilled_in_Current_Year).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Category)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Proposed_No_Drilled).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -15562,9 +15661,15 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_GAS_PRODUCTION_ACTIVITIES_Contract_Type");
 
+                entity.Property(e => e.Actual_Total_Gas_Produced).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Contract_Type)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Flared_Gas_Produced).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Utilized_Gas_Produced).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -15577,7 +15682,13 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_GAS_PRODUCTION_ACTIVITIES_Percentages");
 
+                entity.Property(e => e.Actual_Total_Gas_Produced).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Flared_Gas_Produced).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Percentage_Utilized).HasColumnType("decimal(38, 16)");
+
+                entity.Property(e => e.Utilized_Gas_Produced).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -15594,7 +15705,11 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Percentage_Production).HasColumnType("decimal(33, 13)");
+                entity.Property(e => e.Percentage_Production).HasColumnType("decimal(38, 18)");
+
+                entity.Property(e => e.Total_GAS_Production_by_company).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Total_GAS_Production_by_year).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -15628,47 +15743,89 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e._2010).HasColumnName("2010");
+                entity.Property(e => e._2010)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2010");
 
-                entity.Property(e => e._2011).HasColumnName("2011");
+                entity.Property(e => e._2011)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2011");
 
-                entity.Property(e => e._2012).HasColumnName("2012");
+                entity.Property(e => e._2012)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2012");
 
-                entity.Property(e => e._2013).HasColumnName("2013");
+                entity.Property(e => e._2013)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2013");
 
-                entity.Property(e => e._2014).HasColumnName("2014");
+                entity.Property(e => e._2014)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2014");
 
-                entity.Property(e => e._2015).HasColumnName("2015");
+                entity.Property(e => e._2015)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2015");
 
-                entity.Property(e => e._2016).HasColumnName("2016");
+                entity.Property(e => e._2016)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2016");
 
-                entity.Property(e => e._2017).HasColumnName("2017");
+                entity.Property(e => e._2017)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2017");
 
-                entity.Property(e => e._2018).HasColumnName("2018");
+                entity.Property(e => e._2018)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2018");
 
-                entity.Property(e => e._2019).HasColumnName("2019");
+                entity.Property(e => e._2019)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2019");
 
-                entity.Property(e => e._2020).HasColumnName("2020");
+                entity.Property(e => e._2020)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2020");
 
-                entity.Property(e => e._2021).HasColumnName("2021");
+                entity.Property(e => e._2021)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2021");
 
-                entity.Property(e => e._2022).HasColumnName("2022");
+                entity.Property(e => e._2022)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2022");
 
-                entity.Property(e => e._2023).HasColumnName("2023");
+                entity.Property(e => e._2023)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2023");
 
-                entity.Property(e => e._2024).HasColumnName("2024");
+                entity.Property(e => e._2024)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2024");
 
-                entity.Property(e => e._2025).HasColumnName("2025");
+                entity.Property(e => e._2025)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2025");
 
-                entity.Property(e => e._2026).HasColumnName("2026");
+                entity.Property(e => e._2026)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2026");
 
-                entity.Property(e => e._2027).HasColumnName("2027");
+                entity.Property(e => e._2027)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2027");
 
-                entity.Property(e => e._2028).HasColumnName("2028");
+                entity.Property(e => e._2028)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2028");
 
-                entity.Property(e => e._2029).HasColumnName("2029");
+                entity.Property(e => e._2029)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2029");
 
-                entity.Property(e => e._2030).HasColumnName("2030");
+                entity.Property(e => e._2030)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2030");
             });
 
             modelBuilder.Entity<WP_GAS_PRODUCTION_ACTIVITIES_contract_type_tobe_pivoted>(entity =>
@@ -15676,6 +15833,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.HasNoKey();
 
                 entity.ToView("WP_GAS_PRODUCTION_ACTIVITIES_contract_type_tobe_pivoted");
+
+                entity.Property(e => e.Annual_Total_Production_by_CONTRACT_TYPE).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Contract_Type)
                     .HasMaxLength(50)
@@ -15692,13 +15851,19 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_GAS_PRODUCTION_ACTIVITIES_penalty_payment");
 
+                entity.Property(e => e.Amount_Paid).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.CompanyName)
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Flared).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.penaltyfeepaid).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<WP_GAS_PRODUCTION_ACTIVITIES_produced_utilized_flared>(entity =>
@@ -15711,7 +15876,13 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Percentage_FLARED).HasColumnType("decimal(33, 13)");
+                entity.Property(e => e.Current_Actual_Year).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Flared).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Percentage_FLARED).HasColumnType("decimal(38, 18)");
+
+                entity.Property(e => e.Utilized).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -15779,47 +15950,89 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e._2010).HasColumnName("2010");
+                entity.Property(e => e._2010)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2010");
 
-                entity.Property(e => e._2011).HasColumnName("2011");
+                entity.Property(e => e._2011)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2011");
 
-                entity.Property(e => e._2012).HasColumnName("2012");
+                entity.Property(e => e._2012)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2012");
 
-                entity.Property(e => e._2013).HasColumnName("2013");
+                entity.Property(e => e._2013)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2013");
 
-                entity.Property(e => e._2014).HasColumnName("2014");
+                entity.Property(e => e._2014)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2014");
 
-                entity.Property(e => e._2015).HasColumnName("2015");
+                entity.Property(e => e._2015)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2015");
 
-                entity.Property(e => e._2016).HasColumnName("2016");
+                entity.Property(e => e._2016)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2016");
 
-                entity.Property(e => e._2017).HasColumnName("2017");
+                entity.Property(e => e._2017)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2017");
 
-                entity.Property(e => e._2018).HasColumnName("2018");
+                entity.Property(e => e._2018)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2018");
 
-                entity.Property(e => e._2019).HasColumnName("2019");
+                entity.Property(e => e._2019)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2019");
 
-                entity.Property(e => e._2020).HasColumnName("2020");
+                entity.Property(e => e._2020)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2020");
 
-                entity.Property(e => e._2021).HasColumnName("2021");
+                entity.Property(e => e._2021)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2021");
 
-                entity.Property(e => e._2022).HasColumnName("2022");
+                entity.Property(e => e._2022)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2022");
 
-                entity.Property(e => e._2023).HasColumnName("2023");
+                entity.Property(e => e._2023)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2023");
 
-                entity.Property(e => e._2024).HasColumnName("2024");
+                entity.Property(e => e._2024)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2024");
 
-                entity.Property(e => e._2025).HasColumnName("2025");
+                entity.Property(e => e._2025)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2025");
 
-                entity.Property(e => e._2026).HasColumnName("2026");
+                entity.Property(e => e._2026)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2026");
 
-                entity.Property(e => e._2027).HasColumnName("2027");
+                entity.Property(e => e._2027)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2027");
 
-                entity.Property(e => e._2028).HasColumnName("2028");
+                entity.Property(e => e._2028)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2028");
 
-                entity.Property(e => e._2029).HasColumnName("2029");
+                entity.Property(e => e._2029)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2029");
 
-                entity.Property(e => e._2030).HasColumnName("2030");
+                entity.Property(e => e._2030)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2030");
             });
 
             modelBuilder.Entity<WP_GAS_PRODUCTION_ACTIVITIES_terrain_tobe_pivotted>(entity =>
@@ -15827,6 +16040,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.HasNoKey();
 
                 entity.ToView("WP_GAS_PRODUCTION_ACTIVITIES_terrain_tobe_pivotted");
+
+                entity.Property(e => e.Annual_Total_Production_by_Terrain).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Terrain)
                     .HasMaxLength(50)
@@ -15843,6 +16058,12 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_GAS_PRODUCTION_ACTIVITIES");
 
+                entity.Property(e => e.Actual_Total_Gas_Produced).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Flared_Gas_Produced).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Utilized_Gas_Produced).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -15854,6 +16075,8 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION");
 
+                entity.Property(e => e.Actual_year_aquired_data).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Geo_type_of_data_acquired)
                     .HasMaxLength(300)
                     .IsUnicode(false);
@@ -15861,6 +16084,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.proposed_year_data).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_count_contract_type>(entity =>
@@ -15888,6 +16113,8 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_and_count");
 
+                entity.Property(e => e.Actual_year_aquired_data).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Contract_Type)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -15899,6 +16126,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.proposed_year_data).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_contract_type>(entity =>
@@ -15907,6 +16136,8 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_GEOPHYSICAL_ACTIVITIES_ACQUISITION_sum_contract_type");
 
+                entity.Property(e => e.Actual_year_aquired_data).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Contract_Type)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -15918,6 +16149,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.proposed_year_data).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<WP_GEOPHYSICAL_ACTIVITIES_PROCESSING>(entity =>
@@ -16082,6 +16315,10 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_INITIAL_WELL_COMPLETION_JOBS");
 
+                entity.Property(e => e.Current_year_Actual_Number).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Proposed_year_data).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -16097,6 +16334,8 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Total_Reconciled_National_Crude_Oil_Production).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -16107,6 +16346,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.HasNoKey();
 
                 entity.ToView("WP_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_Total_reconciled_crude_oil");
+
+                entity.Property(e => e.Total_Reconciled_National_Crude_Oil_Production).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -16748,33 +16989,6 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Weight).IsUnicode(false);
 
                 entity.Property(e => e.Weighted_Score).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Year_of_WP)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<WP_OML_Aggregated_Score_ALL_COMPANy>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("WP_OML_Aggregated_Score_ALL_COMPANIES");
-
-                entity.Property(e => e.CompanyName)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Consession_Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
-
-                entity.Property(e => e.OML_Aggregated_Score).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Recalibrated_Scaled_Index_SUM).HasColumnType("numeric(38, 2)");
-
-                entity.Property(e => e.Weighted_Score_SUM).HasColumnType("numeric(38, 2)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -18270,43 +18484,6 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIES");
-
-                entity.Property(e => e.CompanyName)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Consession_Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.INDEX_TYPE).IsUnicode(false);
-
-                entity.Property(e => e.MAX_RGT).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.MIN_RGT).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Recalibrated_Scaled_Index).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Scaled_by_Reciprocal_GrandTotal_RGT).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Unscaled_Score).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Unscaled_Score_sum).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Weight).IsUnicode(false);
-
-                entity.Property(e => e.Weighted_Score).HasColumnType("numeric(38, 6)");
-
-                entity.Property(e => e.Year_of_WP)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<WP_OPL_ACQUISITION_INDEX_MN_MAX_RGT_by_YEAR>(entity =>
             {
                 entity.HasNoKey();
@@ -18868,47 +19045,89 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e._2010).HasColumnName("2010");
+                entity.Property(e => e._2010)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2010");
 
-                entity.Property(e => e._2011).HasColumnName("2011");
+                entity.Property(e => e._2011)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2011");
 
-                entity.Property(e => e._2012).HasColumnName("2012");
+                entity.Property(e => e._2012)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2012");
 
-                entity.Property(e => e._2013).HasColumnName("2013");
+                entity.Property(e => e._2013)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2013");
 
-                entity.Property(e => e._2014).HasColumnName("2014");
+                entity.Property(e => e._2014)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2014");
 
-                entity.Property(e => e._2015).HasColumnName("2015");
+                entity.Property(e => e._2015)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2015");
 
-                entity.Property(e => e._2016).HasColumnName("2016");
+                entity.Property(e => e._2016)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2016");
 
-                entity.Property(e => e._2017).HasColumnName("2017");
+                entity.Property(e => e._2017)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2017");
 
-                entity.Property(e => e._2018).HasColumnName("2018");
+                entity.Property(e => e._2018)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2018");
 
-                entity.Property(e => e._2019).HasColumnName("2019");
+                entity.Property(e => e._2019)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2019");
 
-                entity.Property(e => e._2020).HasColumnName("2020");
+                entity.Property(e => e._2020)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2020");
 
-                entity.Property(e => e._2021).HasColumnName("2021");
+                entity.Property(e => e._2021)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2021");
 
-                entity.Property(e => e._2022).HasColumnName("2022");
+                entity.Property(e => e._2022)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2022");
 
-                entity.Property(e => e._2023).HasColumnName("2023");
+                entity.Property(e => e._2023)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2023");
 
-                entity.Property(e => e._2024).HasColumnName("2024");
+                entity.Property(e => e._2024)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2024");
 
-                entity.Property(e => e._2025).HasColumnName("2025");
+                entity.Property(e => e._2025)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2025");
 
-                entity.Property(e => e._2026).HasColumnName("2026");
+                entity.Property(e => e._2026)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2026");
 
-                entity.Property(e => e._2027).HasColumnName("2027");
+                entity.Property(e => e._2027)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2027");
 
-                entity.Property(e => e._2028).HasColumnName("2028");
+                entity.Property(e => e._2028)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2028");
 
-                entity.Property(e => e._2029).HasColumnName("2029");
+                entity.Property(e => e._2029)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2029");
 
-                entity.Property(e => e._2030).HasColumnName("2030");
+                entity.Property(e => e._2030)
+                    .HasColumnType("decimal(38, 0)")
+                    .HasColumnName("2030");
             });
 
             modelBuilder.Entity<WP_RESERVES_REPLACEMENT_RATIO_VALUE_TO_BE_PIVOTTED>(entity =>
@@ -18921,6 +19140,8 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.Property(e => e.RESERVES_REPLACEMENT_RATIO_VALUE).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -18931,6 +19152,12 @@ namespace Backend_UMR_Work_Program.Models
                 entity.HasNoKey();
 
                 entity.ToView("WP_RESERVES_UPDATES_OIL_CONDENSATE_MMBBL");
+
+                entity.Property(e => e.Reserves_as_at_MMbbl).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Reserves_as_at_MMbbl_condensate).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Reserves_as_at_MMbbl_gas).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -18993,6 +19220,10 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.ToView("WP_SUM_INITIAL_WELL_COMPLETION_JOBS_WORKOVERS_RECOMPLETION");
 
+                entity.Property(e => e.Actual_Year).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Proposed_Year).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP_I)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -19012,6 +19243,12 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Frequency).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Total_Quantity_Recovered).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Total_Quantity_Spilled).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -19027,6 +19264,8 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Frequency).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -19041,6 +19280,10 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.CompanyName)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Total_Quantity_Recovered).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Total_Quantity_Spilled).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
@@ -19074,6 +19317,10 @@ namespace Backend_UMR_Work_Program.Models
                 entity.HasNoKey();
 
                 entity.ToView("WP_WORKOVERS_RECOMPLETION_JOBS");
+
+                entity.Property(e => e.Current_year_Actual_Number_data).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.Proposed_year_data).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)

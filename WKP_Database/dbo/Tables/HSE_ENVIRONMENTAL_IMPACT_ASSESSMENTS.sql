@@ -18,15 +18,7 @@
     [Consession_Type]      VARCHAR (50)  NULL,
     [Contract_Type]        VARCHAR (50)  NULL,
     [CompanyNumber]        INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_HSE_ENVIRONMENTAL_IMPACT_ASSESSMENTS] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]             INT           NULL,
     CONSTRAINT [PK_HSE_ENVIRONMENTAL_IMPACT_ASSESSMENTS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

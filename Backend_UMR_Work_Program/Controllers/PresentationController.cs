@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Backend_UMR_Work_Program.DataModels;
+using Backend_UMR_Work_Program.Models;
 using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

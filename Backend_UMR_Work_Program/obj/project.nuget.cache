@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+bQgV79Bcb2yct8apnzuaERL3qL1QMVooteMlsYuTXQyBi50zgiIQMnUL7toz6HENy8XXC/2ugf0+7QlafGHAw==",
+  "dgSpecHash": "GPddUJhEBS2RSG+nWlRH0lcjm+QBOhLW4SZmFeZImb9lW3il7ugVgR8cuXU0ZyhCBSGfuDlGVvaf6bjW6Xu9iA==",
   "success": true,
   "projectFilePath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,7 @@
     "C:\\Users\\suppo\\.nuget\\packages\\documentformat.openxml\\2.16.0\\documentformat.openxml.2.16.0.nupkg.sha512",
     "C:\\Users\\suppo\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",
     "C:\\Users\\suppo\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\suppo\\.nuget\\packages\\linq2db\\4.4.0\\linq2db.4.4.0.nupkg.sha512",
     "C:\\Users\\suppo\\.nuget\\packages\\mailkit\\3.2.0\\mailkit.3.2.0.nupkg.sha512",
     "C:\\Users\\suppo\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.5\\microsoft.aspnetcore.authentication.jwtbearer.6.0.5.nupkg.sha512",
     "C:\\Users\\suppo\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",

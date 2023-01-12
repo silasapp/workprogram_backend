@@ -19,15 +19,7 @@
     [Consession_Type]   VARCHAR (50)   NULL,
     [COMPANY_ID]        VARCHAR (100)  NULL,
     [CompanyNumber]     INT            NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]          INT            NULL,
     CONSTRAINT [PK_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

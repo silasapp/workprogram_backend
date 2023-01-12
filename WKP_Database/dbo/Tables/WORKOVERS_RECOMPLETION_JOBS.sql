@@ -26,15 +26,8 @@
     [oil_or_gas_wells]                                   VARCHAR (20)  NULL,
     [COMPANY_ID]                                         VARCHAR (100) NULL,
     [CompanyNumber]                                      INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_WORKOVERS_RECOMPLETION_JOBS] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                                           INT           NULL,
+    [DaysForCompletion]                                  VARCHAR (20)  NULL,
     CONSTRAINT [PK_WORKOVERS_RECOMPLETION_JOBS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

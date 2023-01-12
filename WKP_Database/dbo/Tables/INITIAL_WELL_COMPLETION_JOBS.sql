@@ -28,15 +28,7 @@
     [Proposed_Completion_Date]                  DATE          NULL,
     [COMPANY_ID]                                VARCHAR (100) NULL,
     [CompanyNumber]                             INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_INITIAL_WELL_COMPLETION_JOBS] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                                  INT           NULL,
     CONSTRAINT [PK_INITIAL_WELL_COMPLETION_JOBS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main
