@@ -1172,7 +1172,7 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpGet("GET_FORM_FIVE_HSE")]
-        public async Task<object> GET_FORM_FIVE_HSE(string omlName, string fieldName, string year)
+        public async Task<object> GET_FORM_FIVE_HSE(string omlName, string fieldName, string year, string type_of_facility, string number_of_facilities)
         {
 
 
@@ -5995,7 +5995,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         [HttpPost("POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
         public async Task<WebApiResponse> POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW([FromBody] HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW hse_technical_safety_model,
-            string omlName, string fieldName, string year, string id, string actionToDo)
+            string omlName, string fieldName, string year, string id, string actionToDo, string type_of_facility, string number_of_facilities)
         {
             int save = 0;
             string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
@@ -6013,7 +6013,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else if (hse_technical_safety_model != null)
                 {
-                    var getData = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                    var getData = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.type_of_facility == type_of_facility && c.number_of_facilities == number_of_facilities select c).ToListAsync();
 
                     hse_technical_safety_model.Companyemail = WKPCompanyEmail;
                     hse_technical_safety_model.CompanyName = WKPCompanyName;
@@ -6024,7 +6024,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_technical_safety_model.Year_of_WP = year;
                     hse_technical_safety_model.OML_Name = omlName;
                     hse_technical_safety_model.Field_ID = concessionField.Field_ID;
-
+                    hse_technical_safety_model.type_of_facility = type_of_facility;
+                    hse_technical_safety_model.number_of_facilities = number_of_facilities;
                     if (action == GeneralModel.Insert)
                     {
                         if (getData.Count() <= 0)
@@ -6055,7 +6056,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = "Form has been " + action + "D successfully.";
-                    var All_Data = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                    var All_Data = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.type_of_facility == type_of_facility && c.number_of_facilities == number_of_facilities select c).ToListAsync();
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
                 }
                 else
