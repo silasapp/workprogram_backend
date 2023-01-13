@@ -30,20 +30,12 @@ steps:
 
 - task: MSBuild@1
   inputs:
-    solution: 'Database/Database.sqlproj'
+    solution: 'WKP_Database/WKP_Database.sqlproj'
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(agent.builddirectory)'
     Contents: '**'
     TargetFolder: '$(build.artifactstagingdirectory)'    
-- task: DotNetCoreCLI@2
-  displayName: 'Publishing App...'
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: '**/*.csproj'
-    arguments: '-o $(Build.ArtifactStagingDirectory)/Output'
-    zipAfterPublish: true
-    modifyOutputPath: true
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publishing Build Artifacts...'
