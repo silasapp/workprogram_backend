@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -2266,6 +2267,86 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
+
+
+		//added by Musa
+
+		[HttpPost("POST_HSE_OPERATIONS_SAFETY_CASE")]
+		public async Task<WebApiResponse> POST_HSE_OPERATIONS_SAFETY_CASE([FromBody] HSE_OPERATIONS_SAFETY_CASE operations_Sefety_Case_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+
+				#region Saving Operation Safety Case
+				if (operations_Sefety_Case_model != null)
+				{
+					var getOperationSafetyCaseData = (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+					operations_Sefety_Case_model.Companyemail = WKPCompanyEmail;
+					operations_Sefety_Case_model.CompanyName = WKPCompanyName;
+					operations_Sefety_Case_model.COMPANY_ID = WKPCompanyId;
+					operations_Sefety_Case_model.CompanyNumber = WKPCompanyNumber;
+					operations_Sefety_Case_model.Date_Updated = DateTime.Now;
+					operations_Sefety_Case_model.Updated_by = WKPCompanyId;
+					operations_Sefety_Case_model.Year_of_WP = year;
+					operations_Sefety_Case_model.OML_Name = omlName;
+					operations_Sefety_Case_model.Field_ID = concessionField.Field_ID;
+					//operations_Sefety_Case_model.Actual_year = year;
+					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getOperationSafetyCaseData == null)
+						{
+							operations_Sefety_Case_model.Date_Created = DateTime.Now;
+							operations_Sefety_Case_model.Created_by = WKPCompanyId;
+							await _context.HSE_OPERATIONS_SAFETY_CASEs.AddAsync(operations_Sefety_Case_model);
+						}
+						else
+						{
+							_context.HSE_OPERATIONS_SAFETY_CASEs.Remove(getOperationSafetyCaseData);
+
+							operations_Sefety_Case_model.Date_Created = operations_Sefety_Case_model.Date_Created;
+							operations_Sefety_Case_model.Created_by = operations_Sefety_Case_model.Created_by;
+							operations_Sefety_Case_model.Date_Updated = DateTime.Now;
+							operations_Sefety_Case_model.Updated_by = WKPCompanyId;
+							await _context.HSE_OPERATIONS_SAFETY_CASEs.AddAsync(operations_Sefety_Case_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_OPERATIONS_SAFETY_CASEs.Remove(operations_Sefety_Case_model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = "Form has been " + action + "D successfully.";
+						var All_Data = await (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+					}
+				}
+
+				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
 
 		[HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL"), DisableRequestSizeLimit]
 		public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string fieldName, string year, string actionToDo = null)
@@ -6037,24 +6118,24 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_technical_safety_model.OML_Name = omlName;
                     hse_technical_safety_model.Field_ID = concessionField.Field_ID;
 
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData.Count() <= 0)
-                        {
-                            hse_technical_safety_model.Date_Created = DateTime.Now;
-                            hse_technical_safety_model.Created_by = WKPCompanyId;
-                            await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
-                        }
-                        else
-                        {
-                            hse_technical_safety_model.Date_Created = getData.FirstOrDefault().Date_Created;
-                            hse_technical_safety_model.Created_by = getData.FirstOrDefault().Created_by;
-                            hse_technical_safety_model.Date_Updated = DateTime.Now;
-                            hse_technical_safety_model.Updated_by = WKPCompanyId;
-                            // getData.ForEach(x =>
-                            // {
-                            //     _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(x);
-                            //     save += _context.SaveChanges();
+					if (action == GeneralModel.Insert)
+					{
+						if (getData.Count() <= 0)
+						{
+							hse_technical_safety_model.Date_Created = DateTime.Now;
+							hse_technical_safety_model.Created_by = WKPCompanyId;
+							await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
+						}
+						else
+						{
+							hse_technical_safety_model.Date_Created = getData.FirstOrDefault()?.Date_Created;
+							hse_technical_safety_model.Created_by = getData.FirstOrDefault()?.Created_by;
+							hse_technical_safety_model.Date_Updated = DateTime.Now;
+							hse_technical_safety_model.Updated_by = WKPCompanyId;
+							// getData.ForEach(x =>
+							// {
+							//     _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(x);
+							//     save += _context.SaveChanges();
 
 							// });
 							await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
