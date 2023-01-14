@@ -5103,7 +5103,9 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
-		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string year, string id, string actionToDo)
+		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, 
+			string year, string id, string actionToDo, string reasonForNoEvidence, string areThereEvidenceOfDesignSafetyCaseApproval, 
+			string evidenceOfDesignSafetyCaseApprovalPath, string evidenceOfDesignSafetyCaseApprovalFilename)
 		{
 
 			int save = 0;
@@ -5123,7 +5125,10 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (facilities_project_model != null)
 				{
-					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && 
+										 c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
+										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath && 
+										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename select c).FirstOrDefaultAsync();
 
 					facilities_project_model.Companyemail = WKPCompanyEmail;
 					facilities_project_model.CompanyName = WKPCompanyName;
@@ -5132,6 +5137,10 @@ namespace Backend_UMR_Work_Program.Controllers
 					facilities_project_model.Date_Updated = DateTime.Now;
 					facilities_project_model.Updated_by = WKPCompanyId;
 					facilities_project_model.Year_of_WP = year;
+					facilities_project_model.evidenceOfDesignSafetyCaseApprovalFilename = evidenceOfDesignSafetyCaseApprovalFilename;
+					facilities_project_model.evidenceOfDesignSafetyCaseApprovalPath = evidenceOfDesignSafetyCaseApprovalPath;
+					facilities_project_model.reasonForNoEvidence = reasonForNoEvidence;
+					facilities_project_model.areThereEvidenceOfDesignSafetyCaseApproval = areThereEvidenceOfDesignSafetyCaseApproval;
 					facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
 					//facilities_project_model.OML_Name = omlName;
 					//facilities_project_model.Field_ID = concessionField.Field_ID;
@@ -5168,7 +5177,10 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = "Form has been " + action + "D successfully.";
-					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
+										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
+										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
+										  select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
