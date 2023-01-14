@@ -44,15 +44,7 @@
     [Actual_Proposed]                             VARCHAR (50)  NULL,
     [COMPANY_ID]                                  VARCHAR (100) NULL,
     [CompanyNumber]                               INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                                    INT           NULL,
     CONSTRAINT [PK_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

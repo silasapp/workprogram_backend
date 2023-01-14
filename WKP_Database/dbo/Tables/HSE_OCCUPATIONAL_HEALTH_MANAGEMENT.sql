@@ -18,15 +18,7 @@
     [OHMplanCommunicationFilename] VARCHAR (100)  NULL,
     [SMSFileUploadname]            VARCHAR (100)  NULL,
     [COMPANY_ID]                   VARCHAR (100)  NULL,
-<<<<<<< HEAD
-    [CompanyNumber]                INT            NULL
-);
-
-=======
     [CompanyNumber]                INT            NULL,
     [Field_ID]                     INT            NULL
 );
 
-
-
->>>>>>> origin/main

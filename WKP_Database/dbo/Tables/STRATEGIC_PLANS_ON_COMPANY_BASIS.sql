@@ -35,15 +35,7 @@
     [Consession_Type] VARCHAR (50)  NULL,
     [COMPANY_ID]      VARCHAR (100) NULL,
     [CompanyNumber]   INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_STRATEGIC_PLANS_ON_COMPANY_BASIS] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]        INT           NULL,
     CONSTRAINT [PK_STRATEGIC_PLANS_ON_COMPANY_BASIS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

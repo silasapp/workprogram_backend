@@ -73,15 +73,7 @@
     [number_of_gas_wells_tested]                                                                          VARCHAR (100) NULL,
     [COMPANY_ID]                                                                                          VARCHAR (100) NULL,
     [CompanyNumber]                                                                                       INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_GAS_PRODUCTION_ACTIVITIES] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                                                                                            INT           NULL,
     CONSTRAINT [PK_GAS_PRODUCTION_ACTIVITIES] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

@@ -17,16 +17,8 @@
     [OrganogramrFilename]     VARCHAR (100)  NULL,
     [PromotionLetterFilename] VARCHAR (100)  NULL,
     [COMPANY_ID]              VARCHAR (100)  NULL,
-<<<<<<< HEAD
-    [CompanyNumber]           INT            NULL
-);
-
-=======
     [CompanyNumber]           INT            NULL,
     [Field_ID]                INT            NULL,
     CONSTRAINT [PK_HSE_MANAGEMENT_POSITION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

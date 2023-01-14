@@ -25,15 +25,7 @@
     [Created_by]                    VARCHAR (50)   NULL,
     [COMPANY_ID]                    VARCHAR (100)  NULL,
     [CompanyNumber]                 INT            NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_HSE_CAUSES_OF_SPILL] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                      INT            NULL,
     CONSTRAINT [PK_HSE_CAUSES_OF_SPILL] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main
