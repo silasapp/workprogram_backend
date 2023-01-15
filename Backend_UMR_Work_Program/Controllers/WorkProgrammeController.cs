@@ -1260,8 +1260,10 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEWasteManagementSystems = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSEEnvironmentalManagementSystems = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
+						//Added by Musa
 						var HSEOPERATIONSSAFETYCASEs = (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
+						var HSEEnvironmentalMgtPlans = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						return new
 						{
@@ -1300,7 +1302,8 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSEOccupationalHealth = HSEOccupationalHealth,
 							HSEWasteManagementSystems = HSEWasteManagementSystems,
 							HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
-							HSEOperationSafetyCases = HSEOPERATIONSSAFETYCASEs
+							HSEOperationSafetyCases = HSEOPERATIONSSAFETYCASEs,
+							HSEEnvironmentalManagementPlans = HSEEnvironmentalMgtPlans
 						};
 					}
 					else
@@ -1366,6 +1369,10 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEWasteManagementSystems = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEEnvironmentalManagementSystems = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
+						var HSEOperationCases = (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
+						var HSEEnvironmentalMgtPlans = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						return new
 						{
 							HSETechnicalSafety = HSETechnicalSafety,
@@ -1403,6 +1410,9 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSEOccupationalHealth = HSEOccupationalHealth,
 							HSEWasteManagementSystems = HSEWasteManagementSystems,
 							HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
+							HSEOperationalCases = HSEOperationCases,
+							HSEEnvironmentalMgtPlans = HSEEnvironmentalMgtPlans
+
 						};
 					}
 				}
@@ -2331,6 +2341,81 @@ namespace Backend_UMR_Work_Program.Controllers
 					{
 						string successMsg = "Form has been " + action + "D successfully.";
 						var All_Data = await (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+					}
+				}
+
+				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN")]
+		public async Task<WebApiResponse> POST_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN([FromBody] HSE_ENVIRONMENTAL_MANAGEMENT_PLAN environment_Management_Plan_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+
+				#region Saving Operation Safety Case
+				if (environment_Management_Plan_model != null)
+				{
+					var getOperationSafetyCaseData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+					environment_Management_Plan_model.Companyemail = WKPCompanyEmail;
+					environment_Management_Plan_model.CompanyName = WKPCompanyName;
+					environment_Management_Plan_model.COMPANY_ID = WKPCompanyId;
+					environment_Management_Plan_model.CompanyNumber = WKPCompanyNumber;
+					environment_Management_Plan_model.Date_Updated = DateTime.Now;
+					environment_Management_Plan_model.Updated_by = WKPCompanyId;
+					environment_Management_Plan_model.Year_of_WP = year;
+					environment_Management_Plan_model.OML_Name = omlName;
+					environment_Management_Plan_model.Field_ID = concessionField.Field_ID;
+					//operations_Sefety_Case_model.Actual_year = year;
+					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getOperationSafetyCaseData == null)
+						{
+							environment_Management_Plan_model.Date_Created = DateTime.Now;
+							environment_Management_Plan_model.Created_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.AddAsync(environment_Management_Plan_model);
+						}
+						else
+						{
+							_context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
+
+							environment_Management_Plan_model.Date_Created = environment_Management_Plan_model.Date_Created;
+							environment_Management_Plan_model.Created_by = environment_Management_Plan_model.Created_by;
+							environment_Management_Plan_model.Date_Updated = DateTime.Now;
+							environment_Management_Plan_model.Updated_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.AddAsync(environment_Management_Plan_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(environment_Management_Plan_model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = "Form has been " + action + "D successfully.";
+						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else

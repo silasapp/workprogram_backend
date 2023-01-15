@@ -13,7 +13,7 @@ namespace Backend_UMR_Work_Program.Models
 			: base(options)
 		{
 		}
-
+		public virtual DbSet<HSE_ENVIRONMENTAL_MANAGEMENT_PLAN> HSE_ENVIRONMENTAL_MANAGEMENT_PLANs { get; set; } = null;
 		public virtual DbSet<ADMIN_ACCIDENT_INCIDENCE_REPORT_CAUSE> ADMIN_ACCIDENT_INCIDENCE_REPORT_CAUSEs { get; set; } = null!;
 		public virtual DbSet<ADMIN_ACCIDENT_INCIDENCE_REPORT_CONSEQUENCE> ADMIN_ACCIDENT_INCIDENCE_REPORT_CONSEQUENCEs { get; set; } = null!;
 		public virtual DbSet<ADMIN_BUDGET_CAPEX_OPEX> ADMIN_BUDGET_CAPEX_OPices { get; set; } = null!;
