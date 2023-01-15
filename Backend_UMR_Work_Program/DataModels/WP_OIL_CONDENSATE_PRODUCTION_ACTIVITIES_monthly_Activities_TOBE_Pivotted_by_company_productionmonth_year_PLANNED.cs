@@ -7,7 +7,7 @@ namespace Backend_UMR_Work_Program.Models
     {
         public string? CompanyName { get; set; }
         public string? Production_month { get; set; }
-        public int? Annual_Total_Production_by_company_name { get; set; }
+        public decimal? Annual_Total_Production_by_company_name { get; set; }
         public string? Year_of_WP { get; set; }
     }
 }

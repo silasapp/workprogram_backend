@@ -1186,27 +1186,24 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 
-			try
-			{
-				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-				if (concessionField == null)
-				{
-					return null;
-				}
-				if (concessionField != null)
-				{
-					if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
-					{
-						var HSEQuestion = (from c in _context.HSE_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-						var HSEFatality = (from c in _context.HSE_FATALITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-						var HSEDesignSafety = (from c in _context.HSE_DESIGNS_SAFETies where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-						var HSEInspectionMaintenance = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-						var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-						var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+            try
+            {
+                var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+                if (concessionField == null)
+                {
+                    return null;
+                }
+                if (concessionField != null)
+                {
+                    if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
+                    {
+                        var HSEQuestion = (from c in _context.HSE_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+                        var HSEFatality = (from c in _context.HSE_FATALITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+                        var HSEDesignSafety = (from c in _context.HSE_DESIGNS_SAFETies where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+                        var HSEInspectionMaintenance = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+                        var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+                        var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Type_Of_Facility == type_of_facility && c.Number_of_Facilities == number_of_facilities select c).ToList();
+                        var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSEAssetRegister = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEOilSpill = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -5191,7 +5188,9 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
-		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string year, string id, string actionToDo)
+		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, 
+			string year, string id, string actionToDo, string reasonForNoEvidence, string areThereEvidenceOfDesignSafetyCaseApproval, 
+			string evidenceOfDesignSafetyCaseApprovalPath, string evidenceOfDesignSafetyCaseApprovalFilename)
 		{
 
 			int save = 0;
@@ -5211,7 +5210,10 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (facilities_project_model != null)
 				{
-					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && 
+										 c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
+										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath && 
+										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename select c).FirstOrDefaultAsync();
 
 					facilities_project_model.Companyemail = WKPCompanyEmail;
 					facilities_project_model.CompanyName = WKPCompanyName;
@@ -5220,6 +5222,10 @@ namespace Backend_UMR_Work_Program.Controllers
 					facilities_project_model.Date_Updated = DateTime.Now;
 					facilities_project_model.Updated_by = WKPCompanyId;
 					facilities_project_model.Year_of_WP = year;
+					facilities_project_model.evidenceOfDesignSafetyCaseApprovalFilename = evidenceOfDesignSafetyCaseApprovalFilename;
+					facilities_project_model.evidenceOfDesignSafetyCaseApprovalPath = evidenceOfDesignSafetyCaseApprovalPath;
+					facilities_project_model.reasonForNoEvidence = reasonForNoEvidence;
+					facilities_project_model.areThereEvidenceOfDesignSafetyCaseApproval = areThereEvidenceOfDesignSafetyCaseApproval;
 					facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
 					//facilities_project_model.OML_Name = omlName;
 					//facilities_project_model.Field_ID = concessionField.Field_ID;
@@ -5256,7 +5262,10 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = "Form has been " + action + "D successfully.";
-					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
+										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
+										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
+										  select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
