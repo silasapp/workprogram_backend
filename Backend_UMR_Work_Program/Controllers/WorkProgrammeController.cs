@@ -2368,7 +2368,8 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 
@@ -2439,7 +2440,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 
-		[HttpPost("POST_HSE_EFFLUENT_MONITORING_COMPLIANCE")]
+		[HttpPost("POST_HSE_EFFLUENT_MONITORING_COMPLIANCE"), DisableRequestSizeLimit]
 		public async Task<WebApiResponse> POST_HSE_EFFLUENT_MONITORING_COMPLIANCE([FromForm] HSE_EFFLUENT_MONITORING_COMPLIANCE Effluenct_Monitoring_Complience_Mode, string omlName, string fieldName, string year, string actionToDo = null)
 		{
 
@@ -2479,10 +2480,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						if (Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingPath == null)
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
-						{
-
 							Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingFilename = blobname1;
-						}
+
 					}
 
 
@@ -2537,6 +2536,239 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
+		[HttpPost("POST_HSE_GHG_MANAGEMENT_PLAN"), DisableRequestSizeLimit]
+		public async Task<WebApiResponse> POST_HSE_GHG_MANAGEMENT_PLAN([FromForm] HSE_GHG_MANAGEMENT_PLAN ghg_Mgt_Plan_Model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+
+				#region Saving Operation Safety Case
+				if (ghg_Mgt_Plan_Model != null)
+				{
+					var getOperationSafetyCaseData = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+					ghg_Mgt_Plan_Model.Companyemail = WKPCompanyEmail;
+					ghg_Mgt_Plan_Model.CompanyName = WKPCompanyName;
+					ghg_Mgt_Plan_Model.COMPANY_ID = WKPCompanyId;
+					ghg_Mgt_Plan_Model.CompanyNumber = WKPCompanyNumber;
+					ghg_Mgt_Plan_Model.Date_Updated = DateTime.Now;
+					ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
+					ghg_Mgt_Plan_Model.Year_of_WP = year;
+					ghg_Mgt_Plan_Model.OML_Name = omlName;
+					ghg_Mgt_Plan_Model.Field_ID = concessionField.Field_ID;
+					//operations_Sefety_Case_model.Actual_year = year;
+					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+
+
+					#region File processing
+					var file1 = Request.Form.Files[0];
+					var blobname1 = blobService.Filenamer(file1);
+					var file2 = Request.Form.Files[1];
+					var blobname2 = blobService.Filenamer(file2);
+
+					if (file1 != null)
+					{
+						string docName = "GHG Approval";
+						ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+						if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
+
+					}
+					if (file2 != null)
+					{
+						string docName = "LDR Certificate";
+						ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+						if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
+
+					}
+
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getOperationSafetyCaseData == null)
+						{
+							ghg_Mgt_Plan_Model.Date_Created = DateTime.Now;
+							ghg_Mgt_Plan_Model.Created_by = WKPCompanyId;
+							await _context.HSE_GHG_MANAGEMENT_PLANs.AddAsync(ghg_Mgt_Plan_Model);
+						}
+						else
+						{
+							_context.HSE_GHG_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
+
+							ghg_Mgt_Plan_Model.Date_Created = ghg_Mgt_Plan_Model.Date_Created;
+							ghg_Mgt_Plan_Model.Created_by = ghg_Mgt_Plan_Model.Created_by;
+							ghg_Mgt_Plan_Model.Date_Updated = DateTime.Now;
+							ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
+							await _context.HSE_GHG_MANAGEMENT_PLANs.AddAsync(ghg_Mgt_Plan_Model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_GHG_MANAGEMENT_PLANs.Remove(ghg_Mgt_Plan_Model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = "Form has been " + action + "D successfully.";
+						var All_Data = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+					}
+				}
+
+				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_HSE_HOST_COMMUNITIES_DEVELOPMENT"), DisableRequestSizeLimit]
+		public async Task<WebApiResponse> POST_HSE_HOST_COMMUNITIES_DEVELOPMENT([FromForm] HSE_HOST_COMMUNITIES_DEVELOPMENT host_Community_Devt_Model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+
+				#region Saving Operation Safety Case
+				if (host_Community_Devt_Model != null)
+				{
+					var getOperationSafetyCaseData = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+					host_Community_Devt_Model.Companyemail = WKPCompanyEmail;
+					host_Community_Devt_Model.CompanyName = WKPCompanyName;
+					host_Community_Devt_Model.COMPANY_ID = WKPCompanyId;
+					host_Community_Devt_Model.CompanyNumber = WKPCompanyNumber;
+					host_Community_Devt_Model.Date_Updated = DateTime.Now;
+					host_Community_Devt_Model.Updated_by = WKPCompanyId;
+					host_Community_Devt_Model.Year_of_WP = year;
+					host_Community_Devt_Model.OML_Name = omlName;
+					host_Community_Devt_Model.Field_ID = concessionField.Field_ID;
+					//operations_Sefety_Case_model.Actual_year = year;
+					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+
+
+					#region File processing
+					var file1 = Request.Form.Files[0];
+					var blobname1 = blobService.Filenamer(file1);
+
+					var file2 = Request.Form.Files[0];
+					var blobname2 = blobService.Filenamer(file2);
+
+					var file3 = Request.Form.Files[0];
+					var blobname3 = blobService.Filenamer(file3);
+
+					if (file1 != null)
+					{
+						string docName = "Evidence Of Pay Trust Fund";
+						host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+						if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname1;
+
+					}
+
+					if (file2 != null)
+					{
+						string docName = "Evidence Of Reg Trust Fund";
+						host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+						if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname2;
+
+					}
+
+					if (file3 != null)
+					{
+						string docName = "Upload Comm Dev Plan Approval";
+						host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file2.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+						if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname3;
+
+					}
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getOperationSafetyCaseData == null)
+						{
+							host_Community_Devt_Model.Date_Created = DateTime.Now;
+							host_Community_Devt_Model.Created_by = WKPCompanyId;
+							await _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.AddAsync(host_Community_Devt_Model);
+						}
+						else
+						{
+							_context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(getOperationSafetyCaseData);
+
+							host_Community_Devt_Model.Date_Created = host_Community_Devt_Model.Date_Created;
+							host_Community_Devt_Model.Created_by = host_Community_Devt_Model.Created_by;
+							host_Community_Devt_Model.Date_Updated = DateTime.Now;
+							host_Community_Devt_Model.Updated_by = WKPCompanyId;
+							await _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.AddAsync(host_Community_Devt_Model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(host_Community_Devt_Model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = "Form has been " + action + "D successfully.";
+						var All_Data = await (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+					}
+				}
+
+				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
 
 		[HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL"), DisableRequestSizeLimit]
 		public async Task<WebApiResponse> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string fieldName, string year, string actionToDo = null)
