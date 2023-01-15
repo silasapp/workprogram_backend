@@ -2723,7 +2723,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (file3 != null)
 					{
 						string docName = "Upload Comm Dev Plan Approval";
-						host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file2.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 						if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
