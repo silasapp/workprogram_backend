@@ -1264,6 +1264,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						var HSEEnfluenceConliences = await (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
+
+						var HSEGHGPlans = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+						var HSEHostCommunities = await (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
 						return new
 						{
 							HSETechnicalSafety = HSETechnicalSafety,
@@ -1303,7 +1308,9 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
 							HSEOperationSafetyCases = HSEOPERATIONSSAFETYCASEs,
 							HSEEnvironmentalManagementPlans = HSEEnvironmentalMgtPlans,
-							HSEEnfluenceConliences = HSEEnfluenceConliences
+							HSEEnfluenceConliences = HSEEnfluenceConliences,
+							HSEGHGPlans = HSEGHGPlans,
+							HSEHostCommunities = HSEHostCommunities
 						};
 					}
 					else
@@ -1375,6 +1382,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						var HSEEFluenceCompliences = (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
+						var HSEHostComms = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
+						var HSEGHGs = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						return new
 						{
 							HSETechnicalSafety = HSETechnicalSafety,
@@ -1414,7 +1425,9 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
 							HSEOperationalCases = HSEOperationCases,
 							HSEEnvironmentalMgtPlans = HSEEnvironmentalMgtPlans,
-							HSEEFluenceCompliences = HSEEFluenceCompliences
+							HSEEFluenceCompliences = HSEEFluenceCompliences,
+							HSEHostComms = HSEHostComms,
+							HSEGHGs = HSEGHGs
 
 						};
 					}
