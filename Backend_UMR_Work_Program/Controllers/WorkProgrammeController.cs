@@ -8423,7 +8423,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						}
 						else
 						{
-							hse_point_source_registration.OML_ID = getData.omlID;
+							hse_point_source_registration.OML_ID = getData.OML_ID;
 							hse_point_source_registration.OML_Name = getData.OML_Name;
 							_context.HSE_POINT_SOURCE_REGISTRATION.Remove(getData);
 							await _context.HSE_POINT_SOURCE_REGISTRATION.AddAsync(hse_point_source_registration);
