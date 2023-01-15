@@ -51,6 +51,8 @@ namespace Backend_UMR_Work_Program.Models
 		public virtual DbSet<ADMIN_GASPRODUCTION_UTILIZED_MMSCF> ADMIN_GASPRODUCTION_UTILIZED_MMSCFs { get; set; } = null!;
 		public virtual DbSet<ADMIN_HSE_CONDITION_OF_EQUIPMENT> ADMIN_HSE_CONDITION_OF_EQUIPMENTs { get; set; } = null!;
 		public virtual DbSet<ADMIN_HSE_OSP_REGISTRATIONS_NEW> ADMIN_HSE_OSP_REGISTRATIONS_NEWs { get; set; } = null!;
+		public virtual DbSet<HSE_POINT_SOURCE_REGISTRATION> HSE_POINT_SOURCE_REGISTRATION { get; set; } = null!;
+		public virtual DbSet<ADMIN_HSE_REMEDIATION_FUND> ADMIN_HSE_REMEDIATION_FUND { get; set; } = null!;
 		public virtual DbSet<ADMIN_HSE_OSP_REGISTRATIONS_NEW1> ADMIN_HSE_OSP_REGISTRATIONS_NEWs1 { get; set; } = null!;
 		public virtual DbSet<ADMIN_INSPECTION_MAINTENANCE> ADMIN_INSPECTION_MAINTENANCEs { get; set; } = null!;
 		public virtual DbSet<ADMIN_LIST_OF_OMLS_OPL> ADMIN_LIST_OF_OMLS_OPLs { get; set; } = null!;
@@ -898,6 +900,48 @@ namespace Backend_UMR_Work_Program.Models
 
 				entity.Property(e => e.UPDATED_DATE)
 					.HasMaxLength(100)
+					.IsUnicode(false);
+			});
+			modelBuilder.Entity<ADMIN_HSE_REMEDIATION_FUND>(entity =>
+			{
+				entity.ToTable("ADMIN_HSE_REMEDIATION_FUND");
+				entity.HasKey(e => e.Id);
+				entity.Property(e => e.Company_Number)
+					.HasMaxLength(100)
+					.IsUnicode(false);
+				
+
+				entity.Property(e => e.Evidence_Of_Payment_Filename)
+					.HasMaxLength(200)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Evidence_Of_Payment_Path)
+					.HasMaxLength(200)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Reason_For_No_Remediation)
+					.HasMaxLength(200)
+					.IsUnicode(false);
+			});
+			modelBuilder.Entity<HSE_POINT_SOURCE_REGISTRATION>(entity =>
+			{
+				entity.ToTable("HSE_POINT_SOURCE_REGISTRATION");
+				entity.HasKey(e => e.Id);
+				entity.Property(e => e.Company_Number)
+					.HasMaxLength(100)
+					.IsUnicode(false);
+
+
+				entity.Property(e => e.Evidence_Of_Payment_Filename)
+					.HasMaxLength(200)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Evidence_Of_Payment_Path)
+					.HasMaxLength(200)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Reason_For_No_Remediation)
+					.HasMaxLength(200)
 					.IsUnicode(false);
 			});
 
