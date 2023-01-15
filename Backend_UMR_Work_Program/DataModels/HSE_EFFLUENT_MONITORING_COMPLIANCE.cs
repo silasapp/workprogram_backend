@@ -1,6 +1,6 @@
 ﻿namespace Backend_UMR_Work_Program.DataModels
 {
-	public class HSE_ENVIRONMENTAL_MANAGEMENT_PLAN
+	public class HSE_EFFLUENT_MONITORING_COMPLIANCE
 	{
 		public int Id { get; set; }
 		public int? Field_ID { get; set; }
@@ -11,15 +11,13 @@
 		public string? Year_of_WP { get; set; }
 		public string? COMPANY_ID { get; set; }
 		public int? CompanyNumber { get; set; }
-		public string? AreThereEMP { get; set; }
-		public string? FacilityType { get; set; }
-		public string? FacilityLocation { get; set; }
-		public string? RemarkIfNoEMP { get; set; }
+		public string? AreThereEvidentOfSampling { get; set; }
+		public string? EvidenceOfSamplingFilename { get; set; }
+		public string? EvidenceOfSamplingPath { get; set; }
+		public string? ReasonForNoEvidenceSampling { get; set; }
 		public DateTime? Date_Updated { get; set; }
 		public string? Updated_by { get; set; }
 		public DateTime? Date_Created { get; set; }
 		public string? Created_by { get; set; }
-
-
 	}
 }
