@@ -82,4 +82,5 @@ public partial class GEOPHYSICAL_ACTIVITIES_ACQUISITION
     public int? CompanyNumber { get; set; }
 
     public int? Field_ID { get; set; }
+	public int? No_of_Folds { get; set; }
 }

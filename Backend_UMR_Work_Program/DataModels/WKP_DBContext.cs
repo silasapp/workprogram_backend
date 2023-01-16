@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Backend_UMR_Work_Program.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend_UMR_Work_Program.DataModels;
@@ -86,6 +87,7 @@ public partial class WKP_DBContext : DbContext
     public virtual DbSet<ADMIN_HSE_OSP_REGISTRATIONS_NEW> ADMIN_HSE_OSP_REGISTRATIONS_NEWs { get; set; }
 
     public virtual DbSet<ADMIN_HSE_OSP_REGISTRATIONS_NEW1> ADMIN_HSE_OSP_REGISTRATIONS_NEWs1 { get; set; }
+    public virtual DbSet<ADMIN_HSE_REMEDIATION_FUND> ADMIN_HSE_REMEDIATION_FUNDs { get; set; }
 
     public virtual DbSet<ADMIN_INSPECTION_MAINTENANCE> ADMIN_INSPECTION_MAINTENANCEs { get; set; }
 
@@ -334,6 +336,7 @@ public partial class WKP_DBContext : DbContext
     public virtual DbSet<HSE_OIL_SPILL_REPORTING_NEW> HSE_OIL_SPILL_REPORTING_NEWs { get; set; }
 
     public virtual DbSet<HSE_OSP_REGISTRATIONS_NEW> HSE_OSP_REGISTRATIONS_NEWs { get; set; }
+    public virtual DbSet<HSE_POINT_SOURCE_REGISTRATION> HSE_POINT_SOURCE_REGISTRATIONs { get; set; }
 
     public virtual DbSet<HSE_PRODUCED_WATER_MANAGEMENT_NEW> HSE_PRODUCED_WATER_MANAGEMENT_NEWs { get; set; }
 
@@ -346,6 +349,7 @@ public partial class WKP_DBContext : DbContext
     public virtual DbSet<HSE_SAFETY_CULTURE_TRAINING> HSE_SAFETY_CULTURE_TRAININGs { get; set; }
 
     public virtual DbSet<HSE_SAFETY_STUDIES_NEW> HSE_SAFETY_STUDIES_NEWs { get; set; }
+    public virtual DbSet<HSE_OPERATIONS_SAFETY_CASE> HSE_OPERATIONS_SAFETY_CASEs { get; set; }
 
     public virtual DbSet<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSRs { get; set; }
 
