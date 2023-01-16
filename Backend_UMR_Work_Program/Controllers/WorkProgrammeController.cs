@@ -5207,15 +5207,15 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (!string.IsNullOrEmpty(id))
 				{
-					var getData = (from c in _context.BUDGET_CAPEX_OPices where c.Id == int.Parse(id) select c).FirstOrDefault();
+					var getData = (from c in _context.BUDGET_CAPEX_OPEXes where c.Id == int.Parse(id) select c).FirstOrDefault();
 
 					if (action == GeneralModel.Delete)
-						_context.BUDGET_CAPEX_OPices.Remove(getData);
+						_context.BUDGET_CAPEX_OPEXes.Remove(getData);
 					save += _context.SaveChanges();
 				}
 				else if (budget_capex_opex_model != null)
 				{
-					var getData = await (from c in _context.BUDGET_CAPEX_OPices where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var getData = await (from c in _context.BUDGET_CAPEX_OPEXes where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 					budget_capex_opex_model.Companyemail = WKPCompanyEmail;
 					budget_capex_opex_model.CompanyName = WKPCompanyName;
@@ -5233,7 +5233,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						{
 							budget_capex_opex_model.Date_Created = DateTime.Now;
 							budget_capex_opex_model.Created_by = WKPCompanyId;
-							await _context.BUDGET_CAPEX_OPices.AddAsync(budget_capex_opex_model);
+							await _context.BUDGET_CAPEX_OPEXes.AddAsync(budget_capex_opex_model);
 						}
 						else
 						{
@@ -5241,13 +5241,13 @@ namespace Backend_UMR_Work_Program.Controllers
 							//budget_capex_opex_model.Created_by = getData.Created_by;
 							budget_capex_opex_model.Date_Updated = DateTime.Now;
 							budget_capex_opex_model.Updated_by = WKPCompanyId;
-							_context.BUDGET_CAPEX_OPices.RemoveRange(getData);
-							await _context.BUDGET_CAPEX_OPices.AddAsync(budget_capex_opex_model);
+							_context.BUDGET_CAPEX_OPEXes.RemoveRange(getData);
+							await _context.BUDGET_CAPEX_OPEXes.AddAsync(budget_capex_opex_model);
 						}
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.BUDGET_CAPEX_OPices.RemoveRange(getData);
+						_context.BUDGET_CAPEX_OPEXes.RemoveRange(getData);
 					}
 
 					save += await _context.SaveChangesAsync();
@@ -5259,7 +5259,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = "Form has been " + action + "D successfully.";
-					var All_Data = await (from c in _context.BUDGET_CAPEX_OPices where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = await (from c in _context.BUDGET_CAPEX_OPEXes where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else

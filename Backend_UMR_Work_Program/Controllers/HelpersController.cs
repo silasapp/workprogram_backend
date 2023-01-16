@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Backend_UMR_Work_Program.Helpers;
+using Backend_UMR_Work_Program.DataModels;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -2224,7 +2225,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 #region Saving Budget Capex Opex
 
-                var getBudgetCapexOpexData = (from c in _context.BUDGET_CAPEX_OPices where c.COMPANY_ID == WKPUserId && c.Year_of_WP == WorkProgramme_Year select c).FirstOrDefault();
+                var getBudgetCapexOpexData = (from c in _context.BUDGET_CAPEX_OPEXes where c.COMPANY_ID == WKPUserId && c.Year_of_WP == WorkProgramme_Year select c).FirstOrDefault();
 
                 BudgetCapexOpexData = getBudgetCapexOpexData != null ? getBudgetCapexOpexData : BudgetCapexOpexData;
                 BudgetCapexOpexData = _mapper.Map<BUDGET_CAPEX_OPEX>(wkp);
@@ -2239,11 +2240,11 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     BudgetCapexOpexData.Created_by = WKPUserId;
                     BudgetCapexOpexData.Date_Created = DateTime.Now;
-                    _context.BUDGET_CAPEX_OPices.AddAsync(BudgetCapexOpexData);
+                    _context.BUDGET_CAPEX_OPEXes.AddAsync(BudgetCapexOpexData);
                 }
                 else if (action == GeneralModel.Delete)
                 {
-                    _context.BUDGET_CAPEX_OPices.Remove(BudgetCapexOpexData);
+                    _context.BUDGET_CAPEX_OPEXes.Remove(BudgetCapexOpexData);
                 }
                 save += _context.SaveChanges();
                 #endregion

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -2461,12 +2462,12 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 if (WKUserRole == GeneralModel.Admin)
                 {
-                    BudgetCapex =await _context.BUDGET_CAPEX_OPices.Where(c => c.Year_of_WP == year).ToListAsync();
+                    BudgetCapex =await _context.BUDGET_CAPEX_OPEXes.Where(c => c.Year_of_WP == year).ToListAsync();
                 }
 
                 else
                 {
-                    BudgetCapex =await _context.BUDGET_CAPEX_OPices.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
+                    BudgetCapex =await _context.BUDGET_CAPEX_OPEXes.Where(c => c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year).ToListAsync();
                 }
 
 
