@@ -553,7 +553,9 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.Year == myyear && d.DELETED_STATUS == null select d).ToListAsync();
+
 				var concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
+
 				return new { concessionSituation = concessionSituation, concessionInfo = concessionInfo };
 			}
 			catch (Exception e)
@@ -2178,6 +2180,27 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (action == GeneralModel.Insert)
 					{
+						var noOfFolds = geophysical_activities_acquisition_model.No_of_Folds;
+						var lengthOfData = geophysical_activities_acquisition_model.Geo_Record_Length_of_Data;
+
+						int lengthOfDataint = Convert.ToInt32(lengthOfData);
+
+						if (noOfFolds<1 || noOfFolds >100)
+						{
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : Number of can only between 1 and 100.", StatusCode = ResponseCodes.Failure };
+						}
+
+						if (lengthOfDataint<1 || lengthOfDataint >59)
+						{
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : Number of can only between 1 and 59.", StatusCode = ResponseCodes.Failure };
+						}
+
+						if (noOfFolds<1 || noOfFolds >100)
+						{
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : Number of can only between 1 and 100.", StatusCode = ResponseCodes.Failure };
+						}
+
+
 						if (getgeophysical_activities_acquisition_model == null)
 						{
 							geophysical_activities_acquisition_model.Date_Created = DateTime.Now;
