@@ -511,5 +511,9 @@
     <Build Include="dbo\Tables\HSE_GHG_MANAGEMENT_PLAN.sql" />
     <Build Include="dbo\Tables\HSE_ENVIRONMENTAL_MANAGEMENT_PLAN.sql" />
     <Build Include="dbo\Tables\HSE_EFFLUENT_MONITORING_COMPLIANCE.sql" />
+    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
+    <Build Include="dbo\Tables\HSE_REMEDIATION_FUND.sql" />
+    <Build Include="dbo\Tables\HSE_POINT_SOURCE_REGISTRATION.sql" />
+    <Build Include="dbo\Tables\HSE_OPERATIONS_SAFETY_CASE.sql" />
   </ItemGroup>
 </Project>
