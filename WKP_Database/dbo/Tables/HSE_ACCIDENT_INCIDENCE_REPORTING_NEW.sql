@@ -19,6 +19,10 @@
     [COMPANY_ID]                       VARCHAR (100)  NULL,
     [CompanyNumber]                    INT            NULL,
     [Field_ID]                         INT            NULL,
+    [UploadIncidentStatisticsFilename] VARCHAR (1000) NULL,
+    [UploadIncidentStatisticsPath]     VARCHAR (3000) NULL,
     CONSTRAINT [PK_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
