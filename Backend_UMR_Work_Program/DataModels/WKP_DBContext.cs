@@ -933,15 +933,15 @@ namespace Backend_UMR_Work_Program.Models
 					.IsUnicode(false);
 
 
-				entity.Property(e => e.Evidence_Of_Payment_Filename)
+				entity.Property(e => e.areTherePointSourcePermit)
 					.HasMaxLength(200)
 					.IsUnicode(false);
 
-				entity.Property(e => e.Evidence_Of_Payment_Path)
+				entity.Property(e => e.evidenceOfPSPFilename)
 					.HasMaxLength(200)
 					.IsUnicode(false);
 
-				entity.Property(e => e.Reason_For_No_Remediation)
+				entity.Property(e => e.evidenceOfPSPPath)
 					.HasMaxLength(200)
 					.IsUnicode(false);
 			});
