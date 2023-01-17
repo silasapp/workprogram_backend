@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW
     {

@@ -507,5 +507,9 @@
     <Build Include="dbo\Views\Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION.sql" />
     <Build Include="dbo\Views\Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLS.sql" />
     <Build Include="dbo\Views\ADMIN_COMPANYEMAIL_REMINDER_TABLE.sql" />
+    <Build Include="dbo\Tables\HSE_HOST_COMMUNITIES_DEVELOPMENT.sql" />
+    <Build Include="dbo\Tables\HSE_GHG_MANAGEMENT_PLAN.sql" />
+    <Build Include="dbo\Tables\HSE_ENVIRONMENTAL_MANAGEMENT_PLAN.sql" />
+    <Build Include="dbo\Tables\HSE_EFFLUENT_MONITORING_COMPLIANCE.sql" />
   </ItemGroup>
 </Project>

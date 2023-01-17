@@ -1204,7 +1204,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEDesignSafety = (from c in _context.HSE_DESIGNS_SAFETies where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEInspectionMaintenance = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Type_Of_Facility == type_of_facility && c.Number_of_Facilities == number_of_facilities select c).ToList();
+						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.type_of_facility == type_of_facility && c.number_of_facilities == number_of_facilities select c).ToList();
 						var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSEAssetRegister = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -1267,7 +1267,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEEnfluenceConliences = await (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 
-						var HSEGHGPlans = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var HSEGHGPlans = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.Field_ID == concessionField.Field_ID && c.CompanY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 						var HSEHostCommunities = await (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
@@ -1386,7 +1386,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						var HSEHostComms = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
-						var HSEGHGs = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+						var HSEGHGs = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.OmL_Name == omlName && c.CompanY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						return new
 						{
@@ -2493,7 +2493,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					Effluenct_Monitoring_Complience_Mode.Companyemail = WKPCompanyEmail;
 					Effluenct_Monitoring_Complience_Mode.CompanyName = WKPCompanyName;
 					Effluenct_Monitoring_Complience_Mode.COMPANY_ID = WKPCompanyId;
-					Effluenct_Monitoring_Complience_Mode.CompanyNumber = WKPCompanyNumber;
+					Effluenct_Monitoring_Complience_Mode.CompanyNumber = WKPCompanyNumber.ToString();
 					Effluenct_Monitoring_Complience_Mode.Date_Updated = DateTime.Now;
 					Effluenct_Monitoring_Complience_Mode.Updated_by = WKPCompanyId;
 					Effluenct_Monitoring_Complience_Mode.Year_of_WP = year;
@@ -2584,16 +2584,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Operation Safety Case
 				if (ghg_Mgt_Plan_Model != null)
 				{
-					var getOperationSafetyCaseData = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					var getOperationSafetyCaseData = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.OmL_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
 
-					ghg_Mgt_Plan_Model.Companyemail = WKPCompanyEmail;
+					ghg_Mgt_Plan_Model.companyemail = WKPCompanyEmail;
 					ghg_Mgt_Plan_Model.CompanyName = WKPCompanyName;
-					ghg_Mgt_Plan_Model.COMPANY_ID = WKPCompanyId;
+					ghg_Mgt_Plan_Model.CompanY_ID = WKPCompanyId;
 					ghg_Mgt_Plan_Model.CompanyNumber = WKPCompanyNumber;
 					ghg_Mgt_Plan_Model.Date_Updated = DateTime.Now;
 					ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
 					ghg_Mgt_Plan_Model.Year_of_WP = year;
-					ghg_Mgt_Plan_Model.OML_Name = omlName;
+					ghg_Mgt_Plan_Model.OmL_Name = omlName;
 					ghg_Mgt_Plan_Model.Field_ID = concessionField.Field_ID;
 					//operations_Sefety_Case_model.Actual_year = year;
 					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
@@ -2661,7 +2661,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action + "D successfully.";
-						var All_Data = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -2698,7 +2698,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					host_Community_Devt_Model.Companyemail = WKPCompanyEmail;
 					host_Community_Devt_Model.CompanyName = WKPCompanyName;
 					host_Community_Devt_Model.COMPANY_ID = WKPCompanyId;
-					host_Community_Devt_Model.CompanyNumber = WKPCompanyNumber;
+					host_Community_Devt_Model.CompanyNumber = WKPCompanyNumber.ToString();
 					host_Community_Devt_Model.Date_Updated = DateTime.Now;
 					host_Community_Devt_Model.Updated_by = WKPCompanyId;
 					host_Community_Devt_Model.Year_of_WP = year;
@@ -8654,52 +8654,52 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (!string.IsNullOrEmpty(omlID))
 				{
-					var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATION where c.Id == int.Parse(omlID) select c).FirstOrDefault();
+					var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
 
 					if (action == GeneralModel.Delete)
-						_context.HSE_POINT_SOURCE_REGISTRATION.Remove(getData);
+						_context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
 					save += _context.SaveChanges();
 					
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action + "D successfully.";
-						var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATION where c.OML_ID == omlID && c.OML_Name == omlName && c.areTherePointSourcePermit == areTherePointSourcePermit && c.evidenceOfPSPFilename == evidenceOfPSPFilename && c.evidenceOfPSPPath == evidenceOfPSPPath && c.reasonForNoPSP == reasonForNoPSP select c).ToListAsync();
+						var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 				}
 				if (hse_point_source_registration != null)
 				{
-					var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATION where c.OML_ID == omlID && c.OML_Name == omlName && c.areTherePointSourcePermit == areTherePointSourcePermit && c.evidenceOfPSPFilename == evidenceOfPSPFilename && c.evidenceOfPSPPath == evidenceOfPSPPath && c.reasonForNoPSP == reasonForNoPSP select c).FirstOrDefault();
+					var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).FirstOrDefault();
 
 					hse_point_source_registration.OML_ID = omlID;
-					hse_point_source_registration.areTherePointSourcePermit = areTherePointSourcePermit;
-					hse_point_source_registration.evidenceOfPSPFilename = evidenceOfPSPFilename;
-					hse_point_source_registration.evidenceOfPSPPath = evidenceOfPSPPath;
+					hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
+					hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
+					hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
 					hse_point_source_registration.OML_Name = omlName;
-					hse_point_source_registration.reasonForNoPSP = reasonForNoPSP;
+					hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
 
 
 					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
 						{
-							hse_point_source_registration.areTherePointSourcePermit = areTherePointSourcePermit;
-							hse_point_source_registration.evidenceOfPSPFilename = evidenceOfPSPFilename;
-							hse_point_source_registration.evidenceOfPSPPath = evidenceOfPSPPath;
-							hse_point_source_registration.reasonForNoPSP = reasonForNoPSP;
-							await _context.HSE_POINT_SOURCE_REGISTRATION.AddAsync(hse_point_source_registration);
+							hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
+							hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
+							hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
+							hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
+							await _context.HSE_POINT_SOURCE_REGISTRATIONs.AddAsync(hse_point_source_registration);
 						}
 						else
 						{
 							hse_point_source_registration.OML_ID = getData.OML_ID;
 							hse_point_source_registration.OML_Name = getData.OML_Name;
-							_context.HSE_POINT_SOURCE_REGISTRATION.Remove(getData);
-							await _context.HSE_POINT_SOURCE_REGISTRATION.AddAsync(hse_point_source_registration);
+							_context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
+							await _context.HSE_POINT_SOURCE_REGISTRATIONs.AddAsync(hse_point_source_registration);
 						}
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.HSE_POINT_SOURCE_REGISTRATION.Remove(getData);
+						_context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
 					}
 
 					save += await _context.SaveChangesAsync();
@@ -8712,7 +8712,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = "Form has been " + action + "D successfully.";
-					var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATION where c.OML_ID == omlID && c.OML_Name == omlName && c.areTherePointSourcePermit == areTherePointSourcePermit && c.evidenceOfPSPFilename == evidenceOfPSPFilename && c.evidenceOfPSPPath == evidenceOfPSPPath && c.reasonForNoPSP == reasonForNoPSP select c).ToListAsync();
+					var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -8730,7 +8730,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_REMEDIATION_FUND")]
-		public async Task<WebApiResponse> POST_HSE_REMEDIATION_FUND([FromBody] ADMIN_HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string omlID, string evidenceOfPaymentFilename, string evidenceOfPaymentPath, string reasonForNoRemdiation, string actionToDo, string fieldName)
+		public async Task<WebApiResponse> POST_HSE_REMEDIATION_FUND([FromBody] HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string omlID, string evidenceOfPaymentFilename, string evidenceOfPaymentPath, string reasonForNoRemdiation, string actionToDo, string fieldName)
 		{
 
 			int save = 0;
@@ -8742,27 +8742,27 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (!string.IsNullOrEmpty(omlID))
 				{
-					var getData = (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.Id == int.Parse(omlID) select c).FirstOrDefault();
+					var getData = (from c in _context.HSE_REMEDIATION_FUNDs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
 
 					if (action == GeneralModel.Delete)
-						_context.ADMIN_HSE_REMEDIATION_FUND.Remove(getData);
+						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
 					save += _context.SaveChanges();
 
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action + "D successfully.";
-						var All_Data = await (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Evidence_Of_Payment_Filename == evidenceOfPaymentFilename && c.Evidence_Of_Payment_Path == evidenceOfPaymentPath && c.Reason_For_No_Remediation == reasonForNoRemdiation select c).ToListAsync();
+						var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.evidenceOfPaymentFilename == evidenceOfPaymentFilename && c.evidenceOfPaymentPath == evidenceOfPaymentPath && c.reasonForNoRemediation == reasonForNoRemdiation select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 				}
 				if (hse_remediation_fund != null)
 				{
-					var getData = (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Evidence_Of_Payment_Filename == evidenceOfPaymentFilename && c.Evidence_Of_Payment_Path == evidenceOfPaymentPath && c.Reason_For_No_Remediation == reasonForNoRemdiation select c).FirstOrDefault();
+					var getData = (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.evidenceOfPaymentFilename == evidenceOfPaymentFilename && c.evidenceOfPaymentPath == evidenceOfPaymentPath && c.reasonForNoRemediation == reasonForNoRemdiation select c).FirstOrDefault();
 
 					hse_remediation_fund.OML_ID = omlID;
-					hse_remediation_fund.Evidence_Of_Payment_Filename = evidenceOfPaymentFilename;
-					hse_remediation_fund.Evidence_Of_Payment_Path = evidenceOfPaymentPath;
-					hse_remediation_fund.Reason_For_No_Remediation = reasonForNoRemdiation;					
+					hse_remediation_fund.evidenceOfPaymentFilename = evidenceOfPaymentFilename;
+					hse_remediation_fund.evidenceOfPaymentPath = evidenceOfPaymentPath;
+					hse_remediation_fund.reasonForNoRemediation = reasonForNoRemdiation;					
 					hse_remediation_fund.OML_Name = omlName;
 					
 
@@ -8770,22 +8770,22 @@ namespace Backend_UMR_Work_Program.Controllers
 					{
 						if (getData == null)
 						{
-							hse_remediation_fund.Reason_For_No_Remediation = reasonForNoRemdiation;
-							hse_remediation_fund.Evidence_Of_Payment_Path = evidenceOfPaymentPath;
-							hse_remediation_fund.Evidence_Of_Payment_Filename = evidenceOfPaymentFilename;
-							await _context.ADMIN_HSE_REMEDIATION_FUND.AddAsync(hse_remediation_fund);
+							hse_remediation_fund.reasonForNoRemediation = reasonForNoRemdiation;
+							hse_remediation_fund.evidenceOfPaymentPath = evidenceOfPaymentPath;
+							hse_remediation_fund.evidenceOfPaymentFilename = evidenceOfPaymentFilename;
+							await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
 						}
 						else
 						{
 							hse_remediation_fund.OML_ID = getData.OML_ID;
 							hse_remediation_fund.OML_Name = getData.OML_Name;
-							_context.ADMIN_HSE_REMEDIATION_FUND.Remove(getData);
-							await _context.ADMIN_HSE_REMEDIATION_FUND.AddAsync(hse_remediation_fund);
+							_context.HSE_REMEDIATION_FUNDs.Remove(getData);
+							await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
 						}
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.ADMIN_HSE_REMEDIATION_FUND.Remove(getData);
+						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
 					}
 
 					save += await _context.SaveChangesAsync();
@@ -8798,7 +8798,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = "Form has been " + action + "D successfully.";
-					var All_Data = await (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Evidence_Of_Payment_Filename == evidenceOfPaymentFilename && c.Evidence_Of_Payment_Path == evidenceOfPaymentPath && c.Reason_For_No_Remediation == reasonForNoRemdiation select c).ToListAsync();
+					var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.evidenceOfPaymentFilename == evidenceOfPaymentFilename && c.evidenceOfPaymentPath == evidenceOfPaymentPath && c.reasonForNoRemediation == reasonForNoRemdiation select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -10203,7 +10203,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		[HttpGet("OML_RECALIBRATED_SCALED")]
 		public async Task<WebApiResponse> OML_RECALIBRATED_SCALE(string year)
 		{
-			var details = new List<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>();
+			var details = new List<WP_OPL_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy>();
 			try
 			{
 				if (WKUserRole == GeneralModel.Admin)
