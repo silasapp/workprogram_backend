@@ -393,7 +393,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 var netProduction_Data = await (from conc in _context.CONCESSION_SITUATIONs
                                                 join comp in _context.ADMIN_COMPANY_INFORMATIONs on conc.COMPANY_ID equals comp.COMPANY_ID
                                                 join reserve in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs on conc.Id.ToString() equals reserve.OML_ID
-                                                join capex_opex in _context.BUDGET_CAPEX_OPEXes on conc.Id.ToString() equals capex_opex.OML_ID
+                                                join capex_opex in _context.BUDGET_CAPEX_OPices on conc.Id.ToString() equals capex_opex.OML_ID
                                                 where (reserve.Year_of_WP == year || reserve.Year_of_WP == (N - 1).ToString()) && conc.Consession_Type == type
                                                 select new
                                                 {
