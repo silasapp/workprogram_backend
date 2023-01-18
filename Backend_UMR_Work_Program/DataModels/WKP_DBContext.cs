@@ -52,6 +52,7 @@ namespace Backend_UMR_Work_Program.DataModels
         public virtual DbSet<ADMIN_HSE_CONDITION_OF_EQUIPMENT> ADMIN_HSE_CONDITION_OF_EQUIPMENTs { get; set; } = null!;
         public virtual DbSet<ADMIN_HSE_OSP_REGISTRATIONS_NEW> ADMIN_HSE_OSP_REGISTRATIONS_NEWs { get; set; } = null!;
         public virtual DbSet<ADMIN_HSE_OSP_REGISTRATIONS_NEW1> ADMIN_HSE_OSP_REGISTRATIONS_NEWs1 { get; set; } = null!;
+        public virtual DbSet<ADMIN_HSE_REMEDIATION_FUND> ADMIN_HSE_REMEDIATION_FUND { get; set; } = null!;
         public virtual DbSet<ADMIN_INSPECTION_MAINTENANCE> ADMIN_INSPECTION_MAINTENANCEs { get; set; } = null!;
         public virtual DbSet<ADMIN_LIST_OF_OMLS_OPL> ADMIN_LIST_OF_OMLS_OPLs { get; set; } = null!;
         public virtual DbSet<ADMIN_LITIGATION_JURISDICTION> ADMIN_LITIGATION_JURISDICTIONs { get; set; } = null!;
