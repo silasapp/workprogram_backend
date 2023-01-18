@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 ﻿namespace Backend_UMR_Work_Program.Models
+=======
+﻿using System;
+using System.Collections.Generic;
+
+namespace Backend_UMR_Work_Program.DataModels
+>>>>>>> origin/main
 {
 	public partial class INITIAL_WELL_COMPLETION_JOB1
 	{
