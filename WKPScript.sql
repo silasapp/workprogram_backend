@@ -505,3 +505,8 @@ ALTER TABLE dbo.WORKOVERS_RECOMPLETION_JOBS ADD
 	CompletionWellName varchar(500) NULL,
 	Proposed_Workover_Date datetime NULL
 
+ALTER TABLE dbo.GAS_PRODUCTION_ACTIVITIES ADD
+	AnnualForecastOil varchar(1000) NULL,
+	AnnualForecastCondensate varchar(1000) NULL,
+	AnnualForecastGasAg varchar(1000) NULL,
+	AnnualForecastGasNag varchar(1000) NULL
