@@ -1,7 +1,11 @@
-﻿namespace Backend_UMR_Work_Program.DataModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Backend_UMR_Work_Program.DataModels
 {
+	//[Table("HSE_ENVIRONMENTAL_MANAGEMENT_PLAN")]
 	public class HSE_ENVIRONMENTAL_MANAGEMENT_PLAN
 	{
+		[Key]
 		public int Id { get; set; }
 		public int? Field_ID { get; set; }
 		public string? OML_Name { get; set; }

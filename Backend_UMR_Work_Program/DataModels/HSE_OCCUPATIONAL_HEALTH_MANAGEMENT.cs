@@ -1,7 +1,10 @@
-﻿namespace Backend_UMR_Work_Program.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Backend_UMR_Work_Program.Models
 {
 	public partial class HSE_OCCUPATIONAL_HEALTH_MANAGEMENT
 	{
+		[Key]
 		public int Id { get; set; }
 		public string? OML_ID { get; set; }
 		public string? OML_Name { get; set; }

@@ -472,6 +472,16 @@ namespace Backend_UMR_Work_Program.Models
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			//modelBuilder.Convensions
+			modelBuilder.Entity<HSE_EFFLUENT_MONITORING_COMPLIANCE>(entity =>
+			{
+				//entity.HasKey(e => e.Id)
+				//.HasName("PK_HSE_EFFLUENT_MONITORING_COMPLIANCE");
+				entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+				entity.ToTable("HSE_EFFLUENT_MONITORING_COMPLIANCE");
+			});
+
 			modelBuilder.Entity<ADMIN_ACCIDENT_INCIDENCE_REPORT_CAUSE>(entity =>
 			{
 				entity.ToTable("ADMIN_ACCIDENT_INCIDENCE_REPORT_CAUSE");
@@ -8009,7 +8019,8 @@ namespace Backend_UMR_Work_Program.Models
 
 			modelBuilder.Entity<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>(entity =>
 			{
-				entity.HasNoKey();
+				entity.HasKey(e => e.Id)
+					.HasName("PK_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT");
 
 				entity.ToTable("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT");
 
@@ -8587,7 +8598,8 @@ namespace Backend_UMR_Work_Program.Models
 
 			modelBuilder.Entity<HSE_SAFETY_CULTURE_TRAINING>(entity =>
 			{
-				entity.HasNoKey();
+				entity.HasKey(e => e.Id)
+					.HasName("PK_HSE_SAFETY_CULTURE_TRAINING");
 
 				entity.ToTable("HSE_SAFETY_CULTURE_TRAINING");
 
@@ -19445,6 +19457,14 @@ namespace Backend_UMR_Work_Program.Models
 
 				entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 			});
+
+			modelBuilder.Entity<HSE_ENVIRONMENTAL_MANAGEMENT_PLAN>(entity =>
+			{
+
+				entity.ToTable("HSE_ENVIRONMENTAL_MANAGEMENT_PLAN");
+				entity.Property(e => e.Id).ValueGeneratedOnAdd();
+			});
+
 
 			modelBuilder.Entity<tbl_fruitanalysis>(entity =>
 			{
