@@ -8707,15 +8707,15 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_REMEDIATION_FUND")]
-		public async Task<WebApiResponse> POST_HSE_REMEDIATION_FUND([FromBody] ADMIN_HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string omlID, string evidenceOfPaymentFilename, string evidenceOfPaymentPath, string reasonForNoRemdiation, string actionToDo, string fieldName)
+		public async Task<WebApiResponse> POST_HSE_REMEDIATION_FUND([FromBody] ADMIN_HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string fieldName, string year, string omlID, string actionToDo)
 		{
 
 			int save = 0;
-			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
-
 
 				if (!string.IsNullOrEmpty(omlID))
 				{
@@ -8728,45 +8728,55 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action + "D successfully.";
-						var All_Data = await (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Evidence_Of_Payment_Filename == evidenceOfPaymentFilename && c.Evidence_Of_Payment_Path == evidenceOfPaymentPath && c.Reason_For_No_Remediation == reasonForNoRemdiation select c).ToListAsync();
+						var All_Data = await (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 				}
 				if (hse_remediation_fund != null)
 				{
-					var getData = (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Evidence_Of_Payment_Filename == evidenceOfPaymentFilename && c.Evidence_Of_Payment_Path == evidenceOfPaymentPath && c.Reason_For_No_Remediation == reasonForNoRemdiation select c).FirstOrDefault();
+					var getData = (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
 					hse_remediation_fund.OML_ID = omlID;
-					hse_remediation_fund.Evidence_Of_Payment_Filename = evidenceOfPaymentFilename;
-					hse_remediation_fund.Evidence_Of_Payment_Path = evidenceOfPaymentPath;
-					hse_remediation_fund.Reason_For_No_Remediation = reasonForNoRemdiation;					
+					hse_remediation_fund.Companyemail = WKPCompanyEmail;
+					hse_remediation_fund.CompanyName = WKPCompanyName;
+					hse_remediation_fund.Company_ID = WKPCompanyId;
+					hse_remediation_fund.Company_Number = WKPCompanyNumber.ToString();
 					hse_remediation_fund.OML_Name = omlName;
-					
 
-					if (action == GeneralModel.Insert)
+					var file = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var blobname = blobService.Filenamer(file);
+
+					if (file != null)
 					{
-						if (getData == null)
-						{
-							hse_remediation_fund.Reason_For_No_Remediation = reasonForNoRemdiation;
-							hse_remediation_fund.Evidence_Of_Payment_Path = evidenceOfPaymentPath;
-							hse_remediation_fund.Evidence_Of_Payment_Filename = evidenceOfPaymentFilename;
-							await _context.ADMIN_HSE_REMEDIATION_FUND.AddAsync(hse_remediation_fund);
-						}
+						string docName = "Evidence of Payment";
+						hse_remediation_fund.Evidence_Of_Payment_Path = await blobService.UploadFileBlobAsync("documents", file.OpenReadStream(), file.ContentType, $"Remediation Documents/{blobname}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_remediation_fund.Evidence_Of_Payment_Path == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
+							hse_remediation_fund.Evidence_Of_Payment_Path = blobname;
+
+						if (action == GeneralModel.Insert)
 						{
-							hse_remediation_fund.OML_ID = getData.OML_ID;
-							hse_remediation_fund.OML_Name = getData.OML_Name;
-							_context.ADMIN_HSE_REMEDIATION_FUND.Remove(getData);
-							await _context.ADMIN_HSE_REMEDIATION_FUND.AddAsync(hse_remediation_fund);
+							if (getData == null)
+							{
+								await _context.ADMIN_HSE_REMEDIATION_FUND.AddAsync(hse_remediation_fund);
+							}
+							else
+							{
+								hse_remediation_fund.OML_ID = getData.OML_ID;
+								hse_remediation_fund.OML_Name = getData.OML_Name;
+								_context.ADMIN_HSE_REMEDIATION_FUND.Remove(getData);
+								await _context.ADMIN_HSE_REMEDIATION_FUND.AddAsync(hse_remediation_fund);
+							}
 						}
-					}
-					else if (action == GeneralModel.Delete)
-					{
-						_context.ADMIN_HSE_REMEDIATION_FUND.Remove(getData);
-					}
+						else if (action == GeneralModel.Delete)
+						{
+							_context.ADMIN_HSE_REMEDIATION_FUND.Remove(getData);
+						}
 
-					save += await _context.SaveChangesAsync();
+						save += await _context.SaveChangesAsync();
 
+					}
 				}
 				else
 				{
@@ -8775,7 +8785,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = "Form has been " + action + "D successfully.";
-					var All_Data = await (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName && c.Evidence_Of_Payment_Filename == evidenceOfPaymentFilename && c.Evidence_Of_Payment_Path == evidenceOfPaymentPath && c.Reason_For_No_Remediation == reasonForNoRemdiation select c).ToListAsync();
+					var All_Data = await (from c in _context.ADMIN_HSE_REMEDIATION_FUND where c.OML_ID == omlID && c.OML_Name == omlName  select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
