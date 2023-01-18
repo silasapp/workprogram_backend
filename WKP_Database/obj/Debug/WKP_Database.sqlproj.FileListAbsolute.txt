@@ -1,0 +1,6 @@
+C:\Workcode\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dacpac
+C:\Workcode\WorkProgram_BEnd\WKP_Database\bin\Debug\Database.dll
+C:\Workcode\WorkProgram_BEnd\WKP_Database\bin\Debug\Database.pdb
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\Database.dll
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\Database.pdb
