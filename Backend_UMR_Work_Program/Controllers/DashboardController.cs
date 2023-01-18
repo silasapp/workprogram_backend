@@ -37,7 +37,7 @@
 //                                   join reserveStatus in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs on conc.OML_ID equals reserveStatus.OML_ID
 //                                   where reserve.Year_of_WP == year && (reserve.Created_by == WKPCompanyEmail || reserve.CompanyNumber == WKPCompanyNumber)
 //                                   && (reserveStatus.Created_by == WKPCompanyEmail || reserveStatus.CompanyNumber == WKPCompanyNumber)
-                                
+
 //                                   select new
 //                                   {
 //                                       year = reserve.Year_of_WP,
@@ -137,6 +137,7 @@
 //     }
 // }
 
+using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

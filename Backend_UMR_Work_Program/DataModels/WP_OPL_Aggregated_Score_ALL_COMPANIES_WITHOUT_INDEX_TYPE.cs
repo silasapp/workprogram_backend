@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPE
     {

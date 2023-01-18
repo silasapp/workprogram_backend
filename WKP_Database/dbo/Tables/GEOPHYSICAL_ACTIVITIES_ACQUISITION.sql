@@ -38,6 +38,9 @@
     [COMPANY_ID]                    VARCHAR (100)  NULL,
     [CompanyNumber]                 INT            NULL,
     [Field_ID]                      INT            NULL,
+    [No_of_Folds]                   INT            NULL,
     CONSTRAINT [PK_Geophysical_Activities] PRIMARY KEY CLUSTERED ([Geophysical_ActivitiesId] ASC)
 );
+
+
 
