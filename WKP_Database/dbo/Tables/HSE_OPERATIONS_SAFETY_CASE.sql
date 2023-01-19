@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[HSE_OPERATIONS_SAFETY_CASE] (
-    [Id]                                          INT            NULL,
+    [Id]                                          INT            IDENTITY (1, 1) NOT NULL,
     [OML_ID]                                      VARCHAR (50)   NULL,
     [OML_Name]                                    VARCHAR (500)  NULL,
     [CompanyName]                                 VARCHAR (500)  NULL,
@@ -20,4 +20,6 @@
     [CompanyNumber]                               INT            NULL,
     [Field_ID]                                    INT            NULL
 );
+
+
 
