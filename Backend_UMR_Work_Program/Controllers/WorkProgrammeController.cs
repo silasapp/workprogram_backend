@@ -35,12 +35,10 @@ namespace Backend_UMR_Work_Program.Controllers
 
 		private string? WKPCompanyId => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-
 		private string? WKPCompanyName => User.FindFirstValue(ClaimTypes.Name);
 		private string? WKPCompanyEmail => User.FindFirstValue(ClaimTypes.Email);
 		private string? WKUserRole => User.FindFirstValue(ClaimTypes.Role);
 		private int? WKPCompanyNumber => Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
-
 
 		[HttpGet("GETWORKPROGRAMYEARS")]
 		public async Task<object> GETWORKPROGRAMYEARS()
@@ -372,8 +370,6 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
-
-
 
 		[HttpGet("GAS_PRODUCTION_TEXT")]
 		public async Task<object> GAS_PRODUCTION_TEXT(string year)
@@ -2321,7 +2317,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-
 		//added by Musa
 
 		[HttpPost("POST_HSE_OPERATIONS_SAFETY_CASE")]
@@ -2475,7 +2470,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-
 		[HttpPost("POST_HSE_EFFLUENT_MONITORING_COMPLIANCE"), DisableRequestSizeLimit]
 		public async Task<WebApiResponse> POST_HSE_EFFLUENT_MONITORING_COMPLIANCE([FromForm] HSE_EFFLUENT_MONITORING_COMPLIANCE Effluenct_Monitoring_Complience_Mode, string omlName, string fieldName, string year, string actionToDo = null)
 		{
@@ -2505,22 +2499,25 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 					#region File processing
-					var file1 = Request.Form.Files[0];
-					var blobname1 = blobService.Filenamer(file1);
+					var files = Request.Form.Files;
 
-					if (file1 != null)
+					if (files.Count>=1)
 					{
-						string docName = "Effluent Monitoring Complience";
-						Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EffluenceMonitoringDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						var file1 = Request.Form.Files[0];
+						var blobname1 = blobService.Filenamer(file1);
 
-						if (Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingFilename = blobname1;
+						if (file1 != null)
+						{
+							string docName = "Effluent Monitoring Complience";
+							Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EffluenceMonitoringDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
+							if (Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingFilename = blobname1;
+
+						}
 					}
-
-
 					#endregion
 
 					if (action == GeneralModel.Insert)
@@ -2601,34 +2598,64 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 					#region File processing
-					var file1 = Request.Form.Files[0];
-					var blobname1 = blobService.Filenamer(file1);
-					var file2 = Request.Form.Files[1];
-					var blobname2 = blobService.Filenamer(file2);
+					var files = Request.Form.Files;
 
-					if (file1 != null)
+					IFormFile? file1 = null;
+					string blobname1 = string.Empty;
+					IFormFile? file2 = null;
+					string blobname2 = string.Empty;
+					if (files.Count>1)
 					{
-						string docName = "GHG Approval";
-						ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						file1 = Request.Form.Files[0];
+						file2 = Request.Form.Files[1];
 
-						if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
+						blobname1 = blobService.Filenamer(file1);
+						blobname2 = blobService.Filenamer(file2);
+
+
+						if (file1 != null)
+						{
+							string docName = "GHG Approval";
+							ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+							if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
+
+						}
+						if (file2 != null)
+						{
+							string docName = "LDR Certificate";
+							ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+							if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
+
+						}
+					}
+					if (files.Count==1)
+					{
+						file1 = Request.Form.Files[0];
+
+						blobname1 = blobService.Filenamer(file1);
+
+
+						if (file1 != null)
+						{
+							string docName = "GHG Approval";
+							ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+							if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
+
+						}
 
 					}
-					if (file2 != null)
-					{
-						string docName = "LDR Certificate";
-						ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-						if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
-
-					}
-
 
 					#endregion
 
@@ -2710,49 +2737,103 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 					#region File processing
-					var file1 = Request.Form.Files[0];
-					var blobname1 = blobService.Filenamer(file1);
+					var files = Request.Form.Files;
 
-					var file2 = Request.Form.Files[0];
-					var blobname2 = blobService.Filenamer(file2);
+					IFormFile? file1 = null;
+					string blobname1 = string.Empty;
 
-					var file3 = Request.Form.Files[0];
-					var blobname3 = blobService.Filenamer(file3);
+					IFormFile? file2 = null;
+					string blobname2 = string.Empty;
 
-					if (file1 != null)
+					IFormFile? file3 = null;
+					string blobname3 = string.Empty;
+
+					if (files.Count==1)
 					{
-						string docName = "Evidence Of Pay Trust Fund";
-						host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						file1 = Request.Form.Files[0];
+						blobname1 = blobService.Filenamer(file1);
+						if (file1 != null)
+						{
+							string docName = "Upload Comm Dev Plan Approval";
+							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
-						if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname1;
+							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
+						}
 					}
-
-					if (file2 != null)
+					if (files.Count==2)
 					{
-						string docName = "Evidence Of Reg Trust Fund";
-						host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						file1 = Request.Form.Files[0];
+						file2 = Request.Form.Files[1];
+						blobname1 = blobService.Filenamer(file1);
+						blobname2 = blobService.Filenamer(file2);
+						if (file1 != null)
+						{
+							string docName = "Upload Comm Dev Plan Approval";
+							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
-						if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname2;
+							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
+						}
+						if (file2 != null)
+						{
+							string docName = "Evidence Of Pay Trust Fund";
+							host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+							if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
+
+						}
 					}
-
-					if (file3 != null)
+					if (files.Count>2)
 					{
-						string docName = "Upload Comm Dev Plan Approval";
-						host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						file1 = Request.Form.Files[0];
+						file2 = Request.Form.Files[1];
+						file3 = Request.Form.Files[2];
+						blobname1 = blobService.Filenamer(file1);
+						blobname2 = blobService.Filenamer(file2);
+						blobname3 = blobService.Filenamer(file3);
+						if (file1 != null)
+						{
+							string docName = "Upload Comm Dev Plan Approval";
+							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
-						if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname3;
+							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
+						}
+						if (file2 != null)
+						{
+							string docName = "Evidence Of Pay Trust Fund";
+							host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+							if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
+
+						}
+						if (file3 != null)
+						{
+							string docName = "Evidence Of Reg Trust Fund ";
+							host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+							if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname3;
+
+						}
 					}
 
 					#endregion
@@ -3868,7 +3949,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-
 		[HttpPost("POST_RESERVES_UPDATES_DEPLETION_RATE")]
 		public async Task<WebApiResponse> POST_RESERVES_UPDATES_DEPLETION_RATE([FromBody] RESERVES_UPDATES_DEPLETION_RATE reserves_depletion_rate_model, string omlName, string fieldName, string year, string actionToDo)
 		{
@@ -3937,8 +4017,6 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
-
-
 
 		[HttpPost("POST_RESERVES_UPDATES_LIFE_INDEX")]
 		public async Task<WebApiResponse> POST_RESERVES_UPDATES_LIFE_INDEX([FromBody] RESERVES_UPDATES_LIFE_INDEX reserves_life_index_model, string omlName, string fieldName, string year, string actionToDo)
@@ -4086,7 +4164,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			}
 		}
-
 
 		[HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT")]
 		public async Task<WebApiResponse> POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE reserves_condensate_status_model, string omlName, string fieldName, string year, string actionToDo)
@@ -7184,7 +7261,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-
 		[HttpPost("POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW")]
 		public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_NEW hse_accident_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
@@ -8641,7 +8717,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_POINT_SOURCE_REGISTRATION")]
-		public async Task<WebApiResponse> POST_HSE_POINT_SOURCE_REGISTRATION([FromBody] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName, 
+		public async Task<WebApiResponse> POST_HSE_POINT_SOURCE_REGISTRATION([FromBody] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName,
 			string omlID, string areTherePointSourcePermit, string evidenceOfPSPFilename, string evidenceOfPSPPath, string actionToDo, string fieldName, string reasonForNoPSP)
 		{
 
@@ -8659,7 +8735,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (action == GeneralModel.Delete)
 						_context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
 					save += _context.SaveChanges();
-					
+
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action + "D successfully.";
@@ -8762,9 +8838,9 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_remediation_fund.OML_ID = omlID;
 					hse_remediation_fund.evidenceOfPaymentFilename = evidenceOfPaymentFilename;
 					hse_remediation_fund.evidenceOfPaymentPath = evidenceOfPaymentPath;
-					hse_remediation_fund.reasonForNoRemediation = reasonForNoRemdiation;					
+					hse_remediation_fund.reasonForNoRemediation = reasonForNoRemdiation;
 					hse_remediation_fund.OML_Name = omlName;
-					
+
 
 					if (action == GeneralModel.Insert)
 					{
@@ -9139,7 +9215,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-
 		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME"), DisableRequestSizeLimit]
 		public async Task<WebApiResponse> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME hse_scholarship_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
@@ -9388,13 +9463,35 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_safety_culture_model.Field_ID = concessionField.Field_ID;
 
 					#region file section
+					var filesLength = Request.Form.Files;
+
 					var file1 = Request.Form.Files[0];
 					var file2 = Request.Form.Files[1];
-					var file3 = Request.Form.Files[2];
+					IFormFile? file3 = null;
+					var blobname3 = string.Empty;
+
+
+
 					var blobname1 = blobService.Filenamer(file1);
 					var blobname2 = blobService.Filenamer(file2);
-					var blobname3 = blobService.Filenamer(file3);
 
+					if (filesLength.Count>2)
+					{
+						//var file1 = Request.Form.Files[0];
+						//var file2 = Request.Form.Files[1];
+						file3 = Request.Form.Files[2];
+						blobname3 = blobService.Filenamer(file3);
+
+						if (file3 != null)
+						{
+							string docName = "Evidence Of Training Plan";
+							hse_safety_culture_model.EvidenceOfTrainingPlanPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfTrainingPlanDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.EvidenceOfTrainingPlanPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
+						}
+					}
 					if (file1 != null)
 					{
 						string docName = "Safety Current Year";
@@ -9413,15 +9510,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						else
 							hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
 					}
-					if (file3 != null)
-					{
-						string docName = "Evidence Of Training Plan";
-						hse_safety_culture_model.EvidenceOfTrainingPlanPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfTrainingPlanDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_safety_culture_model.EvidenceOfTrainingPlanPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
-					}
+
 					#endregion
 
 					if (action == GeneralModel.Insert)
@@ -9439,6 +9528,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							hse_safety_culture_model.Date_Updated = DateTime.Now;
 							hse_safety_culture_model.Updated_by = WKPCompanyId;
 							hse_safety_culture_model.CompanyNumber = WKPCompanyNumber;
+
 							getData.ForEach(x =>
 							{
 								_context.HSE_SAFETY_CULTURE_TRAININGs.Remove(x);
@@ -9696,12 +9786,30 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_occupational_model.Field_ID = concessionField.Field_ID;
 
 					#region file section
+					var files = Request.Form.Files;
 					var file1 = Request.Form.Files[0];
 					var file2 = Request.Form.Files[1];
-					var file3 = Request.Form.Files[2];
+					IFormFile? file3 = null;
+					string blobname3 = string.Empty;
+
 					var blobname1 = blobService.Filenamer(file1);
 					var blobname2 = blobService.Filenamer(file2);
-					var blobname3 = blobService.Filenamer(file3);
+
+					if (files.Count>2)
+					{
+						file3=Request.Form.Files[2];
+						blobname3=blobService.Filenamer(file3);
+
+						if (file3 != null)
+						{
+							string docName = "Reason Why Ohm Was Not Communicated To Staff";
+							hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"ReasonWhyOhmWasNotCommunicatedToStaffFileNameDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname3;
+						}
+					}
 
 					if (file1 != null)
 					{
@@ -9720,16 +9828,6 @@ namespace Backend_UMR_Work_Program.Controllers
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
 							hse_occupational_model.OHMplanCommunicationFilename = blobname2;
-					}
-					if (file3 != null)
-					{
-						string docName = "Reason why OHM was not Communicated to Staff";
-						hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"FieldDiscoveryDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-						if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname3;
 					}
 					#endregion
 
