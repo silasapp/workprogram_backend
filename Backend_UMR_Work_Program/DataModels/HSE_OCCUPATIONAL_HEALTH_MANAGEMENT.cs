@@ -1,4 +1,7 @@
-﻿namespace Backend_UMR_Work_Program.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class HSE_OCCUPATIONAL_HEALTH_MANAGEMENT
     {

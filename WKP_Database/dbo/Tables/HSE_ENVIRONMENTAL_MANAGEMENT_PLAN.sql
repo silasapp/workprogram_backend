@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[HSE_ENVIRONMENTAL_MANAGEMENT_PLAN] (
-    [Id]               INT            NOT NULL,
+    [Id]               INT            IDENTITY (1, 1) NOT NULL,
     [Field_ID]         INT            NULL,
     [OML_Name]         VARCHAR (1000) NULL,
     [OmL_ID]           VARCHAR (100)  NULL,
@@ -18,4 +18,6 @@
     [Created_by]       VARCHAR (100)  NULL,
     CONSTRAINT [PK_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
