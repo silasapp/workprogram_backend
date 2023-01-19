@@ -24,6 +24,8 @@
     [COMPANY_ID]                                                    VARCHAR (100)  NULL,
     [CompanyNumber]                                                 INT            NULL,
     [Field_ID]                                                      INT            NULL,
-    CONSTRAINT [PK_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
