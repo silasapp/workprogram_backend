@@ -510,3 +510,6 @@ ALTER TABLE dbo.GAS_PRODUCTION_ACTIVITIES ADD
 	AnnualForecastCondensate varchar(1000) NULL,
 	AnnualForecastGasAg varchar(1000) NULL,
 	AnnualForecastGasNag varchar(1000) NULL
+
+	ALTER TABLE dbo.HSE_SAFETY_CULTURE_TRAINING ADD
+	Remark varchar(600) NULL

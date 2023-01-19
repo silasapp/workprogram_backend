@@ -26,5 +26,6 @@
 		public string? AreThereTrainingPlansForHSE { get; set; }
 		public string? EvidenceOfTrainingPlanFilename { get; set; }
 		public string? EvidenceOfTrainingPlanPath { get; set; }
+		public string? Remark { get; set; }
 	}
 }

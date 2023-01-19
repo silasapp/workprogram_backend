@@ -9465,22 +9465,23 @@ namespace Backend_UMR_Work_Program.Controllers
 					#region file section
 					var filesLength = Request.Form.Files;
 
-					var file1 = Request.Form.Files[0];
-					var file2 = Request.Form.Files[1];
+					IFormFile? file1 = null;
+					IFormFile? file2 = null;
 					IFormFile? file3 = null;
 					var blobname3 = string.Empty;
 
-
-
-					var blobname1 = blobService.Filenamer(file1);
-					var blobname2 = blobService.Filenamer(file2);
+					var blobname1 = string.Empty;
+					var blobname2 = string.Empty;
 
 					if (filesLength.Count>2)
 					{
-						//var file1 = Request.Form.Files[0];
-						//var file2 = Request.Form.Files[1];
+						file1 = Request.Form.Files[0];
+						file2 = Request.Form.Files[1];
 						file3 = Request.Form.Files[2];
+
 						blobname3 = blobService.Filenamer(file3);
+						blobname1 = blobService.Filenamer(file1);
+						blobname2 = blobService.Filenamer(file2);
 
 						if (file3 != null)
 						{
@@ -9491,24 +9492,52 @@ namespace Backend_UMR_Work_Program.Controllers
 							else
 								hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
 						}
+						if (file1 != null)
+						{
+							string docName = "Safety Current Year";
+							hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
+						}
+						if (file2 != null)
+						{
+							string docName = "Safety Last Two Years";
+							hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
+						}
 					}
-					if (file1 != null)
+					if (filesLength.Count==2)
 					{
-						string docName = "Safety Current Year";
-						hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
-					}
-					if (file2 != null)
-					{
-						string docName = "Safety Last Two Years";
-						hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-						else
-							hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
+						file1 = Request.Form.Files[0];
+						file2 = Request.Form.Files[1];
+
+						blobname1 = blobService.Filenamer(file1);
+						blobname2 = blobService.Filenamer(file2);
+
+						if (file1 != null)
+						{
+							string docName = "Safety Current Year";
+							hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
+						}
+						if (file2 != null)
+						{
+							string docName = "Safety Last Two Years";
+							hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+							else
+								hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
+						}
+
 					}
 
 					#endregion
