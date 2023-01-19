@@ -8725,11 +8725,11 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
-                entity.Property(e => e.evidence_of_PSP_path)
+                entity.Property(e => e.evidence_of_PSP_filename)
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
-                entity.Property(e => e.evidence_of_PSP_filename)
+                entity.Property(e => e.evidence_of_PSP_path)
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
@@ -9071,7 +9071,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_SAFETY_CULTURE_TRAINING>(entity =>
             {
-
                 entity.ToTable("HSE_SAFETY_CULTURE_TRAINING");
 
                 entity.Property(e => e.AreThereTrainingPlansForHSE).IsUnicode(false);
@@ -9107,8 +9106,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.EvidenceOfTrainingPlanFilename).IsUnicode(false);
 
                 entity.Property(e => e.EvidenceOfTrainingPlanPath).IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)

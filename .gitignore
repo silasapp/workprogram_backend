@@ -12,3 +12,5 @@
 /A_WorkProgram/WKP_Backend/WKP_Database/WKP_Database.jfm
 /Database/Database.jfm
 /Database
+/WKP_Database/*.jfm
+/WKP_Database/*.dbmdl

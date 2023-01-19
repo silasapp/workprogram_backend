@@ -35,5 +35,7 @@ namespace Backend_UMR_Work_Program.DataModels
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
         public int? Field_ID { get; set; }
+        public string? Proposed_Completion_Days { get; set; }
+        public string? Proposed_Initial_Name { get; set; }
     }
 }
