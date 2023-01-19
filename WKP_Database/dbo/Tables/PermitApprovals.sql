@@ -10,6 +10,8 @@
     [Printed]     BIT            NOT NULL,
     [ApprovedBy]  INT            NULL,
     [CreatedAt]   DATETIME       NULL,
-    CONSTRAINT [PK_permit_id] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_PermitApprovals] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

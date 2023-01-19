@@ -18,6 +18,8 @@
     [SignaturePath]       VARCHAR (1000) NULL,
     [SignatureName]       VARCHAR (100)  NULL,
     [AdminCompanyInfo_ID] INT            NULL,
-    CONSTRAINT [PK_Staff_UT] PRIMARY KEY CLUSTERED ([StaffID] ASC)
+    CONSTRAINT [PK_staff] PRIMARY KEY CLUSTERED ([StaffID] ASC)
 );
+
+
 

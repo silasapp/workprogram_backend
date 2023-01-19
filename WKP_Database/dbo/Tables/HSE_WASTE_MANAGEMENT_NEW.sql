@@ -25,6 +25,8 @@
     [Evidence_Of_Submission_Of_Journey_MGT_Plan]            VARCHAR (300)  NULL,
     [Are_Registered_Point_Sources_Valid]                    VARCHAR (100)  NULL,
     [Evidence_Of_Submission_Of_PreviousYears_Waste_Release] VARCHAR (300)  NULL,
-    CONSTRAINT [PK_WASTE_MANAGEMENT_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_HSE_WASTE_MANAGEMENT_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
