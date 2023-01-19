@@ -7087,8 +7087,6 @@ namespace Backend_UMR_Work_Program.DataModels
             {
                 entity.ToTable("HSE_EFFLUENT_MONITORING_COMPLIANCE");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.AreThereEvidentOfSampling)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -7469,8 +7467,6 @@ namespace Backend_UMR_Work_Program.DataModels
             modelBuilder.Entity<HSE_ENVIRONMENTAL_MANAGEMENT_PLAN>(entity =>
             {
                 entity.ToTable("HSE_ENVIRONMENTAL_MANAGEMENT_PLAN");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.AreThereEMP)
                     .HasMaxLength(10)
@@ -8561,7 +8557,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_OPERATIONS_SAFETY_CASE>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("HSE_OPERATIONS_SAFETY_CASE");
 
