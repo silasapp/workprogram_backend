@@ -7,6 +7,8 @@
     [Updated_by]      VARCHAR (100) NULL,
     [Date_Created]    DATETIME      NULL,
     [Date_Updated]    DATETIME      NULL,
-    CONSTRAINT [PK_ADMIN_SCRIBE_new] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_ADMIN_SCRIBE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

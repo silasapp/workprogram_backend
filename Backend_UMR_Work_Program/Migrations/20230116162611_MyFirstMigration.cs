@@ -903,27 +903,27 @@ namespace Backend_UMR_Work_Program.Migrations
             //        table.PrimaryKey("PK_ADMIN_HSE_OSP_REGISTRATIONS_NEW", x => x.Id);
             //    });
 
-            migrationBuilder.CreateTable(
-                name: "ADMIN_HSE_REMEDIATION_FUNDs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OML_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OML_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Companyemail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Year_of_WP = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Company_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Company_Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Evidence_Of_Payment_Filename = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Evidence_Of_Payment_Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Reason_For_No_Remediation = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ADMIN_HSE_REMEDIATION_FUNDs", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "ADMIN_HSE_REMEDIATION_FUNDs",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        OML_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        OML_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Companyemail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Year_of_WP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Company_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Company_Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Evidence_Of_Payment_Filename = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Evidence_Of_Payment_Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Reason_For_No_Remediation = table.Column<string>(type: "nvarchar(max)", nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_ADMIN_HSE_REMEDIATION_FUNDs", x => x.Id);
+            //    });
 
             //migrationBuilder.CreateTable(
             //    name: "ADMIN_INSPECTION_MAINTENANCE",
@@ -3450,32 +3450,32 @@ namespace Backend_UMR_Work_Program.Migrations
             //        table.PrimaryKey("PK_HSE_DESIGNS_SAFETY", x => x.Id);
             //    });
 
-            migrationBuilder.CreateTable(
-                name: "HSE_EFFLUENT_MONITORING_COMPLIANCE",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Field_ID = table.Column<int>(type: "int", nullable: true),
-                    OML_Name = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
-                    OmL_ID = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    CompanyName = table.Column<string>(type: "varchar(300)", unicode: false, maxLength: 300, nullable: true),
-                    Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Year_of_WP = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
-                    COMPANY_ID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    CompanyNumber = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    AreThereEvidentOfSampling = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
-                    EvidenceOfSamplingFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    EvidenceOfSamplingPath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
-                    ReasonForNoEvidenceSampling = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Updated_by = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Created_by = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HSE_EFFLUENT_MONITORING_COMPLIANCE", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "HSE_EFFLUENT_MONITORING_COMPLIANCE",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "int", nullable: false),
+            //        Field_ID = table.Column<int>(type: "int", nullable: true),
+            //        OML_Name = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
+            //        OmL_ID = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        CompanyName = table.Column<string>(type: "varchar(300)", unicode: false, maxLength: 300, nullable: true),
+            //        Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        Year_of_WP = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
+            //        COMPANY_ID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+            //        CompanyNumber = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+            //        AreThereEvidentOfSampling = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
+            //        EvidenceOfSamplingFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        EvidenceOfSamplingPath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
+            //        ReasonForNoEvidenceSampling = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Updated_by = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Created_by = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_HSE_EFFLUENT_MONITORING_COMPLIANCE", x => x.Id);
+            //    });
 
             //migrationBuilder.CreateTable(
             //    name: "HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW",
@@ -3612,32 +3612,32 @@ namespace Backend_UMR_Work_Program.Migrations
             //        table.PrimaryKey("PK_HSE_ENVIRONMENTAL_IMPACT_ASSESSMENTS", x => x.Id);
             //    });
 
-            migrationBuilder.CreateTable(
-                name: "HSE_ENVIRONMENTAL_MANAGEMENT_PLAN",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Field_ID = table.Column<int>(type: "int", nullable: true),
-                    OML_Name = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    OmL_ID = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    CompanyName = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
-                    Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Year_of_WP = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: true),
-                    COMPANY_ID = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: true),
-                    CompanyNumber = table.Column<int>(type: "int", nullable: true),
-                    AreThereEMP = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
-                    FacilityType = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    FacilityLocation = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
-                    RemarkIfNoEMP = table.Column<string>(type: "varchar(500)", unicode: false, maxLength: 500, nullable: true),
-                    Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Updated_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Created_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "HSE_ENVIRONMENTAL_MANAGEMENT_PLAN",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "int", nullable: false),
+            //        Field_ID = table.Column<int>(type: "int", nullable: true),
+            //        OML_Name = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        OmL_ID = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        CompanyName = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
+            //        Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        Year_of_WP = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: true),
+            //        COMPANY_ID = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: true),
+            //        CompanyNumber = table.Column<int>(type: "int", nullable: true),
+            //        AreThereEMP = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
+            //        FacilityType = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        FacilityLocation = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
+            //        RemarkIfNoEMP = table.Column<string>(type: "varchar(500)", unicode: false, maxLength: 500, nullable: true),
+            //        Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Updated_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Created_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN", x => x.Id);
+            //    });
 
             //migrationBuilder.CreateTable(
             //    name: "HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM",
@@ -3800,71 +3800,71 @@ namespace Backend_UMR_Work_Program.Migrations
             //        table.PrimaryKey("PK_HSE_FATALITIES", x => x.Id);
             //    });
 
-            migrationBuilder.CreateTable(
-                name: "HSE_GHG_MANAGEMENT_PLAN",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Field_ID = table.Column<int>(type: "int", nullable: true),
-                    OML_Name = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    OmL_ID = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    CompanyName = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Year_of_WP = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    COMPANY_ID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    CompanyNumber = table.Column<int>(type: "int", nullable: true),
-                    DoYouHaveGHG = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
-                    GHGApprovalFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    GHGApprovalPath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
-                    ReasonForNoGHG = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
-                    DoYouHaveLDRCertificate = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
-                    LDRCertificateFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    LDRCertificatePath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
-                    ReasonForNoLDR = table.Column<string>(type: "varchar(3000)", unicode: false, maxLength: 3000, nullable: true),
-                    Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Updated_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Created_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HSE_GHG_MANAGEMENT_PLAN", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "HSE_GHG_MANAGEMENT_PLAN",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        Field_ID = table.Column<int>(type: "int", nullable: true),
+            //        OML_Name = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        OmL_ID = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        CompanyName = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        Year_of_WP = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+            //        COMPANY_ID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+            //        CompanyNumber = table.Column<int>(type: "int", nullable: true),
+            //        DoYouHaveGHG = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
+            //        GHGApprovalFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        GHGApprovalPath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
+            //        ReasonForNoGHG = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
+            //        DoYouHaveLDRCertificate = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
+            //        LDRCertificateFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        LDRCertificatePath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
+            //        ReasonForNoLDR = table.Column<string>(type: "varchar(3000)", unicode: false, maxLength: 3000, nullable: true),
+            //        Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Updated_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Created_by = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_HSE_GHG_MANAGEMENT_PLAN", x => x.Id);
+            //    });
 
-            migrationBuilder.CreateTable(
-                name: "HSE_HOST_COMMUNITIES_DEVELOPMENT",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DoYouHaveEvidenceOfReg = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
-                    EvidenceOfRegTrustFundFilename = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: true),
-                    EvidenceOfRegTrustFundPath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
-                    ReasonForNoEvidenceOfRegTF = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: true),
-                    DoYouHaveEvidenceOfPay = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
-                    EvidenceOfPayTrustFundFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    EvidenceOfPayTrustFundPath = table.Column<string>(type: "varchar(3000)", unicode: false, maxLength: 3000, nullable: true),
-                    ReasonForNoEvidenceOfPayTF = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: true),
-                    UploadCommDevPlanApprovalFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    UploadCommDevPlanApprovalPath = table.Column<string>(type: "varchar(3000)", unicode: false, maxLength: 3000, nullable: true),
-                    Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Updated_by = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Created_by = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    Field_ID = table.Column<int>(type: "int", nullable: true),
-                    OML_Name = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    OmL_ID = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
-                    CompanyName = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
-                    Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Year_of_WP = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: true),
-                    COMPANY_ID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    CompanyNumber = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HSE_HOST_COMMUNITIES_DEVELOPMENT", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "HSE_HOST_COMMUNITIES_DEVELOPMENT",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        DoYouHaveEvidenceOfReg = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
+            //        EvidenceOfRegTrustFundFilename = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: true),
+            //        EvidenceOfRegTrustFundPath = table.Column<string>(type: "varchar(5000)", unicode: false, maxLength: 5000, nullable: true),
+            //        ReasonForNoEvidenceOfRegTF = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: true),
+            //        DoYouHaveEvidenceOfPay = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: true),
+            //        EvidenceOfPayTrustFundFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        EvidenceOfPayTrustFundPath = table.Column<string>(type: "varchar(3000)", unicode: false, maxLength: 3000, nullable: true),
+            //        ReasonForNoEvidenceOfPayTF = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: true),
+            //        UploadCommDevPlanApprovalFilename = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        UploadCommDevPlanApprovalPath = table.Column<string>(type: "varchar(3000)", unicode: false, maxLength: 3000, nullable: true),
+            //        Date_Updated = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Updated_by = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+            //        Date_Created = table.Column<DateTime>(type: "datetime", nullable: true),
+            //        Created_by = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+            //        Field_ID = table.Column<int>(type: "int", nullable: true),
+            //        OML_Name = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        OmL_ID = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: true),
+            //        CompanyName = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
+            //        Companyemail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+            //        Year_of_WP = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: true),
+            //        COMPANY_ID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+            //        CompanyNumber = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_HSE_HOST_COMMUNITIES_DEVELOPMENT", x => x.Id);
+            //    });
 
             //migrationBuilder.CreateTable(
             //    name: "HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW",
@@ -4087,36 +4087,36 @@ namespace Backend_UMR_Work_Program.Migrations
             //        table.PrimaryKey("PK_HSE_OIL_SPILL_REPORTING_NEW", x => x.Id);
             //    });
 
-            migrationBuilder.CreateTable(
-                name: "HSE_OPERATIONS_SAFETY_CASEs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OML_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OML_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Companyemail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Year_of_WP = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Reason_If_No_Evidence = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Evidence_of_Operations_Safety_Case_Approval = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Does_the_Facility_Have_a_Valid_Safety_Case = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type_of_Facility = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Location_of_Facility = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name_Of_Facility = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Number_of_Facilities = table.Column<int>(type: "int", nullable: false),
-                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date_Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    COMPANY_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyNumber = table.Column<int>(type: "int", nullable: true),
-                    Field_ID = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HSE_OPERATIONS_SAFETY_CASEs", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "HSE_OPERATIONS_SAFETY_CASEs",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        OML_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        OML_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Companyemail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Year_of_WP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Reason_If_No_Evidence = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Evidence_of_Operations_Safety_Case_Approval = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Does_the_Facility_Have_a_Valid_Safety_Case = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Type_of_Facility = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Location_of_Facility = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Name_Of_Facility = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Number_of_Facilities = table.Column<int>(type: "int", nullable: false),
+            //        Date_Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+            //        Created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Date_Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+            //        COMPANY_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        CompanyNumber = table.Column<int>(type: "int", nullable: true),
+            //        Field_ID = table.Column<int>(type: "int", nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_HSE_OPERATIONS_SAFETY_CASEs", x => x.Id);
+            //    });
 
             //migrationBuilder.CreateTable(
             //    name: "HSE_OSP_REGISTRATIONS_NEW",
@@ -4147,28 +4147,28 @@ namespace Backend_UMR_Work_Program.Migrations
             //        table.PrimaryKey("PK_HSE_OSP_REGISTRATIONS_NEW", x => x.Id);
             //    });
 
-            migrationBuilder.CreateTable(
-                name: "HSE_POINT_SOURCE_REGISTRATIONs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OML_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OML_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Companyemail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Year_of_WP = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Company_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Company_Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    areTherePointSourcePermit = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    evidenceOfPSPFilename = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    evidenceOfPSPPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    reasonForNoPSP = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HSE_POINT_SOURCE_REGISTRATIONs", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "HSE_POINT_SOURCE_REGISTRATIONs",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        OML_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        OML_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Companyemail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Year_of_WP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Company_ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        Company_Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        areTherePointSourcePermit = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        evidenceOfPSPFilename = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        evidenceOfPSPPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+            //        reasonForNoPSP = table.Column<string>(type: "nvarchar(max)", nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_HSE_POINT_SOURCE_REGISTRATIONs", x => x.Id);
+            //    });
 
             //migrationBuilder.CreateTable(
             //    name: "HSE_PRODUCED_WATER_MANAGEMENT_NEW",
@@ -7078,8 +7078,8 @@ namespace Backend_UMR_Work_Program.Migrations
             //migrationBuilder.DropTable(
             //    name: "ADMIN_HSE_OSP_REGISTRATIONS_NEW");
 
-            migrationBuilder.DropTable(
-                name: "ADMIN_HSE_REMEDIATION_FUNDs");
+            //migrationBuilder.DropTable(
+            //    name: "ADMIN_HSE_REMEDIATION_FUNDs");
 
             //migrationBuilder.DropTable(
             //    name: "ADMIN_INSPECTION_MAINTENANCE");
@@ -7351,8 +7351,8 @@ namespace Backend_UMR_Work_Program.Migrations
             //migrationBuilder.DropTable(
             //    name: "HSE");
 
-            migrationBuilder.DropTable(
-                name: "HSE_ACCIDENT_INCIDENCE_REPORTING_NEW");
+            //migrationBuilder.DropTable(
+            //    name: "HSE_ACCIDENT_INCIDENCE_REPORTING_NEW");
 
             //migrationBuilder.DropTable(
             //    name: "HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW");
@@ -7381,8 +7381,8 @@ namespace Backend_UMR_Work_Program.Migrations
             //migrationBuilder.DropTable(
             //    name: "HSE_DESIGNS_SAFETY");
 
-            migrationBuilder.DropTable(
-                name: "HSE_EFFLUENT_MONITORING_COMPLIANCE");
+            //migrationBuilder.DropTable(
+            //    name: "HSE_EFFLUENT_MONITORING_COMPLIANCE");
 
             //migrationBuilder.DropTable(
             //    name: "HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW");
@@ -7414,8 +7414,8 @@ namespace Backend_UMR_Work_Program.Migrations
             //migrationBuilder.DropTable(
             //    name: "HSE_FATALITIES");
 
-            migrationBuilder.DropTable(
-                name: "HSE_GHG_MANAGEMENT_PLAN");
+            //migrationBuilder.DropTable(
+            //    name: "HSE_GHG_MANAGEMENT_PLAN");
 
             //migrationBuilder.DropTable(
             //    name: "HSE_HOST_COMMUNITIES_DEVELOPMENT");
@@ -7432,8 +7432,8 @@ namespace Backend_UMR_Work_Program.Migrations
             //migrationBuilder.DropTable(
             //    name: "HSE_MinimumRequirement");
 
-            migrationBuilder.DropTable(
-                name: "HSE_OCCUPATIONAL_HEALTH_MANAGEMENT");
+            //migrationBuilder.DropTable(
+            //    name: "HSE_OCCUPATIONAL_HEALTH_MANAGEMENT");
 
             //migrationBuilder.DropTable(
             //    name: "HSE_OIL_SPILL_INCIDENT");
@@ -7441,14 +7441,14 @@ namespace Backend_UMR_Work_Program.Migrations
             //migrationBuilder.DropTable(
             //    name: "HSE_OIL_SPILL_REPORTING_NEW");
 
-            migrationBuilder.DropTable(
-                name: "HSE_OPERATIONS_SAFETY_CASEs");
+            //migrationBuilder.DropTable(
+            //    name: "HSE_OPERATIONS_SAFETY_CASEs");
 
             //migrationBuilder.DropTable(
             //    name: "HSE_OSP_REGISTRATIONS_NEW");
 
-            migrationBuilder.DropTable(
-                name: "HSE_POINT_SOURCE_REGISTRATIONs");
+            //migrationBuilder.DropTable(
+            //    name: "HSE_POINT_SOURCE_REGISTRATIONs");
 
             //migrationBuilder.DropTable(
             //    name: "HSE_PRODUCED_WATER_MANAGEMENT_NEW");
