@@ -26952,7 +26952,7 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.ToView("WP_WORKOVERS_RECOMPLETION_JOBS");
                 });
 
-            modelBuilder.Entity("Backend_UMR_Work_Program.Models.ADMIN_HSE_REMEDIATION_FUND", b =>
+            modelBuilder.Entity("Backend_UMR_Work_Program.Models.HSE_REMEDIATION_FUND", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
