@@ -27691,6 +27691,8 @@ namespace Backend_UMR_Work_Program.Migrations
 
 =======
 >>>>>>> main
+=======
+>>>>>>> origin/main
             modelBuilder.Entity("Backend_UMR_Work_Program.Models.HSE_OCCUPATIONAL_HEALTH_MANAGEMENT", b =>
                 {
                     b.Property<string>("COMPANY_ID")
