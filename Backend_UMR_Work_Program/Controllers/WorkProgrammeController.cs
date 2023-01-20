@@ -8825,7 +8825,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_REMEDIATION_FUND")]
-		public async Task<WebApiResponse> POST_HSE_REMEDIATION_FUND([FromBody] HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string fieldName, string year, string omlID, string actionToDo)
+		public async Task<WebApiResponse> POST_HSE_REMEDIATION_FUND([FromForm] HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string fieldName, string year, string omlID, string actionToDo)
 		{
 
 			int save = 0;
