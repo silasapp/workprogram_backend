@@ -22,8 +22,11 @@
     [AreThereTrainingPlansForHSE]    VARCHAR (MAX)  NULL,
     [EvidenceOfTrainingPlanFilename] VARCHAR (MAX)  NULL,
     [EvidenceOfTrainingPlanPath]     VARCHAR (MAX)  NULL,
+    [Remark]                         NVARCHAR (MAX) NULL,
     CONSTRAINT [PK_HSE_SAFETY_CULTURE_TRAINING] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
 
 

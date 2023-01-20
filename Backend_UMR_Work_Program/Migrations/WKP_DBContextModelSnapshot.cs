@@ -12738,6 +12738,9 @@ namespace Backend_UMR_Work_Program.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(200)");
 
+                    b.Property<string>("Remark")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SafetyCurrentYearFilePath")
                         .HasMaxLength(3000)
                         .IsUnicode(false)
