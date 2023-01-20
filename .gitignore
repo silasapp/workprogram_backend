@@ -12,5 +12,10 @@
 /A_WorkProgram/WKP_Backend/WKP_Database/WKP_Database.jfm
 /Database/Database.jfm
 /Database
+<<<<<<< HEAD
+/WKP_Database/WKP_Database.dbmdl
+/WKP_Database/WKP_Database.jfm
+=======
 /WKP_Database/*.jfm
 /WKP_Database/*.dbmdl
+>>>>>>> 7090468ef5c26ecbd1387931a1dd0e03945f3666
