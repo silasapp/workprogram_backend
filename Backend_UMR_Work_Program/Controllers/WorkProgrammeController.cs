@@ -8861,6 +8861,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_remediation_fund.Company_Number = WKPCompanyNumber.ToString();
 					hse_remediation_fund.OML_Name = omlName;
 
+
+					#region Fileregion
 					var file = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
 					var blobname = blobService.Filenamer(file);
 
@@ -8873,28 +8875,22 @@ namespace Backend_UMR_Work_Program.Controllers
 						else
 							hse_remediation_fund.evidenceOfPaymentPath = blobname;
 
-						if (action == GeneralModel.Insert)
+					}
+                    #endregion
+                    if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
 						{
-							if (getData == null)
-							{
-								await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
-							}
-							else
-							{
-								hse_remediation_fund.OML_ID = getData.OML_ID;
-								hse_remediation_fund.OML_Name = getData.OML_Name;
-								_context.HSE_REMEDIATION_FUNDs.Remove(getData);
-								await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
-							}
+							await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
 						}
-						else if (action == GeneralModel.Delete)
-						{
-							_context.HSE_REMEDIATION_FUNDs.Remove(getData);
-						}
-
-						save += await _context.SaveChangesAsync();
 
 					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
+					}
+
+						save += await _context.SaveChangesAsync();
 				}
 				else
 				{
