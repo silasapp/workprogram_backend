@@ -2320,7 +2320,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		//added by Musa
 
 		[HttpPost("POST_HSE_OPERATIONS_SAFETY_CASE")]
-		public async Task<WebApiResponse> POST_HSE_OPERATIONS_SAFETY_CASE([FromBody] HSE_OPERATIONS_SAFETY_CASE operations_Sefety_Case_model, string omlName, string fieldName, string year, string actionToDo = null)
+		public async Task<WebApiResponse> POST_HSE_OPERATIONS_SAFETY_CASE([FromForm] HSE_OPERATIONS_SAFETY_CASE operations_Sefety_Case_model, string omlName, string fieldName, string year, string actionToDo = null)
 		{
 
 			int save = 0;
@@ -7083,7 +7083,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_ACCIDENT_INCIDENCE")]
-		public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_MODEL hse_accident_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<WebApiResponse> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromForm] HSE_ACCIDENT_INCIDENCE_MODEL hse_accident_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
