@@ -8874,7 +8874,6 @@ namespace Backend_UMR_Work_Program.Controllers
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
 							hse_remediation_fund.evidenceOfPaymentPath = blobname;
-
 					}
                     #endregion
                     if (action == GeneralModel.Insert)
