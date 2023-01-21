@@ -6,6 +6,8 @@
     [Updated_by]   VARCHAR (100) NULL,
     [Date_Created] DATETIME      NULL,
     [Date_Updated] DATETIME      NULL,
-    CONSTRAINT [PK_TYPE_OF_TEST] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_ADMIN_TYPE_OF_TEST] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

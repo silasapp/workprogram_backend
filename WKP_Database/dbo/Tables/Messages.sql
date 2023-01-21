@@ -9,6 +9,8 @@
     [AppId]     INT            NULL,
     [staffID]   INT            NULL,
     [UserType]  NCHAR (10)     NULL,
-    CONSTRAINT [PK_message_id] PRIMARY KEY CLUSTERED ([id] ASC)
+    CONSTRAINT [PK_Messages] PRIMARY KEY CLUSTERED ([id] ASC)
 );
+
+
 

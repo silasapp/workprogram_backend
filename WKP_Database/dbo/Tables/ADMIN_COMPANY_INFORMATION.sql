@@ -24,6 +24,8 @@
     [CompanyNumber]        INT           NULL,
     [ELPS_ID]              INT           NULL,
     [CompanyAddress]       VARCHAR (150) NULL,
-    CONSTRAINT [PK_ADMIN_COMPANY_INFORMATION_] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_ADMIN_COMPANY_INFORMATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
