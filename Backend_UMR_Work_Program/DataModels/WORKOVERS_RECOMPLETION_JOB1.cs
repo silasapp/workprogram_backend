@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class WORKOVERS_RECOMPLETION_JOB1
     {
@@ -34,5 +34,7 @@ namespace Backend_UMR_Work_Program.Models
         public int? CompanyNumber { get; set; }
         public int? Field_ID { get; set; }
         public string? DaysForCompletion { get; set; }
+        public string? CompletionWellName { get; set; }
+        public DateTime? Proposed_Workover_Date { get; set; }
     }
 }

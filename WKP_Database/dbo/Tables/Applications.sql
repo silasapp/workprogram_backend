@@ -17,6 +17,8 @@
     [DeletedBy]     INT           NULL,
     [DeleteStatus]  BIT           NULL,
     [DeletedAt]     DATETIME      NULL,
-    CONSTRAINT [PK_applications_id] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_Applications] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

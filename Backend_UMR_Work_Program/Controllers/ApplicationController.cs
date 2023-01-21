@@ -10,6 +10,7 @@ using Microsoft.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
+using Backend_UMR_Work_Program.DataModels;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -668,7 +669,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
         [HttpPost("RejectApplication")]
-        public async Task<object> RejectApplication(int deskID, string comment, ActionModel model)
+        public async Task<object> RejectApplication([FromBody] ActionModel model, int deskID, string comment)
         {
             try
             {

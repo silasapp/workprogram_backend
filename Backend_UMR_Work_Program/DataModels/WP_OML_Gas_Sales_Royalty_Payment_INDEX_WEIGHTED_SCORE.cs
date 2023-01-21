@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class WP_OML_Gas_Sales_Royalty_Payment_INDEX_WEIGHTED_SCORE
     {
