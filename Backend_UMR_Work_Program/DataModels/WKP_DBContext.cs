@@ -7523,8 +7523,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM");
 
                 entity.Property(e => e.AUDITFilePath)
