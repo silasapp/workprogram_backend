@@ -669,7 +669,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
         [HttpPost("RejectApplication")]
-        public async Task<object> RejectApplication(int deskID, string comment, ActionModel model)
+        public async Task<object> RejectApplication([FromBody] ActionModel model, int deskID, string comment)
         {
             try
             {
