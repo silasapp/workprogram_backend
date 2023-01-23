@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
-using Backend_UMR_Work_Program.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -53,7 +52,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 
-				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.COMPANY_NAME==companyName).FirstOrDefault();
+				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.EMAIL==companyEmail || q.Id==Convert.ToInt32(companyId)).FirstOrDefault();
 				//var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
 
 
