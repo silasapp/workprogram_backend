@@ -5,7 +5,7 @@ namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class HSE_OPERATIONS_SAFETY_CASE
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string? OML_ID { get; set; }
         public string? OML_Name { get; set; }
         public string? CompanyName { get; set; }

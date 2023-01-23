@@ -6702,7 +6702,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY");
 
@@ -6745,8 +6744,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.GHGFilename)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
@@ -7569,8 +7566,6 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -8306,7 +8301,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>(entity =>
             {
-
                 entity.ToTable("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -8340,8 +8334,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.DoYouHaveAnOhm)
                     .HasMaxLength(10)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OHMplanCommunicationFilePath)
                     .HasMaxLength(500)
@@ -8687,21 +8679,13 @@ namespace Backend_UMR_Work_Program.DataModels
             {
                 entity.ToTable("HSE_POINT_SOURCE_REGISTRATION");
 
-                entity.Property(e => e.CompanyName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.CompanyName).IsUnicode(false);
 
-                entity.Property(e => e.Company_Email)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.Company_Email).IsUnicode(false);
 
-                entity.Property(e => e.Company_ID)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.Company_ID).IsUnicode(false);
 
-                entity.Property(e => e.Company_Number)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.Company_Number).IsUnicode(false);
 
                 entity.Property(e => e.OML_ID).IsUnicode(false);
 
@@ -8709,25 +8693,15 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Year_of_WP)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.Year_of_WP).IsUnicode(false);
 
-                entity.Property(e => e.are_there_point_source_permit)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.are_there_point_source_permit).IsUnicode(false);
 
-                entity.Property(e => e.evidence_of_PSP_filename)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.evidence_of_PSP_filename).IsUnicode(false);
 
-                entity.Property(e => e.evidence_of_PSP_path)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.evidence_of_PSP_path).IsUnicode(false);
 
-                entity.Property(e => e.reason_for_no_PSP)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.reason_for_no_PSP).IsUnicode(false);
             });
 
             modelBuilder.Entity<HSE_PRODUCED_WATER_MANAGEMENT_NEW>(entity =>
@@ -9022,21 +8996,13 @@ namespace Backend_UMR_Work_Program.DataModels
             {
                 entity.ToTable("HSE_REMEDIATION_FUND");
 
-                entity.Property(e => e.CompanyName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.CompanyName).IsUnicode(false);
 
-                entity.Property(e => e.Company_Email)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.Company_Email).IsUnicode(false);
 
-                entity.Property(e => e.Company_ID)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.Company_ID).IsUnicode(false);
 
-                entity.Property(e => e.Company_Number)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.Company_Number).IsUnicode(false);
 
                 entity.Property(e => e.OML_ID).IsUnicode(false);
 
@@ -9044,21 +9010,13 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Year_of_WP)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.Year_of_WP).IsUnicode(false);
 
-                entity.Property(e => e.evidenceOfPaymentFilename)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.evidenceOfPaymentFilename).IsUnicode(false);
 
-                entity.Property(e => e.evidenceOfPaymentPath)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.evidenceOfPaymentPath).IsUnicode(false);
 
-                entity.Property(e => e.reasonForNoRemediation)
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                entity.Property(e => e.reasonForNoRemediation).IsUnicode(false);
             });
 
             modelBuilder.Entity<HSE_SAFETY_CULTURE_TRAINING>(entity =>
