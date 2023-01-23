@@ -190,24 +190,25 @@ namespace Backend_UMR_Work_Program.Controllers
 				string isEditable = "";
 				if (concessionFields.Count > 0)
 				{
-					foreach (var field in concessionFields) {
+					foreach (var field in concessionFields)
+					{
 
 
-						var checkApplication =await (from ap in _context.Applications
-												where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
-												select ap).FirstOrDefaultAsync();
+						var checkApplication = await (from ap in _context.Applications
+													  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
+													  select ap).FirstOrDefaultAsync();
 						field.isEditable = true;
 						if (checkApplication != null)
 						{
 							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
-							if(NRejectApp == null)
-							field.isEditable = false;
+							if (NRejectApp == null)
+								field.isEditable = false;
 						}
-							
+
 					}
-					
+
 				}
-				
+
 				return new { ConcessionFields = concessionFields };
 			}
 			catch (Exception e)
@@ -2936,26 +2937,26 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
 
 					#region file section
-					var file1 = Request.Form.Files[0];
-					var file2 = Request.Form.Files[1];
-					var blobname1 = blobService.Filenamer(file1);
-					var blobname2 = blobService.Filenamer(file2);
+					//var file1 = Request.Form.Files[0];
+					//var file2 = Request.Form.Files[1];
+					//var blobname1 = blobService.Filenamer(file1);
+					//var blobname2 = blobService.Filenamer(file2);
 
-					if (file1 != null)
-					{
-						string docName = "Field Discovery";
-						drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-					}
-					if (file2 != null)
-					{
-						string docName = "Hydrocarbon Count";
-						drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+					//if (file1 != null)
+					//{
+					//	string docName = "Field Discovery";
+					//	drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+					//	if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
+					//		return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+					//}
+					//if (file2 != null)
+					//{
+					//	string docName = "Hydrocarbon Count";
+					//	drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+					//	if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
+					//		return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 
-					}
+					//}
 					#endregion
 
 					if (action == GeneralModel.Insert)
@@ -3488,6 +3489,8 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER select c).FirstOrDefaultAsync();
 
+					var getDataList = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Proposed_Initial_Name==initial_well_completion_model.Proposed_Initial_Name select c).ToListAsync();
+
 					initial_well_completion_model.Companyemail = WKPCompanyEmail;
 					initial_well_completion_model.CompanyName = WKPCompanyName;
 					initial_well_completion_model.COMPANY_ID = WKPCompanyId;
@@ -3502,6 +3505,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (action == GeneralModel.Insert)
 					{
+						initial_well_completion_model.Proposed_Well_Number=getDataList.Count+1;
+
 						if (getData == null)
 						{
 							initial_well_completion_model.Date_Created = DateTime.Now;
@@ -3520,6 +3525,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else if (action == GeneralModel.Delete)
 					{
+
+
 						_context.INITIAL_WELL_COMPLETION_JOBs1.Remove(getData);
 					}
 
@@ -4926,7 +4933,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_BUDGET_ACTUAL_EXPENDITURE")]
-		public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName,  string year, string id, string actionToDo)
+		public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
@@ -5009,10 +5016,10 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
-		public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName,  string year, string id,string actionToDo)
+		public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
@@ -5675,7 +5682,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
-		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName, 
+		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName,
 			string year, string id, string actionToDo, string reasonForNoEvidence, string areThereEvidenceOfDesignSafetyCaseApproval,
 			string evidenceOfDesignSafetyCaseApprovalPath, string evidenceOfDesignSafetyCaseApprovalFilename)
 		{
@@ -8896,8 +8903,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						else
 							hse_remediation_fund.evidenceOfPaymentPath = blobname;
 					}
-                    #endregion
-                    if (action == GeneralModel.Insert)
+					#endregion
+					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
 						{
@@ -8909,7 +8916,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
 					}
 
-						save += await _context.SaveChangesAsync();
+					save += await _context.SaveChangesAsync();
 				}
 				else
 				{
@@ -9878,12 +9885,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					if (file2 != null)
 					{
-						string docName = "Reason Why Ohm Was Not Communicated To Staff";
-						hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
+						string docName = "OHM Plan";
+						hse_occupational_model.OHMplanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_occupational_model.OHMplanFilePath == null)
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
-							hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname2;
+							hse_occupational_model.OHMplanFilename = blobname2;
 					}
 					//}
 
