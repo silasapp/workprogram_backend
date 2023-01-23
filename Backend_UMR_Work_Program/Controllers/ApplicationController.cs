@@ -697,7 +697,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         if (staffDesk.Sort == 1) //Rejection to company
                         {
                             var getStaff = (from stf in _context.staff where stf.StaffID == staffDesk.StaffID select stf).FirstOrDefault();
-                            var NRejectApp = _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated);
+                            var NRejectApp =await _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
                             if (NRejectApp == null)
                             {
                                 List<string> RejectedForms = new List<string>();
@@ -725,6 +725,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     SBU_Tables = RejectedTables,
                                     AppID = appId,
                                     DateCreated = DateTime.Now,
+                                    
                                 };
                                 await _context.SBU_ApplicationComments.AddAsync(nReject);
                                 if (await _context.SaveChangesAsync() > 0)
@@ -734,6 +735,9 @@ namespace Backend_UMR_Work_Program.Controllers
                                     string content = $"{SBU?.SBU_Name} made comment on your WORK PROGRAM application for year {application.YearOfWKP}. See comment :- " + comment;
                                     var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
                                     var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+
+                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Rejection for application {concession.Concession_Held} has been sent to the company.", StatusCode = ResponseCodes.Success };
+
                                 }
                             }
                         }
