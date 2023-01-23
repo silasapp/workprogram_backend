@@ -8549,7 +8549,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_OPERATIONS_SAFETY_CASE>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("HSE_OPERATIONS_SAFETY_CASE");
 
@@ -8580,8 +8579,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.Evidence_of_Operations_Safety_Case_Approval)
                     .HasMaxLength(3000)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Location_of_Facility)
                     .HasMaxLength(1000)
