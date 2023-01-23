@@ -1,0 +1,10 @@
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\bin\Debug\WKP_Database.dacpac
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\bin\Debug\Database.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\bin\Debug\Database.pdb
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\obj\Debug\Model.xml
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\obj\Debug\refactor.xml
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\obj\Debug\postdeploy.sql
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\obj\Debug\predeploy.sql
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\obj\Debug\Database.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\Database\obj\Debug\Database.pdb

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class WKP_DBContext : DbContext
     {
@@ -47,7 +47,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<ADMIN_ENVIRONMENTAL_STUDY> ADMIN_ENVIRONMENTAL_STUDies { get; set; } = null!;
         public virtual DbSet<ADMIN_FEILDDEVELOPMENTPLAN_WELLORGA> ADMIN_FEILDDEVELOPMENTPLAN_WELLORGAs { get; set; } = null!;
         public virtual DbSet<ADMIN_FIVE_YEAR_TREND> ADMIN_FIVE_YEAR_TRENDs { get; set; } = null!;
-        public virtual DbSet<ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI_> ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI_s { get; set; } = null!;
+        public virtual DbSet<ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI> ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTIs { get; set; } = null!;
         public virtual DbSet<ADMIN_GASPRODUCTION_UTILIZED_MMSCF> ADMIN_GASPRODUCTION_UTILIZED_MMSCFs { get; set; } = null!;
         public virtual DbSet<ADMIN_HSE_CONDITION_OF_EQUIPMENT> ADMIN_HSE_CONDITION_OF_EQUIPMENTs { get; set; } = null!;
         public virtual DbSet<ADMIN_HSE_OSP_REGISTRATIONS_NEW> ADMIN_HSE_OSP_REGISTRATIONS_NEWs { get; set; } = null!;
@@ -155,15 +155,19 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEW> HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NUMBER_AND_QUALITY_NEW> HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NUMBER_AND_QUALITY_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_DESIGNS_SAFETY> HSE_DESIGNS_SAFETies { get; set; } = null!;
+        public virtual DbSet<HSE_EFFLUENT_MONITORING_COMPLIANCE> HSE_EFFLUENT_MONITORING_COMPLIANCEs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_TYPE_OF_REPORT_NEW> HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_TYPE_OF_REPORT_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_IMPACT_ASSESSMENT> HSE_ENVIRONMENTAL_IMPACT_ASSESSMENTs { get; set; } = null!;
+        public virtual DbSet<HSE_ENVIRONMENTAL_MANAGEMENT_PLAN> HSE_ENVIRONMENTAL_MANAGEMENT_PLANs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM> HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW> HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_STUDIES_NEW> HSE_ENVIRONMENTAL_STUDIES_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED> HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs { get; set; } = null!;
         public virtual DbSet<HSE_FATALITy> HSE_FATALITIEs { get; set; } = null!;
+        public virtual DbSet<HSE_GHG_MANAGEMENT_PLAN> HSE_GHG_MANAGEMENT_PLANs { get; set; } = null!;
+        public virtual DbSet<HSE_HOST_COMMUNITIES_DEVELOPMENT> HSE_HOST_COMMUNITIES_DEVELOPMENTs { get; set; } = null!;
         public virtual DbSet<HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW> HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_INSPECTION_AND_MAINTENANCE_NEW> HSE_INSPECTION_AND_MAINTENANCE_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_MANAGEMENT_POSITION> HSE_MANAGEMENT_POSITIONs { get; set; } = null!;
@@ -171,11 +175,14 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT> HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs { get; set; } = null!;
         public virtual DbSet<HSE_OIL_SPILL_INCIDENT> HSE_OIL_SPILL_INCIDENTs { get; set; } = null!;
         public virtual DbSet<HSE_OIL_SPILL_REPORTING_NEW> HSE_OIL_SPILL_REPORTING_NEWs { get; set; } = null!;
+        public virtual DbSet<HSE_OPERATIONS_SAFETY_CASE> HSE_OPERATIONS_SAFETY_CASEs { get; set; } = null!;
         public virtual DbSet<HSE_OSP_REGISTRATIONS_NEW> HSE_OSP_REGISTRATIONS_NEWs { get; set; } = null!;
+        public virtual DbSet<HSE_POINT_SOURCE_REGISTRATION> HSE_POINT_SOURCE_REGISTRATIONs { get; set; } = null!;
         public virtual DbSet<HSE_PRODUCED_WATER_MANAGEMENT_NEW> HSE_PRODUCED_WATER_MANAGEMENT_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED> HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs { get; set; } = null!;
         public virtual DbSet<HSE_QUALITY_CONTROL> HSE_QUALITY_CONTROLs { get; set; } = null!;
         public virtual DbSet<HSE_QUESTION> HSE_QUESTIONs { get; set; } = null!;
+        public virtual DbSet<HSE_REMEDIATION_FUND> HSE_REMEDIATION_FUNDs { get; set; } = null!;
         public virtual DbSet<HSE_SAFETY_CULTURE_TRAINING> HSE_SAFETY_CULTURE_TRAININGs { get; set; } = null!;
         public virtual DbSet<HSE_SAFETY_STUDIES_NEW> HSE_SAFETY_STUDIES_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSRs { get; set; } = null!;
@@ -257,6 +264,7 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITION> Sum_GEOPHYSICAL_ACTIVITIES_ACQUISITIONs { get; set; } = null!;
         public virtual DbSet<Sum_GEOPHYSICAL_ACTIVITIES_PROCESSING> Sum_GEOPHYSICAL_ACTIVITIES_PROCESSINGs { get; set; } = null!;
         public virtual DbSet<Table_1> Table_1s { get; set; } = null!;
+        public virtual DbSet<Table_Detail> Table_Details { get; set; } = null!;
         public virtual DbSet<TrainingForStaff> TrainingForStaffs { get; set; } = null!;
         public virtual DbSet<UserLogin> UserLogins { get; set; } = null!;
         public virtual DbSet<UserMaster> UserMasters { get; set; } = null!;
@@ -429,7 +437,6 @@ namespace Backend_UMR_Work_Program.Models
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPE> WP_OPL_Aggregated_Score_ALL_COMPANIES_WITHOUT_INDEX_TYPEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Aggregated_Score_ALL_COMPANy> WP_OPL_Aggregated_Score_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_COMPLIANCE_INDEX_CALCULATION> WP_OPL_COMPLIANCE_INDEX_CALCULATIONs { get; set; } = null!;
-        public virtual DbSet<WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANy> WP_OML_WEIGHTED_AND_RECALIBRATED_SCORE_UNION_ALL_COMPANIEs { get; set; } = null!;
         public virtual DbSet<WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCORE> WP_OPL_CONCESSION_RENTALS_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
         public virtual DbSet<WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEAR> WP_OPL_Concession_Rentals_Index_MN_MAX_RGT_by_YEARs { get; set; } = null!;
         public virtual DbSet<WP_OPL_DISCOVERY_INDEX_WEIGHTED_SCORE> WP_OPL_DISCOVERY_INDEX_WEIGHTED_SCOREs { get; set; } = null!;
@@ -465,7 +472,8 @@ namespace Backend_UMR_Work_Program.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("name=Data:Wkpconnect:ConnectionString");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=tcp:staging-servers.database.windows.net,1433;Initial Catalog=workprogram;Persist Security Info=False;User ID=serveradmin;Password=*123*brandonetech#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
@@ -2127,9 +2135,9 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI_>(entity =>
+            modelBuilder.Entity<ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI>(entity =>
             {
-                entity.ToTable("ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI ");
+                entity.ToTable("ADMIN_Fatalities_Casualties_ManOverboard_TRI_LTI");
 
                 entity.Property(e => e.Created_by)
                     .HasMaxLength(100)
@@ -5015,6 +5023,14 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.areThereEvidenceOfDesignSafetyCaseApproval).IsUnicode(false);
+
+                entity.Property(e => e.evidenceOfDesignSafetyCaseApprovalFilename).IsUnicode(false);
+
+                entity.Property(e => e.evidenceOfDesignSafetyCaseApprovalPath).IsUnicode(false);
+
+                entity.Property(e => e.reasonForNoEvidence).IsUnicode(false);
             });
 
             modelBuilder.Entity<FIELD_DEVELOPMENT_FIELDS_AND_STATUS>(entity =>
@@ -6241,6 +6257,14 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.UploadIncidentStatisticsFilename)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UploadIncidentStatisticsPath)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Was_there_any_accident_incidence)
                     .HasMaxLength(3999)
                     .IsUnicode(false);
@@ -7059,6 +7083,67 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<HSE_EFFLUENT_MONITORING_COMPLIANCE>(entity =>
+            {
+                entity.ToTable("HSE_EFFLUENT_MONITORING_COMPLIANCE");
+
+                entity.Property(e => e.AreThereEvidentOfSampling)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.COMPANY_ID)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyNumber)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Companyemail)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created_by)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date_Created).HasColumnType("datetime");
+
+                entity.Property(e => e.Date_Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.EvidenceOfSamplingFilename)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EvidenceOfSamplingPath)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OML_Name)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OmL_ID)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReasonForNoEvidenceSampling)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Updated_by)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW>(entity =>
             {
                 entity.ToTable("HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW");
@@ -7379,10 +7464,65 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<HSE_ENVIRONMENTAL_MANAGEMENT_PLAN>(entity =>
+            {
+                entity.ToTable("HSE_ENVIRONMENTAL_MANAGEMENT_PLAN");
+
+                entity.Property(e => e.AreThereEMP)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.COMPANY_ID)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Companyemail)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created_by)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date_Created).HasColumnType("datetime");
+
+                entity.Property(e => e.Date_Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.FacilityLocation)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FacilityType)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OML_Name)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OmL_ID)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RemarkIfNoEMP)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Updated_by)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM");
 
                 entity.Property(e => e.AUDITFilePath)
@@ -7756,6 +7896,164 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<HSE_GHG_MANAGEMENT_PLAN>(entity =>
+            {
+                entity.ToTable("HSE_GHG_MANAGEMENT_PLAN");
+
+                entity.Property(e => e.CompanY_ID)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created_by)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date_Created).HasColumnType("datetime");
+
+                entity.Property(e => e.Date_Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.DoYouHaveGHG)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DoYouHaveLDRCertificate)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GHGApprovalFilename)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GHGApprovalPath)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LDRCertificateFilename)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LDRCertificatePath)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OmL_ID)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OmL_Name)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReasonForNoGHG)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReasonForNoLDR)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Updated_by)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.companyemail)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<HSE_HOST_COMMUNITIES_DEVELOPMENT>(entity =>
+            {
+                entity.ToTable("HSE_HOST_COMMUNITIES_DEVELOPMENT");
+
+                entity.Property(e => e.COMPANY_ID)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyNumber)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Companyemail)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created_by)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date_Created).HasColumnType("datetime");
+
+                entity.Property(e => e.Date_Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.DoYouHaveEvidenceOfPay)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DoYouHaveEvidenceOfReg)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EvidenceOfPayTrustFundFilename)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EvidenceOfPayTrustFundPath)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EvidenceOfRegTrustFundFilename)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EvidenceOfRegTrustFundPath)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OML_Name)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OmL_ID)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReasonForNoEvidenceOfPayTF)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReasonForNoEvidenceOfRegTF)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Updated_by)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UploadCommDevPlanApprovalFilename)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UploadCommDevPlanApprovalPath)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW>(entity =>
             {
                 entity.ToTable("HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW");
@@ -8008,7 +8306,6 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT");
 
@@ -8040,6 +8337,10 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.Date_Updated).HasColumnType("datetime");
 
+                entity.Property(e => e.DoYouHaveAnOhm)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OHMplanCommunicationFilePath)
@@ -8066,6 +8367,18 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ReasonForNoOhm)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaffFileName)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaffPath)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.SMSFileUploadname)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -8076,6 +8389,10 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.Updated_by)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WasOhmPolicyCommunicatedToStaff)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Year_of_WP)
@@ -8235,6 +8552,76 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<HSE_OPERATIONS_SAFETY_CASE>(entity =>
+            {
+
+                entity.ToTable("HSE_OPERATIONS_SAFETY_CASE");
+
+                entity.Property(e => e.COMPANY_ID)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Companyemail)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created_by)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date_Created).HasColumnType("datetime");
+
+                entity.Property(e => e.Date_Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.Does_the_Facility_Have_a_Valid_Safety_Case)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Evidence_of_Operations_Safety_Case_Approval)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Location_of_Facility)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name_Of_Facility)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Number_of_Facilities)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OML_ID)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OML_Name)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Reason_If_No_Evidence)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type_of_Facility)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Updated_by)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<HSE_OSP_REGISTRATIONS_NEW>(entity =>
             {
                 entity.ToTable("HSE_OSP_REGISTRATIONS_NEW");
@@ -8293,6 +8680,53 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.Year_of_WP)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<HSE_POINT_SOURCE_REGISTRATION>(entity =>
+            {
+                entity.ToTable("HSE_POINT_SOURCE_REGISTRATION");
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Company_Email)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Company_ID)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Company_Number)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OML_ID).IsUnicode(false);
+
+                entity.Property(e => e.OML_Name)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.are_there_point_source_permit)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.evidence_of_PSP_filename)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.evidence_of_PSP_path)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.reason_for_no_PSP)
+                    .HasMaxLength(1)
                     .IsUnicode(false);
             });
 
@@ -8584,11 +9018,54 @@ namespace Backend_UMR_Work_Program.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<HSE_REMEDIATION_FUND>(entity =>
+            {
+                entity.ToTable("HSE_REMEDIATION_FUND");
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Company_Email)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Company_ID)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Company_Number)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OML_ID).IsUnicode(false);
+
+                entity.Property(e => e.OML_Name)
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year_of_WP)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.evidenceOfPaymentFilename)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.evidenceOfPaymentPath)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.reasonForNoRemediation)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<HSE_SAFETY_CULTURE_TRAINING>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("HSE_SAFETY_CULTURE_TRAINING");
+
+                entity.Property(e => e.AreThereTrainingPlansForHSE).IsUnicode(false);
 
                 entity.Property(e => e.COMPANY_ID)
                     .HasMaxLength(100)
@@ -8618,7 +9095,9 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.Date_Updated).HasColumnType("datetime");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.EvidenceOfTrainingPlanFilename).IsUnicode(false);
+
+                entity.Property(e => e.EvidenceOfTrainingPlanPath).IsUnicode(false);
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
@@ -9527,6 +10006,8 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(3999)
                     .IsUnicode(false);
 
+                entity.Property(e => e.number_of_facilities).IsUnicode(false);
+
                 entity.Property(e => e.remarks)
                     .HasMaxLength(3999)
                     .IsUnicode(false);
@@ -9534,6 +10015,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.study_type)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.type_of_facility).IsUnicode(false);
             });
 
             modelBuilder.Entity<HSE_WASTE_MANAGEMENT_NEW>(entity =>
@@ -11560,13 +12043,9 @@ namespace Backend_UMR_Work_Program.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ProductionOilCondensateAGNAGUFilename)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.ProductionOilCondensateAGNAGUFilename).IsUnicode(false);
 
-                entity.Property(e => e.ProductionOilCondensateAGNAGUploadFilePath)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.ProductionOilCondensateAGNAGUploadFilePath).IsUnicode(false);
 
                 entity.Property(e => e.Remarks).IsUnicode(false);
 
@@ -12375,7 +12854,7 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Effect_on_Operation).IsUnicode(false);
 
                 entity.Property(e => e.Evidence_Of_MOUs_With_CAN)
-                    .HasMaxLength(300)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Evidence_Of_QuaterlySubmissions_Of_OilField_Chemicals)
@@ -13699,7 +14178,8 @@ namespace Backend_UMR_Work_Program.Models
                         });
             });
 
-            modelBuilder.Entity<Royalty>(entity =>
+           
+             modelBuilder.Entity<Royalty>(entity =>
             {
                 entity.HasKey(e => e.Royalty_ID);
 
@@ -13738,7 +14218,7 @@ namespace Backend_UMR_Work_Program.Models
 
             modelBuilder.Entity<SBU_ApplicationComment>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.ActionStatus)
                     .HasMaxLength(50)
@@ -13751,6 +14231,8 @@ namespace Backend_UMR_Work_Program.Models
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.SBU_Comment).IsUnicode(false);
+
+                entity.Property(e => e.SBU_Tables).IsUnicode(false);
             });
 
             modelBuilder.Entity<SBU_Record>(entity =>
@@ -14080,6 +14562,23 @@ namespace Backend_UMR_Work_Program.Models
 
                 entity.Property(e => e.name)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Table_Detail>(entity =>
+            {
+                entity.HasKey(e => e.TableId);
+
+                entity.Property(e => e.SBU_ID)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TableName)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TableSchema)
+                    .HasMaxLength(250)
                     .IsUnicode(false);
             });
 

@@ -1,4 +1,6 @@
-﻿namespace Backend_UMR_Work_Program.Models
+﻿using Backend_UMR_Work_Program.DataModels;
+
+namespace Backend_UMR_Work_Program.Models
 {
     public class GeneralModel
     {
@@ -55,6 +57,12 @@
         //public static string WKUserRole { get; set; }
         //public static string WKPCompanyNumber { get; set; }
 
+        public class ActionModel
+        {
+           public string[] selectedApps { get; set; }
+           public string[] SBU_IDs { get; set; }
+           public string[] selectedTables { get; set; }
+        }    
         public class Concession_Index
         {
             public string companyName { get; set; }
@@ -293,6 +301,8 @@
             public List<Staff_Model> Staff { get; set; }
             public List<ApplicationDeskHistory_Model> Application_History { get; set; }
             public List<SubmittedDocument> Document { get; set; }
+            public List<StrategicBusinessUnit> SBU { get; set; }
+            public List<Table_Detail> SBU_TableDetails { get; set; }
         }
         public class Staff_Model
         {

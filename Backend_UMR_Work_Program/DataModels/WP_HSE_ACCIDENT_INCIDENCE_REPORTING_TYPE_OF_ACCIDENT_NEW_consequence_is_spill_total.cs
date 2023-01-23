@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class WP_HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEW_consequence_is_spill_total
     {

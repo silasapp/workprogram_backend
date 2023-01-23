@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend_UMR_Work_Program", "Backend_UMR_Work_Program\Backend_UMR_Work_Program.csproj", "{925693F4-20F3-4DFE-9FB9-06ACFD236F33}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "WKP_Database", "WKP_Database\WKP_Database.sqlproj", "{15A6CB79-B9B1-4E16-8672-A7022F05746B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,12 +17,12 @@ Global
 		{925693F4-20F3-4DFE-9FB9-06ACFD236F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{925693F4-20F3-4DFE-9FB9-06ACFD236F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{925693F4-20F3-4DFE-9FB9-06ACFD236F33}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5437F16-F389-4F53-969A-6079E921334A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5437F16-F389-4F53-969A-6079E921334A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5437F16-F389-4F53-969A-6079E921334A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{C5437F16-F389-4F53-969A-6079E921334A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5437F16-F389-4F53-969A-6079E921334A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5437F16-F389-4F53-969A-6079E921334A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{15A6CB79-B9B1-4E16-8672-A7022F05746B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15A6CB79-B9B1-4E16-8672-A7022F05746B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15A6CB79-B9B1-4E16-8672-A7022F05746B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{15A6CB79-B9B1-4E16-8672-A7022F05746B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15A6CB79-B9B1-4E16-8672-A7022F05746B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15A6CB79-B9B1-4E16-8672-A7022F05746B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
