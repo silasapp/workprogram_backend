@@ -190,24 +190,25 @@ namespace Backend_UMR_Work_Program.Controllers
 				string isEditable = "";
 				if (concessionFields.Count > 0)
 				{
-					foreach (var field in concessionFields) {
+					foreach (var field in concessionFields)
+					{
 
 
-						var checkApplication =await (from ap in _context.Applications
-												where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
-												select ap).FirstOrDefaultAsync();
+						var checkApplication = await (from ap in _context.Applications
+													  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
+													  select ap).FirstOrDefaultAsync();
 						field.isEditable = true;
 						if (checkApplication != null)
 						{
 							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
-							if(NRejectApp == null)
-							field.isEditable = false;
+							if (NRejectApp == null)
+								field.isEditable = false;
 						}
-							
+
 					}
-					
+
 				}
-				
+
 				return new { ConcessionFields = concessionFields };
 			}
 			catch (Exception e)
@@ -2936,26 +2937,26 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
 
 					#region file section
-					var file1 = Request.Form.Files[0];
-					var file2 = Request.Form.Files[1];
-					var blobname1 = blobService.Filenamer(file1);
-					var blobname2 = blobService.Filenamer(file2);
+					//var file1 = Request.Form.Files[0];
+					//var file2 = Request.Form.Files[1];
+					//var blobname1 = blobService.Filenamer(file1);
+					//var blobname2 = blobService.Filenamer(file2);
 
-					if (file1 != null)
-					{
-						string docName = "Field Discovery";
-						drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-					}
-					if (file2 != null)
-					{
-						string docName = "Hydrocarbon Count";
-						drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+					//if (file1 != null)
+					//{
+					//	string docName = "Field Discovery";
+					//	drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+					//	if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
+					//		return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+					//}
+					//if (file2 != null)
+					//{
+					//	string docName = "Hydrocarbon Count";
+					//	drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+					//	if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
+					//		return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 
-					}
+					//}
 					#endregion
 
 					if (action == GeneralModel.Insert)
