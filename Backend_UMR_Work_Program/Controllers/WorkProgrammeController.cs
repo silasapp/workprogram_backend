@@ -548,7 +548,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			try
 			{
-				var concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.Year == myyear && d.DELETED_STATUS == null select d).ToListAsync();
+				var concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).ToListAsync();
 
 				var concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
 
@@ -8852,7 +8852,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (hse_remediation_fund != null)
 				{
-					var getData = (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					var getData = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_remediation_fund.OML_ID = omlID;
 					hse_remediation_fund.Company_Email = WKPCompanyEmail;
@@ -8882,7 +8882,6 @@ namespace Backend_UMR_Work_Program.Controllers
 						{
 							await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
 						}
-
 					}
 					else if (action == GeneralModel.Delete)
 					{
