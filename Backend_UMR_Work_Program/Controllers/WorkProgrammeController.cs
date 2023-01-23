@@ -10054,14 +10054,13 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 
-
 				if (!string.IsNullOrEmpty(id))
 				{
 					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
 					if (action == GeneralModel.Delete)
 						_context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
-					save += _context.SaveChanges();
+					save += await _context.SaveChangesAsync();
 				}
 				else if (hse_waste_model != null)
 				{
