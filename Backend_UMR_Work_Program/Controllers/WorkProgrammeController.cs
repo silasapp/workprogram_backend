@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Backend_UMR_Work_Program.DataModels;
+﻿using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -3467,6 +3465,8 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER select c).FirstOrDefaultAsync();
 
+					var getDataList = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Proposed_Initial_Name==initial_well_completion_model.Proposed_Initial_Name select c).ToListAsync();
+
 					initial_well_completion_model.Companyemail = WKPCompanyEmail;
 					initial_well_completion_model.CompanyName = WKPCompanyName;
 					initial_well_completion_model.COMPANY_ID = WKPCompanyId;
@@ -3481,6 +3481,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (action == GeneralModel.Insert)
 					{
+						initial_well_completion_model.Proposed_Well_Number=getDataList.Count+1;
+
 						if (getData == null)
 						{
 							initial_well_completion_model.Date_Created = DateTime.Now;
@@ -4905,7 +4907,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_BUDGET_ACTUAL_EXPENDITURE")]
-		public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName,  string year, string id, string actionToDo)
+		public async Task<WebApiResponse> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
@@ -4988,10 +4990,10 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
-		public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName,  string year, string id,string actionToDo)
+		public async Task<WebApiResponse> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
@@ -5654,7 +5656,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
-		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName, 
+		public async Task<WebApiResponse> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName,
 			string year, string id, string actionToDo, string reasonForNoEvidence, string areThereEvidenceOfDesignSafetyCaseApproval,
 			string evidenceOfDesignSafetyCaseApprovalPath, string evidenceOfDesignSafetyCaseApprovalFilename)
 		{
@@ -8875,8 +8877,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						else
 							hse_remediation_fund.evidenceOfPaymentPath = blobname;
 					}
-                    #endregion
-                    if (action == GeneralModel.Insert)
+					#endregion
+					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
 						{
@@ -8889,7 +8891,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
 					}
 
-						save += await _context.SaveChangesAsync();
+					save += await _context.SaveChangesAsync();
 				}
 				else
 				{
