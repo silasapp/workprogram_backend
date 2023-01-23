@@ -1,5 +1,7 @@
-﻿using Backend_UMR_Work_Program.DataModels;
+﻿using AutoMapper;
+using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -3501,6 +3503,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else if (action == GeneralModel.Delete)
 					{
+
+
 						_context.INITIAL_WELL_COMPLETION_JOBs1.Remove(getData);
 					}
 
