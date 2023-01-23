@@ -17,6 +17,9 @@
     [GHGFilename]     VARCHAR (100)  NULL,
     [COMPANY_ID]      VARCHAR (100)  NULL,
     [CompanyNumber]   INT            NULL,
-    [Field_ID]        INT            NULL
+    [Field_ID]        INT            NULL,
+    CONSTRAINT [PK_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

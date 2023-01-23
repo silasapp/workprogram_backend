@@ -6702,7 +6702,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY");
 
@@ -6745,8 +6744,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.GHGFilename)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
