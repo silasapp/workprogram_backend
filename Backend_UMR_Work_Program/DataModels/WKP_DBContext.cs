@@ -10351,7 +10351,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<LEGAL_ARBITRATION>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("LEGAL_ARBITRATION");
 
@@ -10440,7 +10439,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<LEGAL_LITIGATION>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("LEGAL_LITIGATION");
 

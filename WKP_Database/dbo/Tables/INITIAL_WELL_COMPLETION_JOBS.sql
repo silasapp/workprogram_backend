@@ -31,8 +31,11 @@
     [Field_ID]                                  INT            NULL,
     [Proposed_Completion_Days]                  NVARCHAR (MAX) NULL,
     [Proposed_Initial_Name]                     NVARCHAR (MAX) NULL,
+    [Proposed_Well_Number]                      INT            DEFAULT ((0)) NOT NULL,
     CONSTRAINT [PK_INITIAL_WELL_COMPLETION_JOBS] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
 
 

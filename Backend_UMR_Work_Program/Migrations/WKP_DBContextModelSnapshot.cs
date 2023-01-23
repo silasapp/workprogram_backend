@@ -11680,15 +11680,10 @@ namespace Backend_UMR_Work_Program.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(1000)");
 
-                    b.Property<string>("ReasonWhyOhmWasNotCommunicatedToStaffFileName")
+                    b.Property<string>("ReasonWhyOhmWasNotCommunicatedToStaff")
                         .HasMaxLength(1000)
                         .IsUnicode(false)
                         .HasColumnType("varchar(1000)");
-
-                    b.Property<string>("ReasonWhyOhmWasNotCommunicatedToStaffPath")
-                        .HasMaxLength(3000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(3000)");
 
                     b.Property<string>("SMSFileUploadname")
                         .HasMaxLength(100)
@@ -14507,6 +14502,9 @@ namespace Backend_UMR_Work_Program.Migrations
 
                     b.Property<string>("Proposed_Initial_Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Proposed_Well_Number")
+                        .HasColumnType("int");
 
                     b.Property<string>("Proposed_year_data")
                         .HasMaxLength(500)
