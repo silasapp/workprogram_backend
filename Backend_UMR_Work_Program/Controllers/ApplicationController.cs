@@ -710,7 +710,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                         var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId == tableID).FirstOrDefaultAsync();
 
                                         if (getSBU_TablesToDisplay != null)
-                                            RejectedTables = $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}";
+                                            RejectedTables = RejectedTables != ""? $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}" : getSBU_TablesToDisplay.TableName;
 
                                     }
                                 }
