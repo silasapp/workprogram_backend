@@ -16,6 +16,6 @@ namespace Backend_UMR_Work_Program.DataModels
         public string? evidenceOfPaymentFilename { get; set; }
         public string? evidenceOfPaymentPath { get; set; }
         public string? reasonForNoRemediation { get; set; }
-        public string? areThereRemediationFund {get; set;}
+        public string? areThereRemediationFund { get; set; }
     }
 }
