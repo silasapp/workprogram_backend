@@ -4,3 +4,13 @@ C:\Workcode\WorkProgram_BEnd\WKP_Database\bin\Debug\Database.pdb
 C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
 C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\Database.dll
 C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\Database.pdb
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\WKP_Database.dacpac
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\Database.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\Database.pdb
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\Model.xml
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\refactor.xml
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\postdeploy.sql
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\predeploy.sql
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\Database.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\Database.pdb
