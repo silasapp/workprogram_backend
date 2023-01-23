@@ -57,6 +57,12 @@ namespace Backend_UMR_Work_Program.Models
         //public static string WKUserRole { get; set; }
         //public static string WKPCompanyNumber { get; set; }
 
+        public class ActionModel
+        {
+           public string[] selectedApps { get; set; }
+           public string[] SBU_IDs { get; set; }
+           public string[] selectedTables { get; set; }
+        }    
         public class Concession_Index
         {
             public string companyName { get; set; }
