@@ -24,8 +24,11 @@
     [ReasonWhyOhmWasNotCommunicatedToStaffFileName] VARCHAR (1000) NULL,
     [WasOhmPolicyCommunicatedToStaff]               VARCHAR (10)   NULL,
     [ReasonForNoOhm]                                VARCHAR (1000) NULL,
-    [DoYouHaveAnOhm]                                VARCHAR (10)   NULL
+    [DoYouHaveAnOhm]                                VARCHAR (10)   NULL,
+    CONSTRAINT [PK_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
 
 

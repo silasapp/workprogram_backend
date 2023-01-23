@@ -62,7 +62,6 @@
             public DateTime? Date_Updated { get; set; }
             public string? REPRESENTATIVE { get; set; }
             public string? REPRESENTATIVE_EMAIL { get; set; }
-          
         }
     }
 }

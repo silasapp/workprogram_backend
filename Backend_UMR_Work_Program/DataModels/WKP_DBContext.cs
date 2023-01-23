@@ -7523,8 +7523,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM");
 
                 entity.Property(e => e.AUDITFilePath)
@@ -8308,7 +8306,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_OCCUPATIONAL_HEALTH_MANAGEMENT>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("HSE_OCCUPATIONAL_HEALTH_MANAGEMENT");
 
@@ -14181,7 +14178,8 @@ namespace Backend_UMR_Work_Program.DataModels
                         });
             });
 
-            modelBuilder.Entity<Royalty>(entity =>
+           
+             modelBuilder.Entity<Royalty>(entity =>
             {
                 entity.HasKey(e => e.Royalty_ID);
 
@@ -14220,7 +14218,7 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<SBU_ApplicationComment>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.ActionStatus)
                     .HasMaxLength(50)

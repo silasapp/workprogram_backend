@@ -10,8 +10,11 @@
     [evidenceOfPaymentFilename] VARCHAR (1)    NULL,
     [evidenceOfPaymentPath]     VARCHAR (1)    NULL,
     [reasonForNoRemediation]    VARCHAR (1)    NULL,
+    [areThereRemediationFund]   NVARCHAR (MAX) NULL,
     CONSTRAINT [PK_HSE_REMEDIATION_FUND] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
 
 

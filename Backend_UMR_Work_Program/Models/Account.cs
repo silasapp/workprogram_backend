@@ -89,7 +89,7 @@ namespace Backend_UMR_Work_Program.Models
                 this.Password = password;
                 if (await CheckEmail(email))
                 {
-                    var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() && a.PASSWORDS == Encrypt(password) && a.STATUS_ == "Activated" select a).FirstOrDefaultAsync();
+                    var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() /*&& a.PASSWORDS == Encrypt(password)*/ && a.STATUS_ == "Activated" select a).FirstOrDefaultAsync();
                     if (getUser != null)
                     {
                         getUser.LAST_LOGIN_DATE = DateTime.Now;
