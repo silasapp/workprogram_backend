@@ -10061,7 +10061,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (action == GeneralModel.Delete)
 						_context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
-					save += _context.SaveChanges();
+					save += _context.SaveCh();
 				}
 				else if (hse_waste_model != null)
 				{
