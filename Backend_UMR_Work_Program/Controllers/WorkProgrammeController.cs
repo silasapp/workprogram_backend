@@ -8757,12 +8757,12 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_POINT_SOURCE_REGISTRATION")]
-		public async Task<WebApiResponse> POST_HSE_POINT_SOURCE_REGISTRATION([FromBody] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName,
-			string omlID, string areTherePointSourcePermit, string evidenceOfPSPFilename, string evidenceOfPSPPath, string actionToDo, string fieldName, string reasonForNoPSP)
+		public async Task<WebApiResponse> POST_HSE_POINT_SOURCE_REGISTRATION([FromBody] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName, string omlID, string actionToDo, string fieldName, string year)
 		{
 
 			int save = 0;
-			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8779,30 +8779,39 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action + "D successfully.";
-						var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
+						var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 				}
 				if (hse_point_source_registration != null)
 				{
-					var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).FirstOrDefault();
+					var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
 					hse_point_source_registration.OML_ID = omlID;
-					hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
-					hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
-					hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
+					hse_point_source_registration.CompanyName = WKPCompanyName;
+					hse_point_source_registration.Company_Email = WKPCompanyEmail;
+					hse_point_source_registration.Company_ID = WKPCompanyId;
 					hse_point_source_registration.OML_Name = omlName;
-					hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
 
+					#region Fileregion
+					var file = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var blobname = blobService.Filenamer(file);
+
+					if (file != null)
+					{
+						string docName = "Evidence of Payment";
+						hse_point_source_registration.evidence_of_PSP_path = await blobService.UploadFileBlobAsync("documents", file.OpenReadStream(), file.ContentType, $"Remediation Documents/{blobname}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_point_source_registration.evidence_of_PSP_path == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							hse_point_source_registration.evidence_of_PSP_path = blobname;
+					}
+					#endregion
 
 					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
 						{
-							hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
-							hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
-							hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
-							hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
 							await _context.HSE_POINT_SOURCE_REGISTRATIONs.AddAsync(hse_point_source_registration);
 						}
 						else
@@ -8828,7 +8837,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = "Form has been " + action + "D successfully.";
-					var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
+					var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else

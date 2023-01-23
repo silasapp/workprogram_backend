@@ -8,3 +8,13 @@ C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\Model.xml
 C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\refactor.xml
 C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\postdeploy.sql
 C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\predeploy.sql
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dacpac
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\bin\Debug\Database.dll
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\bin\Debug\Database.pdb
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\obj\Debug\Model.xml
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\obj\Debug\refactor.xml
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\obj\Debug\postdeploy.sql
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\obj\Debug\predeploy.sql
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\obj\Debug\Database.dll
+C:\Users\Reliance\source\repos\BrandOne\WorkProgram_BEnd\WKP_Database\obj\Debug\Database.pdb
