@@ -710,7 +710,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                         var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId == tableID).FirstOrDefaultAsync();
 
                                         if (getSBU_TablesToDisplay != null)
-                                            RejectedTables = $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}";
+                                            RejectedTables = RejectedTables != ""? $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}" : getSBU_TablesToDisplay.TableName;
 
                                     }
                                 }
@@ -725,6 +725,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     SBU_Tables = RejectedTables,
                                     AppID = appId,
                                     DateCreated = DateTime.Now,
+                                    
                                 };
                                 await _context.SBU_ApplicationComments.AddAsync(nReject);
                                 if (await _context.SaveChangesAsync() > 0)
@@ -734,6 +735,9 @@ namespace Backend_UMR_Work_Program.Controllers
                                     string content = $"{SBU?.SBU_Name} made comment on your WORK PROGRAM application for year {application.YearOfWKP}. See comment :- " + comment;
                                     var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
                                     var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+
+                                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Rejection for application {concession.Concession_Held} has been sent to the company.", StatusCode = ResponseCodes.Success };
+
                                 }
                             }
                         }
