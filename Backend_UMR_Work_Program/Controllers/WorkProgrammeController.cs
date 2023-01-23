@@ -187,6 +187,27 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
 				var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
+				string isEditable = "";
+				if (concessionFields.Count > 0)
+				{
+					foreach (var field in concessionFields) {
+
+
+						var checkApplication =await (from ap in _context.Applications
+												where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
+												select ap).FirstOrDefaultAsync();
+						field.isEditable = true;
+						if (checkApplication != null)
+						{
+							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
+							if(NRejectApp == null)
+							field.isEditable = false;
+						}
+							
+					}
+					
+				}
+				
 				return new { ConcessionFields = concessionFields };
 			}
 			catch (Exception e)
