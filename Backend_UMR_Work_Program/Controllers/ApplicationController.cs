@@ -164,6 +164,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                               CreatedAt = app.CreatedAt,
                                               SubmittedAt = app.SubmittedAt,
                                               Status = app.Status,
+                                              SBU_Tables = cmt.SBU_Tables,
                                               YearOfWKP = app.YearOfWKP
                                           }).ToListAsync();
                 return new WebApiResponse { Data= applications, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };

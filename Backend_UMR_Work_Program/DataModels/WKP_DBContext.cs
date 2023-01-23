@@ -8363,13 +8363,13 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaffFileName)
+                entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaff)
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaffPath)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
+                // entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaffPath)
+                //     .HasMaxLength(3000)
+                //     .IsUnicode(false);
 
                 entity.Property(e => e.SMSFileUploadname)
                     .HasMaxLength(100)
