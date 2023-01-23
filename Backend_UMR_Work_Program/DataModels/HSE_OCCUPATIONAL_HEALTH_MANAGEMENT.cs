@@ -10,6 +10,8 @@
 		public string? Year_of_WP { get; set; }
 		public string? OHMplanFilePath { get; set; }
 		public string? OHMplanCommunicationFilePath { get; set; }
+		public string? ReasonWhyOhmWasNotCommunicatedToStaffPath { get; set; }
+		public string? ReasonWhyOhmWasNotCommunicatedToStaffFileName { get; set; }
 		public string? Created_by { get; set; }
 		public string? Updated_by { get; set; }
 		public DateTime? Date_Created { get; set; }
