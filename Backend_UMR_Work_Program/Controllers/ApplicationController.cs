@@ -697,7 +697,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         if (staffDesk.Sort == 1) //Rejection to company
                         {
                             var getStaff = (from stf in _context.staff where stf.StaffID == staffDesk.StaffID select stf).FirstOrDefault();
-                            var NRejectApp = _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated);
+                            var NRejectApp =await _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
                             if (NRejectApp == null)
                             {
                                 List<string> RejectedForms = new List<string>();
