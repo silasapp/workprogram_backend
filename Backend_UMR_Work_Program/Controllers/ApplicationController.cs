@@ -669,16 +669,15 @@ namespace Backend_UMR_Work_Program.Controllers
 
         }
         [HttpPost("RejectApplication")]
-        public async Task<object> RejectApplication([FromBody] ActionModel model, int deskID, string comment)
+        public async Task<object> RejectApplication(/*[FromBody] ActionModel model,*/ int deskID, string comment,string [] selectedApps, string[] SBU_IDs, string [] selectedTables)
         {
             try
             {
-                if (model.selectedApps != null)
+                if (selectedApps != null)
                 {
-                    foreach (var b in model.selectedApps)
+                    foreach (var b in selectedApps)
                     {
-                        string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
-                        int appId = int.Parse(appID);
+                        int appId =b != "undefined"? int.Parse(b):0;
                         //get current staff desk
                         var get_CurrentStaff = (from stf in _context.staff
                                                 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
@@ -703,11 +702,11 @@ namespace Backend_UMR_Work_Program.Controllers
                             {
                                 List<string> RejectedForms = new List<string>();
                                 string RejectedTables = "";
-                                if (model.selectedTables.Count() > 0)
+                                if (selectedTables.Count() > 0)
                                 {
-                                    foreach (var table in model.selectedTables)
+                                    foreach (var table in selectedTables)
                                     {
-                                        int tableID = int.Parse(table);
+                                        int tableID = table != "undefined" ? int.Parse(table) : 0;
                                         var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId == tableID).FirstOrDefaultAsync();
 
                                         if (getSBU_TablesToDisplay != null)
@@ -745,11 +744,11 @@ namespace Backend_UMR_Work_Program.Controllers
                                             where stf.Staff_SBU == get_CurrentStaff.Staff_SBU && dsk.Sort == staffDesk.Sort - 1 && stf.DeleteStatus != true
                                             select dsk).FirstOrDefault();
                             
-                            if (model.SBU_IDs.Count() > 0)
+                            if (SBU_IDs.Count() > 0)
                             {
-                                foreach (var SBU in model.SBU_IDs)
+                                foreach (var SBU in SBU_IDs)
                                 {
-                                    int SBU_ID = int.Parse(SBU);
+                                    int SBU_ID = SBU != "undefined" ? int.Parse(SBU) : 0;
                                     if (SBU_ID > 0) //planning rejecting back to a particular SBU
                                     {
                                         prevDesk = (from dsk in _context.MyDesks
