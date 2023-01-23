@@ -274,6 +274,7 @@ namespace Backend_UMR_Work_Program.Models
             public string CompanyName { get; set; }
             public string FieldName { get; set; }
             public string ConcessionName { get; set; }
+            public string SBU_Tables { get; set; }
             public string SBU_Comment { get; set; }
             public int? FieldID { get; set; }
             public int CategoryID { get; set; }
