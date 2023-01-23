@@ -1,28 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Backend_UMR_Work_Program.Controllers;
+﻿using AutoMapper;
+using Backend_UMR_Work_Program.DataModels;
+using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
+using Backend_UMR_Work_Program.Services;
 using LpgLicense.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using Backend_UMR_Work_Program.Helpers;
-using AutoMapper;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using static Backend_UMR_Work_Program.Models.ViewModel;
-using Backend_UMR_Work_Program.Services;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using static Backend_UMR_Work_Program.Models.ViewModel;
 
 namespace Backend_UMR_Work_Program.Controllers.Authentications
 {

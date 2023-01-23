@@ -148,6 +148,15 @@
           "lib/netstandard2.0/Humanizer.dll": {}
         }
       },
+      "linq2db/4.4.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/linq2db.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/linq2db.dll": {}
+        }
+      },
       "MailKit/3.2.0": {
         "type": "package",
         "dependencies": {
@@ -2657,6 +2666,34 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "linq2db/4.4.0": {
+      "sha512": "6/u1EzQlV25bhN0Ej/I5dLV5Hgxun+ww/TX2VnMBnSVytED2VzQGeFIO/14I624GkfPOtB79x1ooL3F18dAbdw==",
+      "type": "package",
+      "path": "linq2db/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "MIT-LICENSE.txt",
+        "README.md",
+        "images/icon.png",
+        "lib/net45/linq2db.dll",
+        "lib/net45/linq2db.xml",
+        "lib/net46/linq2db.dll",
+        "lib/net46/linq2db.xml",
+        "lib/net472/linq2db.dll",
+        "lib/net472/linq2db.xml",
+        "lib/net6.0/linq2db.dll",
+        "lib/net6.0/linq2db.xml",
+        "lib/netcoreapp3.1/linq2db.dll",
+        "lib/netcoreapp3.1/linq2db.xml",
+        "lib/netstandard2.0/linq2db.dll",
+        "lib/netstandard2.0/linq2db.xml",
+        "lib/netstandard2.1/linq2db.dll",
+        "lib/netstandard2.1/linq2db.xml",
+        "linq2db.4.4.0.nupkg.sha512",
+        "linq2db.nuspec"
       ]
     },
     "MailKit/3.2.0": {
@@ -8242,7 +8279,8 @@
       "System.Data.SqlClient >= 4.8.3",
       "System.Net.Security >= 4.3.2",
       "WindowsAzure.Storage >= 9.3.3",
-      "YamlDotNet >= 11.2.1"
+      "YamlDotNet >= 11.2.1",
+      "linq2db >= 4.4.0"
     ]
   },
   "packageFolders": {
@@ -8369,6 +8407,10 @@
           "YamlDotNet": {
             "target": "Package",
             "version": "[11.2.1, )"
+          },
+          "linq2db": {
+            "target": "Package",
+            "version": "[4.4.0, )"
           }
         },
         "imports": [

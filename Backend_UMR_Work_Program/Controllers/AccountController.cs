@@ -4,10 +4,15 @@ using Newtonsoft.Json;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using static Backend_UMR_Work_Program.Models.ViewModel;
 using AutoMapper;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Backend_UMR_Work_Program.DataModels;
 //using static Backend_UMR_Work_Program.Helpers.GeneralClass;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
+   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
@@ -28,6 +33,8 @@ namespace Backend_UMR_Work_Program.Controllers
             _mapper = mapper;
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
         }
+
+        
 
         [HttpGet("GetData")]
         public object GetData()
@@ -139,13 +146,14 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("ResetPassword")]
-        public async Task<WebApiResponse> ResetPassword(string email, string currentPassword, string newPassword)
+        public async Task<WebApiResponse> ResetPassword(string currentPassword, string newPassword)
         {
             try { 
             string encryptCP = _helpersController.Encrypt(currentPassword);
-
-            var getUser = (from u in _context.ADMIN_COMPANY_INFORMATIONs where u.EMAIL == email.Trim() && u.PASSWORDS == encryptCP select u).FirstOrDefault();
+               string email = User.FindFirstValue(ClaimTypes.Email);
+                var getUser = (from u in _context.ADMIN_COMPANY_INFORMATIONs where u.EMAIL == email.Trim() && u.PASSWORDS == encryptCP select u).FirstOrDefault();
             if (getUser != null)
             {
                 getUser.PASSWORDS = _helpersController.Encrypt(newPassword);
@@ -154,6 +162,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 if (await _context.SaveChangesAsync() > 0)
                 {
+
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Password updated successfully", StatusCode = ResponseCodes.Success };
                 }
                 else

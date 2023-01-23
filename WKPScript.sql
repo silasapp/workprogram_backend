@@ -88,6 +88,22 @@ ALTER TABLE [dbo].[HSE_SAFETY_CULTURE_TRAINING]
 ADD CONSTRAINT PK_HSE_SAFETY_CULTURE_TRAINING_ID PRIMARY KEY NONCLUSTERED (Id);
 GO
 
+ALTER TABLE [dbo].[HSE_CLIMATE_CHANGE_AND_AIR_QUALITY]
+ADD CONSTRAINT PK_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY_ID PRIMARY KEY NONCLUSTERED (Id);
+GO
+
+ALTER TABLE [dbo].[HSE_WASTE_MANAGEMENT_SYSTEM]
+ADD CONSTRAINT PK_HSE_WASTE_MANAGEMENT_SYSTEM_ID PRIMARY KEY NONCLUSTERED (Id);
+GO
+
+ALTER TABLE [dbo].[HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU]
+ADD CONSTRAINT PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU_ID PRIMARY KEY NONCLUSTERED (Id);
+GO
+
+ALTER TABLE [dbo].[HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME]
+ADD CONSTRAINT PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME_ID PRIMARY KEY NONCLUSTERED (Id);
+GO
+
 ALTER TABLE [dbo].[HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW] ADD [CompanyNumber] int NULL;
 ALTER TABLE [dbo].[ADMIN_WELL_CATEGORIES] ADD [CompanyNumber] int NULL;
 ALTER TABLE [dbo].[HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships] ADD [CompanyNumber] int NULL;
@@ -319,3 +335,181 @@ ALTER TABLE [dbo].[RESERVES_REPLACEMENT_RATIO] ADD [CompanyNumber] int NULL;
 
 ALTER TABLE FIELD_DEVELOPMENT_PLAN ADD Status varchar(50)
 ALTER TABLE [dbo].[HSE_QUALITY_CONTROL] ADD [Valid_Accreditation_Letter_For_QualityControl] varchar(max) NULL;
+
+ALTER TABLE dbo.GEOPHYSICAL_ACTIVITIES_ACQUISITION ADD
+	No_of_Folds int NULL
+
+
+CREATE TABLE [dbo].[HSE_EFFLUENT_MONITORING_COMPLIANCE](
+	[Id] [int] NOT NULL,
+	[Field_ID] [int] NULL,
+	[OML_Name] [varchar](200) NULL,
+	[OmL_ID] [varchar](100) NULL,
+	[CompanyName] [varchar](300) NULL,
+	[Companyemail] [varchar](100) NULL,
+	[Year_of_WP] [varchar](10) NULL,
+	[COMPANY_ID] [varchar](50) NULL,
+	[CompanyNumber] [varchar](50) NULL,
+	[AreThereEvidentOfSampling] [varchar](10) NULL,
+	[EvidenceOfSamplingFilename] [varchar](1000) NULL,
+	[EvidenceOfSamplingPath] [varchar](5000) NULL,
+	[ReasonForNoEvidenceSampling] [varchar](1000) NULL,
+	[Date_Updated] [datetime] NULL,
+	[Updated_by] [varchar](1000) NULL,
+	[Date_Created] [datetime] NULL,
+	[Created_by] [varchar](1000) NULL,
+ CONSTRAINT [PK_HSE_EFFLUENT_MONITORING_COMPLIANCE] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[HSE_ENVIRONMENTAL_MANAGEMENT_PLAN](
+	[Id] [int] NOT NULL,
+	[Field_ID] [int] NULL,
+	[OML_Name] [varchar](1000) NULL,
+	[OmL_ID] [varchar](100) NULL,
+	[CompanyName] [varchar](200) NULL,
+	[Companyemail] [varchar](100) NULL,
+	[Year_of_WP] [varchar](30) NULL,
+	[COMPANY_ID] [varchar](30) NULL,
+	[CompanyNumber] [int] NULL,
+	[AreThereEMP] [varchar](10) NULL,
+	[FacilityType] [varchar](100) NULL,
+	[FacilityLocation] [varchar](200) NULL,
+	[RemarkIfNoEMP] [varchar](500) NULL,
+	[Date_Updated] [datetime] NULL,
+	[Updated_by] [varchar](100) NULL,
+	[Date_Created] [datetime] NULL,
+	[Created_by] [varchar](100) NULL,
+ CONSTRAINT [PK_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[HSE_GHG_MANAGEMENT_PLAN](
+	[Id] [int] NULL,
+	[OmL_Name] [varchar](100) NULL,
+	[OmL_ID] [varchar](100) NULL,
+	[CompanyName] [varchar](1000) NULL,
+	[companyemail] [varchar](100) NULL,
+	[Year_of_WP] [varchar](50) NULL,
+	[CompanY_ID] [varchar](50) NULL,
+	[CompanyNumber] [int] NULL,
+	[DoYouHaveGHG] [varchar](10) NULL,
+	[GHGApprovalFilename] [varchar](1000) NULL,
+	[GHGApprovalPath] [varchar](5000) NULL,
+	[ReasonForNoGHG] [varchar](5000) NULL,
+	[DoYouHaveLDRCertificate] [varchar](10) NULL,
+	[LDRCertificateFilename] [varchar](1000) NULL,
+	[LDRCertificatePath] [varchar](5000) NULL,
+	[ReasonForNoLDR] [varchar](3000) NULL,
+	[Date_Updated] [datetime] NULL,
+	[Updated_by] [varchar](100) NULL,
+	[Date_Created] [datetime] NULL,
+	[Created_by] [varchar](100) NULL
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[HSE_HOST_COMMUNITIES_DEVELOPMENT](
+	[DoYouHaveEvidenceOfReg] [varchar](10) NULL,
+	[EvidenceOfRegTrustFundFilename] [varchar](2000) NULL,
+	[EvidenceOfRegTrustFundPath] [varchar](5000) NULL,
+	[ReasonForNoEvidenceOfRegTF] [varchar](2000) NULL,
+	[DoYouHaveEvidenceOfPay] [varchar](10) NULL,
+	[EvidenceOfPayTrustFundFilename] [varchar](1000) NULL,
+	[EvidenceOfPayTrustFundPath] [varchar](3000) NULL,
+	[ReasonForNoEvidenceOfPayTF] [varchar](2000) NULL,
+	[UploadCommDevPlanApprovalFilename] [varchar](1000) NULL,
+	[UploadCommDevPlanApprovalPath] [varchar](3000) NULL,
+	[Date_Updated] [datetime] NULL,
+	[Updated_by] [varchar](50) NULL,
+	[Date_Created] [datetime] NULL,
+	[Created_by] [varchar](50) NULL,
+	[Id] [int] NOT NULL,
+	[Field_ID] [int] NULL,
+	[OML_Name] [varchar](1000) NULL,
+	[OmL_ID] [varchar](1000) NULL,
+	[CompanyName] [varchar](200) NULL,
+	[Companyemail] [varchar](100) NULL,
+	[Year_of_WP] [varchar](30) NULL,
+	[COMPANY_ID] [varchar](50) NULL,
+	[CompanyNumber] [varchar](50) NULL,
+ CONSTRAINT [PK_HSE_HOST_COMMUNITIES_DEVELOPMENT] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE dbo.HSE_ACCIDENT_INCIDENCE_REPORTING_NEW ADD
+	UploadIncidentStatisticsFilename varchar(1000) NULL,
+	UploadIncidentStatisticsPath varchar(3000) NULL
+
+
+ALTER TABLE dbo.HSE_OCCUPATIONAL_HEALTH_MANAGEMENT ADD
+	ReasonWhyOhmWasNotCommunicatedToStaffPath varchar(3000) NULL,
+	ReasonWhyOhmWasNotCommunicatedToStaffFileName varchar(1000) NULL,
+	WasOhmPolicyCommunicatedToStaff varchar(10) NULL,
+	ReasonForNoOhm varchar(1000) NULL,
+	DoYouHaveAnOhm varchar(10) NULL
+
+CREATE TABLE [dbo].[HSE_OPERATIONS_SAFETY_CASE](
+	[Id] [int] NULL,
+	[OML_ID] [varchar](50) NULL,
+	[OML_Name] [varchar](500) NULL,
+	[CompanyName] [varchar](500) NULL,
+	[Companyemail] [varchar](500) NULL,
+	[Year_of_WP] [varchar](30) NULL,
+	[Reason_If_No_Evidence] [varchar](2000) NULL,
+	[Evidence_of_Operations_Safety_Case_Approval] [varchar](3000) NULL,
+	[Does_the_Facility_Have_a_Valid_Safety_Case] [varchar](10) NULL,
+	[Type_of_Facility] [varchar](100) NULL,
+	[Location_of_Facility] [varchar](1000) NULL,
+	[Name_Of_Facility] [varchar](1000) NULL,
+	[Number_of_Facilities] [varchar](10) NULL,
+	[Date_Created] [datetime] NULL,
+	[Created_by] [varchar](100) NULL,
+	[Updated_by] [varchar](100) NULL,
+	[Date_Updated] [datetime] NULL,
+	[COMPANY_ID] [varchar](1000) NULL,
+	[CompanyNumber] [int] NULL,
+	[Field_ID] [int] NULL
+) ON [PRIMARY]
+
+ALTER TABLE dbo.HSE_SAFETY_CULTURE_TRAINING ADD
+	AreThereTrainingPlansForHSE varchar(10) NULL,
+	EvidenceOfTrainingPlanFilename varchar(100) NULL,
+	EvidenceOfTrainingPlanPath varchar(3000) NULL
+
+
+	ALTER TABLE dbo.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW ADD
+	Type_Of_Facility varchar(100) NULL,
+	Number_of_Facilities varchar(100) NULL
+GO
+
+ALTER TABLE dbo.HSE_SAFETY_CULTURE_TRAINING ADD
+	AreThereTrainingPlansForHSE varchar(10) NULL,
+	EvidenceOfTrainingPlanFilename varchar(100) NULL,
+	EvidenceOfTrainingPlanPath varchar(3000) NULL
+
+
+ALTER TABLE dbo.INITIAL_WELL_COMPLETION_JOBS ADD
+	Proposed_Initial_Name varchar(100) NULL,
+	Proposed_Completion_Days varchar(100) NULL
+
+ALTER TABLE dbo.WORKOVERS_RECOMPLETION_JOBS ADD
+	CompletionWellName varchar(500) NULL,
+	Proposed_Workover_Date datetime NULL
+
+ALTER TABLE dbo.GAS_PRODUCTION_ACTIVITIES ADD
+	AnnualForecastOil varchar(1000) NULL,
+	AnnualForecastCondensate varchar(1000) NULL,
+	AnnualForecastGasAg varchar(1000) NULL,
+	AnnualForecastGasNag varchar(1000) NULL
+
+	ALTER TABLE dbo.HSE_SAFETY_CULTURE_TRAINING ADD
+	Remark varchar(600) NULL

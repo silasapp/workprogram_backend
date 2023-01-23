@@ -18,15 +18,11 @@
     [Consession_Type]                  VARCHAR (50)   NULL,
     [COMPANY_ID]                       VARCHAR (100)  NULL,
     [CompanyNumber]                    INT            NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                         INT            NULL,
+    [UploadIncidentStatisticsFilename] VARCHAR (1000) NULL,
+    [UploadIncidentStatisticsPath]     VARCHAR (3000) NULL,
     CONSTRAINT [PK_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 
 
->>>>>>> origin/main

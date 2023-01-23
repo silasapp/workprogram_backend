@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Backend_UMR_Work_Program.Helpers;
+using Backend_UMR_Work_Program.DataModels;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
@@ -2791,9 +2792,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     AppId = appID,
 
-                    StaffID = appProcess.ProcessId,
+                    StaffID = appProcess.StaffId,
 
                     FromStaffID = appProcess.FromStaffId,
+
+                    FromSBU = appProcess.SBU_Id.ToString(),
 
                     HasWork = false,
 
@@ -2816,35 +2819,54 @@ namespace Backend_UMR_Work_Program.Controllers
                 return 0;
             }
         }
-        public async Task<List<ApplicationProcessModel>> GetApplicationProccess(string appType, int sortID)
+        public async Task<List<ApplicationProcessModel>> GetApplicationProccess(string appType, int sortID = 0, int SBU_ID = 0)
         {
-            try { 
-            var applicationProcess =  (from ap in _context.ApplicationProccesses
+            try 
+            {
+                var getStaff = new List<ApplicationProcessModel>();
+                var applicationProcess =  (from ap in _context.ApplicationProccesses
                                       join cat in _context.ApplicationCategories on ap.CategoryID equals cat.Id
-                                      where cat.Name == appType && ap.DeleteStatus != true && cat.DeleteStatus != true
+                                      where cat.Name == appType && ap.Sort == sortID+1 && ap.DeleteStatus != true && cat.DeleteStatus != true
                                       select ap).ToList();
 
             if (applicationProcess.Count() > 0)
             {
-                var getSBUs = applicationProcess.Select(x=> x.SBU_ID).Distinct();
-
-                var getStaff = (from sbu in getSBUs
-                                join stf in _context.staff on sbu equals stf.Staff_SBU
-                                //join sbu in applicationProcess.AsEnumerable() on stf.Staff_SBU equals sbu.SBU_ID
-                                join role in _context.Roles on stf.RoleID equals role.id
-                                where role.id == applicationProcess.FirstOrDefault().RoleID 
-                                && stf.DeleteStatus != true && stf.ActiveStatus != false
-                                select new ApplicationProcessModel
-                                {
-                                    SBU_Id= stf.Staff_SBU,
-                                    StaffId = stf.StaffID,
-                                    RoleId = applicationProcess.FirstOrDefault().RoleID,
-                                    RoleName = role.Description,
-                                    Sort = applicationProcess.FirstOrDefault().Sort,
-                                    ProcessId = applicationProcess.FirstOrDefault().ProccessID,
-                                    DeskCount = _context.MyDesks.Where(x => x.StaffID == stf.StaffID && x.HasWork != true).Count(),
-                                }).OrderBy(x => x.DeskCount).ToList();
-
+                    if (sortID == 0) //new submission
+                    {
+                        var getSBUs = applicationProcess.Select(x => x.SBU_ID).Distinct();
+                        getStaff = (from sbu in getSBUs
+                                        join stf in _context.staff on sbu equals stf.Staff_SBU
+                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                        join role in _context.Roles on stf.RoleID equals role.id
+                                        where role.id == applicationProcess.FirstOrDefault().RoleID
+                                        select new ApplicationProcessModel
+                                        {
+                                            SBU_Id = stf.Staff_SBU,
+                                            StaffId = stf.StaffID,
+                                            RoleId = applicationProcess.FirstOrDefault().RoleID,
+                                            RoleName = role.RoleName,
+                                            Sort = applicationProcess.FirstOrDefault().Sort,
+                                            ProcessId = applicationProcess.FirstOrDefault().ProccessID,
+                                            DeskCount = _context.MyDesks.Where(x => x.StaffID == stf.StaffID && x.HasWork != true).Count(),
+                                        }).OrderBy(x => x.DeskCount).ToList();
+                    }
+                    else
+                    {
+                            getStaff = (from stf in _context.staff 
+                                        join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+                                        join role in _context.Roles on stf.RoleID equals role.id
+                                        where stf.Staff_SBU == SBU_ID && role.id == applicationProcess.FirstOrDefault().RoleID
+                                        select new ApplicationProcessModel
+                                        {
+                                            SBU_Id = stf.Staff_SBU,
+                                            StaffId = stf.StaffID,
+                                            RoleId = applicationProcess.FirstOrDefault().RoleID,
+                                            RoleName = role.Description,
+                                            Sort = applicationProcess.FirstOrDefault().Sort,
+                                            ProcessId = applicationProcess.FirstOrDefault().ProccessID,
+                                            DeskCount = _context.MyDesks.Where(x => x.StaffID == stf.StaffID && x.HasWork != true).Count(),
+                                        }).OrderBy(x => x.DeskCount).ToList();
+                    }
                 if (getStaff.Count() > 0)
                 {
                     var minimum_DeskStaff = getStaff.GroupBy(x => x.SBU_Id).Select(x=> x.FirstOrDefault()).ToList();
@@ -2999,6 +3021,12 @@ namespace Backend_UMR_Work_Program.Controllers
             _context.SaveChanges();
 
         }
+
+        //public List<object> FilterData(int SBU_ID)
+        //{
+
+
+        //}
 
     }
 }
