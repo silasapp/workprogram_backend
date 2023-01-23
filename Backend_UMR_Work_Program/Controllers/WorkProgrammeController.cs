@@ -9864,12 +9864,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					if (file2 != null)
 					{
-						string docName = "Reason Why Ohm Was Not Communicated To Staff";
-						hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
+						string docName = "OHM Plan";
+						hse_occupational_model.OHMplanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_occupational_model.OHMplanFilePath == null)
 							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
-							hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname2;
+							hse_occupational_model.OHMplanFilename = blobname2;
 					}
 					//}
 
