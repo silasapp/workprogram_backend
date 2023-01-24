@@ -13,5 +13,3 @@
     CONSTRAINT [PK_ApplicationCategories] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-

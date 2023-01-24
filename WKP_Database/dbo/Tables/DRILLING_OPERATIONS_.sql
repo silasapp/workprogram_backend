@@ -35,6 +35,6 @@
     [Consession_Type]                           VARCHAR (50)  NULL,
     [CompanyNumber]                             INT           NULL,
     [Field_ID]                                  INT           NULL,
-    CONSTRAINT [PK_Drilling_Operations_] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_DRILLING_OPERATIONS_] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -5,5 +5,3 @@
     CONSTRAINT [PK_StrategicBusinessUnits] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
