@@ -590,11 +590,18 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-				if (concessionField.Consession_Type != "OPL" && int.Parse(myyear) > 2022)
+				if ((concessionField.Consession_Type == "OML" || concessionField.Consession_Type == "PML") && int.Parse(myyear) > 2022)
 				{
-					var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-					var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-					return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
+					if(fieldName != null || fieldName != "undefined") {
+						var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+						var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+						return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
+					}
+					else {
+						var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+						var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+						return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
+					}
 				}
 				else
 				{
@@ -10523,34 +10530,35 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var listObject = new List<object>();
-				var concessions = await (from a in _context.ADMIN_CONCESSIONS_INFORMATIONs where a.Company_ID == mycompanyId && a.DELETED_STATUS == null select a).Distinct().ToListAsync();
-				foreach(var concession in concessions)
-                {
-					var concessionFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
-					bool isEditable = true;
-					if (concessionFields.Count > 0)
-					{
-						foreach (var field in concessionFields)
-						{
-							var checkApplication = await (from ap in _context.Applications
-														  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
-														  select ap).FirstOrDefaultAsync();
-							isEditable = true;
-							if (checkApplication != null)
-							{
-								var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
-								if (NRejectApp == null)
-									isEditable = false;
-							}
-							listObject.Add(new
-							{
-								con = concession.Concession_Held, isEditable = isEditable
-							});
-						}
+				var concessions = await (from a in _context.ADMIN_CONCESSIONS_INFORMATIONs where a.Company_ID == mycompanyId && a.DELETED_STATUS == null select a.Concession_Held).Distinct().ToListAsync();
+				// foreach(var concession in concessions)
+                // {
+				// 	var concessionFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
+				// 	bool isEditable = true;
+				// 	if (concessionFields.Count > 0)
+				// 	{
+				// 		foreach (var field in concessionFields)
+				// 		{
+				// 			var checkApplication = await (from ap in _context.Applications
+				// 										  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
+				// 										  select ap).FirstOrDefaultAsync();
+				// 			isEditable = true;
+				// 			if (checkApplication != null)
+				// 			{
+				// 				var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
+				// 				if (NRejectApp == null)
+				// 					isEditable = false;
+				// 			}
+				// 			listObject.Add(new
+				// 			{
+				// 				con = concession.Concession_Held, isEditable = isEditable
+				// 			});
+				// 		}
 
-					}
-				}
-				return new { listObject };
+				// 	}
+				// }
+				// return new { listObject };
+				return concessions;
 			}
 			catch (Exception e)
 			{
