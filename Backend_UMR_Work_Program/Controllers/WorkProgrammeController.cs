@@ -8760,7 +8760,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_POINT_SOURCE_REGISTRATION")]
-		public async Task<object> POST_HSE_POINT_SOURCE_REGISTRATION([FromBody] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName,
+		public async Task<object> POST_HSE_POINT_SOURCE_REGISTRATION([FromForm] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName,
 			string omlID, string areTherePointSourcePermit, string evidenceOfPSPFilename, string evidenceOfPSPPath, string actionToDo, string fieldName, string reasonForNoPSP)
 		{
 
