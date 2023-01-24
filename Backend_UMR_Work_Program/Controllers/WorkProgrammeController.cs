@@ -8837,14 +8837,12 @@ namespace Backend_UMR_Work_Program.Controllers
 				else
 				{
 					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
-
 				}
 
 			}
 			catch (Exception e)
 			{
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
 			}
 		}
 
@@ -9830,8 +9828,115 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
+		// [HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT"), DisableRequestSizeLimit]
+		// public async Task<object> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromForm] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		// {
+
+		// 	int save = 0;
+		// 	string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+		// 	try
+		// 	{
+		// 		if (!string.IsNullOrEmpty(id))
+		// 		{
+		// 			var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+		// 			if (action == GeneralModel.Delete)
+		// 				_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
+		// 			save += _context.SaveChanges();
+		// 		}
+		// 		else if (hse_occupational_model != null)
+		// 		{
+		// 			var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+		// 			hse_occupational_model.Companyemail = WKPCompanyEmail;
+		// 			hse_occupational_model.CompanyName = WKPCompanyName;
+		// 			hse_occupational_model.COMPANY_ID = WKPCompanyId;
+		// 			hse_occupational_model.CompanyNumber = WKPCompanyNumber;
+		// 			hse_occupational_model.Date_Updated = DateTime.Now;
+		// 			hse_occupational_model.Updated_by = WKPCompanyId;
+		// 			hse_occupational_model.Year_of_WP = year;
+		// 			hse_occupational_model.OML_Name = omlName;
+		// 			hse_occupational_model.Field_ID = concessionField.Field_ID;
+
+		// 			#region file section
+		// 			//var files = Request.Form.Files;
+		// 			var file1 = Request.Form.Files[0];
+		// 			var file2 = Request.Form.Files[1];
+
+		// 			var blobname1 = blobService.Filenamer(file1);
+		// 			var blobname2 = blobService.Filenamer(file2);
+
+
+		// 			if (file1 != null)
+		// 			{
+		// 				string docName = "submission of OHM plan";
+		// 				hse_occupational_model.OHMplanCommunicationFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"OHMplanCommunicationDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+		// 				if (hse_occupational_model.OHMplanCommunicationFilePath == null)
+		// 					return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+		// 				else
+		// 					hse_occupational_model.OHMplanCommunicationFilename = blobname1;
+		// 			}
+		// 			if (file2 != null)
+		// 			{
+		// 				string docName = "Reason Why Ohm Was Not Communicated To Staff";
+		// 				hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+		// 				if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
+		// 					return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+		// 				else
+		// 					hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname2;
+		// 			}
+		// 			//}
+
+
+		// 			#endregion
+
+		// 			if (action == GeneralModel.Insert)
+		// 			{
+		// 				if (getData == null)
+		// 				{
+		// 					hse_occupational_model.Date_Created = DateTime.Now;
+		// 					hse_occupational_model.Created_by = WKPCompanyId;
+		// 					await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+		// 				}
+		// 				else
+		// 				{
+		// 					hse_occupational_model.Date_Created = getData.Date_Created;
+		// 					hse_occupational_model.Created_by = getData.Created_by;
+		// 					hse_occupational_model.Date_Updated = DateTime.Now;
+		// 					hse_occupational_model.Updated_by = WKPCompanyId;
+		// 					_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
+		// 					await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+		// 				}
+		// 			}
+
+		// 			save += await _context.SaveChangesAsync();
+		// 		}
+		// 		else
+		// 		{
+		// 			return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+		// 		}
+		// 		if (save > 0)
+		// 		{
+		// 			string successMsg = "Form has been " + action == GeneralModel.Insert ? action + "ED" : action + "D" + " successfully.";
+		// 			var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+		// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+		// 		}
+		// 		else
+		// 		{
+		// 			return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+
+		// 		}
+		// 	}
+		// 	catch (Exception e)
+		// 	{
+		// 		return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+		// 	}
+		// }
+
 		[HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT"), DisableRequestSizeLimit]
-		public async Task<object> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromForm] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<WebApiResponse> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromForm] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
@@ -9875,18 +9980,18 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "submission of OHM plan";
 						hse_occupational_model.OHMplanCommunicationFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"OHMplanCommunicationDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_occupational_model.OHMplanCommunicationFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
 							hse_occupational_model.OHMplanCommunicationFilename = blobname1;
 					}
 					if (file2 != null)
 					{
-						string docName = "Reason Why Ohm Was Not Communicated To Staff";
-						hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+						string docName = "OHM Plan";
+						hse_occupational_model.OHMplanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_occupational_model.OHMplanFilePath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
 						else
-							hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname2;
+							hse_occupational_model.OHMplanFilename = blobname2;
 					}
 					//}
 
@@ -9916,17 +10021,17 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
 				}
 				if (save > 0)
 				{
-					string successMsg = "Form has been " + action == GeneralModel.Insert ? action + "ED" : action + "D" + " successfully.";
+					string successMsg = "Form has been " + action + "D successfully.";
 					var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
 
 				}
 			}
@@ -9947,14 +10052,13 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 
-
 				if (!string.IsNullOrEmpty(id))
 				{
 					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
 					if (action == GeneralModel.Delete)
 						_context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
-					save += _context.SaveChanges();
+					save += await _context.SaveChangesAsync();
 				}
 				else if (hse_waste_model != null)
 				{
