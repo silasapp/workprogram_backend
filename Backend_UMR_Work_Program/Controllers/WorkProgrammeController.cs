@@ -190,24 +190,25 @@ namespace Backend_UMR_Work_Program.Controllers
 				string isEditable = "";
 				if (concessionFields.Count > 0)
 				{
-					foreach (var field in concessionFields) {
+					foreach (var field in concessionFields)
+					{
 
 
-						var checkApplication =await (from ap in _context.Applications
-												where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
-												select ap).FirstOrDefaultAsync();
+						var checkApplication = await (from ap in _context.Applications
+													  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
+													  select ap).FirstOrDefaultAsync();
 						field.isEditable = true;
 						if (checkApplication != null)
 						{
 							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
-							if(NRejectApp == null)
-							field.isEditable = false;
+							if (NRejectApp == null)
+								field.isEditable = false;
 						}
-							
+
 					}
-					
+
 				}
-				
+
 				return new { ConcessionFields = concessionFields };
 			}
 			catch (Exception e)
@@ -245,7 +246,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_ADMIN_CONCESSIONS_INFORMATION([FromBody] ADMIN_CONCESSIONS_INFORMATION ADMIN_CONCESSIONS_INFORMATION_model, string id, string actionToDo)
 		{
 			int save = 0;
-			 string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
 
 			try
 			{
@@ -263,7 +264,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					{
 						return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
-						return BadRequest(new { message = $"Error : Concession ({ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held} is already existing and can not be duplicated."});
+						return BadRequest(new { message = $"Error : Concession ({ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held} is already existing and can not be duplicated." });
 					}
 					else
 					{
@@ -289,7 +290,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						if (companyConcession == null)
 						{
-							return BadRequest(new { message = $"Error : This concession details could not be found."});
+							return BadRequest(new { message = $"Error : This concession details could not be found." });
 						}
 						else
 						{
@@ -326,13 +327,13 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = "Concession has been "+action == GeneralModel.Insert ? action+"ED":action+"D" +" successfully.";
+					string successMsg = "Concession has been "+action == GeneralModel.Insert ? action+"ED" : action+"D" +" successfully.";
 					var allConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.DELETED_STATUS != "DELETED" select d).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = allConcessions, Message = successMsg, StatusCode = ResponseCodes.Success };
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -496,7 +497,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (companyField != null)
 					{
-						return BadRequest(new { message = $"Error : Field ({company_field_model.Field_Name}) is already existing and can not be duplicated."});
+						return BadRequest(new { message = $"Error : Field ({company_field_model.Field_Name}) is already existing and can not be duplicated." });
 					}
 					else
 					{
@@ -519,7 +520,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						if (companyField == null)
 						{
-							return BadRequest(new { message = $"Error : This field details could not be found."});
+							return BadRequest(new { message = $"Error : This field details could not be found." });
 						}
 						else
 						{
@@ -552,7 +553,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -2001,7 +2002,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -2011,7 +2012,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 				}
 			}
 			catch (Exception e)
@@ -2159,10 +2160,10 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
-				return BadRequest(new { message = $"Error : No CONCESSION_SITUATION_Model was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No CONCESSION_SITUATION_Model was passed for {actionToDo} process to be completed." });
 			}
 			catch (Exception e)
 			{
@@ -2206,17 +2207,17 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						if (noOfFolds<1 || noOfFolds >100)
 						{
-							return BadRequest(new { message = "Error : Number of can only between 1 and 100."});
+							return BadRequest(new { message = "Error : Number of can only between 1 and 100." });
 						}
 
 						if (lengthOfDataint<1 || lengthOfDataint >59)
 						{
-							return BadRequest(new { message = "Error : Number of can only between 1 and 59."});
+							return BadRequest(new { message = "Error : Number of can only between 1 and 59." });
 						}
 
 						if (noOfFolds<1 || noOfFolds >100)
 						{
-							return BadRequest(new { message = "Error : Number of can only between 1 and 100."});
+							return BadRequest(new { message = "Error : Number of can only between 1 and 100." });
 						}
 
 
@@ -2251,12 +2252,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -2325,12 +2326,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -2402,12 +2403,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -2478,12 +2479,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -2535,7 +2536,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EffluenceMonitoringDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								Effluenct_Monitoring_Complience_Mode.EvidenceOfSamplingFilename = blobname1;
 
@@ -2577,12 +2578,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -2642,7 +2643,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
 
@@ -2653,7 +2654,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
 
@@ -2672,7 +2673,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
 
@@ -2716,12 +2717,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -2781,7 +2782,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
@@ -2799,7 +2800,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
@@ -2810,7 +2811,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
 
@@ -2830,7 +2831,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
@@ -2841,7 +2842,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
 
@@ -2852,7 +2853,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
 							if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname3;
 
@@ -2895,12 +2896,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -2959,22 +2960,8 @@ namespace Backend_UMR_Work_Program.Controllers
 							drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 							if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
 								return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-					//if (file1 != null)
-					//{
-					//	string docName = "Field Discovery";
-					//	drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-					//	if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
-					//		return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-					//}
-					//if (file2 != null)
-					//{
-					//	string docName = "Hydrocarbon Count";
-					//	drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-					//	if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
-					//		return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-
-					//}
+						}
+					}
 					#endregion
 
 					if (action == GeneralModel.Insert)
@@ -3010,14 +2997,16 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
+
+
+
+					#endregion
+
 				}
-
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
-				#endregion
-
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 			}
 			catch (Exception e)
 			{
@@ -3083,12 +3072,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3154,12 +3143,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3205,7 +3194,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Approved FDP";
 						field_development_plan_model.Uploaded_approved_FDP_Document = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FDPDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 					}
 
 					// if (file1 != null)
@@ -3253,11 +3242,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3326,12 +3315,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3400,12 +3389,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3476,12 +3465,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3552,12 +3541,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3627,12 +3616,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3704,12 +3693,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3803,12 +3792,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -3895,11 +3884,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 			}
 			catch (Exception e)
@@ -3973,12 +3962,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4044,10 +4033,10 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An Error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An Error occured while trying to submit this form." });
 					}
 				}
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4115,12 +4104,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4189,12 +4178,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4263,12 +4252,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4335,12 +4324,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4388,7 +4377,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						oil_condensate_fiveyears_model.ProductionOilCondensateAGNAGUFilename = blobname1;
 						oil_condensate_fiveyears_model.ProductionOilCondensateAGNAGUploadFilePath= await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"ProductionOilCondensateAGNAGDocument/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (oil_condensate_fiveyears_model.ProductionOilCondensateAGNAGUploadFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 					}
 					#endregion
 
@@ -4425,12 +4414,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4497,12 +4486,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4568,12 +4557,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 					}
 
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 			}
 			catch (Exception e)
@@ -4639,11 +4628,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4711,12 +4700,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4783,12 +4772,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4856,11 +4845,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4928,12 +4917,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -4945,7 +4934,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_BUDGET_ACTUAL_EXPENDITURE")]
-		public async Task<object> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName,  string year, string id, string actionToDo)
+		public async Task<object> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
@@ -5004,7 +4993,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." } );
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
 				}
 				if (save > 0)
@@ -5016,7 +5005,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5029,10 +5018,10 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
-		public async Task<object> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName,  string year, string id,string actionToDo)
+		public async Task<object> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; 
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
@@ -5087,7 +5076,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5098,7 +5087,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5170,7 +5159,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5181,7 +5170,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5253,7 +5242,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5264,7 +5253,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5337,7 +5326,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5348,7 +5337,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5421,7 +5410,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5432,7 +5421,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5505,7 +5494,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5515,7 +5504,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5588,7 +5577,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5599,7 +5588,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 				}
 
 			}
@@ -5673,7 +5662,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5684,7 +5673,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 				}
 			}
 			catch (Exception e)
@@ -5695,7 +5684,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
-		public async Task<object> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName, 
+		public async Task<object> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName,
 			string year, string id, string actionToDo, string reasonForNoEvidence, string areThereEvidenceOfDesignSafetyCaseApproval,
 			string evidenceOfDesignSafetyCaseApprovalPath, string evidenceOfDesignSafetyCaseApprovalFilename)
 		{
@@ -5766,7 +5755,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5780,7 +5769,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -5850,7 +5839,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -5861,7 +5850,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -5932,12 +5921,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6007,12 +5996,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6082,12 +6071,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6156,11 +6145,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6230,12 +6219,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6304,12 +6293,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6378,12 +6367,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6452,12 +6441,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6526,12 +6515,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6603,12 +6592,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					//else
 					//{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					//}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6680,12 +6669,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -6763,10 +6752,10 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
 			}
 			catch (Exception e)
@@ -6828,7 +6817,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "SMS";
 						hse_safety_studies_model.SMSFileUploadPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SMSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_safety_studies_model.SMSFileUploadPath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 					}
 					if (action == GeneralModel.Insert)
 					{
@@ -6863,12 +6852,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					//else
 					//{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					//}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
 			}
 			catch (Exception e)
@@ -6942,12 +6931,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -7019,7 +7008,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 
 				if (save > 0)
@@ -7030,7 +7019,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -7101,7 +7090,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 
 				if (save > 0)
@@ -7112,7 +7101,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -7177,7 +7166,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Accident Incidence Report";
 						HSE_Accident_Incidence.UploadIncidentStatisticsPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"AccidentIncidenceReportDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (HSE_Accident_Incidence.UploadIncidentStatisticsPath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							HSE_Accident_Incidence.UploadIncidentStatisticsFilename = blobname1;
 					}
@@ -7280,7 +7269,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 
 				if (save > 0)
@@ -7311,7 +7300,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -7380,7 +7369,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 
 				if (save > 0)
@@ -7391,7 +7380,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -7462,12 +7451,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -7539,7 +7528,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 
 
@@ -7551,7 +7540,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -7625,7 +7614,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -7635,7 +7624,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -7707,7 +7696,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -7717,7 +7706,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -7792,7 +7781,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
 				}
 				if (save > 0)
@@ -7803,7 +7792,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -7881,12 +7870,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 					}
 				}
 
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				#endregion
 
 			}
@@ -7957,7 +7946,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -7967,7 +7956,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -8041,7 +8030,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8051,7 +8040,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8105,7 +8094,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "MOU Responder";
 						hse_sustainable_model.MOUResponderFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"MOUResponderDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_sustainable_model.MOUResponderFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_sustainable_model.MOUResponderFilename = blobname1;
 					}
@@ -8114,7 +8103,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "OSCP";
 						hse_sustainable_model.MOUOSCPFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"MOUOSCPDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_sustainable_model.MOUOSCPFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_sustainable_model.MOUOSCPFilename = blobname2;
 
@@ -8149,7 +8138,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8159,7 +8148,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8210,7 +8199,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "GMOU";
 						hse_sustainable_model.MOUUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"MOUDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_sustainable_model.MOUUploadFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 
 					}
 					#endregion
@@ -8243,7 +8232,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8253,7 +8242,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8325,7 +8314,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8335,7 +8324,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8408,7 +8397,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8418,7 +8407,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8489,7 +8478,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8499,7 +8488,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8550,7 +8539,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "TS";
 						hse_sustainable_model.TSUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"TSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_sustainable_model.TSUploadFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 
 					}
 					#endregion
@@ -8582,7 +8571,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8592,7 +8581,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8664,7 +8653,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8674,7 +8663,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8754,7 +8743,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8764,7 +8753,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -8843,7 +8832,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8853,7 +8842,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 				}
 
 			}
@@ -8910,12 +8899,12 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Evidence of Payment";
 						hse_remediation_fund.evidenceOfPaymentPath = await blobService.UploadFileBlobAsync("documents", file.OpenReadStream(), file.ContentType, $"Remediation Documents/{blobname}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_remediation_fund.evidenceOfPaymentPath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_remediation_fund.evidenceOfPaymentPath = blobname;
 					}
-                    #endregion
-                    if (action == GeneralModel.Insert)
+					#endregion
+					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
 						{
@@ -8927,11 +8916,11 @@ namespace Backend_UMR_Work_Program.Controllers
 						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
 					}
 
-						save += await _context.SaveChangesAsync();
+					save += await _context.SaveChangesAsync();
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -8941,7 +8930,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -9013,7 +9002,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -9023,7 +9012,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -9092,7 +9081,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -9102,7 +9091,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -9173,7 +9162,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -9183,7 +9172,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -9255,7 +9244,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -9265,7 +9254,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -9317,7 +9306,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "SS";
 						hse_scholarship_model.SSUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_scholarship_model.SSUploadFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_scholarship_model.SSUploadFilename = blobname1;
 					}
@@ -9351,7 +9340,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -9361,7 +9350,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -9425,7 +9414,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Promotion Letter";
 						hse_management_model.PromotionLetterFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"HRDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_management_model.PromotionLetterFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_management_model.PromotionLetterFilename = blobname1;
 					}
@@ -9434,7 +9423,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Organogram";
 						hse_management_model.OrganogramrFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"OGDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_management_model.OrganogramrFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_management_model.OrganogramrFilename = blobname2;
 
@@ -9472,7 +9461,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -9482,7 +9471,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				//else
 				//{
-				return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+				return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 				//}
 			}
 			catch (Exception e)
@@ -9550,7 +9539,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							string docName = "Evidence Of Training Plan";
 							hse_safety_culture_model.EvidenceOfTrainingPlanPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfTrainingPlanDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 							if (hse_safety_culture_model.EvidenceOfTrainingPlanPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
 						}
@@ -9559,7 +9548,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							string docName = "Safety Current Year";
 							hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 							if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
 						}
@@ -9568,7 +9557,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							string docName = "Safety Last Two Years";
 							hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 							if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
 						}
@@ -9586,7 +9575,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							string docName = "Safety Current Year";
 							hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 							if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
 						}
@@ -9595,7 +9584,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							string docName = "Safety Last Two Years";
 							hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 							if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 							else
 								hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
 						}
@@ -9634,7 +9623,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
 				}
 
@@ -9646,7 +9635,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -9700,7 +9689,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Quality Control";
 						hse_quality_model.QualityControlFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"COSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_quality_model.QualityControlFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_quality_model.QualityControlFilename = blobname1;
 					}
@@ -9731,7 +9720,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
 				}
 				if (save > 0)
@@ -9742,7 +9731,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -9794,7 +9783,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "GHG";
 						hse_climate_model.GHGFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_climate_model.GHGFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_climate_model.GHGFilename = blobname1;
 					}
@@ -9823,7 +9812,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 
 				if (save > 0)
@@ -9834,7 +9823,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -10102,7 +10091,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Decom Certificate";
 						hse_waste_model.DecomCertificateFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"DecomCertificateDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_waste_model.DecomCertificateFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_waste_model.DecomCertificateFilename = blobname1;
 					}
@@ -10111,7 +10100,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Waste Management Plan";
 						hse_waste_model.WasteManagementPlanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"WasteManagementPlanDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_waste_model.WasteManagementPlanFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_waste_model.WasteManagementPlanFilename = blobname1;
 					}
@@ -10145,7 +10134,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -10155,7 +10144,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -10217,7 +10206,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "EMS";
 						hse_EMS_model.EMSFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EMSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_EMS_model.EMSFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_EMS_model.EMSFilename = blobname1;
 					}
@@ -10226,7 +10215,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Audit File";
 						hse_EMS_model.AUDITFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"AUDITDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (hse_EMS_model.AUDITFilePath == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						else
 							hse_EMS_model.AUDITFilename = blobname1;
 					}
@@ -10259,7 +10248,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -10269,7 +10258,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 			}
@@ -10320,7 +10309,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						string docName = "Uploaded Presentation";
 						picture_upload_model.uploaded_presentation = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"Presentations/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 						if (picture_upload_model.uploaded_presentation == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 					}
 					#endregion
 
@@ -10351,7 +10340,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 				}
 				if (save > 0)
 				{
@@ -10361,7 +10350,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
 				}
 
@@ -10422,7 +10411,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 			catch (Exception e)
 			{
-				return BadRequest(new { message = "Error : " + e.Message});
+				return BadRequest(new { message = "Error : " + e.Message });
 
 			}
 		}
@@ -10541,8 +10530,8 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				var listObject = new List<object>();
 				var concessions = await (from a in _context.ADMIN_CONCESSIONS_INFORMATIONs where a.Company_ID == mycompanyId && a.DELETED_STATUS == null select a).Distinct().ToListAsync();
-				foreach(var concession in concessions)
-                {
+				foreach (var concession in concessions)
+				{
 					var concessionFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
 					bool isEditable = true;
 					if (concessionFields.Count > 0)
