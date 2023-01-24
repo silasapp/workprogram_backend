@@ -21,5 +21,3 @@
     CONSTRAINT [PK_staff] PRIMARY KEY CLUSTERED ([StaffID] ASC)
 );
 
-
-

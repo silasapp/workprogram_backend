@@ -42,5 +42,3 @@
     CONSTRAINT [PK_Geophysical_Activities] PRIMARY KEY CLUSTERED ([Geophysical_ActivitiesId] ASC)
 );
 
-
-

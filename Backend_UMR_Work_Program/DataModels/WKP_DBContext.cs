@@ -10068,7 +10068,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_WASTE_MANAGEMENT_SYSTEM>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("HSE_WASTE_MANAGEMENT_SYSTEM");
 
@@ -10107,8 +10106,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.DecomCertificateFilename)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
@@ -10351,7 +10348,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<LEGAL_ARBITRATION>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("LEGAL_ARBITRATION");
 
@@ -10395,7 +10391,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
                 entity.Property(e => e.Date_Updated).HasColumnType("datetime");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Jurisdiction)
                     .HasMaxLength(50)
@@ -10440,7 +10435,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<LEGAL_LITIGATION>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("LEGAL_LITIGATION");
 
@@ -10483,8 +10477,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.Date_Created).HasColumnType("datetime");
 
                 entity.Property(e => e.Date_Updated).HasColumnType("datetime");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Jurisdiction)
                     .HasMaxLength(50)

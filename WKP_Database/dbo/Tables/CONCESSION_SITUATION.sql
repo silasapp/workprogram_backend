@@ -43,6 +43,6 @@
     [Field_Name]                                    VARCHAR (500) NULL,
     [AdminConcession_ID]                            INT           NULL,
     [Field_ID]                                      INT           NULL,
-    CONSTRAINT [PK_Concession_Situation] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_CONCESSION_SITUATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
