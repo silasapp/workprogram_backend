@@ -18,6 +18,7 @@
     [DecomCertificateFilename]    VARCHAR (100)  NULL,
     [COMPANY_ID]                  VARCHAR (100)  NULL,
     [CompanyNumber]               INT            NULL,
-    [Field_ID]                    INT            NULL
+    [Field_ID]                    INT            NULL,
+    CONSTRAINT [PK_HSE_WASTE_MANAGEMENT_SYSTEM] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

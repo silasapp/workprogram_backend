@@ -1,5 +1,6 @@
 ﻿
 
+
 /****** Script for SelectTopNRows command from SSMS  ******/
 CREATE VIEW [dbo].[WP_GAS_PRODUCTION_ACTIVITIES]
 AS

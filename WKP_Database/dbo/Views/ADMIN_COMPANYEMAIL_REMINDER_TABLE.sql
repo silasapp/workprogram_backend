@@ -5,9 +5,6 @@ SELECT        dbo.ADMIN_COMPANY_INFORMATION.Id, dbo.ADMIN_COMPANY_INFORMATION.CO
                          dbo.ADMIN_CONCESSIONS_INFORMATION.Company_ID AS Expr1
 FROM            dbo.ADMIN_COMPANY_INFORMATION INNER JOIN
                          dbo.ADMIN_CONCESSIONS_INFORMATION ON dbo.ADMIN_COMPANY_INFORMATION.COMPANY_ID = dbo.ADMIN_CONCESSIONS_INFORMATION.Company_ID
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ADMIN_COMPANYEMAIL_REMINDER_TABLE';
-
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -139,4 +136,8 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ADMIN_COMPANYEMAIL_REMINDER_TABLE';
+
+
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ADMIN_COMPANYEMAIL_REMINDER_TABLE';
 

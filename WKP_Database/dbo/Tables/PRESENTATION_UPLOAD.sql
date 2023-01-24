@@ -19,6 +19,6 @@
     [COMPANY_ID]            VARCHAR (300)  NULL,
     [CompanyNumber]         INT            NULL,
     [Field_ID]              INT            NULL,
-    CONSTRAINT [PK_Presentation_Upload] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_PRESENTATION_UPLOAD] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
