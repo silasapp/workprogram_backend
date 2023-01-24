@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[ADMIN_DIVISION_REP_LIST] (
-    [Id]            INT           IDENTITY (1, 1) NOT NULL,
-    [DIV_REP_NAME]  VARCHAR (200) NULL,
-    [DIV_REP_EMAIL] VARCHAR (100) NULL,
-    [DIVISION]      VARCHAR (100) NULL
-);
-

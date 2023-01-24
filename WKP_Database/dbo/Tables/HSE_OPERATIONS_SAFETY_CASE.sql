@@ -18,8 +18,7 @@
     [Date_Updated]                                DATETIME       NULL,
     [COMPANY_ID]                                  VARCHAR (1000) NULL,
     [CompanyNumber]                               INT            NULL,
-    [Field_ID]                                    INT            NULL
+    [Field_ID]                                    INT            NULL,
+    CONSTRAINT [PK_HSE_OPERATIONS_SAFETY_CASE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
-
-
 

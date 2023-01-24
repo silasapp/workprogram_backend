@@ -13,5 +13,3 @@
     CONSTRAINT [PK_PermitApprovals] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-

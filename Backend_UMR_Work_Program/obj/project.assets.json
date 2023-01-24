@@ -8676,19 +8676,36 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\suppo\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\suppo\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+>>>>>>> ceb4fb4a3d411ce53f7b2abc577090204810fbe9
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "C:\\Sandbox\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
       "projectName": "Backend_UMR_Work_Program",
       "projectPath": "C:\\Sandbox\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
       "packagesPath": "C:\\Users\\suppo\\.nuget\\packages\\",
       "outputPath": "C:\\Sandbox\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\obj\\",
+=======
+      "projectUniqueName": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+      "projectName": "Backend_UMR_Work_Program",
+      "projectPath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+      "packagesPath": "C:\\Users\\suppo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\obj\\",
+>>>>>>> ceb4fb4a3d411ce53f7b2abc577090204810fbe9
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\suppo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+<<<<<<< HEAD
+=======
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+>>>>>>> ceb4fb4a3d411ce53f7b2abc577090204810fbe9
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8824,7 +8841,11 @@
             "privateAssets": "all"
           }
         },
+<<<<<<< HEAD
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+=======
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+>>>>>>> ceb4fb4a3d411ce53f7b2abc577090204810fbe9
       }
     }
   }
