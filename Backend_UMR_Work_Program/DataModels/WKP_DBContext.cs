@@ -5262,7 +5262,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES");
 
@@ -5302,7 +5301,7 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
