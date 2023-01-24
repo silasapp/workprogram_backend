@@ -1225,6 +1225,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.type_of_facility == type_of_facility && c.number_of_facilities == number_of_facilities select c).ToList();
 						var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+						var HSERemediationFund = (from c in _context.HSE_REMEDIATION_FUNDs where c.CompanyName == WKPCompanyName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSEAssetRegister = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEOilSpill = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -1331,7 +1332,8 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSEEnvironmentalManagementPlans = HSEEnvironmentalMgtPlans,
 							HSEEnfluenceConliences = HSEEnfluenceConliences,
 							HSEGHGPlans = HSEGHGPlans,
-							HSEHostCommunities = HSEHostCommunities
+							HSEHostCommunities = HSEHostCommunities,
+							HSERemediationFund = HSERemediationFund
 						};
 					}
 					else
@@ -1406,7 +1408,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEHostComms = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSEGHGs = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.OmL_Name == omlName && c.CompanY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
+						var HSERemediationFund = (from c in _context.HSE_REMEDIATION_FUNDs where c.CompanyName == WKPCompanyName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						return new
 						{
 							HSETechnicalSafety = HSETechnicalSafety,
@@ -1448,7 +1450,8 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSEEnvironmentalMgtPlans = HSEEnvironmentalMgtPlans,
 							HSEEFluenceCompliences = HSEEFluenceCompliences,
 							HSEHostComms = HSEHostComms,
-							HSEGHGs = HSEGHGs
+							HSEGHGs = HSEGHGs,
+							HSERemediationFund = HSERemediationFund
 
 						};
 					}
