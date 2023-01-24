@@ -10544,10 +10544,19 @@ namespace Backend_UMR_Work_Program.Controllers
 							}
 							listObject.Add(new
 							{
-								con = concession.Concession_Held, isEditable = isEditable
+								con = concession.Concession_Held,
+								isEditable = isEditable
 							});
 						}
 
+					}
+					else
+					{
+						listObject.Add(new
+						{
+							con = concession.Concession_Held,
+							isEditable = isEditable
+						});
 					}
 				}
 				return new { listObject };
