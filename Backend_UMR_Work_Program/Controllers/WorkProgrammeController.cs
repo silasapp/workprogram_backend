@@ -738,15 +738,10 @@ namespace Backend_UMR_Work_Program.Controllers
 		[HttpGet("GET_FORM_TWO_INITIAL_WELL_COMPLETION_JOB")]
 		public async Task<object> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName, string fieldName)
 		{
-
 			try
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-				if (concessionField == null)
-				{
-					return null;
-				}
-				if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
+				if ((concessionField.Consession_Type == "OML" || concessionField.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
 					var InitialWellCompletion = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
 					return new { InitialWellCompletion = InitialWellCompletion };
@@ -760,7 +755,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			catch (Exception e)
 			{
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
 			}
 		}
 		[HttpGet("GET_FORM_TWO_WORKOVERS_RECOMPLETION_JOB")]
