@@ -53,7 +53,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 
-				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.COMPANY_NAME==companyName).FirstOrDefault();
+				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.COMPANY_NAME==companyName || q.Id==int.Parse(companyId)).FirstOrDefault();
 				//var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
 
 
