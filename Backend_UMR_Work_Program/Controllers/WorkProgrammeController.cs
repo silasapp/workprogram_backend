@@ -3494,7 +3494,9 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (initial_well_completion_model != null)
 				{
-					var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER select c).FirstOrDefaultAsync();
+					var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER && c.Proposed_Initial_Name.ToUpper().Trim()==initial_well_completion_model.Proposed_Initial_Name.ToUpper().Trim() select c).FirstOrDefaultAsync();
+
+
 
 					initial_well_completion_model.Companyemail = WKPCompanyEmail;
 					initial_well_completion_model.CompanyName = WKPCompanyName;
@@ -3514,6 +3516,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						{
 							initial_well_completion_model.Date_Created = DateTime.Now;
 							initial_well_completion_model.Created_by = WKPCompanyId;
+							//initial_well_completion_model.Proposed_Well_Number=getDataList.Count()+1;
 							await _context.INITIAL_WELL_COMPLETION_JOBs1.AddAsync(initial_well_completion_model);
 						}
 						else
