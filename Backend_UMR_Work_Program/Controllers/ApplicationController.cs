@@ -150,6 +150,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                           join cmt in _context.SBU_ApplicationComments on app.Id equals cmt.AppID 
                                           join sbu in _context.StrategicBusinessUnits on cmt.SBU_ID equals sbu.Id
                                           where app.DeleteStatus != true && cmt.ActionStatus == GeneralModel.Initiated
+                                          && app.CompanyID == WKPCompanyNumber
                                           select new Application_Model
                                           {
                                               Last_SBU = sbu.SBU_Name,
@@ -616,10 +617,24 @@ namespace Backend_UMR_Work_Program.Controllers
                         {
                             foreach (var staff in getApplicationProcess.Result.ToList())
                             {
-                                int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, staff);
+                                //check if next SBU is planning and applications are still 
 
-                                if (saveStaffDesk > 0)
+                                var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == staff.SBU_Id select sb).FirstOrDefaultAsync();
+                                
+                                if (SBU.SBU_Code == GeneralModel.PLANNING_CODE && staff.RoleName == GeneralModel.Reviewer)
                                 {
+                                    var AllStaffDesks = await _context.MyDesks.Where(a => a.AppId == appId && a.HasWork != true).ToListAsync();
+                                    if (AllStaffDesks.Count() == 1)
+                                    {
+                                        int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, staff);
+                                    }
+
+                                }
+                                else
+                                {
+                                    int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, staff);
+                                }
+                                
                                     _helpersController.SaveHistory(application.Id, staff.StaffId, "Moved", comment);
                                     
                                     //update staff desk
@@ -641,11 +656,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                     _helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
                                     return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
-                                }
-                                else
-                                {
-                                    return BadRequest(new { message = "An error occured while trying to submit this application to a staff."});
-                                }
+                                //}
+                                //else
+                                //{
+                                //    return BadRequest(new { message = "An error occured while trying to submit this application to a staff."});
+                                //}
 
                             }
                         }

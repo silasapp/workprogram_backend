@@ -47,6 +47,8 @@ namespace Backend_UMR_Work_Program.Models
         public static string OPL = "OPL";
         public static string Initiated = "Initiated";
         public static string Completed = "Completed";
+        public static string PLANNING_CODE = "PLN";
+        public static string Reviewer = "Reviewer";
 
 
 
