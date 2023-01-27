@@ -7912,7 +7912,46 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-		[HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
+
+
+
+		[HttpGet("FetchConcessionsByCompanies")]
+		public async  Task<object> FetchConcessionsByCompanies()
+		{
+			
+
+                var data = await (from comp in _context.ADMIN_COMPANY_INFORMATIONs
+                         join conce in _context.ADMIN_CONCESSIONS_INFORMATIONs on comp.COMPANY_ID equals conce.Company_ID
+                         orderby conce.Consession_Id
+                         select new
+                         {
+                            
+                             comp.COMPANY_NAME,
+                             comp.EMAIL,
+                             conce.Concession_Held,
+                             conce.Field_Name,
+							 conce.Contract_Type
+                         }).ToListAsync();
+
+
+			var _comData = await _context.ADMIN_COMPANY_INFORMATIONs.Where(a => a.COMPANY_NAME.Trim().ToLower() != "admin").ToListAsync();
+
+			//var _bject = new
+			//{
+			//	CompanyName = "err",
+			//	NumberOfConcessions = 1,
+   //             NumberOfFields = 1,
+			//	Concessions = data.
+
+
+
+   //         }
+
+			return data.GroupBy(a=>a.COMPANY_NAME);
+        }
+
+
+        [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
 		public async Task<object> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW hse_compliance_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 

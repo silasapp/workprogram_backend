@@ -65,6 +65,9 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
+
+		
+
 		[HttpPost("EditCompanyDetails")]
 		public object EditCompanyDetails([FromBody] CompanyDetail myDetail)
 		{
