@@ -1925,7 +1925,7 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var SBU = await (from sb in _context.StrategicBusinessUnits
-                                 where sb.SBU_Name.ToLower() == name.ToLower()
+                                 where sb.Id == id
                                  select sb).FirstOrDefaultAsync();
                 if (SBU == null)
                 {
@@ -2057,7 +2057,7 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var Role = await (from sb in _context.Roles
-                                 where sb.RoleName.ToLower() == name.ToLower()
+                                 where sb.id == id
                                  select sb).FirstOrDefaultAsync();
                 if (Role == null)
                 {
