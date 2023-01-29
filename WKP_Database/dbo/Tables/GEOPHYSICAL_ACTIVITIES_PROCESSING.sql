@@ -38,15 +38,8 @@
     [QUATER]                              VARCHAR (50)   NULL,
     [COMPANY_ID]                          VARCHAR (100)  NULL,
     [CompanyNumber]                       INT            NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_Geophysical_Activities_Processing] PRIMARY KEY CLUSTERED ([Geophysical_Activities_ProcessingId] ASC)
-);
-
-=======
     [Field_ID]                            INT            NULL,
-    CONSTRAINT [PK_Geophysical_Activities_Processing] PRIMARY KEY CLUSTERED ([Geophysical_Activities_ProcessingId] ASC)
+    [No_of_Folds]                         VARCHAR (50)   NULL,
+    CONSTRAINT [PK_GEOPHYSICAL_ACTIVITIES_PROCESSING] PRIMARY KEY CLUSTERED ([Geophysical_Activities_ProcessingId] ASC)
 );
 
-
-
->>>>>>> origin/main

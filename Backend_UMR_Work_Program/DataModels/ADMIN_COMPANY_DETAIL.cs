@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class ADMIN_COMPANY_DETAIL
     {
@@ -22,5 +22,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? Date_Created { get; set; }
         public string? check_status { get; set; }
         public int? CompanyNumber { get; set; }
-    }
+		public string? CompanyId { get; internal set; }
+	}
 }

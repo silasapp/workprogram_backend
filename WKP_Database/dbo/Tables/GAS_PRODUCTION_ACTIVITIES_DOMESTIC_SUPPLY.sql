@@ -15,15 +15,7 @@
     [Terrain]         VARCHAR (50)   NULL,
     [Contract_Type]   VARCHAR (50)   NULL,
     [COMPANY_ID]      VARCHAR (100)  NULL,
-<<<<<<< HEAD
-    [CompanyNumber]   INT            NULL
-);
-
-=======
     [CompanyNumber]   INT            NULL,
     [Field_ID]        INT            NULL
 );
 
-
-
->>>>>>> origin/main

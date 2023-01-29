@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.Models
+namespace Backend_UMR_Work_Program.DataModels
 {
     public partial class GEOPHYSICAL_ACTIVITIES_ACQUISITION
     {
@@ -44,5 +44,6 @@ namespace Backend_UMR_Work_Program.Models
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
         public int? Field_ID { get; set; }
+        public int? No_of_Folds { get; set; }
     }
 }

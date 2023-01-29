@@ -1,4 +1,6 @@
-﻿namespace Backend_UMR_Work_Program.Models
+﻿using Backend_UMR_Work_Program.DataModels;
+
+namespace Backend_UMR_Work_Program.Models
 {
     public class GeneralModel
     {
@@ -43,6 +45,10 @@
         public static string Rejected = "Rejected";
         public static string OML = "OML";
         public static string OPL = "OPL";
+        public static string Initiated = "Initiated";
+        public static string Completed = "Completed";
+        public static string PLANNING_CODE = "PLN";
+        public static string Reviewer = "Reviewer";
 
 
 
@@ -53,6 +59,12 @@
         //public static string WKUserRole { get; set; }
         //public static string WKPCompanyNumber { get; set; }
 
+        public class ActionModel
+        {
+           public string[] selectedApps { get; set; }
+           public string[] SBU_IDs { get; set; }
+           public string[] selectedTables { get; set; }
+        }    
         public class Concession_Index
         {
             public string companyName { get; set; }
@@ -256,6 +268,7 @@
         public class Application_Model
         {
             public int Id { get; set; }
+            public int RejectId { get; set; }
             public string ReferenceNo { get; set; } = null!;
             public int? ConcessionID { get; set; }
             public int CompanyID { get; set; }
@@ -263,8 +276,9 @@
             public string CompanyName { get; set; }
             public string FieldName { get; set; }
             public string ConcessionName { get; set; }
+            public string SBU_Tables { get; set; }
+            public string SBU_Comment { get; set; }
             public int? FieldID { get; set; }
-            //public int? DeskID { get; set; }
             public int CategoryID { get; set; }
             public int YearOfWKP { get; set; }
             public string Status { get; set; } = null!;
@@ -290,6 +304,8 @@
             public List<Staff_Model> Staff { get; set; }
             public List<ApplicationDeskHistory_Model> Application_History { get; set; }
             public List<SubmittedDocument> Document { get; set; }
+            public List<StrategicBusinessUnit> SBU { get; set; }
+            public List<Table_Detail> SBU_TableDetails { get; set; }
         }
         public class Staff_Model
         {

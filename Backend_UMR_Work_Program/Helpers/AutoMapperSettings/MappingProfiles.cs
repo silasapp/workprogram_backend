@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
+using Backend_UMR_Work_Program.DataModels;
 
 namespace Backend_UMR_Work_Program.Helpers.AutoMapperSettings
 {

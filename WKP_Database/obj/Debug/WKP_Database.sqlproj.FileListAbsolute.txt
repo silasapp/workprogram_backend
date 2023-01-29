@@ -1,23 +1,10 @@
-<<<<<<< HEAD
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\WKP_Database.dacpac
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\WKP_Database.dll
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\WKP_Database.pdb
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\Model.xml
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\refactor.xml
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\postdeploy.sql
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\predeploy.sql
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\WKP_Database.dll
-C:\Users\admin\source\repos\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\WKP_Database.pdb
-=======
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\bin\Debug\WKP_Database.dacpac
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\bin\Debug\WKP_Database.dll
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\bin\Debug\WKP_Database.pdb
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\WKP_Database.dll
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\WKP_Database.pdb
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\Model.xml
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\refactor.xml
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\postdeploy.sql
-C:\Users\admin\source\repos\A_WorkProgram\WKP_BackEnd\WKP_Database\obj\Debug\predeploy.sql
->>>>>>> origin/main
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\WKP_Database.dacpac
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\WKP_Database.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\bin\Debug\WKP_Database.pdb
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\Model.xml
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\refactor.xml
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\postdeploy.sql
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\predeploy.sql
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\WKP_Database.dll
+C:\Users\admin\source\repos\B_\WORK-PROGRAM (MAIN)\WKP_Database\obj\Debug\WKP_Database.pdb

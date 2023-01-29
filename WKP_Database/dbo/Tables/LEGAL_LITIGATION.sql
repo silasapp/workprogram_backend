@@ -21,15 +21,10 @@
     [Date_Created]                        DATETIME       NULL,
     [Date_Updated]                        DATETIME       NULL,
     [COMPANY_ID]                          VARCHAR (100)  NULL,
-<<<<<<< HEAD
-    [CompanyNumber]                       INT            NULL
-);
-
-=======
     [CompanyNumber]                       INT            NULL,
-    [Field_ID]                            INT            NULL
+    [Field_ID]                            INT            NULL,
+    CONSTRAINT [PK_LEGAL_LITIGATION] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 
 
->>>>>>> origin/main
