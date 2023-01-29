@@ -235,7 +235,7 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
                                     FirstName = res.firstName.ToUpper(),
                                     LastName = res.lastName.ToUpper(),
                                     CreatedAt = DateTime.Now,
-                                    ActiveStatus = false,
+                                    ActiveStatus = true,
                                     DeleteStatus = false,
                                 };
 
