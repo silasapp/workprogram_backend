@@ -43,7 +43,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		[HttpGet("GETWORKPROGRAMYEARS")]
 		public async Task<object> GETWORKPROGRAMYEARS()
 		{
-			var now = DateTime.UtcNow.Year;
+			var now = DateTime.UtcNow.Year + 1;
 			var yearlist = new List<int>();
 			for (int i = 0; i < 5; i++)
 			{
@@ -109,9 +109,9 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 
 			var step3 = await (from a in _context.BUDGET_ACTUAL_EXPENDITUREs
-							   join b in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs on a.COMPANY_ID equals b.COMPANY_ID
-							   join c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs on a.COMPANY_ID equals c.COMPANY_ID
-							   where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year
+							   join b in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs on a.OML_Name equals b.OML_Name
+							   join c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs on a.OML_Name equals c.OML_Name
+							   where a.OML_Name == omlname
 							   select new
 							   {
 								   exploratoryBudget = a.Budget_for_Direct_Exploration_and_Production_Activities_USD,
@@ -147,7 +147,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 
 			var step5 = await (from a in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs
-							   where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year
+							   where a.OML_Name == omlname && a.Year_of_WP == year
 							   select new
 							   {
 								   facility = a.facility
@@ -187,7 +187,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
 				var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
-				
+
 
 				return new { ConcessionFields = concessionFields };
 			}
@@ -339,7 +339,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where (d.Consession_Id.ToString() == concessionID || d.Concession_Held == concessionID) && d.Company_ID == WKPCompanyId && d.DELETED_STATUS != "DELETED" select d).FirstOrDefault();
 
 					companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
-					
+
 				}
 				string isEditable = "";
 				if (companyFields.Count > 0)
@@ -584,7 +584,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
-	
+
 
 		[HttpGet("GET_FORM_ONE_GEOPHYSICAL")]
 		public async Task<object> GET_FORM_ONE_GEOPHYSICAL(string omlName, string fieldName, string myyear)

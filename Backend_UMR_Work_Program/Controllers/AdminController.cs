@@ -2,18 +2,21 @@
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Syncfusion.XlsIO;
 using System.Data;
+using System.Net;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
 
 	public class AdminController : Controller
@@ -178,8 +181,9 @@ namespace Backend_UMR_Work_Program.Controllers
 							Name_of_company = Regex.Replace(Name_of_company, @"\s+", " ", RegexOptions.Multiline);
 
 							string CompanyCode = row["CompanyCode"].ToString().Replace("'", "").ToUpper().Trim();
+							
 
-							var getCode = (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == CompanyCode && c.IsActive == "YES" select c).FirstOrDefault();
+							var getCode = await (from c in _context.ADMIN_COMPANY_CODEs where c.CompanyCode == CompanyCode && c.IsActive == "YES" select c).FirstOrDefaultAsync();
 							if (getCode == null)
 							{
 								//var company = (from c in _context.ADMIN_COMPANY_INFORMATIONs
@@ -204,7 +208,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						}
 						else
 						{
-							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : Company code details was not found.", StatusCode = ResponseCodes.Badrequest };
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : Company code may already exist.", StatusCode = ResponseCodes.Badrequest };
 						}
 					}
 
