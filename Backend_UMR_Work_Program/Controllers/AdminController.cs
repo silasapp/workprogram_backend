@@ -1810,6 +1810,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concessionID && d.DeletedStatus != true select d).ToListAsync();
+				
 				return new { CompanyFields = companyFields };
 			}
 			catch (Exception e)

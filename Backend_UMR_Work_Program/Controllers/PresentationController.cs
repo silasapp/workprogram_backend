@@ -52,7 +52,9 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 
-				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.EMAIL==companyEmail || q.Id==Convert.ToInt32(companyId)).FirstOrDefault();
+				//var details = _context.ADMIN_COMPANY_INFORMATIONs.Where(q => q.EMAIL==companyEmail || q.COMPANY_ID==companyId).FirstOrDefault();
+
+				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.COMPANY_NAME.Trim().ToUpper()==companyEmail.Trim().ToUpper()).FirstOrDefault();
 				//var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
 
 
@@ -75,10 +77,6 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (details != null)
 				{
 
-
-					//Contact Person's Number
-					//dami
-					//Contact Person's Email
 					details.Address_of_Company=myDetail.Address_of_Company;
 					details.Phone_NO_of_MD_CEO= myDetail.Phone_NO_of_MD_CEO;
 					details.Name_of_MD_CEO = myDetail.Name_of_MD_CEO;
@@ -86,16 +84,33 @@ namespace Backend_UMR_Work_Program.Controllers
 					details.Email_Address=myDetail.Email_Address;
 					details.Phone_No = myDetail.Phone_No;
 
+				}
+				else
+				{
+					var companyDetail = new ADMIN_COMPANY_DETAIL();
 
-					// _context.ADMIN_COMPANY_DETAILs.Remove(details);
-					//_context.SaveChanges();
-					// _context.ADMIN_COMPANY_DETAILs.Add(_detail);
-					//    _presentation.Insert_Company_Details_Contact_Person(myDetail.CompanyName, myDetail.CompanyEmail, myDetail.Address_of_Company, myDetail.Name_of_MD_CEO, myDetail.Phone_NO_of_MD_CEO, myDetail.Contact_Person, myDetail.Phone_No, myDetail.Email_Address);
-					if (_context.SaveChanges() > 0)
-					{
-						return Ok(details);
+					companyDetail.Address_of_Company= myDetail.Address_of_Company;
+					//companyDetail.CompanyNumber=myDetail.CompanyId;
+					companyDetail.Phone_NO_of_MD_CEO=myDetail.Phone_NO_of_MD_CEO;
+					companyDetail.Name_of_MD_CEO=myDetail.Name_of_MD_CEO;
+					companyDetail.Contact_Person=myDetail.Contact_Person;
+					companyDetail.Email_Address=myDetail.Email_Address;
+					companyDetail.Phone_No = myDetail.Phone_No;
+					companyDetail.Phone_No_alt=myDetail.Phone_No_alt;
+					companyDetail.COMPANY_NAME=myDetail.CompanyName;
+					companyDetail.Created_by=WKPUserEmail;
+					companyDetail.Date_Created=DateTime.Now.ToLongDateString();
+					companyDetail.EMAIL=myDetail.CompanyEmail;
+					companyDetail.CompanyId=myDetail.CompanyId;
 
-					}
+
+					_context.ADMIN_COMPANY_DETAILs.Add(companyDetail);
+				}
+
+				if (_context.SaveChanges() > 0)
+				{
+					return Ok(details);
+
 				}
 
 				return null;
