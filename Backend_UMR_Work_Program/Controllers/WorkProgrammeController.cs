@@ -187,27 +187,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				int companyID = companyNumber > 0 ? companyNumber : int.Parse(WKPCompanyId);
 				var concessionFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber == companyID && d.DeletedStatus != true select d).ToListAsync();
-				string isEditable = "";
-				if (concessionFields.Count > 0)
-				{
-					foreach (var field in concessionFields)
-					{
-
-
-						var checkApplication = await (from ap in _context.Applications
-													  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
-													  select ap).FirstOrDefaultAsync();
-						field.isEditable = true;
-						if (checkApplication != null)
-						{
-							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
-							if (NRejectApp == null)
-								field.isEditable = false;
-						}
-
-					}
-
-				}
+				
 
 				return new { ConcessionFields = concessionFields };
 			}
@@ -349,19 +329,40 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			try
 			{
-
+				var companyFields = new List<COMPANY_FIELD>();
 				if (!string.IsNullOrEmpty(companyID) && companyID != "null")
 				{
-					var companyFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber.ToString() == companyID && d.DeletedStatus != true select d).ToListAsync();
-					return companyFields;
+					companyFields = await (from d in _context.COMPANY_FIELDs where d.CompanyNumber.ToString() == companyID && d.DeletedStatus != true select d).ToListAsync();
 				}
 				else
 				{
 					var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where (d.Consession_Id.ToString() == concessionID || d.Concession_Held == concessionID) && d.Company_ID == WKPCompanyId && d.DELETED_STATUS != "DELETED" select d).FirstOrDefault();
 
-					var companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
-					return companyFields;
+					companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
+					
 				}
+				string isEditable = "";
+				if (companyFields.Count > 0)
+				{
+					foreach (var field in companyFields)
+					{
+
+
+						var checkApplication = await (from ap in _context.Applications
+													  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
+													  select ap).FirstOrDefaultAsync();
+						field.isEditable = true;
+						if (checkApplication != null)
+						{
+							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
+							if (NRejectApp == null)
+								field.isEditable = false;
+						}
+
+					}
+
+				}
+				return companyFields;
 			}
 			catch (Exception e)
 			{
@@ -583,6 +584,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
+	
 
 		[HttpGet("GET_FORM_ONE_GEOPHYSICAL")]
 		public async Task<object> GET_FORM_ONE_GEOPHYSICAL(string omlName, string fieldName, string myyear)
@@ -10593,6 +10595,16 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
+						var checkApplication = await (from ap in _context.Applications
+													  where ap.YearOfWKP == DateTime.Now.Year && ap.ConcessionID == concession.Consession_Id && ap.DeleteStatus != true
+													  select ap).FirstOrDefaultAsync();
+						isEditable = true;
+						if (checkApplication != null)
+						{
+							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == checkApplication.Id && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
+							if (NRejectApp == null)
+								isEditable = false;
+						}
 						listObject.Add(new
 						{
 							con = concession.Concession_Held,
