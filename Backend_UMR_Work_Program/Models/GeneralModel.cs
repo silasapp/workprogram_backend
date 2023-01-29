@@ -396,6 +396,8 @@ namespace Backend_UMR_Work_Program.Models
             public string? FLAG1 { get; set; }
             public string? FLAG2 { get; set; }
             public string? EMAIL_REMARK { get; set; }
+            public int? ROLE_ID { get; set; }
+            public int? SBU_ID { get; set; }
         }
         public partial class ADMIN_CONCESSIONS_INFORMATION_Model
         {
@@ -429,6 +431,7 @@ namespace Backend_UMR_Work_Program.Models
             public List<ADMIN_COMPANY_INFORMATION> companiesList { get; set; }
             public List<ADMIN_COMPANY_INFORMATION> staffList { get; set; }
             public List<ROLES_> roles { get; set; }
+            public List<StrategicBusinessUnit> sbus { get; set; }
         }
         public class parameterConfigModel
         {
