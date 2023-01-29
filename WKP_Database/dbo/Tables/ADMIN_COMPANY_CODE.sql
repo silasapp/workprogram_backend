@@ -10,6 +10,9 @@
     [Date_Created]  DATETIME      NULL,
     [Date_Updated]  DATETIME      NULL,
     [UserNumber]    INT           NULL,
-    [CompanyNumber] INT           NULL
+    [CompanyNumber] INT           NULL,
+    CONSTRAINT [PK_ADMIN_COMPANY_CODE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
