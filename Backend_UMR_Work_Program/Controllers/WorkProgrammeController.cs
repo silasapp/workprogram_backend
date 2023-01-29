@@ -43,7 +43,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		[HttpGet("GETWORKPROGRAMYEARS")]
 		public async Task<object> GETWORKPROGRAMYEARS()
 		{
-			var now = DateTime.UtcNow.Year;
+			var now = DateTime.UtcNow.Year + 1;
 			var yearlist = new List<int>();
 			for (int i = 0; i < 5; i++)
 			{
@@ -109,9 +109,9 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 
 			var step3 = await (from a in _context.BUDGET_ACTUAL_EXPENDITUREs
-							   join b in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs on a.COMPANY_ID equals b.COMPANY_ID
-							   join c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs on a.COMPANY_ID equals c.COMPANY_ID
-							   where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year
+							   join b in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs on a.OML_Name equals b.OML_Name
+							   join c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs on a.OML_Name equals c.OML_Name
+							   where a.OML_Name == omlname
 							   select new
 							   {
 								   exploratoryBudget = a.Budget_for_Direct_Exploration_and_Production_Activities_USD,
@@ -147,7 +147,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 
 			var step5 = await (from a in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs
-							   where a.COMPANY_ID == WKPCompanyId && a.Year_of_WP == year
+							   where a.OML_Name == omlname && a.Year_of_WP == year
 							   select new
 							   {
 								   facility = a.facility
