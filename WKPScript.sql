@@ -518,3 +518,8 @@ ALTER TABLE dbo.GAS_PRODUCTION_ACTIVITIES ADD
 ALTER TABLE dbo.ADMIN_COMPANY_DETAILS ADD
 	CompanyId varchar(50) NULL
 
+
+ALTER TABLE dbo.Royalty ADD
+	Last_Qntr_Royalty varchar(1000) NULL
+ALTER TABLE dbo.NIGERIA_CONTENT_Upload_Succession_Plan ADD
+	[Year] varchar(1000) NULL
