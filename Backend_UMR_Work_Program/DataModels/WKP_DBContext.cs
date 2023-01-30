@@ -635,7 +635,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
             {
-                entity.HasNoKey();
 
                 entity.ToTable("ADMIN_COMPANY_CODE");
 
@@ -662,8 +661,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.GUID)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.IsActive)
                     .HasMaxLength(20)

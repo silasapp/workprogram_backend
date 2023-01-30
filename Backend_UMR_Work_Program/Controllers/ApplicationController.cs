@@ -1498,7 +1498,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                return new
                 {
-                   Processes = processes,
+                   Processes = processes.OrderBy(x=> x.SBU).ThenBy(x=> x.Sort),
                    Roles = roles,
                    SBUs = SBUs,
                };
@@ -1587,17 +1587,10 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    var nProcess = new ApplicationProccess()
-                    {
-                        Sort = sort,
-                        RoleID = roleID,
-                        SBU_ID = sbuID,
-                        CreatedAt = DateTime.Now,
-                        DeleteStatus = false,
-                        CategoryID = 1 //Default for new applications
-                    };
-                    await _context.ApplicationProccesses.AddAsync(nProcess);
-
+                    process.Sort = sort;
+                    process.RoleID = roleID;
+                    process.SBU_ID = sbuID;
+                    
                     if (await _context.SaveChangesAsync() > 0)
                     {
                         var processes = await (from prc in _context.ApplicationProccesses
@@ -1624,7 +1617,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
                     else
                     {
-                        return BadRequest(new { message = $"Error : An error occured while trying to create this process."});
+                        return BadRequest(new { message = $"Error : An error occured while trying to edit this process."});
                     }
                 }
             }
@@ -1674,7 +1667,190 @@ namespace Backend_UMR_Work_Program.Controllers
                     }
                     else
                     {
-                        return BadRequest(new { message = $"Error : An error occured while trying to create this process."});
+                        return BadRequest(new { message = $"Error : An error occured while trying to delete this process."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpGet("GetSBU_Tables")]
+        public async Task<object> GetSBU_Tables()
+        {
+            try
+            {
+                var SBU_Tables = await (from tab in _context.Table_Details
+                                join sbu in _context.StrategicBusinessUnits on tab.SBU_ID equals sbu.Id.ToString()
+                                select new
+                                {
+                                    Id= tab.TableId,
+                                    TableName = tab.TableName,
+                                    Role = tab.TableSchema,
+                                    SBU = sbu.SBU_Name
+                                }).ToListAsync();
+                var SBUs = await _context.StrategicBusinessUnits.ToListAsync(); 
+
+               return new
+                {
+                   SBU_Tables = SBU_Tables.OrderBy(x=> x.SBU),
+                   SBUs = SBUs,
+               };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("CreateSBU_Tables")]
+        public async Task<object> CreateSBU_Tables(int sbuID, string TableName, string TableSchema)
+        {
+            try
+            {
+                if (TableName == null || sbuID <= 0 || TableSchema == null)
+                {
+                    return BadRequest(new { message = $"Error : Table name/schema/SBU ID was not passed correctly." });
+                }
+
+                var SBU_Tables = await (from tab in _context.Table_Details
+                                where tab.TableName.ToLower() == TableName.ToLower() && tab.TableSchema.ToLower() == TableSchema.ToLower() && tab.SBU_ID == sbuID.ToString()/*tab.SBU_ID.Contains(sbuID.ToString())*/ 
+                               select tab).FirstOrDefaultAsync();
+                if (SBU_Tables != null)
+                {
+                    return BadRequest(new { message = $"Error : This table is already existing for this SBU and can not be duplicated." });
+                }
+                else
+                {
+                    var nSBU_Tables = new Table_Detail()
+                    {
+                        TableName = TableName,
+                        TableSchema = TableSchema,
+                        SBU_ID = sbuID.ToString()
+                    };
+                    await _context.Table_Details.AddAsync(nSBU_Tables);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var AllSBU_Tables = await (from tab in _context.Table_Details
+                                                join sbu in _context.StrategicBusinessUnits on tab.SBU_ID equals sbu.Id.ToString()
+                                                select new
+                                                {
+                                                    Id = tab.TableId,
+                                                    TableName = tab.TableName,
+                                                    Role = tab.TableSchema,
+                                                    SBU = sbu.SBU_Name
+                                                }).ToListAsync();
+                        var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                        return new
+                        {
+                            SBU_Tables = AllSBU_Tables.OrderBy(x => x.SBU),
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to create this SBU table."});
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("EditSBU_Tables")]
+        public async Task<object> EditSBU_Tables(int id, string TableName, int sbuID, string TableSchema)
+        {
+            try
+            {
+                 if (TableName == null || id <= 0 || sbuID <= 0 || TableSchema == null)
+                {
+                    return BadRequest(new { message = $"Error : Table ID/name/schema/SBU_ID was not passed correctly." });
+                }
+
+                var SBU_Tables = await (from tab in _context.Table_Details
+                                where tab.TableId == id/*tab.SBU_ID.Contains(sbuID.ToString())*/ 
+                               select tab).FirstOrDefaultAsync();
+                if (SBU_Tables == null)
+                {
+                    return BadRequest(new { message = $"Error : SBU_Tables details could not be found or an invalid ID was supplied." });
+                }
+                else
+                {
+
+                    SBU_Tables.TableName = TableName;
+                    SBU_Tables.TableSchema = TableSchema;
+                    SBU_Tables.SBU_ID = sbuID.ToString();
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var AllSBU_Tables = await (from tab in _context.Table_Details
+                                                   join sbu in _context.StrategicBusinessUnits on tab.SBU_ID equals sbu.Id.ToString()
+                                                   select new
+                                                   {
+                                                       Id = tab.TableId,
+                                                       TableName = tab.TableName,
+                                                       Role = tab.TableSchema,
+                                                       SBU = sbu.SBU_Name
+                                                   }).ToListAsync();
+                        var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                        return new
+                        {
+                            SBU_Tables = AllSBU_Tables.OrderBy(x => x.SBU),
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to edit this SBU table." });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = "Error : " + e.Message});
+            }
+        }
+        [HttpPost("DeleteSBU_Tables")]
+        public async Task<object> DeleteSBU_Tables(int id)
+        {
+            try
+            {
+                var SBU_Tables = await (from tab in _context.Table_Details
+                                        where tab.TableId == id 
+                               select tab).FirstOrDefaultAsync();
+                if (SBU_Tables == null)
+                {
+                    return BadRequest(new { message = $"Error : SBU_Tables details could not be found or an invalid ID was supplied."});
+                }
+                else
+                {
+                    _context.Table_Details.Remove(SBU_Tables);
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var AllSBU_Tables = await (from tab in _context.Table_Details
+                                                   join sbu in _context.StrategicBusinessUnits on tab.SBU_ID equals sbu.Id.ToString()
+                                                   select new
+                                                   {
+                                                       Id = tab.TableId,
+                                                       TableName = tab.TableName,
+                                                       Role = tab.TableSchema,
+                                                       SBU = sbu.SBU_Name
+                                                   }).ToListAsync();
+                        var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+                        return new
+                        {
+                            SBU_Tables = AllSBU_Tables.OrderBy(x => x.SBU),
+                            SBUs = SBUs,
+                        };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = $"Error : An error occured while trying to delete this SBU table." });
                     }
                 }
             }
@@ -1749,7 +1925,7 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var SBU = await (from sb in _context.StrategicBusinessUnits
-                                 where sb.SBU_Name.ToLower() == name.ToLower()
+                                 where sb.Id == id
                                  select sb).FirstOrDefaultAsync();
                 if (SBU == null)
                 {
@@ -1836,7 +2012,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("CreateRole")]
-        public async Task<object> CreateRole(string name)
+        public async Task<object> CreateRole(string name, string description)
         {
             try
             {
@@ -1851,7 +2027,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     var nRole = new Role()
                     {
-                        RoleName = name
+                        RoleName = name,
+                        Description = description,
                     };
                     await _context.Roles.AddAsync(nRole);
 
@@ -1876,12 +2053,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("EditRole")]
-        public async Task<object> EditRole(int id, string name)
+        public async Task<object> EditRole(int id, string name, string description)
         {
             try
             {
                 var Role = await (from sb in _context.Roles
-                                 where sb.RoleName.ToLower() == name.ToLower()
+                                 where sb.id == id
                                  select sb).FirstOrDefaultAsync();
                 if (Role == null)
                 {
@@ -1890,6 +2067,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 else
                 {
                     Role.RoleName = name.ToUpper();
+                    Role.Description = description.ToUpper();
                     if (await _context.SaveChangesAsync() > 0)
                     {
                         var Roles = await (from sb in _context.Roles
@@ -1978,7 +2156,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     switch (getStaffSBU.SBU_Code)
                     {
 
-                        case "E&P":
+                        case "ER&SP": //Work Programme
                            
                                 var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.CompanyNumber == application.CompanyID && d.Year_of_WP == year select d).FirstOrDefaultAsync();
                                 var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.CompanyNumber == application.CompanyID && d.Year_of_WP == year select d).FirstOrDefaultAsync();
@@ -1988,7 +2166,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                 return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing, drillEachCost = drillEachCost, drillEachCostProposed = drillEachCostProposed, drillOperationCategoriesWell = drillOperationCategoriesWell };
                            
                             break;
-                        case "PLN":
+                        case "E&AM": //Planning
                           
                                 var BudgetActualExpenditure = await (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var BudgetPerformanceExploratory = await (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
@@ -2009,7 +2187,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     BudgetCapexOpex = BudgetCapexOpex
                                 };
                          
-                        case "LGL":
+                        case "LGL": //Legal
                            
                                 var LegalLitigation = await (from c in _context.LEGAL_LITIGATIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var LegalArbitration = await (from c in _context.LEGAL_ARBITRATIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
@@ -2019,7 +2197,7 @@ namespace Backend_UMR_Work_Program.Controllers
                                     LegalArbitration = LegalArbitration
                                 };
                            
-                        case "HSE":
+                        case "HSE&C": //HSE
                           
                                 var HSEQuestion = await (from c in _context.HSE_QUESTIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var HSEFatality = await (from c in _context.HSE_FATALITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
