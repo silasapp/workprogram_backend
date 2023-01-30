@@ -1925,7 +1925,7 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var SBU = await (from sb in _context.StrategicBusinessUnits
-                                 where sb.SBU_Name.ToLower() == name.ToLower()
+                                 where sb.Id == id
                                  select sb).FirstOrDefaultAsync();
                 if (SBU == null)
                 {
@@ -2012,7 +2012,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("CreateRole")]
-        public async Task<object> CreateRole(string name)
+        public async Task<object> CreateRole(string name, string description)
         {
             try
             {
@@ -2027,7 +2027,8 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     var nRole = new Role()
                     {
-                        RoleName = name
+                        RoleName = name,
+                        Description = description,
                     };
                     await _context.Roles.AddAsync(nRole);
 
@@ -2052,12 +2053,12 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
         [HttpPost("EditRole")]
-        public async Task<object> EditRole(int id, string name)
+        public async Task<object> EditRole(int id, string name, string description)
         {
             try
             {
                 var Role = await (from sb in _context.Roles
-                                 where sb.RoleName.ToLower() == name.ToLower()
+                                 where sb.id == id
                                  select sb).FirstOrDefaultAsync();
                 if (Role == null)
                 {
@@ -2066,6 +2067,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 else
                 {
                     Role.RoleName = name.ToUpper();
+                    Role.Description = description.ToUpper();
                     if (await _context.SaveChangesAsync() > 0)
                     {
                         var Roles = await (from sb in _context.Roles
