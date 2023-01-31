@@ -110,7 +110,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (_context.SaveChanges() > 0)
 				{
-					return Ok(details);
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
+						
 
 				}
 
