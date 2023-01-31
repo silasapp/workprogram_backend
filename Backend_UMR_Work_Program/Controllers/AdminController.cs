@@ -336,12 +336,14 @@ namespace Backend_UMR_Work_Program.Controllers
 											  where c.COMPANY_NAME == GeneralModel.Admin && c.DELETED_STATUS == null
 											  select c).ToListAsync();
 				var userRoles = await _context.ROLES_s.ToListAsync();
+				var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
 
 				var returnData = new UserModel()
 				{
 					companiesList = companyInformation,
 					staffList = staffInformation,
-					roles = userRoles
+					roles = userRoles,
+					sbus = SBUs
 				};
 
 				return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = returnData, StatusCode = ResponseCodes.Success };
@@ -409,6 +411,25 @@ namespace Backend_UMR_Work_Program.Controllers
 					int save = await _context.SaveChangesAsync();
 					if (save > 0)
 					{
+						//add user to staff table
+						staff staff = new staff()
+						{
+                            AdminCompanyInfo_ID=data.Id,
+							StaffElpsID = "123456",
+							Staff_SBU = userModel.SBU_ID,
+							RoleID = userModel.ROLE_ID,
+							LocationID = 1,
+							StaffEmail = data.EMAIL,
+							FirstName = "ADMIN",
+							LastName = "STAFF",
+							CreatedAt = DateTime.Now,
+							ActiveStatus = true,
+							DeleteStatus = false,
+						};
+
+						_context.staff.AddAsync(staff);
+						int saved = await _context.SaveChangesAsync();
+
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"{userModel.EMAIL} has been added successfully", Data = userModel, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -473,6 +494,21 @@ namespace Backend_UMR_Work_Program.Controllers
 					int save = await _context.SaveChangesAsync();
 					if (save > 0)
 					{
+						//update user to staff table
+						var getStaff = (from stf in _context.staff
+										where stf.AdminCompanyInfo_ID == data.Id && stf.DeleteStatus != true
+										select stf).FirstOrDefault();
+						if(getStaff != null) {
+
+							getStaff.Staff_SBU = userModel.SBU_ID;
+							getStaff.RoleID = userModel.ROLE_ID;
+							getStaff.StaffEmail = data.EMAIL;
+							//FirstName = "ADMIN",
+							//LastName = "STAFF",
+							getStaff.UpdatedAt = DateTime.Now;
+						};
+						int saved = await _context.SaveChangesAsync();
+
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"User information has been updated successfully", Data = userModel, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -508,6 +544,16 @@ namespace Backend_UMR_Work_Program.Controllers
 					int save = await _context.SaveChangesAsync();
 					if (save > 0)
 					{
+						var getStaff = (from stf in _context.staff
+										where stf.AdminCompanyInfo_ID == checkUser.Id && stf.DeleteStatus != true
+										select stf).FirstOrDefault();
+						if (getStaff != null)
+						{
+
+							getStaff.DeleteStatus = true;
+							getStaff.UpdatedAt = DateTime.Now;
+						};
+						int saved = await _context.SaveChangesAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"User information has been updated successfully", StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -543,6 +589,15 @@ namespace Backend_UMR_Work_Program.Controllers
 					int save = await _context.SaveChangesAsync();
 					if (save > 0)
 					{
+						var getStaff = (from stf in _context.staff
+										where stf.AdminCompanyInfo_ID == checkUser.Id && stf.DeleteStatus != true
+										select stf).FirstOrDefault();
+						if (getStaff != null)
+						{
+
+							getStaff.DeleteStatus = false;
+							getStaff.UpdatedAt = DateTime.Now;
+						};
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"User information has been updated successfully", StatusCode = ResponseCodes.Success };
 					}
 					else
