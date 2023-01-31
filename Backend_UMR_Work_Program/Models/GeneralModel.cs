@@ -47,6 +47,17 @@ namespace Backend_UMR_Work_Program.Models
         public static string OPL = "OPL";
         public static string Initiated = "Initiated";
         public static string Completed = "Completed";
+        public static string PLANNING_CODE = "ER&SP";
+        public static string HSE_CODE = "HSE&C";
+        public static string LEGAL_CODE = "LGL";
+        public static string D_AND_P_CODE = "D&P";
+        public static string EXPOLRATION_CODE = "E&AM";
+        public static string DEVELOPMENT_CODE = "ER&SP";
+        public static string CORPORATE_SERVICE_CODE = "ER&SP";
+        public static string Reviewer = "Reviewer";
+        public static string Supervisor = "Supervisor";
+        public static string Approval = "Approving Authority";
+        public static string FinalApproval = "Final Approving Authority";
 
 
 
@@ -385,6 +396,8 @@ namespace Backend_UMR_Work_Program.Models
             public string? FLAG1 { get; set; }
             public string? FLAG2 { get; set; }
             public string? EMAIL_REMARK { get; set; }
+            public int? ROLE_ID { get; set; }
+            public int? SBU_ID { get; set; }
         }
         public partial class ADMIN_CONCESSIONS_INFORMATION_Model
         {
@@ -418,6 +431,7 @@ namespace Backend_UMR_Work_Program.Models
             public List<ADMIN_COMPANY_INFORMATION> companiesList { get; set; }
             public List<ADMIN_COMPANY_INFORMATION> staffList { get; set; }
             public List<ROLES_> roles { get; set; }
+            public List<StrategicBusinessUnit> sbus { get; set; }
         }
         public class parameterConfigModel
         {
