@@ -57,6 +57,8 @@ namespace Backend_UMR_Work_Program.Controllers
 				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.CompanyId.Trim().ToUpper()==companyId.Trim().ToUpper() || q.COMPANY_NAME.ToLower().Trim()==companyName.ToLower().Trim()).FirstOrDefault();
 				//var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
 
+				if (details == null) details = new ADMIN_COMPANY_DETAIL();
+
 
 				return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = details, StatusCode = ResponseCodes.Success };
 
@@ -146,7 +148,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			try
 			{
-				var data = await _context.ADMIN_WP_START_END_DATEs.Where(x => x.Created_by == WKPUserEmail)?.FirstOrDefaultAsync();
+				var data = await _context.ADMIN_WP_START_END_DATEs?.FirstOrDefaultAsync();
 
 				if (data==null)
 				{
@@ -157,9 +159,11 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					start_date=data.start_date,
 					end_date=data.end_date
-				};
+
+                    //2022 - 12 - 17
+                };
 				//var response = new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = data, StatusCode = ResponseCodes.Success };
-				return startnEndDate;
+				return startnEndDate=startnEndDate;
 			}
 			catch (Exception e)
 			{
