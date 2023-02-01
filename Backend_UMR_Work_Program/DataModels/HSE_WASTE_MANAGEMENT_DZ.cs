@@ -16,6 +16,9 @@ namespace Backend_UMR_Work_Program.DataModels
         public string? Evidence_of_pay_of_DDCFilename { get; set; }
         public string? Evidence_of_pay_of_DDCPath { get; set; }
         public string? Waste_Contractor_Names { get; set; }
+
+        public string? Field_Name { get; set; }
+
         public string? Produce_Water_Manegent_Plan { get; set; }
         public string? Evidence_of_Reinjection_Permit_Filename { get; set; }
         public string? Evidence_of_Reinjection_Permit_Path { get; set; }
