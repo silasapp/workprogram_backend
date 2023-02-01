@@ -2501,7 +2501,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(environment_Management_Plan_model);
+						_context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
 					}
 
 					save += await _context.SaveChangesAsync();
