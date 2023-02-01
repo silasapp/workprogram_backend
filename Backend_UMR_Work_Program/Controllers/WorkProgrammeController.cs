@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7931,7 +7932,46 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-		[HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
+
+
+
+		[HttpGet("FetchConcessionsByCompanies")]
+		public async  Task<object> FetchConcessionsByCompanies()
+		{
+			
+
+                var data = await (from comp in _context.ADMIN_COMPANY_INFORMATIONs
+                         join conce in _context.ADMIN_CONCESSIONS_INFORMATIONs on comp.COMPANY_ID equals conce.Company_ID
+                         orderby conce.Consession_Id
+                         select new
+                         {
+                            
+                             comp.COMPANY_NAME,
+                             comp.EMAIL,
+                             conce.Concession_Held,
+                             conce.Field_Name,
+							 conce.Contract_Type
+                         }).ToListAsync();
+
+
+			var _comData = await _context.ADMIN_COMPANY_INFORMATIONs.Where(a => a.COMPANY_NAME.Trim().ToLower() != "admin").ToListAsync();
+
+			//var _bject = new
+			//{
+			//	CompanyName = "err",
+			//	NumberOfConcessions = 1,
+   //             NumberOfFields = 1,
+			//	Concessions = data.
+
+
+
+   //         }
+
+			return data.GroupBy(a=>a.COMPANY_NAME);
+        }
+
+
+        [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
 		public async Task<object> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW hse_compliance_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 
@@ -8103,8 +8143,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			int save = 0;
 			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            using var transaction = _context.Database.BeginTransaction();
 
-			try
+            try
 			{
 				if (!string.IsNullOrEmpty(id))
 				{
@@ -8179,6 +8220,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 
 					save += await _context.SaveChangesAsync();
+
+					transaction.Commit();
 
 				}
 				else
@@ -10593,13 +10636,14 @@ namespace Backend_UMR_Work_Program.Controllers
 								if (NRejectApp == null)
 									isEditable = false;
 							}
-							listObject.Add(new
+							
+						}
+
+						listObject.Add(new
 							{
 								con = concession.Concession_Held,
 								isEditable = isEditable
 							});
-						}
-
 					}
 					else
 					{
