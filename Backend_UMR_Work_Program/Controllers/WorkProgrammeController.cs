@@ -9071,7 +9071,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-
+		[HttpPost("POST_HSE_WASTE_MANAGEMENT_DZ")]
 		public async Task<object> POST_HSE_WASTE_MANAGEMENT_DZ([FromForm] HSE_WASTE_MANAGEMENT_DZ hSE_WASTE_MANAGEMENT_DZ, string omlName, string fieldName, string year, string omlID, string actionToDo)
 		{
 
