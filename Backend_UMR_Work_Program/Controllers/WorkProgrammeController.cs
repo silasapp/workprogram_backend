@@ -346,8 +346,6 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					foreach (var field in companyFields)
 					{
-
-
 						var checkApplication = await (from ap in _context.Applications
 													  where ap.YearOfWKP == DateTime.Now.Year && ap.FieldID == field.Field_ID && ap.DeleteStatus != true
 													  select ap).FirstOrDefaultAsync();
@@ -358,9 +356,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							if (NRejectApp == null)
 								field.isEditable = false;
 						}
-
 					}
-
 				}
 				return companyFields;
 			}
@@ -481,7 +477,6 @@ namespace Backend_UMR_Work_Program.Controllers
 		[HttpPost("POST_COMPANY_FIELD")]
 		public async Task<object> POST_COMPANY_FIELD([FromBody] COMPANY_FIELD company_field_model, string id, string actionToDo)
 		{
-
 			int save = 0;
 			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert : actionToDo;
 			try
