@@ -24,6 +24,7 @@ namespace Backend_UMR_Work_Program.DataModels
         public virtual DbSet<ADMIN_COMPANYEMAIL_REMINDER_TABLE> ADMIN_COMPANYEMAIL_REMINDER_TABLEs { get; set; } = null!;
         public virtual DbSet<ADMIN_COMPANY_CODE> ADMIN_COMPANY_CODEs { get; set; } = null!;
         public virtual DbSet<ADMIN_COMPANY_DETAIL> ADMIN_COMPANY_DETAILs { get; set; } = null!;
+        public virtual DbSet<HSE_WASTE_MANAGEMENT_DZ> HSE_WASTE_MANAGEMENT_DZs { get; set; } = null!;
         public virtual DbSet<ADMIN_COMPANY_INFORMATION> ADMIN_COMPANY_INFORMATIONs { get; set; } = null!;
         public virtual DbSet<ADMIN_COMPANY_INFORMATION_AUDIT> ADMIN_COMPANY_INFORMATION_AUDITs { get; set; } = null!;
         public virtual DbSet<ADMIN_COMPANY_INFORMATION_old_18052020> ADMIN_COMPANY_INFORMATION_old_18052020s { get; set; } = null!;
