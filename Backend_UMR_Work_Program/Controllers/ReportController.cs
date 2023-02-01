@@ -1761,7 +1761,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 if (year != null)
                 {
-                    ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == year).ToListAsync();
+                    ConcessionsInformation = ConcessionsInformation.Where(c => c.Year == year).ToList();
                 }
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ConcessionsInformation, StatusCode = ResponseCodes.Success };
