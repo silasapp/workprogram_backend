@@ -1244,11 +1244,17 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
 					{
 						var HSEQuestion = (from c in _context.HSE_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSEFatality = (from c in _context.HSE_FATALITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSEDesignSafety = (from c in _context.HSE_DESIGNS_SAFETies where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSEInspectionMaintenance = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.type_of_facility == type_of_facility && c.number_of_facilities == number_of_facilities select c).ToList();
+
 						var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSERemediationFund = (from c in _context.HSE_REMEDIATION_FUNDs where c.CompanyName == WKPCompanyName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
@@ -1368,7 +1374,9 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEDesignSafety = (from c in _context.HSE_DESIGNS_SAFETies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEInspectionMaintenance = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+
 						var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSEAssetRegister = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -2417,7 +2425,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.HSE_OPERATIONS_SAFETY_CASEs.Remove(operations_Sefety_Case_model);
+						_context.HSE_OPERATIONS_SAFETY_CASEs.Remove(getOperationSafetyCaseData);
 					}
 
 					save += await _context.SaveChangesAsync();
@@ -2788,104 +2796,109 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 					#region File processing
-					var files = Request.Form.Files;
+					//var files = Request.Form.Files;
 
-					IFormFile? file1 = null;
-					string blobname1 = string.Empty;
-
-					IFormFile? file2 = null;
-					string blobname2 = string.Empty;
-
-					IFormFile? file3 = null;
-					string blobname3 = string.Empty;
-
-					if (files.Count==1)
+					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
 					{
-						file1 = Request.Form.Files[0];
-						blobname1 = blobService.Filenamer(file1);
-						if (file1 != null)
+						IFormFile? file1 = null;
+						string blobname1 = string.Empty;
+
+						IFormFile? file2 = null;
+						string blobname2 = string.Empty;
+
+						IFormFile? file3 = null;
+						string blobname3 = string.Empty;
+
+						if (Request.Form.Files.Count==1)
 						{
-							string docName = "Upload Comm Dev Plan Approval";
-							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							file1 = Request.Form.Files[0];
+							blobname1 = blobService.Filenamer(file1);
+							if (file1 != null)
+							{
+								string docName = "Upload Comm Dev Plan Approval";
+								host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
-							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-							else
-								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
+								if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
+							}
+						}
+						if (Request.Form.Files.Count==2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							if (file1 != null)
+							{
+								string docName = "Upload Comm Dev Plan Approval";
+								host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "Evidence Of Pay Trust Fund";
+								host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
+
+							}
+						}
+						if (Request.Form.Files.Count>2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							file3 = Request.Form.Files[2];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							blobname3 = blobService.Filenamer(file3);
+							if (file1 != null)
+							{
+								string docName = "Upload Comm Dev Plan Approval";
+								host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "Evidence Of Pay Trust Fund";
+								host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
+
+							}
+							if (file3 != null)
+							{
+								string docName = "Evidence Of Reg Trust Fund ";
+								host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname3;
+
+							}
 						}
 					}
-					if (files.Count==2)
-					{
-						file1 = Request.Form.Files[0];
-						file2 = Request.Form.Files[1];
-						blobname1 = blobService.Filenamer(file1);
-						blobname2 = blobService.Filenamer(file2);
-						if (file1 != null)
-						{
-							string docName = "Upload Comm Dev Plan Approval";
-							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
-							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-							else
-								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
 
-						}
-						if (file2 != null)
-						{
-							string docName = "Evidence Of Pay Trust Fund";
-							host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-							if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-							else
-								host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
-
-						}
-					}
-					if (files.Count>2)
-					{
-						file1 = Request.Form.Files[0];
-						file2 = Request.Form.Files[1];
-						file3 = Request.Form.Files[2];
-						blobname1 = blobService.Filenamer(file1);
-						blobname2 = blobService.Filenamer(file2);
-						blobname3 = blobService.Filenamer(file3);
-						if (file1 != null)
-						{
-							string docName = "Upload Comm Dev Plan Approval";
-							host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-							if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-							else
-								host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
-
-						}
-						if (file2 != null)
-						{
-							string docName = "Evidence Of Pay Trust Fund";
-							host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-							if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-							else
-								host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
-
-						}
-						if (file3 != null)
-						{
-							string docName = "Evidence Of Reg Trust Fund ";
-							host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-							if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
-								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-							else
-								host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname3;
-
-						}
-					}
 
 					#endregion
 
@@ -2910,7 +2923,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(host_Community_Devt_Model);
+						_context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(getOperationSafetyCaseData);
 					}
 
 					save += await _context.SaveChangesAsync();
@@ -7923,6 +7936,45 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
+
+
+
+		[HttpGet("FetchConcessionsByCompanies")]
+		public async Task<object> FetchConcessionsByCompanies()
+		{
+
+
+			var data = await (from comp in _context.ADMIN_COMPANY_INFORMATIONs
+							  join conce in _context.ADMIN_CONCESSIONS_INFORMATIONs on comp.COMPANY_ID equals conce.Company_ID
+							  orderby conce.Consession_Id
+							  select new
+							  {
+
+								  comp.COMPANY_NAME,
+								  comp.EMAIL,
+								  conce.Concession_Held,
+								  conce.Field_Name,
+								  conce.Contract_Type
+							  }).ToListAsync();
+
+
+			var _comData = await _context.ADMIN_COMPANY_INFORMATIONs.Where(a => a.COMPANY_NAME.Trim().ToLower() != "admin").ToListAsync();
+
+			//var _bject = new
+			//{
+			//	CompanyName = "err",
+			//	NumberOfConcessions = 1,
+			//             NumberOfFields = 1,
+			//	Concessions = data.
+
+
+
+			//         }
+
+			return data.GroupBy(a => a.COMPANY_NAME);
+		}
+
+
 		[HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
 		public async Task<object> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW hse_compliance_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
@@ -8095,6 +8147,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			int save = 0;
 			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			using var transaction = _context.Database.BeginTransaction();
 
 			try
 			{
@@ -8171,6 +8224,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 
 					save += await _context.SaveChangesAsync();
+
+					transaction.Commit();
 
 				}
 				else
@@ -10585,14 +10640,14 @@ namespace Backend_UMR_Work_Program.Controllers
 								if (NRejectApp == null)
 									isEditable = false;
 							}
-							
+
 						}
 
 						listObject.Add(new
-							{
-								con = concession.Concession_Held,
-								isEditable = isEditable
-							});
+						{
+							con = concession.Concession_Held,
+							isEditable = isEditable
+						});
 					}
 					else
 					{
