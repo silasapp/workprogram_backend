@@ -10628,13 +10628,14 @@ namespace Backend_UMR_Work_Program.Controllers
 								if (NRejectApp == null)
 									isEditable = false;
 							}
-							listObject.Add(new
+							
+						}
+
+						listObject.Add(new
 							{
 								con = concession.Concession_Held,
 								isEditable = isEditable
 							});
-						}
-
 					}
 					else
 					{
