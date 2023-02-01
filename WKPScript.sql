@@ -523,3 +523,39 @@ ALTER TABLE dbo.Royalty ADD
 	Last_Qntr_Royalty varchar(1000) NULL
 ALTER TABLE dbo.NIGERIA_CONTENT_Upload_Succession_Plan ADD
 	[Year] varchar(1000) NULL
+
+	CREATE TABLE [dbo].[BUDGET_CAPEX](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[OmL_Name] [varchar](1000) NULL,
+	[OmL_ID] [varchar](400) NULL,
+	[CompanyName] [varchar](2000) NULL,
+	[Companyemail] [varchar](200) NULL,
+	[Year_of_WP] [varchar](300) NULL,
+	[Company_ID] [varchar](200) NULL,
+	[CompanyNumber] [int] NULL,
+	[Acquisition] [varchar](3000) NULL,
+	[Processing] [varchar](3000) NULL,
+	[Reprocessing] [varchar](2000) NULL,
+	[Exploratory_Well_Drilling] [varchar](1000) NULL,
+	[Appraisal_Well_Drilling] [varchar](1000) NULL,
+	[Development_Well_Drilling] [varchar](1000) NULL,
+	[Workover_Operations] [varchar](1000) NULL,
+	[Completions] [varchar](1000) NULL,
+	[Flowlines] [varchar](1000) NULL,
+	[Pipelines] [varchar](1000) NULL,
+	[Generators] [varchar](1000) NULL,
+	[Turbines_Compressors] [varchar](1000) NULL,
+	[Buildings] [varchar](1000) NULL,
+	[Other_Equipment] [varchar](1000) NULL,
+	[Civil_Works] [varchar](1000) NULL,
+	[Other_Costs] [varchar](1000) NULL,
+	[Created_by] [varchar](3000) NULL,
+	[Updated_by] [varchar](300) NULL,
+	[Date_Created] [datetime] NULL,
+	[Date_Updated] [datetime] NULL,
+ CONSTRAINT [PK_BUDGET_CAPEX] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
