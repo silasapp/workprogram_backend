@@ -4248,8 +4248,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			try
 			{
-
-
 				var reserves_condensate_status_model = new RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE()
 				{
 					Company_Reserves_AG = condensateModel.Company_Reserves_AG,
