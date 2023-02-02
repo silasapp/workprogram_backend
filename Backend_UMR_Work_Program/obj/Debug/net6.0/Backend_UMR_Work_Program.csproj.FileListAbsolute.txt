@@ -1,0 +1,7 @@
+C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.AssemblyReference.cache
+C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfoInputs.cache
+C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfo.cs
+C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CoreCompileInputs.cache
+C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\suppo\tempo\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cache

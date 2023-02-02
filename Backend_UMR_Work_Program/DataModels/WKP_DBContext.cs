@@ -199,7 +199,7 @@ namespace Backend_UMR_Work_Program.DataModels
 		public virtual DbSet<INITIAL_WELL_COMPLETION_JOB1> INITIAL_WELL_COMPLETION_JOBs1 { get; set; } = null!;
 		public virtual DbSet<Initial_Well_Completion_Job> Initial_Well_Completion_Jobs { get; set; } = null!;
 		public virtual DbSet<LEGAL_ARBITRATION> LEGAL_ARBITRATIONs { get; set; } = null!;
-
+		public virtual DbSet<HSE_WASTE_MANAGEMENT_DZ> HSE_WASTE_MANAGEMENT_DZs { get; set; }
 		public virtual DbSet<LEGAL_LITIGATION> LEGAL_LITIGATIONs { get; set; } = null!;
 		public virtual DbSet<LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMME> LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMEs { get; set; } = null!;
 		public virtual DbSet<LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriate> LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriates { get; set; } = null!;
