@@ -356,7 +356,13 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("CompanyId")
+<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
+=======
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
 
                     b.Property<int?>("CompanyNumber")
                         .HasColumnType("int");
@@ -14077,6 +14083,12 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.Property<string>("Evidence_of_pay_of_DDCPath")
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<< HEAD
+=======
+                    b.Property<string>("Field_Name")
+                        .HasColumnType("nvarchar(max)");
+
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
                     b.Property<string>("OML_ID")
                         .HasColumnType("nvarchar(max)");
 
@@ -16223,7 +16235,13 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Year")
+<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
+=======
+                        .HasMaxLength(1000)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(1000)");
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
 
                     b.Property<string>("Year_of_WP")
                         .HasMaxLength(100)
@@ -20109,7 +20127,13 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Last_Qntr_Royalty")
+<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
+=======
+                        .HasMaxLength(1000)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(1000)");
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
 
                     b.Property<string>("Miscellaneous")
                         .HasMaxLength(100)
@@ -20170,12 +20194,6 @@ namespace Backend_UMR_Work_Program.Migrations
 
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.SBU_ApplicationComment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("ActionStatus")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -20190,6 +20208,12 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime");
 
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("SBU_Comment")
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)");
@@ -20203,8 +20227,6 @@ namespace Backend_UMR_Work_Program.Migrations
 
                     b.Property<int?>("Staff_ID")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.ToTable("SBU_ApplicationComments");
                 });

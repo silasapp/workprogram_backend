@@ -22,6 +22,6 @@ namespace Backend_UMR_Work_Program.DataModels
         public string? Date_Created { get; set; }
         public string? check_status { get; set; }
         public int? CompanyNumber { get; set; }
-		public string? CompanyId { get; internal set; }
-	}
+        public string? CompanyId { get; set; }
+    }
 }
