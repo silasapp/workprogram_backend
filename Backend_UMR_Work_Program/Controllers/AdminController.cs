@@ -423,10 +423,12 @@ namespace Backend_UMR_Work_Program.Controllers
 				var checkUser = (from c in _context.ADMIN_COMPANY_INFORMATIONs
 								 where c.EMAIL.ToLower() == userModel.EMAIL.ToLower()
 								 select c).FirstOrDefault();
+
 				if (checkUser != null)
 				{
 					bool deleted = checkUser.DELETED_STATUS == "DELETED" ? true : false;
 					bool activated = checkUser.STATUS_ == "Activated" ? true : false;
+
 					string errMsg = $"User details with '{userModel.EMAIL}' is already existing on the portal.";
 
 					if (deleted == true)
@@ -448,6 +450,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					data.Created_by = WKPCompanyEmail;
 					await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(data);
 					int save = await _context.SaveChangesAsync();
+
 					if (save > 0)
 					{
 						//add user to staff table
@@ -483,6 +486,29 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			}
 		}
+		//Create a method to Generate AccessCode
+		private string GenerateAccessCode(string companyName)
+		{
+			var strIntitials = string.Empty;
+
+			var companyNames = companyName.Split(' ');
+
+			foreach (var item in companyNames)
+			{
+				strIntitials+= item.Substring(0);
+			}
+			//var rndmize=new Randomize
+			var rnd = new Random();
+
+			var firstRndNumber = rnd.Next(0, 9999).ToString().PadLeft(4, '0');
+
+
+			var accessCaode = strIntitials.ToUpper() + firstRndNumber;
+
+
+			return accessCaode.PadLeft(3, '0');
+		}
+
 		[HttpGet("GET_UPDATEUSER")]
 		public async Task<WebApiResponse> Get_UpdateUser(int id)
 		{
@@ -517,6 +543,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				var checkUser = await (from c in _context.ADMIN_COMPANY_INFORMATIONs
 									   where c.Id == userModel.Id
 									   select c).FirstOrDefaultAsync();
+
 				if (checkUser == null)
 				{
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error: User information was not found for {userModel.EMAIL}", StatusCode = ResponseCodes.Failure };
@@ -525,6 +552,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				else
 				{
 					var data = _mapper.Map<ADMIN_COMPANY_INFORMATION>(userModel);
+
 					data.EMAIL = userModel.EMAIL.ToLower();
 					data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
 					data.STATUS_ = "Activated";
