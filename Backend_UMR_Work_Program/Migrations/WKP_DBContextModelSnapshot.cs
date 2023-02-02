@@ -20115,7 +20115,7 @@ namespace Backend_UMR_Work_Program.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("Last_Qntr_Royalty")
+                    b.Property<string>("Last_Qntr_Royalty");
 
                     b.Property<string>("Miscellaneous")
                         .IsUnicode(false)
