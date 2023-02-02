@@ -12,9 +12,8 @@ namespace Backend_UMR_Work_Program.DataModels
 			: base(options)
 		{
 		}
-		//
+
 		public virtual DbSet<ADMIN_ACCIDENT_INCIDENCE_REPORT_CAUSE> ADMIN_ACCIDENT_INCIDENCE_REPORT_CAUSEs { get; set; } = null!;
-		public virtual DbSet<BUDGET_CAPEX> BUDGET_CAPEXs { get; set; } = null!;
 		public virtual DbSet<ADMIN_ACCIDENT_INCIDENCE_REPORT_CONSEQUENCE> ADMIN_ACCIDENT_INCIDENCE_REPORT_CONSEQUENCEs { get; set; } = null!;
 		public virtual DbSet<ADMIN_BUDGET_CAPEX_OPEX> ADMIN_BUDGET_CAPEX_OPices { get; set; } = null!;
 		public virtual DbSet<ADMIN_CATEGORy> ADMIN_CATEGORIEs { get; set; } = null!;
@@ -100,6 +99,7 @@ namespace Backend_UMR_Work_Program.DataModels
 		public virtual DbSet<Appraisal_Drilling> Appraisal_Drillings { get; set; } = null!;
 		public virtual DbSet<AuditTrail> AuditTrails { get; set; } = null!;
 		public virtual DbSet<BUDGET_ACTUAL_EXPENDITURE> BUDGET_ACTUAL_EXPENDITUREs { get; set; } = null!;
+		public virtual DbSet<BUDGET_CAPEX> BUDGET_CAPEXs { get; set; } = null!;
 		public virtual DbSet<BUDGET_CAPEX_OPEX> BUDGET_CAPEX_OPices { get; set; } = null!;
 		public virtual DbSet<BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy> BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs { get; set; } = null!;
 		public virtual DbSet<BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy> BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs { get; set; } = null!;
@@ -193,13 +193,13 @@ namespace Backend_UMR_Work_Program.DataModels
 		public virtual DbSet<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs { get; set; } = null!;
 		public virtual DbSet<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs { get; set; } = null!;
 		public virtual DbSet<HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs { get; set; } = null!;
+		public virtual DbSet<HSE_WASTE_MANAGEMENT_DZ> HSE_WASTE_MANAGEMENT_DZs { get; set; } = null!;
 		public virtual DbSet<HSE_WASTE_MANAGEMENT_NEW> HSE_WASTE_MANAGEMENT_NEWs { get; set; } = null!;
 		public virtual DbSet<HSE_WASTE_MANAGEMENT_SYSTEM> HSE_WASTE_MANAGEMENT_SYSTEMs { get; set; } = null!;
 		public virtual DbSet<HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW> HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs { get; set; } = null!;
 		public virtual DbSet<INITIAL_WELL_COMPLETION_JOB1> INITIAL_WELL_COMPLETION_JOBs1 { get; set; } = null!;
 		public virtual DbSet<Initial_Well_Completion_Job> Initial_Well_Completion_Jobs { get; set; } = null!;
 		public virtual DbSet<LEGAL_ARBITRATION> LEGAL_ARBITRATIONs { get; set; } = null!;
-		public virtual DbSet<HSE_WASTE_MANAGEMENT_DZ> HSE_WASTE_MANAGEMENT_DZs { get; set; }
 		public virtual DbSet<LEGAL_LITIGATION> LEGAL_LITIGATIONs { get; set; } = null!;
 		public virtual DbSet<LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMME> LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMEs { get; set; } = null!;
 		public virtual DbSet<LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriate> LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriates { get; set; } = null!;
@@ -634,7 +634,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
 			{
-
 				entity.ToTable("ADMIN_COMPANY_CODE");
 
 				entity.Property(e => e.CompanyCode)
@@ -684,6 +683,10 @@ namespace Backend_UMR_Work_Program.DataModels
 
 				entity.Property(e => e.COMPANY_NAME)
 					.HasMaxLength(200)
+					.IsUnicode(false);
+
+				entity.Property(e => e.CompanyId)
+					.HasMaxLength(50)
 					.IsUnicode(false);
 
 				entity.Property(e => e.Contact_Person)
@@ -3459,6 +3462,111 @@ namespace Backend_UMR_Work_Program.DataModels
 					.IsUnicode(false);
 			});
 
+			modelBuilder.Entity<BUDGET_CAPEX>(entity =>
+			{
+				entity.ToTable("BUDGET_CAPEX");
+
+				entity.Property(e => e.Acquisition)
+					.HasMaxLength(3000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Appraisal_Well_Drilling)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Buildings)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Civil_Works)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.CompanyName)
+					.HasMaxLength(2000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Company_ID)
+					.HasMaxLength(200)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Companyemail)
+					.HasMaxLength(200)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Completions)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Created_by)
+					.HasMaxLength(3000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Date_Created).HasColumnType("datetime");
+
+				entity.Property(e => e.Date_Updated).HasColumnType("datetime");
+
+				entity.Property(e => e.Development_Well_Drilling)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Exploratory_Well_Drilling)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Flowlines)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Generators)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.OmL_ID)
+					.HasMaxLength(400)
+					.IsUnicode(false);
+
+				entity.Property(e => e.OmL_Name)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Other_Costs)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Other_Equipment)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Pipelines)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Processing)
+					.HasMaxLength(3000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Reprocessing)
+					.HasMaxLength(2000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Turbines_Compressors)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Updated_by)
+					.HasMaxLength(300)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Workover_Operations)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Year_of_WP)
+					.HasMaxLength(300)
+					.IsUnicode(false);
+			});
+
 			modelBuilder.Entity<BUDGET_CAPEX_OPEX>(entity =>
 			{
 				entity.ToTable("BUDGET_CAPEX_OPEX");
@@ -5258,7 +5366,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>(entity =>
 			{
-
 				entity.ToTable("FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES");
 
 				entity.Property(e => e.COMPANY_ID)
@@ -5296,8 +5403,6 @@ namespace Backend_UMR_Work_Program.DataModels
 				entity.Property(e => e.Gas)
 					.HasMaxLength(50)
 					.IsUnicode(false);
-
-
 
 				entity.Property(e => e.OML_ID)
 					.HasMaxLength(200)
@@ -6697,7 +6802,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>(entity =>
 			{
-
 				entity.ToTable("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY");
 
 				entity.Property(e => e.COMPANY_ID)
@@ -8362,10 +8466,6 @@ namespace Backend_UMR_Work_Program.DataModels
 					.HasMaxLength(1000)
 					.IsUnicode(false);
 
-				// entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaffPath)
-				//     .HasMaxLength(3000)
-				//     .IsUnicode(false);
-
 				entity.Property(e => e.SMSFileUploadname)
 					.HasMaxLength(100)
 					.IsUnicode(false);
@@ -8541,7 +8641,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<HSE_OPERATIONS_SAFETY_CASE>(entity =>
 			{
-
 				entity.ToTable("HSE_OPERATIONS_SAFETY_CASE");
 
 				entity.Property(e => e.COMPANY_ID)
@@ -9478,9 +9577,8 @@ namespace Backend_UMR_Work_Program.DataModels
 					.IsUnicode(false);
 			});
 
-            modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU>(entity =>
-            {
-
+			modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU>(entity =>
+			{
 				entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU");
 
 				entity.Property(e => e.Actual_Budget_Total_Dollars)
@@ -9522,8 +9620,6 @@ namespace Backend_UMR_Work_Program.DataModels
 				entity.Property(e => e.Date_Created).HasColumnType("datetime");
 
 				entity.Property(e => e.Date_Updated).HasColumnType("datetime");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
 				entity.Property(e => e.MOUUploadFilePath)
 					.HasMaxLength(500)
@@ -9720,10 +9816,8 @@ namespace Backend_UMR_Work_Program.DataModels
 					.IsUnicode(false);
 			});
 
-            modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME>(entity =>
-            {
-                entity.HasNoKey();
-
+			modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME>(entity =>
+			{
 				entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME");
 
 				entity.Property(e => e.Actual_Budget_Total_Dollars)
@@ -9762,11 +9856,9 @@ namespace Backend_UMR_Work_Program.DataModels
 
 				entity.Property(e => e.Date_Updated).HasColumnType("datetime");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.NameOfCommunity)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
+				entity.Property(e => e.NameOfCommunity)
+					.HasMaxLength(3000)
+					.IsUnicode(false);
 
 				entity.Property(e => e.OML_ID)
 					.HasMaxLength(200)
@@ -9805,10 +9897,8 @@ namespace Backend_UMR_Work_Program.DataModels
 					.IsUnicode(false);
 			});
 
-            modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME>(entity =>
-            {
-                entity.HasNoKey();
-
+			modelBuilder.Entity<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME>(entity =>
+			{
 				entity.ToTable("HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME");
 
 				entity.Property(e => e.Actual_Budget_Total_Dollars)
@@ -9847,11 +9937,9 @@ namespace Backend_UMR_Work_Program.DataModels
 
 				entity.Property(e => e.Date_Updated).HasColumnType("datetime");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.NameOfCommunity)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
+				entity.Property(e => e.NameOfCommunity)
+					.HasMaxLength(3000)
+					.IsUnicode(false);
 
 				entity.Property(e => e.OML_ID)
 					.HasMaxLength(200)
@@ -10062,7 +10150,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<HSE_WASTE_MANAGEMENT_SYSTEM>(entity =>
 			{
-
 				entity.ToTable("HSE_WASTE_MANAGEMENT_SYSTEM");
 
 				entity.Property(e => e.COMPANY_ID)
@@ -10342,7 +10429,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<LEGAL_ARBITRATION>(entity =>
 			{
-
 				entity.ToTable("LEGAL_ARBITRATION");
 
 				entity.Property(e => e.AnyLitigation)
@@ -10384,7 +10470,6 @@ namespace Backend_UMR_Work_Program.DataModels
 				entity.Property(e => e.Date_Created).HasColumnType("datetime");
 
 				entity.Property(e => e.Date_Updated).HasColumnType("datetime");
-
 
 				entity.Property(e => e.Jurisdiction)
 					.HasMaxLength(50)
@@ -10429,7 +10514,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<LEGAL_LITIGATION>(entity =>
 			{
-
 				entity.ToTable("LEGAL_LITIGATION");
 
 				entity.Property(e => e.AnyLitigation)
@@ -11396,6 +11480,10 @@ namespace Backend_UMR_Work_Program.DataModels
 
 				entity.Property(e => e.Updated_by)
 					.HasMaxLength(100)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Year)
+					.HasMaxLength(1000)
 					.IsUnicode(false);
 
 				entity.Property(e => e.Year_of_WP)
@@ -13142,8 +13230,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 				entity.Property(e => e.Date_Updated).HasColumnType("datetime");
 
-				entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
 				entity.Property(e => e.NAG)
 					.HasMaxLength(50)
 					.IsUnicode(false);
@@ -14120,47 +14206,50 @@ namespace Backend_UMR_Work_Program.DataModels
 						});
 			});
 
-
 			modelBuilder.Entity<Royalty>(entity =>
-		   {
-			   entity.HasKey(e => e.Royalty_ID);
+			{
+				entity.HasKey(e => e.Royalty_ID);
 
-			   entity.ToTable("Royalty");
+				entity.ToTable("Royalty");
 
-			   entity.Property(e => e.Concession_Rentals)
+				entity.Property(e => e.Concession_Rentals)
 					.HasMaxLength(100)
 					.IsUnicode(false);
 
-			   entity.Property(e => e.Crude_Oil_Royalty)
+				entity.Property(e => e.Crude_Oil_Royalty)
 					.HasMaxLength(100)
 					.IsUnicode(false);
 
-			   entity.Property(e => e.Date_Created).HasColumnType("date");
+				entity.Property(e => e.Date_Created).HasColumnType("date");
 
-			   entity.Property(e => e.Gas_Flare_Payment)
+				entity.Property(e => e.Gas_Flare_Payment)
 					.HasMaxLength(100)
 					.IsUnicode(false);
 
-			   entity.Property(e => e.Gas_Sales_Royalty)
+				entity.Property(e => e.Gas_Sales_Royalty)
 					.HasMaxLength(100)
 					.IsUnicode(false);
 
-			   entity.Property(e => e.Miscellaneous)
-				   .HasMaxLength(100)
-				   .IsUnicode(false);
+				entity.Property(e => e.Last_Qntr_Royalty)
+					.HasMaxLength(1000)
+					.IsUnicode(false);
 
-			   entity.Property(e => e.Status)
+				entity.Property(e => e.Miscellaneous)
+					.HasMaxLength(100)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Status)
 					.HasMaxLength(50)
 					.IsUnicode(false);
 
-			   entity.Property(e => e.Year)
+				entity.Property(e => e.Year)
 					.HasMaxLength(20)
 					.IsUnicode(false);
-		   });
+			});
 
 			modelBuilder.Entity<SBU_ApplicationComment>(entity =>
 			{
-				entity.HasKey(e => e.Id);
+				entity.HasNoKey();
 
 				entity.Property(e => e.ActionStatus)
 					.HasMaxLength(50)

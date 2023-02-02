@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dacpac
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dll
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.pdb
@@ -8,3 +9,15 @@ C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\postdeploy.sql
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\predeploy.sql
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.dll
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.pdb
+=======
+C:\Workcode\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dacpac
+C:\Workcode\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dll
+C:\Workcode\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.pdb
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.sqlproj.AssemblyReference.cache
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.dll
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.pdb
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\Model.xml
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\refactor.xml
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\postdeploy.sql
+C:\Workcode\WorkProgram_BEnd\WKP_Database\obj\Debug\predeploy.sql
+>>>>>>> 13f1247559d1b4c9e8ae87c7043a6c4033853e66

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Backend_UMR_Work_Program.DataModels
 {
-    public partial class BUDGET_CAPEX
+    public partial class BUDGET_CAPEX1
     {
         public int ID { get; set; }
         public string? OmL_Name { get; set; }
