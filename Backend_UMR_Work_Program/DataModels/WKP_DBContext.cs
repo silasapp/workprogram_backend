@@ -13109,8 +13109,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<RESERVES_UPDATES_LIFE_INDEX>(entity =>
 			{
-				entity.HasNoKey();
-
 				entity.ToTable("RESERVES_UPDATES_LIFE_INDEX");
 
 				entity.Property(e => e.AG)
