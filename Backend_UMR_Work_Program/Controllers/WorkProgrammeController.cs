@@ -243,7 +243,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (companyConcession != null)
 					{
-						return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+						//return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
 						return BadRequest(new { message = $"Error : Concession ({ADMIN_CONCESSIONS_INFORMATION_model.Concession_Held} is already existing and can not be duplicated." });
 					}
@@ -342,7 +342,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					companyFields = await (from d in _context.COMPANY_FIELDs where d.Concession_ID == concession.Consession_Id && d.DeletedStatus != true select d).ToListAsync();
 
 				}
-				string isEditable = "";
+				//string isEditable = null;
 				if (companyFields.Count > 0)
 				{
 					foreach (var field in companyFields)
@@ -1231,7 +1231,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			try
 			{
-				var budgetCapex = await (from c in _context.BUDGET_CAPEXs where c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+				var budgetCapex = await (from c in _context.BUDGET_CAPices where c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 				return new
 				{
@@ -3672,7 +3672,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (Budget_Capex_model != null)
 				{
-					var getData = await (from c in _context.BUDGET_CAPEXs where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					var getData = await (from c in _context.BUDGET_CAPices where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 
 
@@ -3692,7 +3692,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							Budget_Capex_model.Date_Created = DateTime.Now;
 							Budget_Capex_model.Created_by = WKPCompanyId;
 							//initial_well_completion_model.Proposed_Well_Number=getDataList.Count()+1;
-							await _context.BUDGET_CAPEXs.AddAsync(Budget_Capex_model);
+							await _context.BUDGET_CAPices.AddAsync(Budget_Capex_model);
 						}
 						else
 						{
@@ -3700,13 +3700,13 @@ namespace Backend_UMR_Work_Program.Controllers
 							Budget_Capex_model.Created_by = getData.Created_by;
 							Budget_Capex_model.Date_Updated = DateTime.Now;
 							Budget_Capex_model.Updated_by = WKPCompanyId;
-							_context.BUDGET_CAPEXs.Remove(getData);
-							await _context.BUDGET_CAPEXs.AddAsync(Budget_Capex_model);
+							_context.BUDGET_CAPices.Remove(getData);
+							await _context.BUDGET_CAPices.AddAsync(Budget_Capex_model);
 						}
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.BUDGET_CAPEXs.Remove(getData);
+						_context.BUDGET_CAPices.Remove(getData);
 					}
 
 					save += await _context.SaveChangesAsync();
@@ -3714,7 +3714,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action == GeneralModel.Insert ? action + "ED" : action + "D" + " successfully.";
-						var All_Data = await (from c in _context.BUDGET_CAPEXs where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = await (from c in _context.BUDGET_CAPices where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
