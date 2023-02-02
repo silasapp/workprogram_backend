@@ -20121,7 +20121,6 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<string>("Miscellaneous")
-                        .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 

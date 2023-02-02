@@ -4252,7 +4252,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					Company_Reserves_AG = condensateModel.Company_Reserves_AG,
 					Company_Reserves_Oil = condensateModel.Company_Reserves_Oil,
-					Year = condensateModel.Year,
+					Year_of_WP = condensateModel.Year,
 					Company_Reserves_Condensate = condensateModel.Company_Reserves_Condensate,
 					Company_Reserves_NAG = condensateModel.Company_Reserves_NAG
 				};
