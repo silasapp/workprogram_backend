@@ -14,6 +14,7 @@
 		public string? Year { get; set; }
 		public string? Status { get; set; }
 		public DateTime? Date_Created { get; set; }
-		public string? Last_Qntr_Royalty { get; }
-	}
+		public string? Last_Qntr_Royalty { get; set; }
+        
+    }
 }

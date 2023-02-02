@@ -10,6 +10,7 @@ namespace Backend_UMR_Work_Program.DataModels
         public string? OML_Name { get; set; }
         public string? CompanyName { get; set; }
         public string? Companyemail { get; set; }
+        public string Companyphone { get; set; }
         public string? Year_of_WP { get; set; }
         public string? Company_Reserves_Year { get; set; }
         public string? Company_Reserves_Oil { get; set; }
@@ -33,5 +34,6 @@ namespace Backend_UMR_Work_Program.DataModels
         public string? COMPANY_ID { get; set; }
         public int? CompanyNumber { get; set; }
         public int? Field_ID { get; set; }
+        public string? Year { get; set; }
     }
 }
