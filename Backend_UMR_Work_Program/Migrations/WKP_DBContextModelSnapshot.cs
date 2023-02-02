@@ -274,6 +274,12 @@ namespace Backend_UMR_Work_Program.Migrations
 
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.ADMIN_COMPANY_CODE", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("CompanyCode")
                         .HasMaxLength(200)
                         .IsUnicode(false)
@@ -308,12 +314,6 @@ namespace Backend_UMR_Work_Program.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("IsActive")
                         .HasMaxLength(20)
                         .IsUnicode(false)
@@ -326,6 +326,8 @@ namespace Backend_UMR_Work_Program.Migrations
 
                     b.Property<int?>("UserNumber")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.ToTable("ADMIN_COMPANY_CODE", (string)null);
                 });
@@ -352,6 +354,11 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(200)
                         .IsUnicode(false)
                         .HasColumnType("varchar(200)");
+
+                    b.Property<string>("CompanyId")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int?>("CompanyNumber")
                         .HasColumnType("int");
@@ -7288,6 +7295,12 @@ namespace Backend_UMR_Work_Program.Migrations
 
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("COMPANY_ID")
                         .HasMaxLength(100)
                         .IsUnicode(false)
@@ -7340,12 +7353,6 @@ namespace Backend_UMR_Work_Program.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("OML_ID")
                         .HasMaxLength(200)
                         .IsUnicode(false)
@@ -7375,6 +7382,8 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES", (string)null);
                 });
@@ -14017,6 +14026,100 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.ToTable("HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW", (string)null);
                 });
 
+            modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.HSE_WASTE_MANAGEMENT_DZ", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ACTUAL_year")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COMPANY_ID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CompanyNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Companyemail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Created_by")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Do_You_Have_Previous_Year_Waste_Inventory_Report")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Evidence_of_EWD_Filename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Evidence_of_EWD_Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Evidence_of_Reinjection_Permit_Filename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Evidence_of_Reinjection_Permit_Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Evidence_of_pay_of_DDCFilename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Evidence_of_pay_of_DDCPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Field_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OML_ID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OML_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PROPOSED_year")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Produce_Water_Manegent_Plan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason_for_No_Evidence_of_EWD")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason_for_No_Evidence_of_Reinjection")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Updated_by")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Waste_Contractor_Names")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Waste_Service_Permit_Filename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Waste_Service_Permit_Path")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Year_of_WP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HSE_WASTE_MANAGEMENT_DZs");
+                });
+
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.HSE_WASTE_MANAGEMENT_NEW", b =>
                 {
                     b.Property<int>("Id")
@@ -14147,6 +14250,12 @@ namespace Backend_UMR_Work_Program.Migrations
 
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.HSE_WASTE_MANAGEMENT_SYSTEM", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("COMPANY_ID")
                         .HasMaxLength(100)
                         .IsUnicode(false)
@@ -14199,12 +14308,6 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.Property<int?>("Field_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("OML_ID")
                         .HasMaxLength(200)
                         .IsUnicode(false)
@@ -14239,6 +14342,8 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("HSE_WASTE_MANAGEMENT_SYSTEM", (string)null);
                 });
@@ -14579,6 +14684,12 @@ namespace Backend_UMR_Work_Program.Migrations
 
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.LEGAL_ARBITRATION", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("AnyLitigation")
                         .HasMaxLength(20)
                         .IsUnicode(false)
@@ -14636,12 +14747,6 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.Property<int?>("Field_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Jurisdiction")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -14691,12 +14796,20 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("LEGAL_ARBITRATION", (string)null);
                 });
 
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.LEGAL_LITIGATION", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("AnyLitigation")
                         .HasMaxLength(20)
                         .IsUnicode(false)
@@ -14754,12 +14867,6 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.Property<int?>("Field_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Jurisdiction")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -14809,6 +14916,8 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("LEGAL_LITIGATION", (string)null);
                 });
@@ -16117,6 +16226,11 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Year")
+                        .HasMaxLength(1000)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(1000)");
 
                     b.Property<string>("Year_of_WP")
                         .HasMaxLength(100)
@@ -19998,6 +20112,11 @@ namespace Backend_UMR_Work_Program.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("Last_Qntr_Royalty")
+                        .HasMaxLength(1000)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(1000)");
+
                     b.Property<string>("Miscellaneous")
                         .HasMaxLength(100)
                         .IsUnicode(false)
@@ -20057,12 +20176,6 @@ namespace Backend_UMR_Work_Program.Migrations
 
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.SBU_ApplicationComment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("ActionStatus")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -20077,6 +20190,12 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime");
 
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("SBU_Comment")
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)");
@@ -20090,8 +20209,6 @@ namespace Backend_UMR_Work_Program.Migrations
 
                     b.Property<int?>("Staff_ID")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.ToTable("SBU_ApplicationComments");
                 });

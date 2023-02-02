@@ -199,6 +199,7 @@ namespace Backend_UMR_Work_Program.DataModels
 		public virtual DbSet<INITIAL_WELL_COMPLETION_JOB1> INITIAL_WELL_COMPLETION_JOBs1 { get; set; } = null!;
 		public virtual DbSet<Initial_Well_Completion_Job> Initial_Well_Completion_Jobs { get; set; } = null!;
 		public virtual DbSet<LEGAL_ARBITRATION> LEGAL_ARBITRATIONs { get; set; } = null!;
+
 		public virtual DbSet<LEGAL_LITIGATION> LEGAL_LITIGATIONs { get; set; } = null!;
 		public virtual DbSet<LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMME> LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMEs { get; set; } = null!;
 		public virtual DbSet<LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriate> LOCAL_CONTENT_AND_HUMAN_CAPACITY_DEVELOPMENT_PROGRAMMES_Expatriates { get; set; } = null!;
@@ -14130,34 +14131,34 @@ namespace Backend_UMR_Work_Program.DataModels
 			   entity.ToTable("Royalty");
 
 			   entity.Property(e => e.Concession_Rentals)
-				   .HasMaxLength(100)
-				   .IsUnicode(false);
+					.HasMaxLength(100)
+					.IsUnicode(false);
 
 			   entity.Property(e => e.Crude_Oil_Royalty)
-				   .HasMaxLength(100)
-				   .IsUnicode(false);
+					.HasMaxLength(100)
+					.IsUnicode(false);
 
 			   entity.Property(e => e.Date_Created).HasColumnType("date");
 
 			   entity.Property(e => e.Gas_Flare_Payment)
-				   .HasMaxLength(100)
-				   .IsUnicode(false);
+					.HasMaxLength(100)
+					.IsUnicode(false);
 
 			   entity.Property(e => e.Gas_Sales_Royalty)
-				   .HasMaxLength(100)
-				   .IsUnicode(false);
+					.HasMaxLength(100)
+					.IsUnicode(false);
 
 			   entity.Property(e => e.Miscellaneous)
 				   .HasMaxLength(100)
 				   .IsUnicode(false);
 
 			   entity.Property(e => e.Status)
-				   .HasMaxLength(50)
-				   .IsUnicode(false);
+					.HasMaxLength(50)
+					.IsUnicode(false);
 
 			   entity.Property(e => e.Year)
-				   .HasMaxLength(20)
-				   .IsUnicode(false);
+					.HasMaxLength(20)
+					.IsUnicode(false);
 		   });
 
 			modelBuilder.Entity<SBU_ApplicationComment>(entity =>
