@@ -356,9 +356,13 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("CompanyId")
+<<<<<<< HEAD
+                        .HasColumnType("nvarchar(max)");
+=======
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
 
                     b.Property<int?>("CompanyNumber")
                         .HasColumnType("int");
@@ -14079,9 +14083,12 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.Property<string>("Evidence_of_pay_of_DDCPath")
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<< HEAD
+=======
                     b.Property<string>("Field_Name")
                         .HasColumnType("nvarchar(max)");
 
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
                     b.Property<string>("OML_ID")
                         .HasColumnType("nvarchar(max)");
 
@@ -16228,9 +16235,13 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Year")
+<<<<<<< HEAD
+                        .HasColumnType("nvarchar(max)");
+=======
                         .HasMaxLength(1000)
                         .IsUnicode(false)
                         .HasColumnType("varchar(1000)");
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
 
                     b.Property<string>("Year_of_WP")
                         .HasMaxLength(100)
@@ -17136,6 +17147,9 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(500)
                         .IsUnicode(false)
                         .HasColumnType("varchar(500)");
+
+                    b.Property<string>("CondensateProd")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Consession_Type")
                         .HasMaxLength(50)
@@ -20113,9 +20127,13 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Last_Qntr_Royalty")
+<<<<<<< HEAD
+                        .HasColumnType("nvarchar(max)");
+=======
                         .HasMaxLength(1000)
                         .IsUnicode(false)
                         .HasColumnType("varchar(1000)");
+>>>>>>> ae6acd990212a2071c9cd43d1fadc65d5e80a4e6
 
                     b.Property<string>("Miscellaneous")
                         .HasMaxLength(100)
