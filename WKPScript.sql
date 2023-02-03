@@ -563,3 +563,31 @@ GO
 ALTER TABLE dbo.GEOPHYSICAL_ACTIVITIES_PROCESSING ADD
 	Type_of_Processing varchar(500) NULL
 
+
+ALTER TABLE dbo.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE ADD
+	Year varchar(100) NULL
+
+CREATE TABLE [dbo].[BUDGET_OPEX](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[OmL_Name] [varchar](1000) NULL,
+	[OmL_ID] [varchar](1000) NULL,
+	[CompanyName] [varchar](1000) NULL,
+	[Companyemail] [varchar](1000) NULL,
+	[Year_of_WP] [varchar](1000) NULL,
+	[Company_ID] [varchar](1000) NULL,
+	[CompanyNumber] [int] NULL,
+	[Variable_Cost] [varchar](1000) NULL,
+	[Fixed_Cost] [varchar](1000) NULL,
+	[Overheads] [varchar](1000) NULL,
+	[Repairs_and_Maintenance_Cost] [varchar](1000) NULL,
+	[General_Expenses] [varchar](1000) NULL,
+	[Created_by] [varchar](1000) NULL,
+	[Updated_by] [varchar](1000) NULL,
+	[Date_Created] [datetime] NULL,
+	[Date_Updated] [datetime] NULL,
+ CONSTRAINT [PK_BUDGET_OPEX] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
