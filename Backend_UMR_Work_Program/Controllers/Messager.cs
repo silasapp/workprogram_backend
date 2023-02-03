@@ -8,7 +8,7 @@ using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 namespace Backend_UMR_Work_Program.Controllers
 {
-    public static class Message
+    public static class Messager
     {
         public static string ShowMessage(string action)
         {
