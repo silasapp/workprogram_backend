@@ -103,7 +103,6 @@ namespace Backend_UMR_Work_Program.DataModels
         public virtual DbSet<AuditTrail> AuditTrails { get; set; } = null!;
         public virtual DbSet<BUDGET_ACTUAL_EXPENDITURE> BUDGET_ACTUAL_EXPENDITUREs { get; set; } = null!;
         public virtual DbSet<BUDGET_CAPEX> BUDGET_CAPices { get; set; } = null!;
-        public virtual DbSet<BUDGET_CAPEX1> BUDGET_CAPEXs { get; set; } = null!;
         public virtual DbSet<BUDGET_CAPEX_OPEX> BUDGET_CAPEX_OPices { get; set; } = null!;
         public virtual DbSet<BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy> BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs { get; set; } = null!;
         public virtual DbSet<BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy> BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs { get; set; } = null!;
@@ -6103,6 +6102,10 @@ namespace Backend_UMR_Work_Program.DataModels
 
                 entity.Property(e => e.Terrain)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type_of_Processing)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Updated_by)
@@ -14079,6 +14082,10 @@ namespace Backend_UMR_Work_Program.DataModels
                     .IsUnicode(false);
 
                 entity.Property(e => e.Updated_by)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 

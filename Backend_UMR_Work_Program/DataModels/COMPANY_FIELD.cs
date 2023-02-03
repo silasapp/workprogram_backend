@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend_UMR_Work_Program.DataModels
 {
@@ -13,5 +14,7 @@ namespace Backend_UMR_Work_Program.DataModels
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Updated { get; set; }
         public bool? DeletedStatus { get; set; }
+        [NotMapped]
+        public bool? isEditable { get; set; }
     }
 }
