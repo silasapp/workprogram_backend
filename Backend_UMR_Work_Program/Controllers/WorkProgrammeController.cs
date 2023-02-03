@@ -11016,14 +11016,6 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 
-		private string getMsg(string _action)
-		{
-			var message = _action == GeneralModel.Insert ? _action + "ED" : _action + "D";
-			return "Form has been " + message + " successfully.";
-			
-		}
-
-
 		#endregion
 
 	}
