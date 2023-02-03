@@ -235,7 +235,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 		//Added by Musa
 
-		[HttpPost("GETPRESENTATION")]
+		[HttpPost("GET_UPLOAD_PRESENTATION")]
 		public async Task<WebApiResponse> GET_PRESENTATION_DOCUMENT(string year)
 		{
 			try
@@ -259,22 +259,29 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-		[HttpDelete("DELETEPRESENTATION")]
+		[HttpDelete("DELETE_UPLOAD_PRESENTATION")]
 		public async Task<WebApiResponse> DELETE_PRESENTATION_DOCUMENT(string year)
 		{
 			try
 			{
 				var CurrentYear = DateTime.Now.Year.ToString();
 
-				var checkCompanyPresentation = await _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == WKPUserId && c.Year_of_WP == year).ToListAsync();
+				var getPresentation = await _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == WKPUserId && c.Year_of_WP == year).FirstOrDefaultAsync();
 
 
 				//check if date has been scheduled by another company
-				if (checkCompanyPresentation.Count>0)
+				if (getPresentation==null)
 				{
-					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "successful", Data = checkCompanyPresentation, StatusCode = ResponseCodes.Success };
+
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "No Record Found", StatusCode = ResponseCodes.Failure };
 				}
-				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, document is empty.", StatusCode = ResponseCodes.Failure };
+				_context.PRESENTATION_UPLOADs.Remove(getPresentation);
+				var save = await _context.SaveChangesAsync();
+				if (save >0)
+				{
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Successfu", Data=getPresentation, StatusCode = ResponseCodes.Failure };
+				}
+				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, an error occured.", StatusCode = ResponseCodes.Failure };
 
 			}
 			catch (Exception ex)
