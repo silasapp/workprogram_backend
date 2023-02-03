@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Backend_UMR_Work_Program.DataModels
 {
@@ -6101,6 +6104,10 @@ namespace Backend_UMR_Work_Program.DataModels
 
 				entity.Property(e => e.Terrain)
 					.HasMaxLength(50)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Type_of_Processing)
+					.HasMaxLength(500)
 					.IsUnicode(false);
 
 				entity.Property(e => e.Updated_by)
@@ -14077,6 +14084,10 @@ namespace Backend_UMR_Work_Program.DataModels
 					.IsUnicode(false);
 
 				entity.Property(e => e.Updated_by)
+					.HasMaxLength(100)
+					.IsUnicode(false);
+
+				entity.Property(e => e.Year)
 					.HasMaxLength(100)
 					.IsUnicode(false);
 
