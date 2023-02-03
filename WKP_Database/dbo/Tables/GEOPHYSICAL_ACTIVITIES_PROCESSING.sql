@@ -40,6 +40,9 @@
     [CompanyNumber]                       INT            NULL,
     [Field_ID]                            INT            NULL,
     [No_of_Folds]                         VARCHAR (50)   NULL,
+    [Type_of_Processing]                  VARCHAR (500)  NULL,
     CONSTRAINT [PK_GEOPHYSICAL_ACTIVITIES_PROCESSING] PRIMARY KEY CLUSTERED ([Geophysical_Activities_ProcessingId] ASC)
 );
+
+
 
