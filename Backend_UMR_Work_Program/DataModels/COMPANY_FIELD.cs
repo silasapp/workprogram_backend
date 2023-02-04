@@ -17,6 +17,5 @@ namespace Backend_UMR_Work_Program.DataModels
 
         [NotMapped]
         public bool? isEditable { get; set; }
-
     }
 }

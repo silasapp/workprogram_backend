@@ -195,6 +195,7 @@ namespace Backend_UMR_Work_Program.DataModels
         public virtual DbSet<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs { get; set; } = null!;
         public virtual DbSet<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME> HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs { get; set; } = null!;
         public virtual DbSet<HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW> HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs { get; set; } = null!;
+        public virtual DbSet<HSE_WASTE_MANAGEMENT_DZ> HSE_WASTE_MANAGEMENT_DZs { get; set; } = null!;
         public virtual DbSet<HSE_WASTE_MANAGEMENT_NEW> HSE_WASTE_MANAGEMENT_NEWs { get; set; } = null!;
         public virtual DbSet<HSE_WASTE_MANAGEMENT_SYSTEM> HSE_WASTE_MANAGEMENT_SYSTEMs { get; set; } = null!;
         public virtual DbSet<HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW> HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs { get; set; } = null!;
@@ -635,7 +636,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<ADMIN_COMPANY_CODE>(entity =>
             {
-
                 entity.ToTable("ADMIN_COMPANY_CODE");
 
                 entity.Property(e => e.CompanyCode)
@@ -685,6 +685,10 @@ namespace Backend_UMR_Work_Program.DataModels
 
                 entity.Property(e => e.COMPANY_NAME)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyId)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Contact_Person)
@@ -5259,7 +5263,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf>(entity =>
             {
-
                 entity.ToTable("FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -5297,8 +5300,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.Gas)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                
 
                 entity.Property(e => e.OML_ID)
                     .HasMaxLength(200)
@@ -6698,7 +6699,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_CLIMATE_CHANGE_AND_AIR_QUALITY>(entity =>
             {
-
                 entity.ToTable("HSE_CLIMATE_CHANGE_AND_AIR_QUALITY");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -8363,10 +8363,6 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
-                // entity.Property(e => e.ReasonWhyOhmWasNotCommunicatedToStaffPath)
-                //     .HasMaxLength(3000)
-                //     .IsUnicode(false);
-
                 entity.Property(e => e.SMSFileUploadname)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -8542,7 +8538,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_OPERATIONS_SAFETY_CASE>(entity =>
             {
-
                 entity.ToTable("HSE_OPERATIONS_SAFETY_CASE");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -10064,7 +10059,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<HSE_WASTE_MANAGEMENT_SYSTEM>(entity =>
             {
-
                 entity.ToTable("HSE_WASTE_MANAGEMENT_SYSTEM");
 
                 entity.Property(e => e.COMPANY_ID)
@@ -10344,7 +10338,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<LEGAL_ARBITRATION>(entity =>
             {
-
                 entity.ToTable("LEGAL_ARBITRATION");
 
                 entity.Property(e => e.AnyLitigation)
@@ -10386,7 +10379,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.Date_Created).HasColumnType("datetime");
 
                 entity.Property(e => e.Date_Updated).HasColumnType("datetime");
-
 
                 entity.Property(e => e.Jurisdiction)
                     .HasMaxLength(50)
@@ -10431,7 +10423,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<LEGAL_LITIGATION>(entity =>
             {
-
                 entity.ToTable("LEGAL_LITIGATION");
 
                 entity.Property(e => e.AnyLitigation)
@@ -11398,6 +11389,10 @@ namespace Backend_UMR_Work_Program.DataModels
 
                 entity.Property(e => e.Updated_by)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year)
+                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Year_of_WP)
@@ -13110,8 +13105,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<RESERVES_UPDATES_LIFE_INDEX>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("RESERVES_UPDATES_LIFE_INDEX");
 
                 entity.Property(e => e.AG)
@@ -13145,8 +13138,6 @@ namespace Backend_UMR_Work_Program.DataModels
                 entity.Property(e => e.Date_Created).HasColumnType("datetime");
 
                 entity.Property(e => e.Date_Updated).HasColumnType("datetime");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.NAG)
                     .HasMaxLength(50)
@@ -14124,8 +14115,7 @@ namespace Backend_UMR_Work_Program.DataModels
                         });
             });
 
-           
-             modelBuilder.Entity<Royalty>(entity =>
+            modelBuilder.Entity<Royalty>(entity =>
             {
                 entity.HasKey(e => e.Royalty_ID);
 
@@ -14149,6 +14139,10 @@ namespace Backend_UMR_Work_Program.DataModels
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Last_Qntr_Royalty)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Miscellaneous)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -14164,7 +14158,7 @@ namespace Backend_UMR_Work_Program.DataModels
 
             modelBuilder.Entity<SBU_ApplicationComment>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                entity.HasNoKey();
 
                 entity.Property(e => e.ActionStatus)
                     .HasMaxLength(50)

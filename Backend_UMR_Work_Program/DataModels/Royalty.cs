@@ -1,4 +1,7 @@
-﻿namespace Backend_UMR_Work_Program.DataModels
+﻿using System;
+using System.Collections.Generic;
+
+namespace Backend_UMR_Work_Program.DataModels
 {
 	public partial class Royalty
 	{
@@ -14,6 +17,7 @@
 		public string? Year { get; set; }
 		public string? Status { get; set; }
 		public DateTime? Date_Created { get; set; }
-		public string? Last_Qntr_Royalty { get; }
-	}
+		public string? Last_Qntr_Royalty { get; set; }
+        
+    }
 }
