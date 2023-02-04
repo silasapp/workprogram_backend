@@ -10,7 +10,7 @@
 
         public string Company_Reserves_Oil { get; set; }
 
-        public string Year { get; set; }
+        public string Company_Reserves_Year { get; set; }
     }
 
 
