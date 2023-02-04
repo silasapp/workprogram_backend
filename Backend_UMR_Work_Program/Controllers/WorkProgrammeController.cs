@@ -4368,7 +4368,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					Company_Reserves_AG = condensateModel.Company_Reserves_AG,
 					Company_Reserves_Oil = condensateModel.Company_Reserves_Oil,
-					Year_of_WP = condensateModel.Year,
+					Company_Reserves_Year = condensateModel.Company_Reserves_Year,
 					Company_Reserves_Condensate = condensateModel.Company_Reserves_Condensate,
 					Company_Reserves_NAG = condensateModel.Company_Reserves_NAG
 				};
@@ -4445,7 +4445,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT")]
-		public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE reserves_condensate_status_model, string omlName, string fieldName, string year, string actionToDo)
+		public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT([FromBody] Condensate_Status_Model condensateModelCurrent, string omlName, string fieldName, string year, string actionToDo)
 		{
 
 			int save = 0;
@@ -4453,8 +4453,20 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			try
 			{
-				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
-				if (reserves_condensate_status_model != null)
+
+
+                var reserves_condensate_status_model = new RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE()
+                {
+                    Company_Reserves_AG = condensateModelCurrent.Company_Reserves_AG,
+                    Company_Reserves_Oil = condensateModelCurrent.Company_Reserves_Oil,
+                    Company_Reserves_Year = condensateModelCurrent.Company_Reserves_Year,
+                    Company_Reserves_Condensate = condensateModelCurrent.Company_Reserves_Condensate,
+                    Company_Reserves_NAG = condensateModelCurrent.Company_Reserves_NAG
+                };
+
+
+                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
+                if (reserves_condensate_status_model != null)
 				{
 					var getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
 
@@ -4462,8 +4474,6 @@ namespace Backend_UMR_Work_Program.Controllers
 					reserves_condensate_status_model.CompanyName = WKPCompanyName;
 					reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
 					reserves_condensate_status_model.CompanyNumber = WKPCompanyNumber;
-					reserves_condensate_status_model.Date_Updated = DateTime.Now;
-					reserves_condensate_status_model.Updated_by = WKPCompanyId;
 					reserves_condensate_status_model.Year_of_WP = year;
 					reserves_condensate_status_model.OML_Name = omlName;
 					reserves_condensate_status_model.Field_ID = concessionField.Field_ID;
@@ -4530,14 +4540,12 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection data
 				if (reserves_condensate_status_model != null)
 				{
-					var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Projection_Year==reserves_condensate_status_model.Fiveyear_Projection_Year select c).FirstOrDefault();
 
 					reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
 					reserves_condensate_status_model.CompanyName = WKPCompanyName;
 					reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
 					reserves_condensate_status_model.CompanyNumber = WKPCompanyNumber;
-					reserves_condensate_status_model.Date_Updated = DateTime.Now;
-					reserves_condensate_status_model.Updated_by = WKPCompanyId;
 					reserves_condensate_status_model.Year_of_WP = year;
 					reserves_condensate_status_model.OML_Name = omlName;
 					reserves_condensate_status_model.Field_ID = concessionField.Field_ID;
@@ -5935,8 +5943,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 		[HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
 		public async Task<object> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName,
-			string year, string id, string actionToDo, string reasonForNoEvidence, string areThereEvidenceOfDesignSafetyCaseApproval,
-			string evidenceOfDesignSafetyCaseApprovalPath, string evidenceOfDesignSafetyCaseApprovalFilename)
+			string year, string id, string actionToDo, string evidenceOfDesignSafetyCaseApprovalPath, string evidenceOfDesignSafetyCaseApprovalFilename)
 		{
 
 			int save = 0;
@@ -5956,12 +5963,22 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (facilities_project_model != null)
 				{
+					//var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
+					//					 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
+					//					 c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
+					//					 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
+					//					 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
+					//					 select c).FirstOrDefaultAsync();
+
+
+
+
 					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
-										 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
-										 c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
-										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
-										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
+										 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year 
 										 select c).FirstOrDefaultAsync();
+
+
+
 
 					facilities_project_model.Companyemail = WKPCompanyEmail;
 					facilities_project_model.CompanyName = WKPCompanyName;
@@ -5970,11 +5987,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					facilities_project_model.Date_Updated = DateTime.Now;
 					facilities_project_model.Updated_by = WKPCompanyId;
 					facilities_project_model.Year_of_WP = year;
-					facilities_project_model.evidenceOfDesignSafetyCaseApprovalFilename = evidenceOfDesignSafetyCaseApprovalFilename;
-					facilities_project_model.evidenceOfDesignSafetyCaseApprovalPath = evidenceOfDesignSafetyCaseApprovalPath;
-					facilities_project_model.reasonForNoEvidence = reasonForNoEvidence;
-					facilities_project_model.areThereEvidenceOfDesignSafetyCaseApproval = areThereEvidenceOfDesignSafetyCaseApproval;
-					facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
+					//facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
 					facilities_project_model.OML_Name = omlName;
 					facilities_project_model.Field_ID = concessionField.Field_ID;
 
@@ -6011,7 +6024,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					string successMsg = getMsg(action);
 					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
-										  where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
+										  where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
 										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
 										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
 										  select c).ToListAsync();

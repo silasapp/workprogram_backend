@@ -1752,16 +1752,21 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 if (WKUserRole == GeneralModel.Admin)
                 {
-                    ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.DELETED_STATUS == null).ToListAsync();
+                    ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.DELETED_STATUS == null).ToListAsync();
+
                 }
                 else
                 {
-                    ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Year == dateYear && c.Company_ID == WKPCompanyId && c.DELETED_STATUS == null).ToListAsync();
+                    ConcessionsInformation =await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(c => c.Company_ID == WKPCompanyId && c.DELETED_STATUS == null).ToListAsync();
                 }
 
                 if (year != null)
                 {
                     ConcessionsInformation = ConcessionsInformation.Where(c => c.Year == year).ToList();
+                }
+                else{
+                    ConcessionsInformation = ConcessionsInformation.Where(c => c.Year == dateYear).ToList();
+              
                 }
 
                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = ConcessionsInformation, StatusCode = ResponseCodes.Success };
