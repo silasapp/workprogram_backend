@@ -307,7 +307,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = "Concession has been "+action == GeneralModel.Insert ? action+"ED" : action+"ED" +" successfully.";
+					string successMsg = Messager.ShowMessage(action);
 					var allConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.DELETED_STATUS != "DELETED" select d).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = allConcessions, Message = successMsg, StatusCode = ResponseCodes.Success };
 				}
@@ -1306,7 +1306,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSEProducedWaterMgt = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEEnvironmentalCompliance = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
-
+						var HSEWasteManagementDZ = (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.COMPANY_ID == WKPCompanyId && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEEnvironmentalFiveYears = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSESustainableDev = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEEnvironmentalStudiesUpdated = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -1345,6 +1345,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSESafetyStudies = HSESafetyStudies,
 							HSEQualityControl = HSEQualityControl,
 							HSEInspectionMaintenance = HSEInspectionMaintenance,
+							HSEWasteManagementDZ = HSEWasteManagementDZ,
 							HSEAssetRegister = HSEAssetRegister,
 							HSEOilSpill = HSEOilSpill,
 							HSECausesOfSpill = HSECausesOfSpill,
@@ -1395,7 +1396,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
+						var HSEWasteManagementDZ = (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.COMPANY_ID == WKPCompanyId && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEAssetRegister = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEOilSpill = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEAssetRegisterRBI = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -1469,6 +1470,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSEOilSpill = HSEOilSpill,
 							HSECausesOfSpill = HSECausesOfSpill,
 							HSEAssetRegisterRBI = HSEAssetRegisterRBI,
+							HSEWasteManagementDZ = HSEWasteManagementDZ,
 							HSEAccidentModel = accidentModel,
 							HSEAccidentIncidence = HSEAccidentIncidence,
 							HSEOSPRegistrations = HSEOSPRegistrations,
@@ -2420,6 +2422,27 @@ namespace Backend_UMR_Work_Program.Controllers
 					operations_Sefety_Case_model.Field_ID = concessionField.Field_ID;
 					//operations_Sefety_Case_model.Actual_year = year;
 					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
+					{
+
+						IFormFile? file1 = null;
+						string blobname1 = string.Empty;
+						if (Request.Form.Files.Count == 1)
+						{
+							file1 = Request.Form.Files[0];
+							blobname1 = blobService.Filenamer(file1);
+							if (file1 != null)
+							{
+								string docName = "Evidence of Operations Safety";
+								operations_Sefety_Case_model.Evidence_of_Operations_Safety_Case_Approval = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"Evidence of Operations Documents/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (operations_Sefety_Case_model.Evidence_of_Operations_Safety_Case_Approval == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+
+							}
+						}
+					}
 
 					if (action == GeneralModel.Insert)
 					{
@@ -7302,7 +7325,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW")]
-		public async Task<object> POST_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW([FromBody] HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW hse_asset_register_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW([FromForm] HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW hse_asset_register_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
