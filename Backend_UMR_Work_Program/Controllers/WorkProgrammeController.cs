@@ -679,7 +679,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			try
 			{
-				if (omlName != "undefined")
+				if (omlName != "undefined" && fieldID != "null")
 				{
 					var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
 
@@ -2184,7 +2184,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				#region Saving Concession Situations
 
-				if (concessionField.Field_Name != null) {
+				if (concessionField?.Field_Name != null) {
 					concessionDbData = await (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.Year == year select c).FirstOrDefaultAsync();
 				}else
 				{
@@ -2209,8 +2209,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						ConcessionCONCESSION_SITUATION_Model.CompanyNumber = WKPCompanyNumber;
 						ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyEmail;
 						ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
-						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField.Field_ID ?? null;
-						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField.Field_Name ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField?.Field_ID ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField?.Field_Name ?? null;
 						await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
 					}
 					else
@@ -2218,8 +2218,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						_context.CONCESSION_SITUATIONs.Remove(concessionDbData);
 						ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
 						ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
-						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField.Field_ID ?? null;
-						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField.Field_Name ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField?.Field_ID ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField?.Field_Name ?? null;
 						await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
 					}
 				}
@@ -2404,7 +2404,6 @@ namespace Backend_UMR_Work_Program.Controllers
 					else
 					{
 						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
 					}
 				}
 
