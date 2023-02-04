@@ -1,7 +1,6 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
     "C:\\Users\\Kenisank\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {}
   },
   "projects": {
@@ -13,45 +12,13 @@
         "projectPath": "C:\\Users\\Kenisank\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
         "packagesPath": "C:\\Users\\Kenisank\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Kenisank\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\obj\\",
-=======
-<<<<<<< HEAD
-    "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
-        "projectName": "Backend_UMR_Work_Program",
-        "projectPath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
-        "packagesPath": "C:\\Users\\suppo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\obj\\",
-=======
-    "C:\\Workcode\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {}
-  },
-  "projects": {
-    "C:\\Workcode\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Workcode\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
-        "projectName": "Backend_UMR_Work_Program",
-        "projectPath": "C:\\Workcode\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
-        "packagesPath": "C:\\Users\\prisc\\.nuget\\packages\\",
-        "outputPath": "C:\\Workcode\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\obj\\",
->>>>>>> 422ef9231e34ea37b66f477abbbb829fdfed4006
->>>>>>> c48806897eefdf6861c86cb6c463610f44f10a35
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-<<<<<<< HEAD
           "C:\\Users\\Kenisank\\AppData\\Roaming\\NuGet\\NuGet.Config",
-=======
-<<<<<<< HEAD
-          "C:\\Users\\suppo\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> c48806897eefdf6861c86cb6c463610f44f10a35
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-=======
-          "C:\\Users\\prisc\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> 422ef9231e34ea37b66f477abbbb829fdfed4006
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -175,7 +142,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -187,15 +155,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
-=======
-<<<<<<< HEAD
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
->>>>>>> 422ef9231e34ea37b66f477abbbb829fdfed4006
->>>>>>> c48806897eefdf6861c86cb6c463610f44f10a35
         }
       }
     }

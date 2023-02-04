@@ -2168,6 +2168,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             break;
                         case "E&AM": //Planning
                           
+                                var PlanningRequirement = await (from c in _context.Planning_MinimumRequirements where c.CompanyNumber == application.CompanyID && c.Year.ToString() == year select c).FirstOrDefaultAsync();
                                 var BudgetActualExpenditure = await (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var BudgetPerformanceExploratory = await (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var BudgetPerformanceDevelopment = await (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
@@ -2178,6 +2179,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                 return new
                                 {
+                                    PlanningRequirement= PlanningRequirement,
                                     BudgetActualExpenditure = BudgetActualExpenditure,
                                     BudgetPerformanceExploratory = BudgetPerformanceExploratory,
                                     BudgetPerformanceDevelopment = BudgetPerformanceDevelopment,
@@ -2198,8 +2200,8 @@ namespace Backend_UMR_Work_Program.Controllers
                                 };
                            
                         case "HSE&C": //HSE
-                          
-                                var HSEQuestion = await (from c in _context.HSE_QUESTIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                            var HSERequirement = await (from c in _context.HSE_MinimumRequirements where c.CompanyNumber == application.CompanyID && c.Year.ToString() == year select c).FirstOrDefaultAsync();
+                            var HSEQuestion = await (from c in _context.HSE_QUESTIONs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var HSEFatality = await (from c in _context.HSE_FATALITIEs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var HSEDesignSafety = await (from c in _context.HSE_DESIGNS_SAFETies where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                                 var HSEInspectionMaintenance = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.CompanyNumber == application.CompanyID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
@@ -2261,6 +2263,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                 return new
                                 {
+                                    HSERequirement= HSERequirement,
                                     HSETechnicalSafety = HSETechnicalSafety,
                                     HSESafetyStudies = HSESafetyStudies,
                                     HSEQualityControl = HSEQualityControl,
