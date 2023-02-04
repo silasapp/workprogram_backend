@@ -7366,7 +7366,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						}
 						else
 						{
-							hse_asset_register_model. Date_Created = getData.Date_Created;
+							hse_asset_register_model.Date_Created = getData.Date_Created;
 							hse_asset_register_model.Created_by = getData.Created_by;
 							hse_asset_register_model.Date_Updated = DateTime.Now;
 							hse_asset_register_model.Updated_by = WKPCompanyId;
