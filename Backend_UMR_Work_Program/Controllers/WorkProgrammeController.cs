@@ -569,6 +569,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
 				List<ADMIN_CONCESSIONS_INFORMATION> concessionInfo = null;
 				List<CONCESSION_SITUATION> concessionSituation = null;
 				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && int.Parse(myyear) > 2022)
@@ -679,7 +680,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			try
 			{
-				if (omlName != "undefined")
+				if (omlName != "undefined" && fieldID != "null")
 				{
 					var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
 
@@ -882,7 +883,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					var ReservesUpdate = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					var StatusOfReservesPreceeding = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
 					var StatusOfReservesCurrent = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
-					var FiveYearProjection = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					var FiveYearProjection = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					var CompanyAnnualProduction = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					var ReservesAddition = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					var ReservesDecline = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
@@ -1283,7 +1284,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						var HSEInspectionMaintenanceFacility = (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
-						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.type_of_facility == type_of_facility && c.number_of_facilities == number_of_facilities select c).ToList();
+						var HSETechnicalSafety = (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
 						var HSESafetyStudies = (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSERemediationFund = (from c in _context.HSE_REMEDIATION_FUNDs where c.CompanyName == WKPCompanyName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -2006,17 +2007,29 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpGet("GET_ROYALTY")]
-		public async Task<object> GET_ROYALTY(string myyear, string omlName)
+		public async Task<object> GET_ROYALTY(string myyear, string omlName, string fieldID)
 		{
 			try
 			{
-				var concessionField = GET_CONCESSION_FIELD(omlName, "");
-				if (concessionField != null)
+				var concessionField = GET_CONCESSION_FIELD(omlName, fieldID);
+				List<Royalty> royaltyData;
+				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
-					var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
-					return new { royalty = royalty };
+					// if ()
+					// {
+					royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Field_ID == concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
+					//}
 				}
-				return null;
+				else
+				{
+					royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Year == myyear select d).ToListAsync();
+				}
+				// if (concessionField != null)
+				// {
+				// 	var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
+
+				// }
+				return new { royalty = royaltyData };
 			}
 			catch (Exception e)
 			{
@@ -2025,54 +2038,71 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_ROYALTY")]
-		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string id, string actionToDo)
+		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string fieldName, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+
 			var concessionField = GET_CONCESSION_FIELD(omlName, "");
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+
+			Royalty myRoyalty;
 			try
 			{
-				if (!string.IsNullOrEmpty(id))
+				if (concessionField?.Field_Name != null)
 				{
-					var getData = (from c in _context.Royalties where c.Royalty_ID == int.Parse(id) select c).FirstOrDefault();
-					if (action == GeneralModel.Delete)
-						_context.Royalties.Remove(getData);
-					save += _context.SaveChanges();
-				}
-				else if (royalty_model != null)
-				{
-					var getData = (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == year select d).FirstOrDefault();
-					royalty_model.CompanyNumber = WKPCompanyNumber;
-					royalty_model.Concession_ID = concessionField.Concession_ID;
-					royalty_model.Year = year;
-					if (action == GeneralModel.Insert)
-					{
-						if (getData == null)
-						{
-							royalty_model.Date_Created = DateTime.Now;
-							await _context.Royalties.AddAsync(royalty_model);
-						}
-						else
-						{
-							royalty_model.Date_Created = getData.Date_Created;
-							_context.Royalties.Remove(getData);
-							await _context.Royalties.AddAsync(royalty_model);
-						}
-					}
-					else if (action == GeneralModel.Delete)
-					{
-						_context.Royalties.Remove(getData);
-					}
-					save += await _context.SaveChangesAsync();
+					myRoyalty = await (from c in _context.Royalties where c.CompanyNumber == WKPCompanyNumber && c.OmlName == omlName && c.Field_ID == concessionField.Field_ID && c.Year == year select c).FirstOrDefaultAsync();
 				}
 				else
 				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+					myRoyalty = await (from c in _context.Royalties where c.CompanyNumber == WKPCompanyNumber && c.OmlName == omlName && c.Year == year select c).FirstOrDefaultAsync();
 				}
+
+				// if (!string.IsNullOrEmpty(id))
+				// {
+				// 	var getData = await (from c in _context.Royalties where c.CompanyNumber == WKPCompanyNumber && c.OmlName == omlName && c.Field_ID == Convert.ToInt32(fieldName) select c).FirstOrDefaultAsync();
+				// 	if (action == GeneralModel.Delete)
+				// 		_context.Royalties.Remove(getData);
+				// 	save += _context.SaveChanges();
+				// }
+				//if (royalty_model != null)
+				//{
+				//var getData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == year select d).FirstOrDefaultAsync();
+				royalty_model.CompanyNumber = WKPCompanyNumber;
+				royalty_model.Concession_ID = concessionField?.Concession_ID ?? null;
+				royalty_model.OmlName = concessionField?.Concession_Name ?? null;
+				royalty_model.Field_ID = concessionField?.Field_ID ?? null;
+				royalty_model.Year = year;
+				if (action == GeneralModel.Insert)
+				{
+					if (myRoyalty == null)
+					{
+						royalty_model.Date_Created = DateTime.Now;
+						await _context.Royalties.AddAsync(royalty_model);
+					}
+					else
+					{
+
+						_context.Royalties.Remove(myRoyalty);
+						royalty_model.Date_Created = DateTime.Now;
+						await _context.Royalties.AddAsync(royalty_model);
+					}
+				}
+				else if (action == GeneralModel.Delete)
+				{
+					_context.Royalties.Remove(myRoyalty);
+				}
+				save += await _context.SaveChangesAsync();
+				// }
+				// else
+				// {
+				// 	return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				// }
+
+
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.Royalties where c.Concession_ID == concessionField.Concession_ID && c.CompanyNumber == WKPCompanyNumber && c.Year == year select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -2085,6 +2115,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
+
 
 		[HttpGet("GET_FORM_FIVE_SDCP")]
 		public async Task<object> GET_FORM_FIVE_SDCP(string omlName, string fieldName, string year)
@@ -2184,7 +2215,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				#region Saving Concession Situations
 
-				if (concessionField.Field_Name != null)
+				if (concessionField?.Field_Name != null)
 				{
 					concessionDbData = await (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.Year == year select c).FirstOrDefaultAsync();
 				}
@@ -2211,8 +2242,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						ConcessionCONCESSION_SITUATION_Model.CompanyNumber = WKPCompanyNumber;
 						ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyEmail;
 						ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
-						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField.Field_ID ?? null;
-						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField.Field_Name ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField?.Field_ID ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField?.Field_Name ?? null;
 						await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
 					}
 					else
@@ -2220,8 +2251,8 @@ namespace Backend_UMR_Work_Program.Controllers
 						_context.CONCESSION_SITUATIONs.Remove(concessionDbData);
 						ConcessionCONCESSION_SITUATION_Model.Created_by = WKPCompanyId;
 						ConcessionCONCESSION_SITUATION_Model.Date_Created = DateTime.Now;
-						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField.Field_ID ?? null;
-						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField.Field_Name ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_ID = concessionField?.Field_ID ?? null;
+						ConcessionCONCESSION_SITUATION_Model.Field_Name = concessionField?.Field_Name ?? null;
 						await _context.CONCESSION_SITUATIONs.AddAsync(ConcessionCONCESSION_SITUATION_Model);
 					}
 				}
@@ -2406,7 +2437,6 @@ namespace Backend_UMR_Work_Program.Controllers
 					else
 					{
 						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
 					}
 				}
 
