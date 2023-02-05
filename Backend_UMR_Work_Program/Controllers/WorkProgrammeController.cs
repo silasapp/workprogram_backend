@@ -2006,17 +2006,28 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpGet("GET_ROYALTY")]
-		public async Task<object> GET_ROYALTY(string myyear, string omlName)
+		public async Task<object> GET_ROYALTY(string myyear, string omlName, string fieldID)
 		{
 			try
 			{
-				var concessionField = GET_CONCESSION_FIELD(omlName, "");
-				if (concessionField != null)
+				var concessionField = GET_CONCESSION_FIELD(omlName, fieldID);
+				List<Royalty> royaltyData; 
+				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
-					var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
-					return new { royalty = royalty };
+					// if ()
+					// {
+						royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Field_ID == concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
+					//}
 				}
-				return null;
+				else {
+					royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Year == myyear select d).ToListAsync();
+				}
+				// if (concessionField != null)
+				// {
+				// 	var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
+					
+				// }
+				return new { royalty = royaltyData };
 			}
 			catch (Exception e)
 			{
@@ -2025,54 +2036,68 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_ROYALTY")]
-		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string id, string actionToDo)
+		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string fieldName, string actionToDo)
 		{
 			int save = 0;
 			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
-			var concessionField = GET_CONCESSION_FIELD(omlName, "");
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			Royalty myRoyalty;
 			try
 			{
-				if (!string.IsNullOrEmpty(id))
-				{
-					var getData = (from c in _context.Royalties where c.Royalty_ID == int.Parse(id) select c).FirstOrDefault();
-					if (action == GeneralModel.Delete)
-						_context.Royalties.Remove(getData);
-					save += _context.SaveChanges();
+				if (concessionField?.Field_Name != null) {
+					myRoyalty = await (from c in _context.Royalties where c.CompanyNumber == WKPCompanyNumber && c.OmlName == omlName && c.Field_ID == concessionField.Field_ID && c.Year == year select c).FirstOrDefaultAsync();
 				}
-				else if (royalty_model != null)
+				else
 				{
-					var getData = (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == year select d).FirstOrDefault();
+					myRoyalty = await (from c in _context.Royalties where c.CompanyNumber == WKPCompanyNumber && c.OmlName == omlName && c.Year == year select c).FirstOrDefaultAsync();
+				}
+
+				// if (!string.IsNullOrEmpty(id))
+				// {
+				// 	var getData = await (from c in _context.Royalties where c.CompanyNumber == WKPCompanyNumber && c.OmlName == omlName && c.Field_ID == Convert.ToInt32(fieldName) select c).FirstOrDefaultAsync();
+				// 	if (action == GeneralModel.Delete)
+				// 		_context.Royalties.Remove(getData);
+				// 	save += _context.SaveChanges();
+				// }
+				//if (royalty_model != null)
+				//{
+					//var getData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == year select d).FirstOrDefaultAsync();
 					royalty_model.CompanyNumber = WKPCompanyNumber;
-					royalty_model.Concession_ID = concessionField.Concession_ID;
+					royalty_model.Concession_ID = concessionField?.Concession_ID ?? null;
+					royalty_model.OmlName = concessionField?.Concession_Name ?? null;
+					royalty_model.Field_ID = concessionField?.Field_ID ?? null;
 					royalty_model.Year = year;
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
+						if (myRoyalty == null)
 						{
 							royalty_model.Date_Created = DateTime.Now;
 							await _context.Royalties.AddAsync(royalty_model);
 						}
 						else
 						{
-							royalty_model.Date_Created = getData.Date_Created;
-							_context.Royalties.Remove(getData);
+							
+							_context.Royalties.Remove(myRoyalty);
+							royalty_model.Date_Created = DateTime.Now;
 							await _context.Royalties.AddAsync(royalty_model);
 						}
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.Royalties.Remove(getData);
+						_context.Royalties.Remove(myRoyalty);
 					}
 					save += await _context.SaveChangesAsync();
-				}
-				else
-				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-				}
+				// }
+				// else
+				// {
+				// 	return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				// }
+
+
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.Royalties where c.Concession_ID == concessionField.Concession_ID && c.CompanyNumber == WKPCompanyNumber && c.Year == year select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else

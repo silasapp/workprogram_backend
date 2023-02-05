@@ -4868,6 +4868,67 @@ namespace Backend_UMR_Work_Program.Migrations
                     b.ToTable("BUDGET_CAPEX_OPEX", (string)null);
                 });
 
+            modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.BUDGET_OPEX", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CompanyNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Company_ID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Companyemail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Created_by")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Fixed_Cost")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("General_Expenses")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OmL_ID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OmL_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Overheads")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Repairs_and_Maintenance_Cost")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Updated_by")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Variable_Cost")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Year_of_WP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BUDGET_OPEXes");
+                });
+
             modelBuilder.Entity("Backend_UMR_Work_Program.DataModels.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy", b =>
                 {
                     b.Property<int>("Id")
@@ -8531,7 +8592,9 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Type_of_Processing")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("Updated_by")
                         .HasMaxLength(100)
@@ -20107,6 +20170,11 @@ namespace Backend_UMR_Work_Program.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("Year")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
                     b.Property<string>("Year_of_WP")
                         .HasMaxLength(100)
                         .IsUnicode(false)
@@ -20277,6 +20345,9 @@ namespace Backend_UMR_Work_Program.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<string>("OmlName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasMaxLength(50)
