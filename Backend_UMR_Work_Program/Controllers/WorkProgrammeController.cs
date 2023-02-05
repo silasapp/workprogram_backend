@@ -2006,14 +2006,15 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpGet("GET_ROYALTY")]
-		public async Task<object> GET_ROYALTY(string myyear, string omlName)
+		public async Task<object> GET_ROYALTY(string myyear, string omlName, string fieldName)
 		{
 			try
 			{
-				var concessionField = GET_CONCESSION_FIELD(omlName, "");
-				if (concessionField != null)
+                //fieldName = fieldName != null ? fieldName : "";
+                var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+                if (concessionField != null)
 				{
-					var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
+					var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Field_ID ==concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
 					return new { royalty = royalty };
 				}
 				return null;
@@ -2025,17 +2026,20 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_ROYALTY")]
-		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string id, string actionToDo)
+		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string fieldName, string id, string actionToDo)
 		{
 			int save = 0;
 			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
-			var concessionField = GET_CONCESSION_FIELD(omlName, "");
+			//fieldName = fieldName != null ? fieldName : "";
+            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 				if (!string.IsNullOrEmpty(id))
 				{
-					var getData = (from c in _context.Royalties where c.Royalty_ID == int.Parse(id) select c).FirstOrDefault();
-					if (action == GeneralModel.Delete)
+                    var getData = (from c in _context.Royalties where c.Royalty_ID == int.Parse(id) select c).FirstOrDefault();
+                  //  var getData = (from c in _context.Royalties where c.Concession_ID=concessionField.Concession_ID && c.Field_ID== int.Parse(fieldName) select c).FirstOrDefault();
+
+                    if (action == GeneralModel.Delete)
 						_context.Royalties.Remove(getData);
 					save += _context.SaveChanges();
 				}
