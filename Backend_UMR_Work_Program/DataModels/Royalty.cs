@@ -8,6 +8,7 @@ namespace Backend_UMR_Work_Program.DataModels
         public int Royalty_ID { get; set; }
         public int? CompanyNumber { get; set; }
         public int? Concession_ID { get; set; }
+        public string? OmlName {get; set;}
         public int? Field_ID { get; set; }
         public string? Crude_Oil_Royalty { get; set; }
         public string? Gas_Sales_Royalty { get; set; }
@@ -18,5 +19,6 @@ namespace Backend_UMR_Work_Program.DataModels
         public string? Status { get; set; }
         public DateTime? Date_Created { get; set; }
         public string? Last_Qntr_Royalty { get; set; }
+        
     }
 }
