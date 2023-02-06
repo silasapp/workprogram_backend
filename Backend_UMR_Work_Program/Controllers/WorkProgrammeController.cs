@@ -689,7 +689,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					return new ConcessionField
 					{
 						Concession_ID = concession.Consession_Id,
-						Concession_Name = concession.ConcessionName,
+						Concession_Name = concession.Concession_Held,
 						Consession_Type = concession.Consession_Type,
 						Terrain = concession.Terrain,
 						Field_Name = field?.Field_Name,

@@ -443,6 +443,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				else
 				{
 					var data = _mapper.Map<ADMIN_COMPANY_INFORMATION>(userModel);
+
 					data.EMAIL = userModel.EMAIL.ToLower();
 					data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
 					data.STATUS_ = "Activated";
@@ -451,8 +452,44 @@ namespace Backend_UMR_Work_Program.Controllers
 					await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(data);
 					int save = await _context.SaveChangesAsync();
 
+					var CompanyInfoId = data.Id;
+
+
+
 					if (save > 0)
 					{
+						string companyAccessCode = string.Empty;
+repeat:
+						var accessCode = GenerateAccessCode(data.COMPANY_NAME);
+
+						var getAccessCodeFromDb = await _context.ADMIN_COMPANY_CODEs.FirstOrDefaultAsync(x => x.CompanyCode==accessCode);
+
+						if (getAccessCodeFromDb != null)
+						{
+							companyAccessCode=accessCode;
+						}
+						else
+						{
+							goto repeat;
+						}
+
+
+
+
+
+						//Added company Code info
+						var CompanyInfoCode = new ADMIN_COMPANY_CODE
+						{
+							Date_Created= DateTime.Now,
+							Date_Updated= DateTime.Now,
+							Created_by = WKPCompanyEmail,
+							CompanyNumber=CompanyInfoId,
+							CompanyCode=companyAccessCode,
+							Email=userModel.EMAIL.ToLower().Trim(),
+							CompanyName=userModel.COMPANY_NAME,
+							GUID=Guid.NewGuid().ToString()
+						};
+						await _context.ADMIN_COMPANY_CODEs.AddAsync(CompanyInfoCode);
 						//add user to staff table
 						staff staff = new staff()
 						{
@@ -489,26 +526,84 @@ namespace Backend_UMR_Work_Program.Controllers
 		//Create a method to Generate AccessCode
 		private string GenerateAccessCode(string companyName)
 		{
-			var strIntitials = string.Empty;
-
-			var companyNames = companyName.Split(' ');
-
-			foreach (var item in companyNames)
+			try
 			{
-				strIntitials+= item.Substring(0);
+				var strIntitials = string.Empty;
+
+				var companyNames = companyName.Split(' ');
+
+				//check if company name has more than one string
+
+				if (companyNames.Length<=1)
+				{
+					strIntitials= companyName.Substring(0, 4);
+				}
+				else
+				{
+					foreach (var item in companyNames)
+					{
+						strIntitials+= item.Substring(0);
+					}
+				}
+
+
+				//var rndmize=new Randomize
+				var rnd = new Random();
+
+				var firstRndNumber = rnd.Next(0, 9999).ToString().PadLeft(4, '0');
+
+
+				var accessCaode = strIntitials.ToUpper() + firstRndNumber;
+
+
+				return accessCaode;
 			}
-			//var rndmize=new Randomize
-			var rnd = new Random();
+			catch (Exception ex)
+			{
 
-			var firstRndNumber = rnd.Next(0, 9999).ToString().PadLeft(4, '0');
-
-
-			var accessCaode = strIntitials.ToUpper() + firstRndNumber;
-
-
-			return accessCaode.PadLeft(3, '0');
+				throw ex;
+			}
 		}
 
+		private async Task<ADMIN_COMPANY_CODE> Get_CompanyInformationByAccessCode(string accessCode)
+		{
+			try
+			{
+				var companyInfo = await _context.ADMIN_COMPANY_CODEs.Where(x => x.CompanyCode==accessCode).FirstOrDefaultAsync();
+				if (companyInfo != null)
+				{
+					return companyInfo;
+				}
+				return null;
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
+
+		private async Task<string> UpdateCompanyInformationByAccessCode(ADMIN_COMPANY_CODE companyCode)
+		{
+			try
+			{
+				var accessCode = companyCode.CompanyCode;
+				var companyId = 0;
+				var getCompanyNumber = await _context.ADMIN_COMPANY_CODEs.FirstOrDefaultAsync(x => x.CompanyCode==accessCode);
+				if (getCompanyNumber != null)
+				{
+					companyId= (int)getCompanyNumber.CompanyNumber;
+
+					var getCompanyInfo = await _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefaultAsync(x => x.Id==companyId);
+				}
+				return null;
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
 		[HttpGet("GET_UPDATEUSER")]
 		public async Task<WebApiResponse> Get_UpdateUser(int id)
 		{
