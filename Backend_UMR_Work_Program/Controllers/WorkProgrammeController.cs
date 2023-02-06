@@ -602,20 +602,12 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-				if ((concessionField.Consession_Type == "OML" || concessionField.Consession_Type == "PML") && int.Parse(myyear) > 2022)
+				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
-					if (concessionField.Field_Name != null)
-					{
-						var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-						var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-						return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
-					}
-					else
-					{
-						var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-						var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
-						return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
-					}
+					var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+					var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
+					return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
+					
 				}
 				else
 				{
@@ -2266,11 +2258,16 @@ namespace Backend_UMR_Work_Program.Controllers
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
+				GEOPHYSICAL_ACTIVITIES_ACQUISITION getgeophysical_activities_acquisition_model;
 				#region Saving Geophysical Activites
 				if (geophysical_activities_acquisition_model != null)
 				{
-					var getgeophysical_activities_acquisition_model = (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
-
+					if (concessionField?.Field_Name != null) {
+						getgeophysical_activities_acquisition_model = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					} else {
+						getgeophysical_activities_acquisition_model = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					
 					geophysical_activities_acquisition_model.Companyemail = WKPCompanyEmail;
 					geophysical_activities_acquisition_model.CompanyName = WKPCompanyName;
 					geophysical_activities_acquisition_model.COMPANY_ID = WKPCompanyId;
@@ -2279,32 +2276,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					geophysical_activities_acquisition_model.Updated_by = WKPCompanyId;
 					geophysical_activities_acquisition_model.Year_of_WP = year;
 					geophysical_activities_acquisition_model.OML_Name = omlName;
-					geophysical_activities_acquisition_model.Field_ID = concessionField?.Field_ID;
+					geophysical_activities_acquisition_model.Field_ID = concessionField?.Field_ID ?? null;
 					geophysical_activities_acquisition_model.Actual_year = year;
 					geophysical_activities_acquisition_model.proposed_year = (int.Parse(year) + 1).ToString();
 
 					if (action == GeneralModel.Insert)
 					{
-						var noOfFolds = geophysical_activities_acquisition_model.No_of_Folds;
-						var lengthOfData = geophysical_activities_acquisition_model.Geo_Record_Length_of_Data;
-
-						int lengthOfDataint = Convert.ToInt32(lengthOfData);
-
-						if (noOfFolds<1 || noOfFolds >100)
-						{
-							return BadRequest(new { message = "Error : Number of can only between 1 and 100." });
-						}
-
-						if (lengthOfDataint<1 || lengthOfDataint >59)
-						{
-							return BadRequest(new { message = "Error : Number of can only between 1 and 59." });
-						}
-
-						if (noOfFolds<1 || noOfFolds >100)
-						{
-							return BadRequest(new { message = "Error : Number of can only between 1 and 100." });
-						}
-
 
 						if (getgeophysical_activities_acquisition_model == null)
 						{
@@ -2332,13 +2309,12 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = getMsg(action);
-						var All_geophysical_activities_acquisitions = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_geophysical_activities_acquisitions = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_geophysical_activities_acquisitions, StatusCode = ResponseCodes.Success };
 					}
 					else
 					{
 						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
 					}
 				}
 
@@ -2349,7 +2325,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			catch (Exception e)
 			{
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
 			}
 		}
 
@@ -2361,10 +2336,17 @@ namespace Backend_UMR_Work_Program.Controllers
 			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
+				GEOPHYSICAL_ACTIVITIES_PROCESSING getGeophysicalActivitesData;
 				#region Saving Geophysical Activites
 				if (geophysical_activities_processing_model != null)
 				{
-					var getGeophysicalActivitesData = (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_processing_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					if (concessionField?.Field_Name != null) {
+						getGeophysicalActivitesData = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.QUATER == geophysical_activities_processing_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else {
+						getGeophysicalActivitesData = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_processing_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					
 
 					geophysical_activities_processing_model.Companyemail = WKPCompanyEmail;
 					geophysical_activities_processing_model.CompanyName = WKPCompanyName;
@@ -2374,7 +2356,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					geophysical_activities_processing_model.Updated_by = WKPCompanyId;
 					geophysical_activities_processing_model.Year_of_WP = year;
 					geophysical_activities_processing_model.OML_Name = omlName;
-					geophysical_activities_processing_model.Field_ID = concessionField.Field_ID;
+					geophysical_activities_processing_model.Field_ID = concessionField?.Field_ID ?? null;
 					geophysical_activities_processing_model.Actual_year = year;
 					geophysical_activities_processing_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -2406,7 +2388,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
