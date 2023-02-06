@@ -573,13 +573,10 @@ namespace Backend_UMR_Work_Program.Controllers
 				
 				List<ADMIN_CONCESSIONS_INFORMATION> concessionInfo = null;
 				List<CONCESSION_SITUATION> concessionSituation = null;
-				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && int.Parse(myyear) > 2022)
+				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
-					if (concessionField.Field_Name != null)
-					{
 						concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName &&  d.DELETED_STATUS == null select d).ToListAsync();
 						concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Field_ID == concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
-					}
 				}
 				else {
 					concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).ToListAsync();
@@ -680,12 +677,14 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			try
 			{
-				if (omlName != "undefined" && fieldID != "null")
+				if (omlName != "undefined")
 				{
+					COMPANY_FIELD field = null;
 					var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
-
-					var field = (from a in _context.COMPANY_FIELDs where a.Field_ID == Convert.ToInt32(fieldID) select a).FirstOrDefault();
-
+					if (fieldID != "null") {
+						field = (from a in _context.COMPANY_FIELDs where a.Field_ID == Convert.ToInt32(fieldID) select a).FirstOrDefault();
+					}
+					
 					return new ConcessionField
 					{
 						Concession_ID = concession.Consession_Id,
@@ -8171,7 +8170,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			catch (Exception e)
 			{
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
 			}
 		}
 
