@@ -3760,6 +3760,106 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
+		//POST_BUDGET_ OPEX
+		[HttpPost("POST_BUDGET_OPEX")]
+		public async Task<object> POST_BUDGET_OPEX([FromBody] BUDGET_OPEX Budget_Opex_model, string omlName, string fieldName, string year, string actionToDo)
+		{
+
+			int save = 0;
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				#region Saving FDP data
+				if (Budget_Opex_model != null)
+				{
+					var getData = await (from c in _context.BUDGET_OPEXes where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+
+
+					Budget_Opex_model.Companyemail = WKPCompanyEmail;
+					Budget_Opex_model.CompanyName = WKPCompanyName;
+					Budget_Opex_model.Company_ID = WKPCompanyId;
+					Budget_Opex_model.CompanyNumber = WKPCompanyNumber;
+					Budget_Opex_model.Date_Updated = DateTime.Now;
+					Budget_Opex_model.Updated_by = WKPCompanyId;
+					Budget_Opex_model.Year_of_WP = year;
+					Budget_Opex_model.OmL_Name = omlName.ToUpper();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							Budget_Opex_model.Date_Created = DateTime.Now;
+							Budget_Opex_model.Created_by = WKPCompanyId;
+							//initial_well_completion_model.Proposed_Well_Number=getDataList.Count()+1;
+							await _context.BUDGET_OPEXes.AddAsync(Budget_Opex_model);
+						}
+						else
+						{
+							Budget_Opex_model.Date_Created = getData.Date_Created;
+							Budget_Opex_model.Created_by = getData.Created_by;
+							Budget_Opex_model.Date_Updated = DateTime.Now;
+							Budget_Opex_model.Updated_by = WKPCompanyId;
+							_context.BUDGET_OPEXes.Remove(getData);
+							await _context.BUDGET_OPEXes.AddAsync(Budget_Opex_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.BUDGET_OPEXes.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = "Form has been " + action == GeneralModel.Insert ? action + "ED" : action + "D" + " successfully.";
+						var All_Data = await (from c in _context.BUDGET_OPEXes where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		[HttpPost("POST_WORKOVERS_RECOMPLETION_JOB")]
 		public async Task<object> POST_WORKOVERS_RECOMPLETION_JOB([FromBody] WORKOVERS_RECOMPLETION_JOB1 workovers_recompletion_model, string omlName, string fieldName, string year, string actionToDo)
 		{
