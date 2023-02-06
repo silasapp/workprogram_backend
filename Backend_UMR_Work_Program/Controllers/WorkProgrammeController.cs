@@ -2011,17 +2011,17 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldID);
-				List<Royalty> royaltyData;
+				Royalty royaltyData;
 				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
 					// if ()
 					// {
-					royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Field_ID == concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
+					royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Field_ID == concessionField.Field_ID && d.Year == myyear select d).FirstOrDefaultAsync();
 					//}
 				}
 				else
 				{
-					royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Year == myyear select d).ToListAsync();
+					royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Year == myyear select d).FirstOrDefaultAsync();
 				}
 				// if (concessionField != null)
 				// {
