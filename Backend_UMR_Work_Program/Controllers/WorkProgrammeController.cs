@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
@@ -227,7 +226,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_ADMIN_CONCESSIONS_INFORMATION([FromBody] ADMIN_CONCESSIONS_INFORMATION ADMIN_CONCESSIONS_INFORMATION_model, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 
 			try
 			{
@@ -570,7 +569,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-				
+
 				List<ADMIN_CONCESSIONS_INFORMATION> concessionInfo = null;
 				List<CONCESSION_SITUATION> concessionSituation = null;
 				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && int.Parse(myyear) > 2022)
@@ -581,11 +580,12 @@ namespace Backend_UMR_Work_Program.Controllers
 						concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Field_ID == concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
 					}
 				}
-				else {
+				else
+				{
 					concessionInfo = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).ToListAsync();
 					concessionSituation = await (from d in _context.CONCESSION_SITUATIONs where d.COMPANY_ID == WKPCompanyId && d.OML_Name == omlName && d.Year == myyear select d).ToListAsync();
 				}
-				
+
 				return new { concessionSituation = concessionSituation, concessionInfo = concessionInfo };
 			}
 			catch (Exception e)
@@ -607,7 +607,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					var geoActivitiesAcquisition = await (from d in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
 					var geoActivitiesProcessing = await (from d in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where d.COMPANY_ID == WKPCompanyId && d.Field_ID == concessionField.Field_ID && d.Year_of_WP == myyear orderby d.QUATER select d).ToListAsync();
 					return new { geoActivitiesAcquisition = geoActivitiesAcquisition, geoActivitiesProcessing = geoActivitiesProcessing };
-					
+
 				}
 				else
 				{
@@ -2003,14 +2003,14 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			try
 			{
-				
+
 
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 				if (concessionField != null)
 				{
 					var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Field_ID==concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
-					if(royalty==null) royalty = new List<Royalty>();
-                    return new { royalty = royalty };
+					if (royalty==null) royalty = new List<Royalty>();
+					return new { royalty = royalty };
 				}
 				return null;
 			}
@@ -2020,73 +2020,73 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-        [HttpPost("POST_ROYALTY")]
-        public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string fieldName, string id, string actionToDo)
-        {
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
-            //fieldName = fieldName != null ? fieldName : "";
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.Royalties where c.Royalty_ID == int.Parse(id) select c).FirstOrDefault();
-                    //  var getData = (from c in _context.Royalties where c.Concession_ID=concessionField.Concession_ID && c.Field_ID== int.Parse(fieldName) select c).FirstOrDefault();
+		[HttpPost("POST_ROYALTY")]
+		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string fieldName, string id, string actionToDo)
+		{
+			int save = 0;
+			string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
+			//fieldName = fieldName != null ? fieldName : "";
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.Royalties where c.Royalty_ID == int.Parse(id) select c).FirstOrDefault();
+					//  var getData = (from c in _context.Royalties where c.Concession_ID=concessionField.Concession_ID && c.Field_ID== int.Parse(fieldName) select c).FirstOrDefault();
 
-                    if (action == GeneralModel.Delete)
-                        _context.Royalties.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (royalty_model != null)
-                {
-                    var getData = (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID &&d.Field_ID==concessionField.Field_ID && d.Year == year select d).FirstOrDefault();
-                    royalty_model.CompanyNumber = WKPCompanyNumber;
-                    royalty_model.Concession_ID = concessionField.Concession_ID;
+					if (action == GeneralModel.Delete)
+						_context.Royalties.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (royalty_model != null)
+				{
+					var getData = (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID &&d.Field_ID==concessionField.Field_ID && d.Year == year select d).FirstOrDefault();
+					royalty_model.CompanyNumber = WKPCompanyNumber;
+					royalty_model.Concession_ID = concessionField.Concession_ID;
 					royalty_model.Field_ID = concessionField?.Field_ID;
-                    royalty_model.Year = year;
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            royalty_model.Date_Created = DateTime.Now;
-                            await _context.Royalties.AddAsync(royalty_model);
-                        }
-                        else
-                        {
-                            royalty_model.Date_Created = getData.Date_Created;
-                            _context.Royalties.Remove(getData);
-                            await _context.Royalties.AddAsync(royalty_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.Royalties.Remove(getData);
-                    }
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = getMsg(action);
-                    var All_Data = await (from c in _context.Royalties where c.Concession_ID == concessionField.Concession_ID && c.CompanyNumber == WKPCompanyNumber && c.Year == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
+					royalty_model.Year = year;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							royalty_model.Date_Created = DateTime.Now;
+							await _context.Royalties.AddAsync(royalty_model);
+						}
+						else
+						{
+							royalty_model.Date_Created = getData.Date_Created;
+							_context.Royalties.Remove(getData);
+							await _context.Royalties.AddAsync(royalty_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.Royalties.Remove(getData);
+					}
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = getMsg(action);
+					var All_Data = await (from c in _context.Royalties where c.Concession_ID == concessionField.Concession_ID && c.CompanyNumber == WKPCompanyNumber && c.Year == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
 
-        [HttpGet("GET_FORM_FIVE_SDCP")]
+		[HttpGet("GET_FORM_FIVE_SDCP")]
 		public async Task<object> GET_FORM_FIVE_SDCP(string omlName, string fieldName, string year)
 		{
 			try
@@ -2177,21 +2177,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			int save = 0;
 			var ConcessionCONCESSION_SITUATION_Model = concession_situation_model;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldID);
 			CONCESSION_SITUATION concessionDbData;
 			try
 			{
 				#region Saving Concession Situations
 
-				if (concessionField?.Field_Name != null) {
+				if (concessionField?.Field_Name != null)
+				{
 					concessionDbData = await (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.Year == year select c).FirstOrDefaultAsync();
-				}else
+				}
+				else
 				{
 					concessionDbData = await (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year == year select c).FirstOrDefaultAsync();
 				}
 
-				
+
 
 				ConcessionCONCESSION_SITUATION_Model.Companyemail = WKPCompanyEmail;
 				ConcessionCONCESSION_SITUATION_Model.CompanyName = WKPCompanyName;
@@ -2254,7 +2256,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
@@ -2262,12 +2264,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Geophysical Activites
 				if (geophysical_activities_acquisition_model != null)
 				{
-					if (concessionField?.Field_Name != null) {
+					if (concessionField?.Field_Name != null)
+					{
 						getgeophysical_activities_acquisition_model = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					} else {
+					}
+					else
+					{
 						getgeophysical_activities_acquisition_model = await (from c in _context.GEOPHYSICAL_ACTIVITIES_ACQUISITIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_acquisition_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					}
-					
+
 					geophysical_activities_acquisition_model.Companyemail = WKPCompanyEmail;
 					geophysical_activities_acquisition_model.CompanyName = WKPCompanyName;
 					geophysical_activities_acquisition_model.COMPANY_ID = WKPCompanyId;
@@ -2333,20 +2338,22 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 				GEOPHYSICAL_ACTIVITIES_PROCESSING getGeophysicalActivitesData;
 				#region Saving Geophysical Activites
 				if (geophysical_activities_processing_model != null)
 				{
-					if (concessionField?.Field_Name != null) {
+					if (concessionField?.Field_Name != null)
+					{
 						getGeophysicalActivitesData = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.QUATER == geophysical_activities_processing_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					}
-					else {
+					else
+					{
 						getGeophysicalActivitesData = await (from c in _context.GEOPHYSICAL_ACTIVITIES_PROCESSINGs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == geophysical_activities_processing_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					}
-					
+
 
 					geophysical_activities_processing_model.Companyemail = WKPCompanyEmail;
 					geophysical_activities_processing_model.CompanyName = WKPCompanyName;
@@ -2414,7 +2421,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 
@@ -2489,7 +2496,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
@@ -2565,7 +2572,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 
@@ -2664,7 +2671,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 
@@ -2689,7 +2696,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					//var files = Request.Form.Files;
 
 					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
-                    {
+					{
 
 						IFormFile? file1 = null;
 						string blobname1 = string.Empty;
@@ -2786,7 +2793,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							}
 						}
 					}
-					
+
 					#endregion
 
 					if (action == GeneralModel.Insert)
@@ -2843,7 +2850,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 
@@ -3024,7 +3031,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string fieldName, string year, string actionToDo = null)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -3034,16 +3041,18 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				#region Saving drilling data
 
-				var getData= new DRILLING_OPERATIONS_CATEGORIES_OF_WELL();
+				var getData = new DRILLING_OPERATIONS_CATEGORIES_OF_WELL();
 				if (drilling_operations_categories_of_well_model != null)
 				{
-				if(concessionField?.Field_Name!=null){
-					 getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-				}
-				else{
-					getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					
-				}
+					if (concessionField?.Field_Name!=null)
+					{
+						getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					}
 
 
 
@@ -3141,7 +3150,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
 
@@ -3213,7 +3222,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -3284,7 +3293,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_FIELD_DEVELOPMENT_PLAN([FromForm] FIELD_DEVELOPMENT_PLAN field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -3384,7 +3393,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -3458,7 +3467,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -3532,7 +3541,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -3610,7 +3619,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -3865,7 +3874,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -3913,8 +3922,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						
-                        string successMsg = getMsg(action);
+
+						string successMsg = getMsg(action);
 						var All_Data = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3941,7 +3950,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -3991,12 +4000,12 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-			
+
 
 
 						string successMsg = getMsg(action);
 
-                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4018,11 +4027,11 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION")]
-		public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION([FromBody]Unitisation_Model unitisation_model, string omlName, string fieldName, string year, string actionToDo)
+		public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION([FromBody] Unitisation_Model unitisation_model, string omlName, string fieldName, string year, string actionToDo)
 		{
-			
+
 			int save = 0;
-			string action = (actionToDo == null || actionToDo== "") ? GeneralModel.Insert : actionToDo; 
+			string action = (actionToDo == null || actionToDo== "") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -4035,11 +4044,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					Is_any_of_your_field_straddling = unitisation_model.Is_any_of_your_field_straddling,
 					How_many_fields_straddle = unitisation_model.How_many_fields_straddle,
 					Is_there_a_Joint_Development = unitisation_model.Is_there_a_Joint_Development,
-                    what_concession_field_straddling = unitisation_model.What_concession_field_straddling
+					what_concession_field_straddling = unitisation_model.What_concession_field_straddling
 				};
 
-                #region Saving Oil Condensate data
-                if (oil_condensate_unitisation_model != null)
+				#region Saving Oil Condensate data
+				if (oil_condensate_unitisation_model != null)
 				{
 					var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
@@ -4102,13 +4111,13 @@ namespace Backend_UMR_Work_Program.Controllers
 					save += await _context.SaveChangesAsync();
 
 					if (save > 0)
-					{ 
+					{
 
 
 						string successMsg = getMsg(action);
-                        var returnData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+						var returnData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
-                       // var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						// var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = returnData, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4134,7 +4143,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4199,13 +4208,13 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-                        
+
 
 
 						string successMsg = getMsg(action);
 
 
-                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4228,7 +4237,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4282,12 +4291,12 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-                        
 
 
-                        string successMsg = getMsg(action);
 
-                        var All_Data = await (from c in _context.NDRs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						string successMsg = getMsg(action);
+
+						var All_Data = await (from c in _context.NDRs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4312,7 +4321,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_RESERVES_UPDATES_DEPLETION_RATE([FromBody] RESERVES_UPDATES_DEPLETION_RATE reserves_depletion_rate_model, string omlName, string fieldName, string year, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -4357,11 +4366,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-                        
 
 
-                        string successMsg = getMsg(action);
-                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+						string successMsg = getMsg(action);
+						var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4385,7 +4394,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4431,11 +4440,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-                        
 
 
-                        string successMsg = getMsg(action);
-                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+						string successMsg = getMsg(action);
+						var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4461,7 +4470,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4474,11 +4483,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					Company_Reserves_NAG = condensateModel.Company_Reserves_NAG
 				};
 
-				
 
 
-                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
-                if (reserves_condensate_status_model != null)
+
+				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
+				if (reserves_condensate_status_model != null)
 				{
 					var getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
 
@@ -4520,11 +4529,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-                        
 
 
-                        string successMsg = getMsg(action);
-                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+						string successMsg = getMsg(action);
+						var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4550,24 +4559,24 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
 
 
-                var reserves_condensate_status_model = new RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE()
-                {
-                    Company_Reserves_AG = condensateModelCurrent.Company_Reserves_AG,
-                    Company_Reserves_Oil = condensateModelCurrent.Company_Reserves_Oil,
-                    Company_Reserves_Year = condensateModelCurrent.Company_Reserves_Year,
-                    Company_Reserves_Condensate = condensateModelCurrent.Company_Reserves_Condensate,
-                    Company_Reserves_NAG = condensateModelCurrent.Company_Reserves_NAG
-                };
+				var reserves_condensate_status_model = new RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE()
+				{
+					Company_Reserves_AG = condensateModelCurrent.Company_Reserves_AG,
+					Company_Reserves_Oil = condensateModelCurrent.Company_Reserves_Oil,
+					Company_Reserves_Year = condensateModelCurrent.Company_Reserves_Year,
+					Company_Reserves_Condensate = condensateModelCurrent.Company_Reserves_Condensate,
+					Company_Reserves_NAG = condensateModelCurrent.Company_Reserves_NAG
+				};
 
 
-                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
-                if (reserves_condensate_status_model != null)
+				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
+				if (reserves_condensate_status_model != null)
 				{
 					var getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
 
@@ -4633,7 +4642,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection reserves_condensate_status_model, string omlName, string fieldName, string year, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4703,7 +4712,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4794,7 +4803,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4866,7 +4875,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_Addition([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition reserve_update_addition_model, string omlName, string fieldName, string year, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionFields = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionFields = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -4936,7 +4945,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_DECLINE([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE reserves_update_decline_model, string omlName, string fieldName, string year, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -5006,7 +5015,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -5080,7 +5089,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -5152,7 +5161,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -5224,7 +5233,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -5297,7 +5306,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -5380,7 +5389,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
 			{
@@ -5463,7 +5472,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -5546,7 +5555,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -5630,7 +5639,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -5713,7 +5722,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -5797,7 +5806,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -5880,7 +5889,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -5963,7 +5972,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6048,7 +6057,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6075,7 +6084,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
-										 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year 
+										 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year
 										 select c).FirstOrDefaultAsync();
 
 
@@ -6147,7 +6156,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_BUDGET_CAPEX_OPEX([FromBody] BUDGET_CAPEX_OPEX budget_capex_opex_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6230,7 +6239,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6306,7 +6315,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -6381,7 +6390,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6456,7 +6465,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6529,7 +6538,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6604,7 +6613,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6678,7 +6687,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -6752,7 +6761,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -6826,7 +6835,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -6900,7 +6909,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -6977,7 +6986,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7054,7 +7063,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7134,7 +7143,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7236,7 +7245,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
@@ -7316,7 +7325,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7399,7 +7408,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7481,7 +7490,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			var HSE_Accident_Incidence = new HSE_ACCIDENT_INCIDENCE_REPORTING_NEW();
@@ -7678,7 +7687,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		public async Task<object> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_NEW hse_accident_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7760,7 +7769,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7835,7 +7844,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -7922,7 +7931,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8004,7 +8013,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8019,7 +8028,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (hse_waste_management_model != null)
 				{
-					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_WASTE_MANAGEMENT_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					hse_waste_management_model.Companyemail = WKPCompanyEmail;
 					hse_waste_management_model.CompanyName = WKPCompanyName;
@@ -8029,7 +8046,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_waste_management_model.Updated_by = WKPCompanyId;
 					hse_waste_management_model.Year_of_WP = year;
 					hse_waste_management_model.OML_Name = omlName;
-					hse_waste_management_model.Field_ID = concessionField.Field_ID;
+					hse_waste_management_model.Field_ID = concessionField.Field_ID??null;
 					hse_waste_management_model.ACTUAL_year = year;
 					hse_waste_management_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8065,7 +8082,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -8088,7 +8105,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8103,7 +8120,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (hse_waste_management_facility_model != null)
 				{
-					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.Field_ID==concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					hse_waste_management_facility_model.Companyemail = WKPCompanyEmail;
 					hse_waste_management_facility_model.CompanyName = WKPCompanyName;
@@ -8113,7 +8138,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_waste_management_facility_model.Updated_by = WKPCompanyId;
 					hse_waste_management_facility_model.Year_of_WP = year;
 					hse_waste_management_facility_model.OML_Name = omlName;
-					hse_waste_management_facility_model.Field_ID = concessionField.Field_ID;
+					hse_waste_management_facility_model.Field_ID = concessionField.Field_ID??null;
 					hse_waste_management_facility_model.ACTUAL_year = year;
 					hse_waste_management_facility_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8151,7 +8176,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -8172,7 +8197,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8187,7 +8212,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (hse_produced_water_model != null)
 				{
-					var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_PRODUCED_WATER_MANAGEMENT_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					hse_produced_water_model.Companyemail = WKPCompanyEmail;
 					hse_produced_water_model.CompanyName = WKPCompanyName;
@@ -8197,7 +8230,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_produced_water_model.Updated_by = WKPCompanyId;
 					hse_produced_water_model.Year_of_WP = year;
 					hse_produced_water_model.OML_Name = omlName;
-					hse_produced_water_model.Field_ID = concessionField.Field_ID;
+					hse_produced_water_model.Field_ID = concessionField.Field_ID??null;
 					hse_produced_water_model.ACTUAL_year = year;
 					hse_produced_water_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8229,7 +8262,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -8291,7 +8324,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8305,7 +8338,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (hse_compliance_model != null)
 				{
-					var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					hse_compliance_model.Companyemail = WKPCompanyEmail;
 					hse_compliance_model.CompanyName = WKPCompanyName;
@@ -8315,7 +8356,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_compliance_model.Updated_by = WKPCompanyId;
 					hse_compliance_model.Year_of_WP = year;
 					hse_compliance_model.OML_Name = omlName;
-					hse_compliance_model.Field_ID = concessionField.Field_ID;
+					hse_compliance_model.Field_ID = concessionField.Field_ID??null;
 					hse_compliance_model.ACTUAL_year = year;
 					hse_compliance_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8351,7 +8392,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -8372,7 +8413,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8388,7 +8429,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (hse_environmental_studies_model != null)
 				{
-					var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.YEAR_ == hse_environmental_studies_model.YEAR_ && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW getData;
+					if (concessionField.Field_Name !=new)
+					{
+						getData=    (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.YEAR_ == hse_environmental_studies_model.YEAR_ && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData=(from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.YEAR_ == hse_environmental_studies_model.YEAR_ && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					hse_environmental_studies_model.Companyemail = WKPCompanyEmail;
 					hse_environmental_studies_model.CompanyName = WKPCompanyName;
@@ -8398,7 +8447,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_environmental_studies_model.Updated_by = WKPCompanyId;
 					hse_environmental_studies_model.Year_of_WP = year;
 					hse_environmental_studies_model.OML_Name = omlName;
-					hse_environmental_studies_model.Field_ID = concessionField.Field_ID;
+					hse_environmental_studies_model.Field_ID = concessionField.Field_ID??null;
 					hse_environmental_studies_model.ACTUAL_year = year;
 					hse_environmental_studies_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8435,7 +8484,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -8457,7 +8506,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			using var transaction = _context.Database.BeginTransaction();
 
 			try
@@ -8472,7 +8521,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (hse_sustainable_model != null)
 				{
-					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					hse_sustainable_model.Companyemail = WKPCompanyEmail;
 					hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -8482,7 +8539,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
 					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField.Field_ID;
+					hse_sustainable_model.Field_ID = concessionField.Field_ID??null;
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -8546,7 +8603,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -8567,7 +8624,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8670,7 +8727,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8759,7 +8816,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8852,7 +8909,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -8942,7 +8999,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9045,7 +9102,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9136,7 +9193,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9235,7 +9292,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9330,7 +9387,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
@@ -9462,7 +9519,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						getData = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.OML_ID == omlID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					}
 
-				    hSE_WASTE_MANAGEMENT_DZ.OML_ID = omlID;
+					hSE_WASTE_MANAGEMENT_DZ.OML_ID = omlID;
 					hSE_WASTE_MANAGEMENT_DZ.Companyemail = WKPCompanyEmail;
 					hSE_WASTE_MANAGEMENT_DZ.CompanyName = WKPCompanyName;
 					hSE_WASTE_MANAGEMENT_DZ.COMPANY_ID = WKPCompanyId;
@@ -9627,7 +9684,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9715,7 +9772,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9802,7 +9859,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9893,7 +9950,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9982,7 +10039,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10087,7 +10144,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			try
@@ -10214,7 +10271,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10388,7 +10445,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10490,7 +10547,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10697,7 +10754,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10812,7 +10869,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10930,7 +10987,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10946,7 +11003,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					{
 						getMsg(action);
 
-                        string successMsg = getMsg(action);
+						string successMsg = getMsg(action);
 						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -11053,7 +11110,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -11390,7 +11447,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			var message = _action == GeneralModel.Insert ? _action + "ED" : _action + "D";
 			return "Form has been " + message + " successfully.";
-			
+
 		}
 
 
