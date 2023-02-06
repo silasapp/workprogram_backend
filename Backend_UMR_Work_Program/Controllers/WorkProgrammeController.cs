@@ -744,14 +744,16 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpGet("GET_FORM_TWO_INITIAL_WELL_COMPLETION_JOB")]
-		public async Task<object> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName, string fieldName)
+		public async Task<object?> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName, string fieldName)
 		{
 			try
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+				if(concessionField==null) return null;
+				
 				if ((concessionField.Consession_Type == "OML" || concessionField.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
-					var InitialWellCompletion = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
+					var InitialWellCompletion = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name ==concessionField.Concession_Name && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
 					return new { InitialWellCompletion = InitialWellCompletion };
 				}
 				else
@@ -759,6 +761,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					var InitialWellCompletion = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new { InitialWellCompletion = InitialWellCompletion };
 				}
+				
+				
 			}
 			catch (Exception e)
 			{
@@ -766,7 +770,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpGet("GET_FORM_TWO_WORKOVERS_RECOMPLETION_JOB")]
-		public async Task<object> GET_WORKOVERS_RECOMPLETION_JOB(string year, string omlName, string fieldName)
+		public async Task<object?> GET_WORKOVERS_RECOMPLETION_JOB(string year, string omlName, string fieldName)
 		{
 
 			try
