@@ -681,14 +681,14 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					COMPANY_FIELD field = null;
 					var concession = (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.Concession_Held == omlName && d.DELETED_STATUS == null select d).FirstOrDefault();
-					if (fieldID != "null") {
+					if (fieldID != "null" && !string.IsNullOrEmpty(fieldID)) {
 						field = (from a in _context.COMPANY_FIELDs where a.Field_ID == Convert.ToInt32(fieldID) select a).FirstOrDefault();
 					}
 					
 					return new ConcessionField
 					{
 						Concession_ID = concession.Consession_Id,
-						Concession_Name = concession.ConcessionName,
+						Concession_Name = concession.Concession_Held,
 						Consession_Type = concession.Consession_Type,
 						Terrain = concession.Terrain,
 						Field_Name = field?.Field_Name,
@@ -2041,7 +2041,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			int save = 0;
 
-			var concessionField = GET_CONCESSION_FIELD(omlName, "");
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 
 			Royalty myRoyalty;
@@ -2210,6 +2210,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldID);
 			CONCESSION_SITUATION concessionDbData;
+
 			try
 			{
 				#region Saving Concession Situations
@@ -2222,7 +2223,6 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					concessionDbData = await (from c in _context.CONCESSION_SITUATIONs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year == year select c).FirstOrDefaultAsync();
 				}
-
 
 
 				ConcessionCONCESSION_SITUATION_Model.Companyemail = WKPCompanyEmail;
