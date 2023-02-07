@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
+using Backend_UMR_Work_Program.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -5456,9 +5457,9 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_proposal_model.CompanyNumber = WKPCompanyNumber;
                     budget_proposal_model.Year_of_WP = year;
                     budget_proposal_model.OML_Name = omlName;
-                    budget_proposal_model.Field_ID = concessionField?.Field_ID??null;
-                   // budget_proposal_model.Actual_year = year;
-                    budget_proposal_model.Proposed_year = year ;
+                    budget_proposal_model.Field_ID = concessionField?.Field_ID ?? null;
+                    // budget_proposal_model.Actual_year = year;
+                    budget_proposal_model.Proposed_year = year;
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null || getData.Count == 0)

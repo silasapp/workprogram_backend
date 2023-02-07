@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Backend_UMR_Work_Program.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Backend_UMR_Work_Program.DataModels
 {
-	public partial class WKP_DBContext : DbContext
+    public partial class WKP_DBContext : DbContext
 	{
 		public WKP_DBContext()
 		{

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend_UMR_Work_Program.DataModels
+namespace Backend_UMR_Work_Program.ViewModels
 {
     public partial class BUDGET_ACTUAL_EXPENDITURE
     {
