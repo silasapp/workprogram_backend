@@ -1,4 +1,4 @@
-﻿namespace Backend_UMR_Work_Program.DataModels
+﻿namespace Backend_UMR_Work_Program.ViewModels
 {
     public class BUDGET_FACILITIES_DEVELOPMENT_MODEL
     {
@@ -14,7 +14,7 @@
 
         public string? DetaileD_ENGINEERING_planned { get; set; }
 
-        public string? InstallatioN_planned   { get; set; }
+        public string? InstallatioN_planned { get; set; }
 
 
         public string? ProcuremenT_planned { get; set; }
