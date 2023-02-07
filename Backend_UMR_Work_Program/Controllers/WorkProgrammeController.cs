@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
-using Backend_UMR_Work_Program.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -847,19 +846,19 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     return null;
                 }
-                if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
+                if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
                 {
-                    var ReservesUpdate = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var StatusOfReservesPreceeding = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
-                    var StatusOfReservesCurrent = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
-                    var FiveYearProjection = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var CompanyAnnualProduction = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReservesAddition = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReservesDecline = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReservesReplacementRatio = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var OilCondensateFiveYears = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReserveDepletionRate = await (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReserveLifeIndices = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesUpdate = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var StatusOfReservesPreceeding = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
+                    var StatusOfReservesCurrent = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
+                    var FiveYearProjection = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var CompanyAnnualProduction = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesAddition = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.Field_ID == concessionField.Field_ID && c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesDecline = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesReplacementRatio = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var OilCondensateFiveYears = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReserveDepletionRate = await (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReserveLifeIndices = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                     return new
                     {
                         ReservesUpdate = ReservesUpdate,
@@ -877,17 +876,17 @@ namespace Backend_UMR_Work_Program.Controllers
                 }
                 else
                 {
-                    var ReservesUpdate = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var StatusOfReservesPreceeding = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
-                    var StatusOfReservesCurrent = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
-                    var FiveYearProjection = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    var CompanyAnnualProduction = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReservesAddition = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReservesDecline = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReservesReplacementRatio = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var OilCondensateFiveYears = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReserveDepletionRate = await (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var ReserveLifeIndices = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesUpdate = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var StatusOfReservesPreceeding = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
+                    var StatusOfReservesCurrent = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
+                    var FiveYearProjection = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                    var CompanyAnnualProduction = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesAddition = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesDecline = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReservesReplacementRatio = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var OilCondensateFiveYears = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReserveDepletionRate = await (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var ReserveLifeIndices = await (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
                     return new
                     {
@@ -920,13 +919,13 @@ namespace Backend_UMR_Work_Program.Controllers
                 {
                     return null;
                 }
-                if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
+                if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
                 {
-                    var OilCondensateProduction = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var OilCondensateProduction = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                     //var Unitization = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var OilCondensateProductionMonthly = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).ToListAsync();
-                    var OilCondensateProductionMonthlyProposed = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).ToListAsync();
-                    var OilCondensateFiveYears = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName && c.Year_of_WP == year select c).ToListAsync();
+                    var OilCondensateProductionMonthly = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).ToListAsync();
+                    var OilCondensateProductionMonthlyProposed = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).ToListAsync();
+                    var OilCondensateFiveYears = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.OML_Name.ToUpper() == omlName.ToUpper() && c.Year_of_WP == year select c).ToListAsync();
 
                     return new
                     {
@@ -966,14 +965,10 @@ namespace Backend_UMR_Work_Program.Controllers
             try
             {
                 var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-                if (concessionField == null)
+                if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
                 {
-                    return null;
-                }
-                if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
-                {
-                    var GasProduction = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-                    var GasProductionDomestic = await (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var GasProduction = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.Field_ID == concessionField.Field_ID && c.OML_Name.ToUpper() == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var GasProductionDomestic = await (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.Field_ID == concessionField.Field_ID && c.OML_Name.ToUpper() == omlName.ToUpper() && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                     return new
                     {
                         GasProductionActivity = GasProduction,
