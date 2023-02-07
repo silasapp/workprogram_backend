@@ -2097,7 +2097,7 @@ repeat:
 
 				if (save > 0)
 				{
-					string successMsg = "Field has been " + action + "D successfully.";
+					string successMsg = Messager.ShowMessage(action);
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 				}
 				else

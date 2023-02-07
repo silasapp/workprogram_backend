@@ -307,7 +307,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = "Concession has been "+action == GeneralModel.Insert ? action+"ED" : action+"D" +" successfully.";
+					string successMsg = Messager.ShowMessage(action);
 					var allConcessions = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Company_ID == WKPCompanyId && d.DELETED_STATUS != "DELETED" select d).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = allConcessions, Message = successMsg, StatusCode = ResponseCodes.Success };
 				}
@@ -535,7 +535,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = "Field has been " + action + "D successfully.";
+					string successMsg = Messager.ShowMessage(action);
 					var allFields = await (from d in _context.COMPANY_FIELDs
 										   where d.CompanyNumber == WKPCompanyNumber && d.DeletedStatus != true
 										   select new
@@ -743,14 +743,16 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 		[HttpGet("GET_FORM_TWO_INITIAL_WELL_COMPLETION_JOB")]
-		public async Task<object> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName, string fieldName)
+		public async Task<object?> GET_INITIAL_WELL_COMPLETION_JOB(string year, string omlName, string fieldName)
 		{
 			try
 			{
 				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+				if(concessionField==null) return null;
+				
 				if ((concessionField.Consession_Type == "OML" || concessionField.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
-					var InitialWellCompletion = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
+					var InitialWellCompletion = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.COMPANY_ID == WKPCompanyId && c.OML_Name ==concessionField.Concession_Name && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
 					return new { InitialWellCompletion = InitialWellCompletion };
 				}
 				else
@@ -758,6 +760,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					var InitialWellCompletion = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new { InitialWellCompletion = InitialWellCompletion };
 				}
+				
+				
 			}
 			catch (Exception e)
 			{
@@ -765,7 +769,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpGet("GET_FORM_TWO_WORKOVERS_RECOMPLETION_JOB")]
-		public async Task<object> GET_WORKOVERS_RECOMPLETION_JOB(string year, string omlName, string fieldName)
+		public async Task<object?> GET_WORKOVERS_RECOMPLETION_JOB(string year, string omlName, string fieldName)
 		{
 
 			try
@@ -776,7 +780,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					return null;
 				}
-				if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
+				if ((concessionField.Consession_Type == "OML" || concessionField.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
 					var WorkoverRecompletion = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
 
@@ -797,7 +801,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpGet("GET_FORM_TWO_FDP_UNITISATION")]
-		public async Task<object> GET_FORM_TWO_FDP_UNITISATION(string omlName, string fieldName, string year)
+		public async Task<object?> GET_FORM_TWO_FDP_UNITISATION(string omlName, string fieldName, string year)
 		{
 			try
 			{
@@ -806,7 +810,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					return null;
 				}
-				if (concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
+				if((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField?.Field_Name != null )
 				{
 					var FDP = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					var FDPExcessiveReserves = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
@@ -2088,7 +2092,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg =Messager.ShowMessage(action);
 					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -2251,7 +2255,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -2326,7 +2330,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_geophysical_activities_acquisitions = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_geophysical_activities_acquisitions, StatusCode = ResponseCodes.Success };
 					}
@@ -2405,7 +2409,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -2481,7 +2485,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -2557,7 +2561,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -2656,7 +2660,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -2835,7 +2839,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3017,7 +3021,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3118,7 +3122,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3193,7 +3197,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3264,7 +3268,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3292,6 +3296,9 @@ namespace Backend_UMR_Work_Program.Controllers
 			int save = 0;
 			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
 			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+                 List<FIELD_DEVELOPMENT_PLAN> getData;
+
+
 
 			try
 			{
@@ -3299,7 +3306,19 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (field_development_plan_model != null)
 				{
-					var getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+
+
+				if (concessionField?.Field_Name != null)
+				{
+					 getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
+
+				}
+				else
+				{
+					 getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+
+				}
+
 
 					field_development_plan_model.Companyemail = WKPCompanyEmail;
 					field_development_plan_model.CompanyName = WKPCompanyName;
@@ -3309,20 +3328,25 @@ namespace Backend_UMR_Work_Program.Controllers
 					field_development_plan_model.Updated_by = WKPCompanyId;
 					field_development_plan_model.Year_of_WP = year;
 					field_development_plan_model.OML_Name = omlName.ToUpper();
-					field_development_plan_model.Field_ID = concessionField.Field_ID;
-					#region file section
-					//string approved_FDP_Document = null;
-					var file1 = Request.Form.Files[0];
-					var blobname1 = blobService.Filenamer(file1);
-					field_development_plan_model.FDPDocumentFilename = blobname1;
+					field_development_plan_model.Field_ID = concessionField?.Field_ID;
 
-					if (file1 != null)
-					{
-						string docName = "Approved FDP";
-						field_development_plan_model.Uploaded_approved_FDP_Document = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FDPDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-						if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
-							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-					}
+                    if (field_development_plan_model.Uploaded_approved_FDP_Document != null && field_development_plan_model.Uploaded_approved_FDP_Document != "null")
+                    {
+                        #region file section
+                        //string approved_FDP_Document = null;
+                        var file1 = Request.Form.Files[0];
+                        var blobname1 = blobService.Filenamer(file1);
+                        field_development_plan_model.FDPDocumentFilename = blobname1;
+
+                        if (file1 != null)
+                        {
+                            string docName = "Approved FDP";
+                            field_development_plan_model.Uploaded_approved_FDP_Document = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FDPDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+                            if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
+                                return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+                        }
+                    }
+					
 
 					// if (file1 != null)
 					// {
@@ -3363,7 +3387,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3437,7 +3461,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3511,7 +3535,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3587,7 +3611,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3617,23 +3641,30 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			int save = 0;
 			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
+			INITIAL_WELL_COMPLETION_JOB1 getData = new INITIAL_WELL_COMPLETION_JOB1();
 			try
 			{
 
 				#region Saving FDP data
 				if (initial_well_completion_model != null)
 				{
-					var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER && c.Proposed_Initial_Name.ToUpper().Trim()==initial_well_completion_model.Proposed_Initial_Name.ToUpper().Trim() select c).FirstOrDefaultAsync();
 
+					if (concessionField?.Field_Name != null)
+				{
+					getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Field_ID==concessionField.Field_ID && c.QUATER == initial_well_completion_model.QUATER && c.Proposed_Initial_Name.ToUpper().Trim()==initial_well_completion_model.Proposed_Initial_Name.ToUpper().Trim() select c).FirstOrDefaultAsync();
 
+				}
+				else{
+					getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER && c.Proposed_Initial_Name.ToUpper().Trim()==initial_well_completion_model.Proposed_Initial_Name.ToUpper().Trim() select c).FirstOrDefaultAsync();
+
+				}
 
 					initial_well_completion_model.Companyemail = WKPCompanyEmail;
 					initial_well_completion_model.CompanyName = WKPCompanyName;
 					initial_well_completion_model.COMPANY_ID = WKPCompanyId;
 					initial_well_completion_model.CompanyNumber = WKPCompanyNumber;
-					initial_well_completion_model.Date_Updated = DateTime.Now;
-					initial_well_completion_model.Updated_by = WKPCompanyId;
+	
+			
 					initial_well_completion_model.Year_of_WP = year;
 					initial_well_completion_model.OML_Name = omlName.ToUpper();
 					initial_well_completion_model.Field_ID = concessionField.Field_ID;
@@ -3668,7 +3699,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3846,24 +3877,32 @@ namespace Backend_UMR_Work_Program.Controllers
 			int save = 0;
 			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
+WORKOVERS_RECOMPLETION_JOB1 getData;
+
 			try
 			{
 				#region Saving FDP data
 				if (workovers_recompletion_model != null)
 				{
-					var getData = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == workovers_recompletion_model.QUATER select c).FirstOrDefaultAsync();
+					if (concessionField?.Field_Name != null){
+					getData = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == workovers_recompletion_model.QUATER select c).FirstOrDefaultAsync();
+
+					}
+					else{
+					getData = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == workovers_recompletion_model.QUATER select c).FirstOrDefaultAsync();
+						
+					}
 
 					workovers_recompletion_model.Companyemail = WKPCompanyEmail;
 					workovers_recompletion_model.CompanyName = WKPCompanyName;
 					workovers_recompletion_model.COMPANY_ID = WKPCompanyId;
 					workovers_recompletion_model.CompanyNumber = WKPCompanyNumber;
-					workovers_recompletion_model.Date_Updated = DateTime.Now;
-					workovers_recompletion_model.Updated_by = WKPCompanyId;
 					workovers_recompletion_model.Year_of_WP = year;
 					workovers_recompletion_model.OML_Name = omlName.ToUpper();
-					workovers_recompletion_model.Field_ID = concessionField.Field_ID;
-					workovers_recompletion_model.Actual_year = year;
-					workovers_recompletion_model.proposed_year = (int.Parse(year) + 1).ToString();
+					workovers_recompletion_model.Field_ID = concessionField?.Field_ID;
+					//workovers_recompletion_model.Actual_year = year;
+				//	workovers_recompletion_model.proposed_year = (int.Parse(year) + 1).ToString();
+				workovers_recompletion_model.proposed_year = year;
 
 					if (action == GeneralModel.Insert)
 					{
@@ -3893,7 +3932,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -3977,7 +4016,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 
 						//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
@@ -4087,7 +4126,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					{
 
 
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var returnData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 						// var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -4187,7 +4226,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4268,7 +4307,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 
 						var All_Data = await (from c in _context.NDRs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -4349,7 +4388,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4425,7 +4464,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4513,10 +4552,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-
-
-
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4604,7 +4640,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4679,7 +4715,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4775,7 +4811,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4847,7 +4883,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -4925,7 +4961,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					save += await _context.SaveChangesAsync();
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -4996,7 +5032,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -5073,7 +5109,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -5150,7 +5186,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -5227,7 +5263,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
@@ -5299,7 +5335,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -5386,7 +5422,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.BUDGET_ACTUAL_EXPENDITUREs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -5468,7 +5504,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -5551,7 +5587,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -5634,7 +5670,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -5718,7 +5754,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -5802,7 +5838,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -5886,7 +5922,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_EXPENDITUREs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -5969,7 +6005,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -6054,7 +6090,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -6152,7 +6188,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
 										  where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
 										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
@@ -6236,7 +6272,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.BUDGET_CAPEX_OPices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.BUDGET_CAPEX_OPices where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
@@ -6308,7 +6344,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.NIGERIA_CONTENT_Trainings where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6383,7 +6419,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.NIGERIA_CONTENT_Upload_Succession_Plans where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6458,7 +6494,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.NIGERIA_CONTENT_QUESTIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6532,7 +6568,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.LEGAL_LITIGATIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6606,7 +6642,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.LEGAL_ARBITRATIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6680,7 +6716,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.STRATEGIC_PLANS_ON_COMPANY_BAses where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6754,7 +6790,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6828,7 +6864,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_FATALITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6902,7 +6938,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_DESIGNS_SAFETies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -6979,7 +7015,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -7056,7 +7092,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -7139,7 +7175,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -7179,7 +7215,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					//Added by Musa
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -7239,7 +7275,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_SAFETY_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -7316,7 +7352,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 
 						var All_Data = await (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
@@ -7406,7 +7442,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -7488,7 +7524,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -7667,7 +7703,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 
 					var All_Data = await (from a1 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs
 										  join a2 in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs on a1.COMPANY_ID equals a2.COMPANY_ID
@@ -7767,7 +7803,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -7838,7 +7874,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_ACCIDENT_INCIDENCE_REPORTING_TYPE_OF_ACCIDENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -7927,7 +7963,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_COMMUNITY_DISTURBANCES_AND_OIL_SPILL_COST_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8011,7 +8047,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8093,7 +8129,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8179,7 +8215,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8257,7 +8293,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -8378,7 +8414,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8462,7 +8498,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8573,7 +8609,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8667,7 +8703,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8749,7 +8785,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8832,7 +8868,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -8913,7 +8949,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9006,7 +9042,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9088,7 +9124,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9127,7 +9163,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					//Added by Musa
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -9178,7 +9214,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9218,7 +9254,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -9267,7 +9303,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9304,7 +9340,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -9355,7 +9391,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9626,7 +9662,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9705,7 +9741,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9786,7 +9822,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9868,7 +9904,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_CAUSES_OF_SPILLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -9964,7 +10000,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10004,7 +10040,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					//Added By Musa
 					if (save > 0)
 					{
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -10085,7 +10121,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10249,7 +10285,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10345,7 +10381,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_QUALITY_CONTROLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10437,7 +10473,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10544,7 +10580,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		// 		}
 		// 		if (save > 0)
 		// 		{
-		// 			string successMsg = getMsg(action);
+		// 			string successMsg = Messager.ShowMessage(action);
 		// 			var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 		// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 		// 		}
@@ -10651,7 +10687,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = "Form has been " + action + "D successfully.";
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10758,7 +10794,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10796,9 +10832,9 @@ namespace Backend_UMR_Work_Program.Controllers
 
 					if (save > 0)
 					{
-						getMsg(action);
+						
 
-						string successMsg = getMsg(action);
+						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
@@ -10874,7 +10910,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -10966,7 +11002,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				if (save > 0)
 				{
-					string successMsg = getMsg(action);
+					string successMsg = Messager.ShowMessage(action);
 					var All_Data = await (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
@@ -11220,13 +11256,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		}
 
 
-		private string getMsg(string _action)
-		{
-			var message = _action == GeneralModel.Insert ? _action + "ED" : _action + "D";
-			return "Form has been " + message + " successfully.";
-
-		}
-
+	
 
 		#endregion
 
