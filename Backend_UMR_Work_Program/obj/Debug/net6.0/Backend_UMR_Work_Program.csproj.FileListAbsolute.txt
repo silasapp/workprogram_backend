@@ -95,3 +95,10 @@ C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\refint\Ba
 C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.AssemblyReference.cache
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.GeneratedMSBuildEditorConfig.editorconfig
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfoInputs.cache
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.AssemblyInfo.cs
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CoreCompileInputs.cache
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cs
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.MvcApplicationPartsAssemblyInfo.cache

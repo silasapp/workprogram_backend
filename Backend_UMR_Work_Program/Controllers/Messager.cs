@@ -15,11 +15,11 @@ namespace Backend_UMR_Work_Program.Controllers
             var message = "";
             if (GeneralModel.Insert == "Insert")
             {
-                message = action + "ED";
+                message = action + "ed";
             }
             else
             {
-                message = action + "D";
+                message = action + "d";
             }
             return $"{message}  successfully.";
         }
