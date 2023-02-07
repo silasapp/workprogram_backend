@@ -2730,7 +2730,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
 					ghg_Mgt_Plan_Model.Year_of_WP = year;
 					ghg_Mgt_Plan_Model.OmL_Name = omlName;
-					ghg_Mgt_Plan_Model.Field_ID = concessionField.Field_ID;
+					ghg_Mgt_Plan_Model.Field_ID = concessionField.Field_ID??null;
 					//operations_Sefety_Case_model.Actual_year = year;
 					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -3112,7 +3112,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
 					drilling_operations_categories_of_well_model.Year_of_WP = year;
 					drilling_operations_categories_of_well_model.OML_Name = omlName;
-					drilling_operations_categories_of_well_model.Field_ID = concessionField.Field_ID;
+					drilling_operations_categories_of_well_model.Field_ID = concessionField.Field_ID??null;
 					drilling_operations_categories_of_well_model.Actual_year = year;
 					drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -3205,7 +3205,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving drilling data
 				if (drilling_each_well_cost_model != null)
 				{
-					var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					DRILLING_EACH_WELL_COST getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					drilling_each_well_cost_model.Companyemail = WKPCompanyEmail;
 					drilling_each_well_cost_model.CompanyName = WKPCompanyName;
@@ -3215,7 +3223,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_each_well_cost_model.Updated_by = WKPCompanyId;
 					drilling_each_well_cost_model.Year_of_WP = year;
 					drilling_each_well_cost_model.OML_Name = omlName;
-					drilling_each_well_cost_model.Field_ID = concessionField.Field_ID;
+					drilling_each_well_cost_model.Field_ID = concessionField.Field_ID??null;
 
 					if (action == GeneralModel.Insert)
 					{
@@ -3245,7 +3253,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -3277,7 +3285,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving drilling data
 				if (drilling_each_well_cost_proposed_model != null)
 				{
-					var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					DRILLING_EACH_WELL_COST_PROPOSED getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					drilling_each_well_cost_proposed_model.Companyemail = WKPCompanyEmail;
 					drilling_each_well_cost_proposed_model.CompanyName = WKPCompanyName;
@@ -3287,7 +3303,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
 					drilling_each_well_cost_proposed_model.Year_of_WP = year;
 					drilling_each_well_cost_proposed_model.OML_Name = omlName;
-					drilling_each_well_cost_proposed_model.Field_ID = concessionField.Field_ID;
+					drilling_each_well_cost_proposed_model.Field_ID = concessionField.Field_ID??null;
 					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
@@ -3350,7 +3366,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (field_development_plan_model != null)
 				{
-					var getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+					List<FIELD_DEVELOPMENT_PLAN> getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName &&c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+					}
 
 					field_development_plan_model.Companyemail = WKPCompanyEmail;
 					field_development_plan_model.CompanyName = WKPCompanyName;
@@ -3360,7 +3384,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					field_development_plan_model.Updated_by = WKPCompanyId;
 					field_development_plan_model.Year_of_WP = year;
 					field_development_plan_model.OML_Name = omlName.ToUpper();
-					field_development_plan_model.Field_ID = concessionField.Field_ID;
+					field_development_plan_model.Field_ID = concessionField.Field_ID??null;
 					#region file section
 					//string approved_FDP_Document = null;
 					var file1 = Request.Form.Files[0];
@@ -3415,7 +3439,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -3449,7 +3473,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (field_development_plan_model != null)
 				{
-					var getData = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year && c.Proposed_Development_well_name== field_development_plan_model.Proposed_Development_well_name select c).FirstOrDefaultAsync();
+					FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year && c.Proposed_Development_well_name== field_development_plan_model.Proposed_Development_well_name select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year && c.Proposed_Development_well_name== field_development_plan_model.Proposed_Development_well_name select c).FirstOrDefaultAsync();
+					}
 
 					field_development_plan_model.Companyemail = WKPCompanyEmail;
 					field_development_plan_model.CompanyName = WKPCompanyName;
@@ -3459,7 +3491,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					field_development_plan_model.Updated_by = WKPCompanyId;
 					field_development_plan_model.Year_of_WP = year;
 					field_development_plan_model.OML_Name = omlName;
-					field_development_plan_model.Field_ID = concessionField.Field_ID;
+					field_development_plan_model.Field_ID = concessionField.Field_ID??null;
 					field_development_plan_model.Field_Name = concessionField.Field_Name;
 
 					if (action == GeneralModel.Insert)
@@ -3523,7 +3555,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (field_development_plan_model != null)
 				{
-					var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+					FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					field_development_plan_model.Companyemail = WKPCompanyEmail;
 					field_development_plan_model.CompanyName = WKPCompanyName;
@@ -3534,7 +3575,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					field_development_plan_model.Year_of_WP = year;
 					field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
 					field_development_plan_model.Field_Name = concessionField.Field_Name;
-					field_development_plan_model.Field_ID = concessionField.Field_ID;
+					field_development_plan_model.Field_ID = concessionField.Field_ID??null;
 
 					if (action == GeneralModel.Insert)
 					{
@@ -3597,7 +3638,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (field_development_plan_model != null)
 				{
-					var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					FIELD_DEVELOPMENT_FIELDS_AND_STATUS getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					field_development_plan_model.Companyemail = WKPCompanyEmail;
 					field_development_plan_model.CompanyName = WKPCompanyName;
@@ -3607,7 +3656,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					field_development_plan_model.Updated_by = WKPCompanyId;
 					field_development_plan_model.Year_of_WP = year;
 					field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
-					field_development_plan_model.Field_ID = concessionField.Field_ID;
+					field_development_plan_model.Field_ID = concessionField.Field_ID??null;
 					field_development_plan_model.Field_Name = concessionField.Field_Name;
 					field_development_plan_model.OML_ID = concessionField.Concession_ID.ToString();
 
@@ -3675,7 +3724,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (initial_well_completion_model != null)
 				{
-					var getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER && c.Proposed_Initial_Name.ToUpper().Trim()==initial_well_completion_model.Proposed_Initial_Name.ToUpper().Trim() select c).FirstOrDefaultAsync();
+
+					INITIAL_WELL_COMPLETION_JOB1 getData;
+					if (true)
+					{
+						getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER && c.Proposed_Initial_Name.ToUpper().Trim()==initial_well_completion_model.Proposed_Initial_Name.ToUpper().Trim() select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.INITIAL_WELL_COMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == initial_well_completion_model.QUATER && c.Proposed_Initial_Name.ToUpper().Trim()==initial_well_completion_model.Proposed_Initial_Name.ToUpper().Trim() select c).FirstOrDefaultAsync();
+					}
 
 
 
@@ -3687,7 +3745,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					initial_well_completion_model.Updated_by = WKPCompanyId;
 					initial_well_completion_model.Year_of_WP = year;
 					initial_well_completion_model.OML_Name = omlName.ToUpper();
-					initial_well_completion_model.Field_ID = concessionField.Field_ID;
+					initial_well_completion_model.Field_ID = concessionField.Field_ID??null;
 					initial_well_completion_model.Actual_year = year;
 					initial_well_completion_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -3754,7 +3812,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (Budget_Capex_model != null)
 				{
-					var getData = await (from c in _context.BUDGET_CAPices where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					BUDGET_CAPEX getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.BUDGET_CAPices where c.OmL_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.BUDGET_CAPices where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
 
 
 
@@ -3765,6 +3832,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					Budget_Capex_model.Date_Updated = DateTime.Now;
 					Budget_Capex_model.Updated_by = WKPCompanyId;
 					Budget_Capex_model.Year_of_WP = year;
+					Budget_Capex_model.Field_ID=concessionField.Field_ID??null;
 					Budget_Capex_model.OmL_Name = omlName.ToUpper();
 
 					if (action == GeneralModel.Insert)
@@ -3796,7 +3864,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = "Form has been " + action == GeneralModel.Insert ? action + "ED" : action + "D" + " successfully.";
-						var All_Data = await (from c in _context.BUDGET_CAPices where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -3828,8 +3896,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (Budget_Opex_model != null)
 				{
-					var getData = await (from c in _context.BUDGET_OPEXes where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
+					BUDGET_OPEX getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.BUDGET_OPEXes where c.OmL_Name == omlName && c.Field_ID ==concessionField.Field_ID && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.BUDGET_OPEXes where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
 
 
 					Budget_Opex_model.Companyemail = WKPCompanyEmail;
@@ -3839,6 +3915,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					Budget_Opex_model.Date_Updated = DateTime.Now;
 					Budget_Opex_model.Updated_by = WKPCompanyId;
 					Budget_Opex_model.Year_of_WP = year;
+					Budget_Opex_model.Field_ID=concessionField.Field_ID??null;
 					Budget_Opex_model.OmL_Name = omlName.ToUpper();
 
 					if (action == GeneralModel.Insert)
@@ -3902,7 +3979,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving FDP data
 				if (workovers_recompletion_model != null)
 				{
-					var getData = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == workovers_recompletion_model.QUATER select c).FirstOrDefaultAsync();
+
+					WORKOVERS_RECOMPLETION_JOB1 getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == workovers_recompletion_model.QUATER select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.WORKOVERS_RECOMPLETION_JOBs1 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.QUATER == workovers_recompletion_model.QUATER select c).FirstOrDefaultAsync();
+					}
 
 					workovers_recompletion_model.Companyemail = WKPCompanyEmail;
 					workovers_recompletion_model.CompanyName = WKPCompanyName;
@@ -3912,7 +3998,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					workovers_recompletion_model.Updated_by = WKPCompanyId;
 					workovers_recompletion_model.Year_of_WP = year;
 					workovers_recompletion_model.OML_Name = omlName.ToUpper();
-					workovers_recompletion_model.Field_ID = concessionField.Field_ID;
+					workovers_recompletion_model.Field_ID = concessionField.Field_ID??null;
 					workovers_recompletion_model.Actual_year = year;
 					workovers_recompletion_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -3979,7 +4065,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Oil Condensate data
 				if (oil_condensate_activity_model != null)
 				{
-					var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					OIL_CONDENSATE_PRODUCTION_ACTIVITy getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					oil_condensate_activity_model.Companyemail = WKPCompanyEmail;
 					oil_condensate_activity_model.CompanyName = WKPCompanyName;
@@ -3989,7 +4083,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					oil_condensate_activity_model.Updated_by = WKPCompanyId;
 					oil_condensate_activity_model.Year_of_WP = year;
 					oil_condensate_activity_model.OML_Name = omlName.ToUpper();
-					oil_condensate_activity_model.Field_ID = concessionField.Field_ID;
+					oil_condensate_activity_model.Field_ID = concessionField.Field_ID??null;
 					oil_condensate_activity_model.Actual_year = year;
 					oil_condensate_activity_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -4071,7 +4165,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Oil Condensate data
 				if (oil_condensate_unitisation_model != null)
 				{
-					var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					oil_condensate_unitisation_model.Companyemail = WKPCompanyEmail;
 					oil_condensate_unitisation_model.CompanyName = WKPCompanyName;
@@ -4079,7 +4181,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					oil_condensate_unitisation_model.CompanyNumber = WKPCompanyNumber;
 					oil_condensate_unitisation_model.Year_of_WP = year;
 					oil_condensate_unitisation_model.OML_Name = omlName;
-					oil_condensate_unitisation_model.Field_ID = concessionField.Field_ID;
+					oil_condensate_unitisation_model.Field_ID = concessionField.Field_ID??null;
 					oil_condensate_unitisation_model.Actual_year = year;
 					oil_condensate_unitisation_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -4172,7 +4274,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Oil Condensate data
 				if (gas_production_model != null)
 				{
-					var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+					GAS_PRODUCTION_ACTIVITy getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					gas_production_model.Companyemail = WKPCompanyEmail;
 					gas_production_model.CompanyName = WKPCompanyName;
@@ -4182,7 +4293,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					gas_production_model.Updated_by = WKPCompanyId;
 					gas_production_model.Year_of_WP = year;
 					gas_production_model.OML_Name = omlName;
-					gas_production_model.Field_ID = concessionField.Field_ID;
+					gas_production_model.Field_ID = concessionField.Field_ID??null;
 					gas_production_model.Actual_year = year;
 					gas_production_model.proposed_year = (int.Parse(year) + 1).ToString();
 

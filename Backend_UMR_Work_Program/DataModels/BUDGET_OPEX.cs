@@ -5,6 +5,7 @@
 
 		public int Id { get; set; }
 		public string? OmL_Name { get; set; }
+		public int? Field_ID { get; set; }
 		public string? OmL_ID { get; set; }
 		public string? CompanyName { get; set; }
 		public string? Companyemail { get; set; }
