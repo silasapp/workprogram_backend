@@ -13140,7 +13140,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 			modelBuilder.Entity<RESERVES_UPDATES_DEPLETION_RATE>(entity =>
 			{
-				entity.HasNoKey();
 
 				entity.ToTable("RESERVES_UPDATES_DEPLETION_RATE");
 
@@ -13176,7 +13175,6 @@ namespace Backend_UMR_Work_Program.DataModels
 
 				entity.Property(e => e.Date_Updated).HasColumnType("datetime");
 
-				entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
 				entity.Property(e => e.NAG)
 					.HasMaxLength(50)
