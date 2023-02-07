@@ -4377,7 +4377,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving NDR data
 				if (ndr_model != null)
 				{
-					var getData = (from c in _context.NDRs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+					NDR getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.NDRs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.NDRs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					ndr_model.Companyemail = WKPCompanyEmail;
 					ndr_model.CompanyName = WKPCompanyName;
@@ -4387,7 +4396,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					ndr_model.Updated_by = WKPCompanyId;
 					ndr_model.Year_of_WP = year;
 					ndr_model.OML_Name = omlName;
-					ndr_model.Field_ID = concessionField.Field_ID;
+					ndr_model.Field_ID = concessionField.Field_ID??null;
 					var getGas_ProductionData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
 					if (getGas_ProductionData != null)
@@ -4428,7 +4437,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						string successMsg = getMsg(action);
 
-						var All_Data = await (from c in _context.NDRs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4461,7 +4470,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving RESERVES_UPDATES_DEPLETION_RATE
 				if (reserves_depletion_rate_model != null)
 				{
-					var getData = (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					RESERVES_UPDATES_DEPLETION_RATE getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 					reserves_depletion_rate_model.Companyemail = WKPCompanyEmail;
 					reserves_depletion_rate_model.CompanyName = WKPCompanyName;
 					reserves_depletion_rate_model.COMPANY_ID = WKPCompanyId;
@@ -4470,7 +4487,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					reserves_depletion_rate_model.Updated_by = WKPCompanyId;
 					reserves_depletion_rate_model.Year_of_WP = year;
 					reserves_depletion_rate_model.OML_Name = omlName;
-					reserves_depletion_rate_model.Field_ID = concessionField.Field_ID;
+					reserves_depletion_rate_model.Field_ID = concessionField.Field_ID??null;
 					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
@@ -4502,7 +4519,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4534,7 +4551,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving RESERVES_UPDATES_LIFE_INDEX data
 				if (reserves_life_index_model != null)
 				{
-					var getData = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+					RESERVES_UPDATES_LIFE_INDEX getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.RESERVES_UPDATES_LIFE_INDices where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					reserves_life_index_model.Companyemail = WKPCompanyEmail;
 					reserves_life_index_model.CompanyName = WKPCompanyName;
@@ -4544,7 +4570,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					reserves_life_index_model.Updated_by = WKPCompanyId;
 					reserves_life_index_model.Year_of_WP = year;
 					reserves_life_index_model.OML_Name = omlName;
-					reserves_life_index_model.Field_ID = concessionField.Field_ID;
+					reserves_life_index_model.Field_ID = concessionField.Field_ID??null;
 					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
@@ -4576,7 +4602,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4621,7 +4647,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
 				if (reserves_condensate_status_model != null)
 				{
-					var getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
+
+					RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_RESERVE_OF_PRECEDDING_YEAR" select c).FirstOrDefaultAsync();
+					}
 
 					reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
 					reserves_condensate_status_model.CompanyName = WKPCompanyName;
@@ -4631,7 +4666,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					reserves_condensate_status_model.Updated_by = WKPCompanyId;
 					reserves_condensate_status_model.Year_of_WP = year;
 					reserves_condensate_status_model.OML_Name = omlName;
-					reserves_condensate_status_model.Field_ID = concessionField.Field_ID;
+					reserves_condensate_status_model.Field_ID = concessionField.Field_ID??null;
 					reserves_condensate_status_model.FLAG1 = "COMPANY_RESERVE_OF_PRECEDDING_YEAR";
 
 					if (action == GeneralModel.Insert)
@@ -4665,7 +4700,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4710,7 +4745,17 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
 				if (reserves_condensate_status_model != null)
 				{
-					var getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
+
+					RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE getData;
+
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
+					}
 
 					reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
 					reserves_condensate_status_model.CompanyName = WKPCompanyName;
@@ -4718,7 +4763,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					reserves_condensate_status_model.CompanyNumber = WKPCompanyNumber;
 					reserves_condensate_status_model.Year_of_WP = year;
 					reserves_condensate_status_model.OML_Name = omlName;
-					reserves_condensate_status_model.Field_ID = concessionField.Field_ID;
+					reserves_condensate_status_model.Field_ID = concessionField.Field_ID??null;
 					reserves_condensate_status_model.FLAG1 = "COMPANY_CURRENT_RESERVE";
 
 					if (action == GeneralModel.Insert)
@@ -4782,7 +4827,17 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection data
 				if (reserves_condensate_status_model != null)
 				{
-					var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Projection_Year==reserves_condensate_status_model.Fiveyear_Projection_Year select c).FirstOrDefault();
+
+					RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection getData;
+
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Projection_Year==reserves_condensate_status_model.Fiveyear_Projection_Year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Projection_Year==reserves_condensate_status_model.Fiveyear_Projection_Year select c).FirstOrDefault();
+					}
 
 					reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
 					reserves_condensate_status_model.CompanyName = WKPCompanyName;
@@ -4790,7 +4845,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					reserves_condensate_status_model.CompanyNumber = WKPCompanyNumber;
 					reserves_condensate_status_model.Year_of_WP = year;
 					reserves_condensate_status_model.OML_Name = omlName;
-					reserves_condensate_status_model.Field_ID = concessionField.Field_ID;
+					reserves_condensate_status_model.Field_ID = concessionField.Field_ID??null;
 					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
@@ -4819,7 +4874,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projections where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -4852,7 +4907,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION data
 				if (oil_condensate_fiveyears_model != null)
 				{
-					var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Timeline == oil_condensate_fiveyears_model.Fiveyear_Timeline select c).FirstOrDefault();
+					OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Timeline == oil_condensate_fiveyears_model.Fiveyear_Timeline select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Timeline == oil_condensate_fiveyears_model.Fiveyear_Timeline select c).FirstOrDefault();
+					}
 
 					oil_condensate_fiveyears_model.Companyemail = WKPCompanyEmail;
 					oil_condensate_fiveyears_model.CompanyName = WKPCompanyName;
@@ -4862,7 +4925,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					oil_condensate_fiveyears_model.Updated_by = WKPCompanyId;
 					oil_condensate_fiveyears_model.Year_of_WP = year;
 					oil_condensate_fiveyears_model.OML_Name = omlName;
-					oil_condensate_fiveyears_model.Field_ID = concessionField.Field_ID;
+					oil_condensate_fiveyears_model.Field_ID = concessionField.Field_ID??null;
 					oil_condensate_fiveyears_model.Actual_year = year;
 					oil_condensate_fiveyears_model.proposed_year = (int.Parse(year) + 1).ToString();
 
