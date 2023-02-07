@@ -46,5 +46,6 @@ namespace Backend_UMR_Work_Program.DataModels
         public int? CompanyNumber { get; set; }
         public int? Field_ID { get; set; }
         public string? No_of_Folds { get; set; }
+        public string? Type_of_Processing { get; set; }
     }
 }

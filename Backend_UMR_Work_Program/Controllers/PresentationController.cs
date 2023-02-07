@@ -13,7 +13,6 @@ namespace Backend_UMR_Work_Program.Controllers
 {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
-	[ApiController]
 
 	public class PresentationController : ControllerBase
 	{
@@ -56,6 +55,8 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				var details = _context.ADMIN_COMPANY_DETAILs.Where(q => q.CompanyId.Trim().ToUpper()==companyId.Trim().ToUpper() || q.COMPANY_NAME.ToLower().Trim()==companyName.ToLower().Trim()).FirstOrDefault();
 				//var details = _presentation.CompanyDetails(companyName, companyEmail, companyId);
+
+				if (details == null) details = new ADMIN_COMPANY_DETAIL();
 
 
 				return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Data = details, StatusCode = ResponseCodes.Success };
@@ -110,17 +111,21 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (_context.SaveChanges() > 0)
 				{
-					return Ok(details);
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = details, StatusCode = ResponseCodes.Success };
+
 
 				}
 
-				return null;
+
 
 			}
 			catch (Exception ex)
 			{
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
 			}
+
+			return null;
+
 		}
 
 		[HttpGet("GET_PRESENTATION_DATETIME")]
@@ -142,7 +147,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			try
 			{
-				var data = await _context.ADMIN_WP_START_END_DATEs.Where(x => x.Created_by == WKPUserEmail)?.FirstOrDefaultAsync();
+				var data = await _context.ADMIN_WP_START_END_DATEs?.FirstOrDefaultAsync();
 
 				if (data==null)
 				{
@@ -153,9 +158,11 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					start_date=data.start_date,
 					end_date=data.end_date
+
+					//2022 - 12 - 17
 				};
 				//var response = new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Success", Data = data, StatusCode = ResponseCodes.Success };
-				return startnEndDate;
+				return startnEndDate=startnEndDate;
 			}
 			catch (Exception e)
 			{
@@ -164,6 +171,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			}
 		}
+
 		[HttpPost("SCHEDULEPRESENTATION")]
 		public async Task<WebApiResponse> SCHEDULE_PRESENTATION_DATETIME(string time, DateTime date)
 		{
@@ -174,8 +182,20 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (checkCompanySchedule != null)
 				{
+					string Date_Conversion1 = date.ToString("dddd , dd MMMM yyyy");
+					checkCompanySchedule.wp_date = Date_Conversion1;
+					checkCompanySchedule.DATE_TIME_TEXT = Date_Conversion1;
+					checkCompanySchedule.wp_time = time;
+					checkCompanySchedule.Updated_by = WKPUserEmail;
+					_context.Entry(checkCompanySchedule).State = EntityState.Modified;
+					await _context.SaveChangesAsync();
+
+					var companyPresentations = _context.ADMIN_DATETIME_PRESENTATIONs.Where(x => x.COMPANY_ID == WKPUserId).ToListAsync();
+					return new WebApiResponse { ResponseCode = "200", Message = "A presentation schedule was created successfully.", Data = companyPresentations, StatusCode = 200 };
+
+
 					//schedule already exist for company
-					return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "There is an existing presentation schedule for this year.", StatusCode = ResponseCodes.Failure };
+					//return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "There is an existing presentation schedule for this year.", StatusCode = ResponseCodes.Failure };
 
 				}
 				else
@@ -187,7 +207,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					var checkSchedule = _context.ADMIN_DATETIME_PRESENTATIONs.Where(c => c.wp_date == Date_Conversion && c.wp_time == time).FirstOrDefault();
 					if (checkSchedule != null)
 					{
-						return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, date and time have already been selected. Kindly select another day and/or time.", StatusCode = ResponseCodes.Failure };
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, date and time have already been selected by another company. Kindly select another day and/or time.", StatusCode = ResponseCodes.Failure };
 					}
 
 					var presentation = new ADMIN_DATETIME_PRESENTATION()
@@ -206,8 +226,9 @@ namespace Backend_UMR_Work_Program.Controllers
 					};
 
 					_context.ADMIN_DATETIME_PRESENTATIONs.Add(presentation);
+					var myTime = await _context.SaveChangesAsync();
 
-					if (await _context.SaveChangesAsync() > 0)
+					if ( myTime > 0)
 					{
 						var companyPresentations = _context.ADMIN_DATETIME_PRESENTATIONs.Where(x => x.COMPANY_ID == WKPUserId).ToListAsync();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "A presentation schedule was created successfully.", Data = companyPresentations, StatusCode = ResponseCodes.Success };
@@ -224,6 +245,65 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
+
+		//Added by Musa
+
+		[HttpPost("GET_UPLOAD_PRESENTATION")]
+		public async Task<WebApiResponse> GET_PRESENTATION_DOCUMENT(string year)
+		{
+			try
+			{
+				var CurrentYear = DateTime.Now.Year.ToString();
+
+				var checkCompanyPresentation = await _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == WKPUserId && c.Year_of_WP == year).ToListAsync();
+
+
+				//check if date has been scheduled by another company
+				if (checkCompanyPresentation.Count>0)
+				{
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "successful", Data = checkCompanyPresentation, StatusCode = ResponseCodes.Success };
+				}
+				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, document is empty.", StatusCode = ResponseCodes.Failure };
+
+			}
+			catch (Exception ex)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpDelete("DELETE_UPLOAD_PRESENTATION")]
+		public async Task<WebApiResponse> DELETE_PRESENTATION_DOCUMENT(string year)
+		{
+			try
+			{
+				var CurrentYear = DateTime.Now.Year.ToString();
+
+				var getPresentation = await _context.PRESENTATION_UPLOADs.Where(c => c.COMPANY_ID == WKPUserId && c.Year_of_WP == year).FirstOrDefaultAsync();
+
+
+				//check if date has been scheduled by another company
+				if (getPresentation==null)
+				{
+
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "No Record Found", StatusCode = ResponseCodes.Failure };
+				}
+				_context.PRESENTATION_UPLOADs.Remove(getPresentation);
+				var save = await _context.SaveChangesAsync();
+				if (save >0)
+				{
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = "Successfu", Data=getPresentation, StatusCode = ResponseCodes.Failure };
+				}
+				return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Sorry, an error occured.", StatusCode = ResponseCodes.Failure };
+
+			}
+			catch (Exception ex)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + ex.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
 		[HttpPost("UPLOADPRESENTATION")]
 		public async Task<WebApiResponse> UPLOAD_PRESENTATION_DOCUMENT(string year, IFormFile document)
 		{

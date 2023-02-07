@@ -31,9 +31,9 @@ namespace Backend_UMR_Work_Program.Models
         public static string HumanError = "HUMAN ERROR";
         public static string MysterySpills = "MYSTERY SPILLS";
         public static string EquipmentFailure = "EQUIPMENT_FAILURE";
-        public static string Insert = "INSERT";
-        public static string Update = "UPDATE";
-        public static string Delete = "DELETE";
+        public static string Insert = "Insert";
+        public static string Update = "Update";
+        public static string Delete = "Delete";
         public static string New = "New";
         public static string Modification = "MODIFICATION";
         public static string ActualYear = "Actual Year";
