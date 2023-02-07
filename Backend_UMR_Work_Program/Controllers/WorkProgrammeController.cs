@@ -3052,114 +3052,116 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-[HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
-		public async Task<object> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string fieldName, string year, string actionToDo = null)
-		{
-			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
-			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+        [HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
+        public async Task<object> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string fieldName, string year, string actionToDo = null)
+        {
+            int save = 0;
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
+            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-			try
-			{
-				DRILLING_OPERATIONS_CATEGORIES_OF_WELL getData;
-				#region Saving drilling data
-				if (drilling_operations_categories_of_well_model != null)
-				{
-					if (concessionField?.Field_Name != null)
-					{
-						getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					} else {
-						getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-				
+            try
+            {
+                DRILLING_OPERATIONS_CATEGORIES_OF_WELL getData;
+                #region Saving drilling data
+                if (drilling_operations_categories_of_well_model != null)
+                {
+                    if (concessionField?.Field_Name != null)
+                    {
+                        getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    }
+                    else
+                    {
+                        getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    }
 
-					drilling_operations_categories_of_well_model.Companyemail = WKPCompanyEmail;
-					drilling_operations_categories_of_well_model.CompanyName = WKPCompanyName;
-					drilling_operations_categories_of_well_model.COMPANY_ID = WKPCompanyId;
-					drilling_operations_categories_of_well_model.CompanyNumber = WKPCompanyNumber;
-					drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
-					drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
-					drilling_operations_categories_of_well_model.Year_of_WP = year;
-					drilling_operations_categories_of_well_model.OML_Name = omlName;
-					drilling_operations_categories_of_well_model.Field_ID = concessionField?.Field_ID ?? null;
-					drilling_operations_categories_of_well_model.Actual_year = year;
-					drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
 
-					// #region file section
-					// var files = Request.Form.Files;
-					// if (files.Count>1)
-					// {
-					// 	var file1 = Request.Form.Files[0];
-					// 	var file2 = Request.Form.Files[1];
-					// 	var blobname1 = blobService.Filenamer(file1);
-					// 	var blobname2 = blobService.Filenamer(file2);
+                    drilling_operations_categories_of_well_model.Companyemail = WKPCompanyEmail;
+                    drilling_operations_categories_of_well_model.CompanyName = WKPCompanyName;
+                    drilling_operations_categories_of_well_model.COMPANY_ID = WKPCompanyId;
+                    drilling_operations_categories_of_well_model.CompanyNumber = WKPCompanyNumber;
+                    drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
+                    drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
+                    drilling_operations_categories_of_well_model.Year_of_WP = year;
+                    drilling_operations_categories_of_well_model.OML_Name = omlName;
+                    drilling_operations_categories_of_well_model.Field_ID = concessionField?.Field_ID ?? null;
+                    drilling_operations_categories_of_well_model.Actual_year = year;
+                    drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
 
-					// 	if (file1 != null)
-					// 	{
-					// 		string docName = "Field Discovery";
-					// 		drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-					// 		if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
-					// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-					// 	}
-					// 	if (file2 != null)
-					// 	{
-					// 		string docName = "Hydrocarbon Count";
-					// 		drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-					// 		if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
-					// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-					// 	}
-					// }
-					// #endregion
+                    // #region file section
+                    // var files = Request.Form.Files;
+                    // if (files.Count>1)
+                    // {
+                    // 	var file1 = Request.Form.Files[0];
+                    // 	var file2 = Request.Form.Files[1];
+                    // 	var blobname1 = blobService.Filenamer(file1);
+                    // 	var blobname2 = blobService.Filenamer(file2);
 
-					if (action == GeneralModel.Insert)
-					{
-						if (getData == null)
-						{
-							drilling_operations_categories_of_well_model.Date_Created = DateTime.Now;
-							drilling_operations_categories_of_well_model.Created_by = WKPCompanyId;
-							await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
-						}
-						else
-						{
-							drilling_operations_categories_of_well_model.Date_Created = getData.Date_Created;
-							drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
-							drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
-							drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
-							_context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(getData);
-							await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
-						}
-					}
-					else if (action == GeneralModel.Delete)
-					{
-						_context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(drilling_operations_categories_of_well_model);
-					}
+                    // 	if (file1 != null)
+                    // 	{
+                    // 		string docName = "Field Discovery";
+                    // 		drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+                    // 		if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
+                    // 			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+                    // 	}
+                    // 	if (file2 != null)
+                    // 	{
+                    // 		string docName = "Hydrocarbon Count";
+                    // 		drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+                    // 		if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
+                    // 			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+                    // 	}
+                    // }
+                    // #endregion
 
-					save += await _context.SaveChangesAsync();
+                    if (action == GeneralModel.Insert)
+                    {
+                        if (getData == null)
+                        {
+                            drilling_operations_categories_of_well_model.Date_Created = DateTime.Now;
+                            drilling_operations_categories_of_well_model.Created_by = WKPCompanyId;
+                            await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
+                        }
+                        else
+                        {
+                            drilling_operations_categories_of_well_model.Date_Created = getData.Date_Created;
+                            drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
+                            drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
+                            drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
+                            _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(getData);
+                            await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
+                        }
+                    }
+                    else if (action == GeneralModel.Delete)
+                    {
+                        _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(drilling_operations_categories_of_well_model);
+                    }
 
-					if (save > 0)
-					{
-						string successMsg = Messager.ShowMessage(action);
-						//var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
-					}
-					else
-					{
-						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+                    save += await _context.SaveChangesAsync();
 
-					}
-					#endregion
+                    if (save > 0)
+                    {
+                        string successMsg = Messager.ShowMessage(action);
+                        //var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
-				}
-				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-			}
-			catch (Exception e)
-			{
-				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+                    }
+                    #endregion
 
-			}
-		}
+                }
+                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-		
+            }
+        }
+
+
 
         [HttpPost("POST_DRILLING_EACH_WELL_COST")]
         public async Task<object> POST_DRILLING_EACH_WELL_COST([FromBody] DRILLING_EACH_WELL_COST drilling_each_well_cost_model, string omlName, string fieldName, string year, string actionToDo = null)
@@ -3343,7 +3345,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
                     field_development_plan_model.OML_Name = omlName.ToUpper();
-                    field_development_plan_model.Field_ID = concessionField?.Field_ID;
+                    field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
 
                     if (field_development_plan_model.Uploaded_approved_FDP_Document != null && field_development_plan_model.Uploaded_approved_FDP_Document != "null")
                     {
