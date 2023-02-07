@@ -4,6 +4,7 @@ using Backend_UMR_Work_Program.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_UMR_Work_Program.Migrations
 {
     [DbContext(typeof(WKP_DBContext))]
-    partial class WKP_DBContextModelSnapshot : ModelSnapshot
+    [Migration("20230207111248_AddLitigationYear")]
+    partial class AddLitigationYear
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
