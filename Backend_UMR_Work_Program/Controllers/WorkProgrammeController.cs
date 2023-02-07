@@ -2029,55 +2029,6 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 			}
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//[HttpGet("GET_ROYALTY")]
-		//public async Task<object> GET_ROYALTY(string myyear, string omlName, string fieldID)
-		//{
-		//	try
-		//	{
-
-
-		//		var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-		//		if (concessionField != null)
-		//		{
-		//			var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Field_ID==concessionField.Field_ID && d.Year == myyear select d).ToListAsync();
-		//			if (royalty==null) royalty = new List<Royalty>();
-		//			return new { royalty = royalty };
-		//		}
-		//		else
-		//		{
-		//			royaltyData = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.OmlName == omlName && d.Year == myyear select d).FirstOrDefaultAsync();
-		//		}
-		//		// if (concessionField != null)
-		//		// {
-		//		// 	var royalty = await (from d in _context.Royalties where d.CompanyNumber == WKPCompanyNumber && d.Concession_ID == concessionField.Concession_ID && d.Year == myyear select d).ToListAsync();
-
-		//		// }
-		//		return new { royalty = royaltyData };
-		//	}
-		//	catch (Exception e)
-		//	{
-		//		return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-		//	}
-		//}
-
 		[HttpPost("POST_ROYALTY")]
 		public async Task<object> POST_ROYALTY([FromBody] Royalty royalty_model, string year, string omlName, string fieldName, string id, string actionToDo)
 		{
@@ -2487,7 +2438,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Operation Safety Case
 				if (operations_Sefety_Case_model != null)
 				{
-					var getOperationSafetyCaseData = (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_OPERATIONS_SAFETY_CASE getOperationSafetyCaseData;
+					if (concessionField.Field_Name !=null)
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					operations_Sefety_Case_model.Companyemail = WKPCompanyEmail;
 					operations_Sefety_Case_model.CompanyName = WKPCompanyName;
@@ -2530,7 +2489,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = getMsg(action);
-						var All_Data = await (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						var All_Data = new object();
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 					}
 					else
@@ -2563,7 +2522,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Operation Safety Case
 				if (environment_Management_Plan_model != null)
 				{
-					var getOperationSafetyCaseData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_ENVIRONMENTAL_MANAGEMENT_PLAN getOperationSafetyCaseData;
+					if (concessionField.Field_Name !=null)
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					environment_Management_Plan_model.Companyemail = WKPCompanyEmail;
 					environment_Management_Plan_model.CompanyName = WKPCompanyName;
@@ -2638,7 +2605,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Operation Safety Case
 				if (Effluenct_Monitoring_Complience_Mode != null)
 				{
-					var getOperationSafetyCaseData = (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+
+					HSE_EFFLUENT_MONITORING_COMPLIANCE getOperationSafetyCaseData;
+					if (concessionField.Field_Name !=null)
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					Effluenct_Monitoring_Complience_Mode.Companyemail = WKPCompanyEmail;
 					Effluenct_Monitoring_Complience_Mode.CompanyName = WKPCompanyName;
@@ -2648,7 +2624,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					Effluenct_Monitoring_Complience_Mode.Updated_by = WKPCompanyId;
 					Effluenct_Monitoring_Complience_Mode.Year_of_WP = year;
 					Effluenct_Monitoring_Complience_Mode.OML_Name = omlName;
-					Effluenct_Monitoring_Complience_Mode.Field_ID = concessionField.Field_ID;
+					Effluenct_Monitoring_Complience_Mode.Field_ID = concessionField.Field_ID??null;
 					//operations_Sefety_Case_model.Actual_year = year;
 					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -2737,8 +2713,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Operation Safety Case
 				if (ghg_Mgt_Plan_Model != null)
 				{
-					var getOperationSafetyCaseData = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.OmL_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
+					HSE_GHG_MANAGEMENT_PLAN getOperationSafetyCaseData;
+					if (concessionField.Field_Name!=null)
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.OmL_Name == omlName &&c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.OmL_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 					ghg_Mgt_Plan_Model.companyemail = WKPCompanyEmail;
 					ghg_Mgt_Plan_Model.CompanyName = WKPCompanyName;
 					ghg_Mgt_Plan_Model.CompanY_ID = WKPCompanyId;
@@ -2916,7 +2899,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				#region Saving Operation Safety Case
 				if (host_Community_Devt_Model != null)
 				{
-					var getOperationSafetyCaseData = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					HSE_HOST_COMMUNITIES_DEVELOPMENT getOperationSafetyCaseData;
+					if (concessionField.Field_Name !=null)
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getOperationSafetyCaseData = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
+					}
 
 					host_Community_Devt_Model.Companyemail = WKPCompanyEmail;
 					host_Community_Devt_Model.CompanyName = WKPCompanyName;
