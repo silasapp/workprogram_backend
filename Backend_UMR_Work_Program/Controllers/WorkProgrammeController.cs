@@ -4050,7 +4050,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			try
 			{
-
 				var oil_condensate_unitisation_model = new OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION()
 				{
 					Has_DPR_been_notified = unitisation_model.Has_DPR_been_notified,
@@ -5128,7 +5127,6 @@ namespace Backend_UMR_Work_Program.Controllers
 			catch (Exception e)
 			{
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
 			}
 		}
 
@@ -5963,7 +5961,13 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (oil_condensate_assessment_model != null)
 				{
-					var getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment> getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					} else {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					}
 					//var getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 					oil_condensate_assessment_model.Companyemail = WKPCompanyEmail;
@@ -5974,7 +5978,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					oil_condensate_assessment_model.Updated_by = WKPCompanyId;
 					oil_condensate_assessment_model.Year_of_WP = year;
 					oil_condensate_assessment_model.OML_Name = omlName;
-					oil_condensate_assessment_model.Field_ID = concessionField.Field_ID;
+					oil_condensate_assessment_model.Field_ID = concessionField?.Field_ID ?? null;
 
 					if (action == GeneralModel.Insert)
 					{
@@ -6008,9 +6012,9 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = Messager.ShowMessage(action);
-					var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 					//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 				}
 				else
 				{
@@ -6025,89 +6029,185 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-		[HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
-		public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string fieldName, string year, string id, string actionToDo)
+
+[HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
+public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string fieldName, string year, string id, string actionToDo)
+{
+
+	int save = 0;
+	string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+	var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+	try
+	{
+
+		if (!string.IsNullOrEmpty(id))
 		{
+			var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
-			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
-			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			if (action == GeneralModel.Delete)
+				_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(getData);
+			save += _context.SaveChanges();
+		}
+		else if (oil_gas_facility_model != null)
+		{
+			List<OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT> getData;
 
-			try
+			if (concessionField.Field_Name !=null)
 			{
+				getData = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+			}
+			else
+			{
+				getData = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+			}
+			//var getData = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Actual_Proposed == oil_gas_facility_model.Actual_Proposed select c).ToListAsync();
 
-				if (!string.IsNullOrEmpty(id))
+			oil_gas_facility_model.Companyemail = WKPCompanyEmail;
+			oil_gas_facility_model.CompanyName = WKPCompanyName;
+			oil_gas_facility_model.COMPANY_ID = WKPCompanyId;
+			oil_gas_facility_model.CompanyNumber = WKPCompanyNumber;
+			oil_gas_facility_model.Date_Updated = DateTime.Now;
+			oil_gas_facility_model.Updated_by = WKPCompanyId;
+			oil_gas_facility_model.Year_of_WP = year;
+			oil_gas_facility_model.OML_Name = omlName;
+			oil_gas_facility_model.Field_ID = concessionField.Field_ID ?? null;
+			oil_gas_facility_model.Actual_year = year;
+			oil_gas_facility_model.Proposed_year = (int.Parse(year) + 1).ToString();
+
+			if (action == GeneralModel.Insert)
+			{
+				if (getData == null || getData.Count == 0)
 				{
-					var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-					if (action == GeneralModel.Delete)
-						_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(getData);
-					save += _context.SaveChanges();
+					oil_gas_facility_model.Date_Created = DateTime.Now;
+					oil_gas_facility_model.Created_by = WKPCompanyId;
+					await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
 				}
-				else if (oil_gas_facility_model != null)
+				else
 				{
-					var getData = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-					//var getData = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Actual_Proposed == oil_gas_facility_model.Actual_Proposed select c).ToListAsync();
-
-					oil_gas_facility_model.Companyemail = WKPCompanyEmail;
-					oil_gas_facility_model.CompanyName = WKPCompanyName;
-					oil_gas_facility_model.COMPANY_ID = WKPCompanyId;
-					oil_gas_facility_model.CompanyNumber = WKPCompanyNumber;
+					//oil_gas_facility_model.Date_Created = getData.Date_Created;
+					//oil_gas_facility_model.Created_by = getData.Created_by;
 					oil_gas_facility_model.Date_Updated = DateTime.Now;
 					oil_gas_facility_model.Updated_by = WKPCompanyId;
-					oil_gas_facility_model.Year_of_WP = year;
-					oil_gas_facility_model.OML_Name = omlName;
-					oil_gas_facility_model.Field_ID = concessionField.Field_ID;
-					oil_gas_facility_model.Actual_year = year;
-					oil_gas_facility_model.Proposed_year = (int.Parse(year) + 1).ToString();
-
-					if (action == GeneralModel.Insert)
-					{
-						if (getData == null || getData.Count == 0)
-						{
-							oil_gas_facility_model.Date_Created = DateTime.Now;
-							oil_gas_facility_model.Created_by = WKPCompanyId;
-							await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
-						}
-						else
-						{
-							//oil_gas_facility_model.Date_Created = getData.Date_Created;
-							//oil_gas_facility_model.Created_by = getData.Created_by;
-							oil_gas_facility_model.Date_Updated = DateTime.Now;
-							oil_gas_facility_model.Updated_by = WKPCompanyId;
-							_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.RemoveRange(getData);
-							await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
-						}
-					}
-					else if (action == GeneralModel.Delete)
-					{
-						_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.RemoveRange(getData);
-					}
-
-					save += await _context.SaveChangesAsync();
-				}
-				else
-				{
-					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-				}
-				if (save > 0)
-				{
-					string successMsg = Messager.ShowMessage(action);
-					var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-					//var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-				}
-				else
-				{
-					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.RemoveRange(getData);
+					await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
 				}
 			}
-			catch (Exception e)
+			else if (action == GeneralModel.Delete)
 			{
-				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
+				_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.RemoveRange(getData);
 			}
+
+			save += await _context.SaveChangesAsync();
 		}
+		else
+		{
+			return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+		}
+		if (save > 0)
+		{
+			string successMsg = Messager.ShowMessage(action);
+			//var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+			//var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+		}
+		else
+		{
+			return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+		}
+	}
+	catch (Exception e)
+	{
+		return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+	}
+}
+
+
+
+		// [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
+		// public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		// {
+
+		// 	int save = 0;
+		// 	string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+		// 	var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+		// 	try
+		// 	{
+
+		// 		if (!string.IsNullOrEmpty(id))
+		// 		{
+		// 			var getData = (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+		// 			if (action == GeneralModel.Delete)
+		// 				_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.Remove(getData);
+		// 			save += _context.SaveChanges();
+		// 		}
+		// 		else if (oil_gas_facility_model != null)
+		// 		{
+		// 			var getData = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+		// 			//var getData = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Actual_Proposed == oil_gas_facility_model.Actual_Proposed select c).ToListAsync();
+
+		// 			oil_gas_facility_model.Companyemail = WKPCompanyEmail;
+		// 			oil_gas_facility_model.CompanyName = WKPCompanyName;
+		// 			oil_gas_facility_model.COMPANY_ID = WKPCompanyId;
+		// 			oil_gas_facility_model.CompanyNumber = WKPCompanyNumber;
+		// 			oil_gas_facility_model.Date_Updated = DateTime.Now;
+		// 			oil_gas_facility_model.Updated_by = WKPCompanyId;
+		// 			oil_gas_facility_model.Year_of_WP = year;
+		// 			oil_gas_facility_model.OML_Name = omlName;
+		// 			oil_gas_facility_model.Field_ID = concessionField.Field_ID;
+		// 			oil_gas_facility_model.Actual_year = year;
+		// 			oil_gas_facility_model.Proposed_year = (int.Parse(year) + 1).ToString();
+
+		// 			if (action == GeneralModel.Insert)
+		// 			{
+		// 				if (getData == null || getData.Count == 0)
+		// 				{
+		// 					oil_gas_facility_model.Date_Created = DateTime.Now;
+		// 					oil_gas_facility_model.Created_by = WKPCompanyId;
+		// 					await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
+		// 				}
+		// 				else
+		// 				{
+		// 					//oil_gas_facility_model.Date_Created = getData.Date_Created;
+		// 					//oil_gas_facility_model.Created_by = getData.Created_by;
+		// 					oil_gas_facility_model.Date_Updated = DateTime.Now;
+		// 					oil_gas_facility_model.Updated_by = WKPCompanyId;
+		// 					_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.RemoveRange(getData);
+		// 					await _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.AddAsync(oil_gas_facility_model);
+		// 				}
+		// 			}
+		// 			else if (action == GeneralModel.Delete)
+		// 			{
+		// 				_context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs.RemoveRange(getData);
+		// 			}
+
+		// 			save += await _context.SaveChangesAsync();
+		// 		}
+		// 		else
+		// 		{
+		// 			return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+		// 		}
+		// 		if (save > 0)
+		// 		{
+		// 			string successMsg = Messager.ShowMessage(action);
+		// 			var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+		// 			//var All_Data = await (from c in _context.OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+		// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+		// 		}
+		// 		else
+		// 		{
+		// 			return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+		// 		}
+		// 	}
+		// 	catch (Exception e)
+		// 	{
+		// 		return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+		// 	}
+		// }
 
 		[HttpPost("POST_FACILITIES_PROJECT_PERFORMANCE")]
 		public async Task<object> POST_FACILITIES_PROJECT_PERFORMANCE([FromBody] FACILITIES_PROJECT_PERFORMANCE facilities_project_model, string omlName, string fieldName,
@@ -6131,22 +6231,13 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else if (facilities_project_model != null)
 				{
-					//var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
-					//					 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
-					//					 c.reasonForNoEvidence == reasonForNoEvidence && c.areThereEvidenceOfDesignSafetyCaseApproval == areThereEvidenceOfDesignSafetyCaseApproval &&
-					//					 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
-					//					 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
-					//					 select c).FirstOrDefaultAsync();
-
-
-
-
-					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
-										 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year
-										 select c).FirstOrDefaultAsync();
-
-
-
+					FACILITIES_PROJECT_PERFORMANCE getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					} else {
+						getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
 
 					facilities_project_model.Companyemail = WKPCompanyEmail;
 					facilities_project_model.CompanyName = WKPCompanyName;
@@ -6157,25 +6248,13 @@ namespace Backend_UMR_Work_Program.Controllers
 					facilities_project_model.Year_of_WP = year;
 					//facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
 					facilities_project_model.OML_Name = omlName;
-					facilities_project_model.Field_ID = concessionField.Field_ID;
+					facilities_project_model.Field_ID = concessionField?.Field_ID ?? null;
 
 					if (action == GeneralModel.Insert)
 					{
-						// if (getData == null || getData.Count == 0)
-						// {
 						facilities_project_model.Date_Created = DateTime.Now;
 						facilities_project_model.Created_by = WKPCompanyId;
 						await _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(facilities_project_model);
-						// }
-						// else
-						// {
-						//     //facilities_project_model.Date_Created = getData.Date_Created;
-						//     //facilities_project_model.Created_by = getData.Created_by;
-						//     facilities_project_model.Date_Updated = DateTime.Now;
-						//     facilities_project_model.Updated_by = WKPCompanyId;
-						//     _context.FACILITIES_PROJECT_PERFORMANCEs.RemoveRange(getData);
-						//     await _context.FACILITIES_PROJECT_PERFORMANCEs.AddAsync(facilities_project_model);
-						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
@@ -6191,12 +6270,12 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = Messager.ShowMessage(action);
-					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
-										  where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
-										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
-										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
-										  select c).ToListAsync();
-					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					// var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
+					// 					  where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
+					// 					 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
+					// 					 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
+					// 					  select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 				}
 				else
 				{
