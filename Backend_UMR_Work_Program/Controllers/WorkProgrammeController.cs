@@ -6079,13 +6079,20 @@ namespace Backend_UMR_Work_Program.Controllers
 					//					 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
 					//					 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
 					//					 select c).FirstOrDefaultAsync();
+					FACILITIES_PROJECT_PERFORMANCE getData;
 
-
-
-
-					var getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
+										 where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year
+										 select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
 										 where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year
 										 select c).FirstOrDefaultAsync();
+					}
 
 
 
@@ -6099,7 +6106,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					facilities_project_model.Year_of_WP = year;
 					//facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
 					facilities_project_model.OML_Name = omlName;
-					facilities_project_model.Field_ID = concessionField.Field_ID;
+					facilities_project_model.Field_ID = concessionField.Field_ID??null;
 
 					if (action == GeneralModel.Insert)
 					{
@@ -6133,11 +6140,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				if (save > 0)
 				{
 					string successMsg = getMsg(action);
-					var All_Data = await (from c in _context.FACILITIES_PROJECT_PERFORMANCEs
-										  where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year &&
-										 c.evidenceOfDesignSafetyCaseApprovalPath == evidenceOfDesignSafetyCaseApprovalPath &&
-										 c.evidenceOfDesignSafetyCaseApprovalFilename == evidenceOfDesignSafetyCaseApprovalFilename
-										  select c).ToListAsync();
+					var All_Data = new object();
 					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
 				}
 				else
@@ -8430,7 +8433,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				else if (hse_environmental_studies_model != null)
 				{
 					HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW getData;
-					if (concessionField.Field_Name !=new)
+					if (concessionField.Field_Name !=null)
 					{
 						getData=    (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.YEAR_ == hse_environmental_studies_model.YEAR_ && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 					}
