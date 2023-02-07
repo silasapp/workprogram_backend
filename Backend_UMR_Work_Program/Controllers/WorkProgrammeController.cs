@@ -4042,11 +4042,11 @@ namespace Backend_UMR_Work_Program.Controllers
 					BUDGET_OPEX getData;
 					if (concessionField.Field_Name !=null)
 					{
-						getData = await (from c in _context.BUDGET_OPEXes where c.OmL_Name == omlName && c.Field_ID ==concessionField.Field_ID && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+						getData = await (from c in _context.BUDGET_OPices where c.OmL_Name == omlName && c.Field_ID ==concessionField.Field_ID && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					}
 					else
 					{
-						getData = await (from c in _context.BUDGET_OPEXes where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+						getData = await (from c in _context.BUDGET_OPices where c.OmL_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 					}
 
 
@@ -4067,7 +4067,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							Budget_Opex_model.Date_Created = DateTime.Now;
 							Budget_Opex_model.Created_by = WKPCompanyId;
 							//initial_well_completion_model.Proposed_Well_Number=getDataList.Count()+1;
-							await _context.BUDGET_OPEXes.AddAsync(Budget_Opex_model);
+							await _context.BUDGET_OPices.AddAsync(Budget_Opex_model);
 						}
 						else
 						{
@@ -4075,13 +4075,13 @@ namespace Backend_UMR_Work_Program.Controllers
 							Budget_Opex_model.Created_by = getData.Created_by;
 							Budget_Opex_model.Date_Updated = DateTime.Now;
 							Budget_Opex_model.Updated_by = WKPCompanyId;
-							_context.BUDGET_OPEXes.Remove(getData);
-							await _context.BUDGET_OPEXes.AddAsync(Budget_Opex_model);
+							_context.BUDGET_OPices.Remove(getData);
+							await _context.BUDGET_OPices.AddAsync(Budget_Opex_model);
 						}
 					}
 					else if (action == GeneralModel.Delete)
 					{
-						_context.BUDGET_OPEXes.Remove(getData);
+						_context.BUDGET_OPices.Remove(getData);
 					}
 
 					save += await _context.SaveChangesAsync();
