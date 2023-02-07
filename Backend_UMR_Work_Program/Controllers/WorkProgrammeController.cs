@@ -3582,7 +3582,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					field_development_plan_model.Year_of_WP = year;
 					field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
 					field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
-					field_development_plan_model.Field_Name = concessionField.Field_Name;
+					field_development_plan_model.Field_Name = concessionField?.Field_Name ?? null;
 					field_development_plan_model.OML_ID = concessionField.Concession_ID.ToString();
 
 					if (action == GeneralModel.Insert)
@@ -3613,8 +3613,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					if (save > 0)
 					{
 						string successMsg = Messager.ShowMessage(action);
-						var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+						//var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
 					}
 					else
 					{
@@ -3901,7 +3901,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					workovers_recompletion_model.CompanyNumber = WKPCompanyNumber;
 					workovers_recompletion_model.Year_of_WP = year;
 					workovers_recompletion_model.OML_Name = omlName.ToUpper();
-					workovers_recompletion_model.Field_ID = concessionField?.Field_ID;
+					workovers_recompletion_model.Field_ID = concessionField?.Field_ID ?? null;
 					//workovers_recompletion_model.Actual_year = year;
 				//	workovers_recompletion_model.proposed_year = (int.Parse(year) + 1).ToString();
 				workovers_recompletion_model.proposed_year = year;
