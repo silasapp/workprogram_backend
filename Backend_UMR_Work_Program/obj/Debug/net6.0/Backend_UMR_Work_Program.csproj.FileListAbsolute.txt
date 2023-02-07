@@ -95,9 +95,6 @@ C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\refint\Ba
 C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Workcode\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
-C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.dll
-C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\refint\Backend_UMR_Work_Program.dll
-C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.Development.json
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\appsettings.json
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\bin\Debug\net6.0\Backend_UMR_Work_Program.exe
@@ -190,5 +187,8 @@ C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\staticweba
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\staticwebassets.development.json
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\scopedcss\bundle\Backend_UMR_Work_Program.styles.css
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CopyComplete
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.dll
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\refint\Backend_UMR_Work_Program.dll
+C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Sandbox\WorkProgram_BEnd\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll

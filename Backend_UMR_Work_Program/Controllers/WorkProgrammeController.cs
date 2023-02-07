@@ -5701,29 +5701,37 @@ namespace Backend_UMR_Work_Program.Controllers
             int save = 0;
             string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
+            List<BUDGET_PERFORMANCE_PRODUCTION_COST> getData;
             try
             {
 
                 if (!string.IsNullOrEmpty(id))
                 {
-                    var getData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+                    var _getData = (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
                     if (action == GeneralModel.Delete)
-                        _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(getData);
+                        _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.Remove(_getData);
                     save += _context.SaveChanges();
                 }
                 else if (budget_performance_model != null)
                 {
-                    var getData = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    if (concessionField?.Field_Name != null)
+                    {
+                        getData = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID&& c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    }
+                    else
+                    {
+                        getData = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    }
                     //var getData = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                     budget_performance_model.Companyemail = WKPCompanyEmail;
                     budget_performance_model.CompanyName = WKPCompanyName;
                     budget_performance_model.COMPANY_ID = WKPCompanyId;
                     budget_performance_model.CompanyNumber = WKPCompanyNumber;
-                    budget_performance_model.Date_Updated = DateTime.Now;
-                    budget_performance_model.Updated_by = WKPCompanyId;
                     budget_performance_model.Year_of_WP = year;
                     budget_performance_model.OML_Name = omlName;
                     budget_performance_model.Field_ID = concessionField.Field_ID;
@@ -5737,8 +5745,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            //budget_performance_model.Date_Created = getData.Date_Created;
-                            //budget_performance_model.Created_by = getData.Created_by;
+                            budget_performance_model.Date_Created = getData.FirstOrDefault().Date_Created;
+                            budget_performance_model.Created_by = getData.FirstOrDefault().Created_by;
                             budget_performance_model.Date_Updated = DateTime.Now;
                             budget_performance_model.Updated_by = WKPCompanyId;
                             _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs.RemoveRange(getData);
@@ -5778,38 +5786,60 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT")]
-        public async Task<object> POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT([FromBody] BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT budget_facilities_model, string omlName, string fieldName, string year, string id, string actionToDo)
+        public async Task<object> POST_BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT([FromBody] BUDGET_FACILITIES_DEVELOPMENT_MODEL facilities_model, string omlName, string fieldName, string year, string id, string actionToDo)
         {
 
             int save = 0;
             string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            List<BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT> getData;
+            BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT budget_facilities_model = new BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT()
+            {
+                CONCEPT_planned = facilities_model.ConcepT_planned,
+                CONSTRUCTION_FABRICATION_planned = facilities_model.ConstructioN_FABRICATION_planned,
+                DECOMMISSIONING_ABANDONMENT = facilities_model.DecommissioninG_ABANDONMENT,
+                DETAILED_ENGINEERING_planned = facilities_model.DetaileD_ENGINEERING_planned,
+                INSTALLATION_planned = facilities_model.InstallatioN_planned,
+                PROCUREMENT_planned = facilities_model.ProcuremenT_planned,
+                UPGRADE_MAINTENANCE_planned = facilities_model.UpgradE_MAINTENANCE_planned
+            };
+
 
             try
             {
 
                 if (!string.IsNullOrEmpty(id))
                 {
-                    var getData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+                    var _getData = (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
                     if (action == GeneralModel.Delete)
-                        _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(getData);
+                        _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.Remove(_getData);
                     save += _context.SaveChanges();
                 }
                 else if (budget_facilities_model != null)
                 {
-                    var getData = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    if (concessionField?.Field_Name != null)
+                    {
+                        getData = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.Field_ID == concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    }
+                    else
+                    {
+                        getData = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    }
+
+
                     //var getData = await (from c in _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                     budget_facilities_model.Companyemail = WKPCompanyEmail;
                     budget_facilities_model.CompanyName = WKPCompanyName;
                     budget_facilities_model.COMPANY_ID = WKPCompanyId;
                     budget_facilities_model.CompanyNumber = WKPCompanyNumber;
-                    budget_facilities_model.Date_Updated = DateTime.Now;
-                    budget_facilities_model.Updated_by = WKPCompanyId;
                     budget_facilities_model.Year_of_WP = year;
                     budget_facilities_model.OML_Name = omlName;
-                    budget_facilities_model.Field_ID = concessionField.Field_ID;
+                    budget_facilities_model.Field_ID = concessionField?.Field_ID ?? null;
 
                     if (action == GeneralModel.Insert)
                     {
@@ -5821,8 +5851,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            //budget_facilities_model.Date_Created = getData.Date_Created;
-                            //budget_facilities_model.Created_by = getData.Created_by;
+                            budget_facilities_model.Date_Created = getData.FirstOrDefault().Date_Created;
+                            budget_facilities_model.Created_by = getData.FirstOrDefault().Created_by;
                             budget_facilities_model.Date_Updated = DateTime.Now;
                             budget_facilities_model.Updated_by = WKPCompanyId;
                             _context.BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECTs.RemoveRange(getData);
