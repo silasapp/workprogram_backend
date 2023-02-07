@@ -5410,37 +5410,55 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT")]
-        public async Task<object> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model, string omlName, string fieldName, string year, string id, string actionToDo)
+        public async Task<object> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] Budget_Proposal_Ngn_Usd_Model budgetProposal_model, string omlName, string fieldName, string year, string id, string actionToDo)
         {
             int save = 0;
             string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            List<BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT> getData;
+            BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model = new BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT()
+            {
+                Budget_for_Direct_Exploration_and_Production_Activities_Dollars = budgetProposal_model.Budget_for_Direct_Exploration_and_Production_Activities_Dollars,
+                Budget_for_Direct_Exploration_and_Production_Activities_Naira = budgetProposal_model.Budget_for_Direct_Exploration_and_Production_Activities_Naira,
+                Budget_for_other_Activities_Dollars = budgetProposal_model.Budget_for_other_Activities_Dollars,
+                Budget_for_other_Activities_Naira = budgetProposal_model.Budget_for_other_Activities_Naira
+            };
+
             try
             {
                 if (!string.IsNullOrEmpty(id))
                 {
-                    var getData = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+                    var _getData = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
                     //var getData = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.Id == int.Parse(id) select c).FirstOrDefaultAsync();
 
                     if (action == GeneralModel.Delete)
-                        _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(getData);
+                        _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.Remove(_getData);
                     save += _context.SaveChanges();
                 }
                 else if (budget_proposal_model != null)
                 {
+
+                    if (concessionField?.Field_Name != null)
+                    {
+                        getData = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    }
+                    else
+                    {
+                        getData = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                    }
+
                     //var getData = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    var getData = await (from c in _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     budget_proposal_model.Companyemail = WKPCompanyEmail;
                     budget_proposal_model.CompanyName = WKPCompanyName;
                     budget_proposal_model.COMPANY_ID = WKPCompanyId;
                     budget_proposal_model.CompanyNumber = WKPCompanyNumber;
-                    budget_proposal_model.Date_Updated = DateTime.Now;
-                    budget_proposal_model.Updated_by = WKPCompanyId;
                     budget_proposal_model.Year_of_WP = year;
                     budget_proposal_model.OML_Name = omlName;
-                    budget_proposal_model.Field_ID = concessionField.Field_ID;
-                    budget_proposal_model.Actual_year = year;
-                    budget_proposal_model.Proposed_year = (int.Parse(year) + 1).ToString();
+                    budget_proposal_model.Field_ID = concessionField?.Field_ID??null;
+                   // budget_proposal_model.Actual_year = year;
+                    budget_proposal_model.Proposed_year = year ;
                     if (action == GeneralModel.Insert)
                     {
                         if (getData == null || getData.Count == 0)
@@ -5451,8 +5469,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         }
                         else
                         {
-                            //budget_proposal_model.Date_Created = getData.Date_Created;
-                            //budget_proposal_model.Created_by = getData.Created_by;
+                            budget_proposal_model.Date_Created = getData.FirstOrDefault().Date_Created;
+                            budget_proposal_model.Created_by = getData.FirstOrDefault().Created_by;
                             budget_proposal_model.Date_Updated = DateTime.Now;
                             budget_proposal_model.Updated_by = WKPCompanyId;
                             _context.BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENTs.RemoveRange(getData);
@@ -5718,7 +5736,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     if (concessionField?.Field_Name != null)
                     {
-                        getData = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID&& c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                        getData = await (from c in _context.BUDGET_PERFORMANCE_PRODUCTION_COSTs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                     }
                     else
