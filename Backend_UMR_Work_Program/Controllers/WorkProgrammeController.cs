@@ -10791,7 +10791,7 @@ WORKOVERS_RECOMPLETION_JOB1 getData;
 
 					if (save > 0)
 					{
-						Messager.ShowMessage(action);
+						
 
 						string successMsg = Messager.ShowMessage(action);
 						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
