@@ -21,7 +21,7 @@ namespace Backend_UMR_Work_Program.Controllers
             {
                 message = action + "D";
             }
-            return "Form has been " + message + " successfully.";
+            return $"{message}  successfully.";
         }
     }
 }
