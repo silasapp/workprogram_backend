@@ -1334,7 +1334,11 @@ namespace Backend_UMR_Work_Program.Controllers
 
 						var HSEEnvironmentalManagementSystems = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						//Added by Musa
+
 						var HSEOPERATIONSSAFETYCASEs = await (from c in _context.HSE_OPERATIONS_SAFETY_CASEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+
+						var HSEPointSourceRegistrations = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.Field_ID == concessionField.Field_ID && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 						var HSEEnvironmentalMgtPlans = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
@@ -1362,7 +1366,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSECommunityDisturbance = HSECommunityDisturbance,
 
 							HSESustainableDevProjProgramCsr = HSESustainableDevProgramCsr,
-
+							HSEPointSourceRegistrations = HSEPointSourceRegistrations,
 							HSEQuestion = HSEQuestion,
 							HSEFatality = HSEFatality,
 							HSEDesignSafety = HSEDesignSafety,
@@ -1449,6 +1453,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						//Musa
 						var HSESustainableDevProgramCsr = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
+						var HSEPointSourceRegistrations = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_Name==omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 						var HSESafetyCulture = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 						var HSEOccupationalHealth = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
@@ -1482,7 +1487,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							HSECommunityDisturbance = HSECommunityDisturbance,
 
 							HSESustainableDevProjectProgmCsr = HSESustainableDevProgramCsr,
-
+							HSEPointSourceRegistrations = HSEPointSourceRegistrations,
 							HSEQuestion = HSEQuestion,
 							HSEFatality = HSEFatality,
 							HSEDesignSafety = HSEDesignSafety,
@@ -6312,6 +6317,41 @@ namespace Backend_UMR_Work_Program.Controllers
 					//facilities_project_model.OML_Name = facilities_project_model.OML_Name.ToUpper();
 					facilities_project_model.OML_Name = omlName;
 					facilities_project_model.Field_ID = concessionField.Field_ID??null;
+
+
+					#region file section
+					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
+					{
+
+						var files = Request.Form.Files;
+						if (files.Count>=1)
+						{
+							var file1 = Request.Form.Files[0];
+							//var file2 = Request.Form.Files[1];
+							var blobname1 = blobService.Filenamer(file1);
+							//var blobname2 = blobService.Filenamer(file2);
+
+							if (file1 != null)
+							{
+								string docName = "Evidence of Design Safety Case Approval";
+								facilities_project_model.evidenceOfDesignSafetyCaseApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EvidenceofDesignSafetyCaseApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+								if (facilities_project_model.evidenceOfDesignSafetyCaseApprovalPath == null)
+									return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+								else
+									facilities_project_model.evidenceOfDesignSafetyCaseApprovalFilename = blobname1;
+							}
+
+						}
+					}
+
+
+
+
+					#endregion
+
+
+
+
 
 					if (action == GeneralModel.Insert)
 					{
