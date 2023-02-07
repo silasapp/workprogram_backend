@@ -4057,7 +4057,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					Budget_Opex_model.Date_Updated = DateTime.Now;
 					Budget_Opex_model.Updated_by = WKPCompanyId;
 					Budget_Opex_model.Year_of_WP = year;
-					Budget_Opex_model.Field_ID=concessionField.?Field_ID??null;
+					Budget_Opex_model.Field_ID=concessionField?.Field_ID ?? null;
 					Budget_Opex_model.OmL_Name = omlName.ToUpper();
 
 					if (action == GeneralModel.Insert)
@@ -4324,7 +4324,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					oil_condensate_unitisation_model.CompanyNumber = WKPCompanyNumber;
 					oil_condensate_unitisation_model.Year_of_WP = year;
 					oil_condensate_unitisation_model.OML_Name = omlName;
-					oil_condensate_unitisation_model.Field_ID = concessionField.?Field_ID??null;
+					oil_condensate_unitisation_model.Field_ID = concessionField?.Field_ID ?? null;
 					oil_condensate_unitisation_model.Actual_year = year;
 					oil_condensate_unitisation_model.proposed_year = (int.Parse(year) + 1).ToString();
 
