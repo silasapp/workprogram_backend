@@ -4169,100 +4169,105 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost("POST_GAS_PRODUCTION_ACTIVITY")]
-        public async Task<object> POST_GAS_PRODUCTION_ACTIVITY([FromBody] GAS_PRODUCTION_ACTIVITy gas_production_model, List<IFormFile> files, string omlName, string fieldName, string year, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                #region Saving Oil Condensate data
-                if (gas_production_model != null)
-                {
-                    var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    gas_production_model.Companyemail = WKPCompanyEmail;
-                    gas_production_model.CompanyName = WKPCompanyName;
-                    gas_production_model.COMPANY_ID = WKPCompanyId;
-                    gas_production_model.CompanyNumber = WKPCompanyNumber;
-                    gas_production_model.Date_Updated = DateTime.Now;
-                    gas_production_model.Updated_by = WKPCompanyId;
-                    gas_production_model.Year_of_WP = year;
-                    gas_production_model.OML_Name = omlName;
-                    gas_production_model.Field_ID = concessionField.Field_ID;
-                    gas_production_model.Actual_year = year;
-                    gas_production_model.proposed_year = (int.Parse(year) + 1).ToString();
-
-                    #region file section
-                    //UploadedDocument Upload_NDR_payment_receipt_File = null;
-
-                    // if (files[0] != null)
-                    // {
-                    //     string docName = "NDR Payment Receipt";
-                    //     Upload_NDR_payment_receipt_File = _helpersController.UploadDocument(files[0], "NDRPaymentReceipt");
-                    //     if (Upload_NDR_payment_receipt_File == null)
-                    //         return BadRequest(new { message = "Error : An error occured while trying to upload " + docName + " document."});
-
-                    // }
-                    #endregion
 
 
-                    //gas_production_model.Upload_NDR_payment_receipt = files[0] != null ? Upload_NDR_payment_receipt_File.filePath : null;
-                    //gas_production_model.NDRFilename = files[0] != null ? Upload_NDR_payment_receipt_File.fileName : null;
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            gas_production_model.Date_Created = DateTime.Now;
-                            gas_production_model.Created_by = WKPCompanyId;
-                            await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(gas_production_model);
-                        }
-                        else
-                        {
-                            gas_production_model.Date_Created = getData.Date_Created;
-                            gas_production_model.Created_by = getData.Created_by;
-                            gas_production_model.Date_Updated = DateTime.Now;
-                            gas_production_model.Updated_by = WKPCompanyId;
-                            _context.GAS_PRODUCTION_ACTIVITIEs.Remove(getData);
-                            await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(gas_production_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.GAS_PRODUCTION_ACTIVITIEs.Remove(getData);
-                    }
+[HttpPost("POST_GAS_PRODUCTION_ACTIVITY")]
+		public async Task<object> POST_GAS_PRODUCTION_ACTIVITY([FromBody] GAS_PRODUCTION_ACTIVITy gas_production_model, List<IFormFile> files, string omlName, string fieldName, string year, string actionToDo)
+		{
 
-                    save += await _context.SaveChangesAsync();
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-                    if (save > 0)
-                    {
+			try
+			{
+				GAS_PRODUCTION_ACTIVITy getData;
+				#region Saving Oil Condensate data
+				if (gas_production_model != null)
+				{
+					if (concessionField?.Field_Name != null) {
+						getData = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else {
+						getData = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					
+
+					gas_production_model.Companyemail = WKPCompanyEmail;
+					gas_production_model.CompanyName = WKPCompanyName;
+					gas_production_model.COMPANY_ID = WKPCompanyId;
+					gas_production_model.CompanyNumber = WKPCompanyNumber;
+					gas_production_model.Date_Updated = DateTime.Now;
+					gas_production_model.Updated_by = WKPCompanyId;
+					gas_production_model.Year_of_WP = year;
+					gas_production_model.OML_Name = omlName;
+					gas_production_model.Field_ID = concessionField?.Field_ID ?? null;
+					gas_production_model.Actual_year = year;
+					gas_production_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+					#region file section
+					//UploadedDocument Upload_NDR_payment_receipt_File = null;
+
+					// if (files[0] != null)
+					// {
+					//     string docName = "NDR Payment Receipt";
+					//     Upload_NDR_payment_receipt_File = _helpersController.UploadDocument(files[0], "NDRPaymentReceipt");
+					//     if (Upload_NDR_payment_receipt_File == null)
+					//         return BadRequest(new { message = "Error : An error occured while trying to upload " + docName + " document."});
+
+					// }
+					#endregion
 
 
+					//gas_production_model.Upload_NDR_payment_receipt = files[0] != null ? Upload_NDR_payment_receipt_File.filePath : null;
+					//gas_production_model.NDRFilename = files[0] != null ? Upload_NDR_payment_receipt_File.fileName : null;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							gas_production_model.Date_Created = DateTime.Now;
+							gas_production_model.Created_by = WKPCompanyId;
+							await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(gas_production_model);
+						}
+						else
+						{
+							gas_production_model.Date_Created = getData.Date_Created;
+							gas_production_model.Created_by = getData.Created_by;
+							gas_production_model.Date_Updated = DateTime.Now;
+							gas_production_model.Updated_by = WKPCompanyId;
+							_context.GAS_PRODUCTION_ACTIVITIEs.Remove(getData);
+							await _context.GAS_PRODUCTION_ACTIVITIEs.AddAsync(gas_production_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.GAS_PRODUCTION_ACTIVITIEs.Remove(getData);
+					}
 
-                        string successMsg = Messager.ShowMessage(action);
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
 
 
-                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
-
+     
         [HttpPost("POST_NDR")]
         public async Task<object> POST_NDR([FromBody] NDR ndr_model, string omlName, string fieldName, string year, string actionToDo)
         {
