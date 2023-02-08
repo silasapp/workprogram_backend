@@ -4005,8 +4005,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					oil_condensate_activity_model.Year_of_WP = year;
 					oil_condensate_activity_model.OML_Name = omlName.ToUpper();
 					oil_condensate_activity_model.Field_ID = concessionField?.Field_ID ?? null;
-					oil_condensate_activity_model.Actual_year = year;
-					oil_condensate_activity_model.proposed_year = (int.Parse(year) + 1).ToString();
+					//oil_condensate_activity_model.Actual_year = year;
+					oil_condensate_activity_model.proposed_year = year;
 
 
 					if (action == GeneralModel.Insert)
