@@ -4353,78 +4353,87 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost("POST_RESERVES_UPDATES_DEPLETION_RATE")]
-        public async Task<object> POST_RESERVES_UPDATES_DEPLETION_RATE([FromBody] RESERVES_UPDATES_DEPLETION_RATE reserves_depletion_rate_model, string omlName, string fieldName, string year, string actionToDo)
-        {
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+       	[HttpPost("POST_RESERVES_UPDATES_DEPLETION_RATE")]
+		public async Task<object> POST_RESERVES_UPDATES_DEPLETION_RATE([FromBody] RESERVES_UPDATES_DEPLETION_RATE reserves_depletion_rate_model, string omlName, string fieldName, string year, string actionToDo)
+		{
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-            try
-            {
-                #region Saving RESERVES_UPDATES_DEPLETION_RATE
-                if (reserves_depletion_rate_model != null)
-                {
-                    var getData = (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-                    reserves_depletion_rate_model.Companyemail = WKPCompanyEmail;
-                    reserves_depletion_rate_model.CompanyName = WKPCompanyName;
-                    reserves_depletion_rate_model.COMPANY_ID = WKPCompanyId;
-                    reserves_depletion_rate_model.Date_Updated = DateTime.Now;
-                    reserves_depletion_rate_model.CompanyNumber = WKPCompanyNumber;
-                    reserves_depletion_rate_model.Updated_by = WKPCompanyId;
-                    reserves_depletion_rate_model.Year_of_WP = year;
-                    reserves_depletion_rate_model.OML_Name = omlName;
-                    reserves_depletion_rate_model.Field_ID = concessionField.Field_ID;
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            reserves_depletion_rate_model.Date_Created = DateTime.Now;
-                            reserves_depletion_rate_model.Created_by = WKPCompanyId;
-                            await _context.RESERVES_UPDATES_DEPLETION_RATEs.AddAsync(reserves_depletion_rate_model);
-                        }
-                        else
-                        {
-                            reserves_depletion_rate_model.Date_Created = getData.Date_Created;
-                            reserves_depletion_rate_model.Created_by = getData.Created_by;
-                            reserves_depletion_rate_model.Date_Updated = DateTime.Now;
-                            reserves_depletion_rate_model.Updated_by = WKPCompanyId;
-                            _context.RESERVES_UPDATES_DEPLETION_RATEs.Remove(getData);
-                            await _context.RESERVES_UPDATES_DEPLETION_RATEs.AddAsync(reserves_depletion_rate_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.RESERVES_UPDATES_DEPLETION_RATEs.Remove(getData);
-                    }
+			try
+			{
+				RESERVES_UPDATES_DEPLETION_RATE getData;
+				#region Saving RESERVES_UPDATES_DEPLETION_RATE
+				if (reserves_depletion_rate_model != null)
+				{
+					if (concessionField?.Field_Name != null) {
+						getData = await (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					} else {
+						getData = await (from c in _context.RESERVES_UPDATES_DEPLETION_RATEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+				
+					reserves_depletion_rate_model.Companyemail = WKPCompanyEmail;
+					reserves_depletion_rate_model.CompanyName = WKPCompanyName;
+					reserves_depletion_rate_model.COMPANY_ID = WKPCompanyId;
+					reserves_depletion_rate_model.Date_Updated = DateTime.Now;
+					reserves_depletion_rate_model.CompanyNumber = WKPCompanyNumber;
+					reserves_depletion_rate_model.Updated_by = WKPCompanyId;
+					reserves_depletion_rate_model.Year_of_WP = year;
+					reserves_depletion_rate_model.OML_Name = omlName;
+					reserves_depletion_rate_model.Field_ID = concessionField?.Field_ID ?? null;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							reserves_depletion_rate_model.Date_Created = DateTime.Now;
+							reserves_depletion_rate_model.Created_by = WKPCompanyId;
+							await _context.RESERVES_UPDATES_DEPLETION_RATEs.AddAsync(reserves_depletion_rate_model);
+						}
+						else
+						{
+							reserves_depletion_rate_model.Date_Created = getData.Date_Created;
+							reserves_depletion_rate_model.Created_by = getData.Created_by;
+							reserves_depletion_rate_model.Date_Updated = DateTime.Now;
+							reserves_depletion_rate_model.Updated_by = WKPCompanyId;
+							_context.RESERVES_UPDATES_DEPLETION_RATEs.Remove(getData);
+							await _context.RESERVES_UPDATES_DEPLETION_RATEs.AddAsync(reserves_depletion_rate_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.RESERVES_UPDATES_DEPLETION_RATEs.Remove(getData);
+					}
 
-                    save += await _context.SaveChangesAsync();
+					save += await _context.SaveChangesAsync();
 
-                    if (save > 0)
-                    {
+					if (save > 0)
+					{
 
 
 
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An Error occured while trying to submit this form." });
-                    }
-                }
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An Error occured while trying to submit this form." });
+					}
+				}
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
 
-            }
-            catch (Exception e)
-            {
+			}
+			catch (Exception e)
+			{
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
 
+       
+       
+       
         [HttpPost("POST_RESERVES_UPDATES_LIFE_INDEX")]
         public async Task<object> POST_RESERVES_UPDATES_LIFE_INDEX([FromBody] RESERVES_UPDATES_LIFE_INDEX reserves_life_index_model, string omlName, string fieldName, string year, string actionToDo)
         {
