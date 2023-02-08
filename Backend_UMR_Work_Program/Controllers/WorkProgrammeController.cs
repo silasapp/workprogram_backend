@@ -5184,223 +5184,237 @@ namespace Backend_UMR_Work_Program.Controllers
        
        
        
-        [HttpPost("POST_RESERVES_REPLACEMENT_RATIO")]
-        public async Task<object> POST_RESERVES_REPLACEMENT_RATIO([FromBody] RESERVES_REPLACEMENT_RATIO reserves_replacement_model, string omlName, string fieldName, string year, string actionToDo)
-        {
+       	[HttpPost("POST_RESERVES_REPLACEMENT_RATIO")]
+		public async Task<object> POST_RESERVES_REPLACEMENT_RATIO([FromBody] RESERVES_REPLACEMENT_RATIO reserves_replacement_model, string omlName, string fieldName, string year, string actionToDo)
+		{
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-            try
-            {
-                #region Saving RESERVES_REPLACEMENT_RATIO data
-                if (reserves_replacement_model != null)
-                {
-                    var getData = (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+			try
+			{
+				RESERVES_REPLACEMENT_RATIO getData;
+				#region Saving RESERVES_REPLACEMENT_RATIO data
+				if (reserves_replacement_model != null)
+				{
+					if (concessionField?.Field_Name != null) {
+						getData = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					} else {
+						getData = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					
 
-                    reserves_replacement_model.Companyemail = WKPCompanyEmail;
-                    reserves_replacement_model.CompanyName = WKPCompanyName;
-                    reserves_replacement_model.COMPANY_ID = WKPCompanyId;
-                    reserves_replacement_model.CompanyNumber = WKPCompanyNumber;
-                    reserves_replacement_model.Date_Updated = DateTime.Now;
-                    reserves_replacement_model.Updated_by = WKPCompanyId;
-                    reserves_replacement_model.Year_of_WP = year;
-                    reserves_replacement_model.OML_Name = omlName;
-                    reserves_replacement_model.Field_ID = concessionField.Field_ID;
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            reserves_replacement_model.Date_Created = DateTime.Now;
-                            reserves_replacement_model.Created_by = WKPCompanyId;
-                            await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(reserves_replacement_model);
-                        }
-                        else
-                        {
-                            reserves_replacement_model.Date_Created = getData.Date_Created;
-                            reserves_replacement_model.Created_by = getData.Created_by;
-                            reserves_replacement_model.Date_Updated = DateTime.Now;
-                            reserves_replacement_model.Updated_by = WKPCompanyId;
-                            _context.RESERVES_REPLACEMENT_RATIOs.Remove(getData);
-                            await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(reserves_replacement_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.RESERVES_REPLACEMENT_RATIOs.Remove(getData);
-                    }
+					reserves_replacement_model.Companyemail = WKPCompanyEmail;
+					reserves_replacement_model.CompanyName = WKPCompanyName;
+					reserves_replacement_model.COMPANY_ID = WKPCompanyId;
+					reserves_replacement_model.CompanyNumber = WKPCompanyNumber;
+					reserves_replacement_model.Date_Updated = DateTime.Now;
+					reserves_replacement_model.Updated_by = WKPCompanyId;
+					reserves_replacement_model.Year_of_WP = year;
+					reserves_replacement_model.OML_Name = omlName;
+					reserves_replacement_model.Field_ID = concessionField?.Field_ID ?? null;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							reserves_replacement_model.Date_Created = DateTime.Now;
+							reserves_replacement_model.Created_by = WKPCompanyId;
+							await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(reserves_replacement_model);
+						}
+						else
+						{
+							reserves_replacement_model.Date_Created = getData.Date_Created;
+							reserves_replacement_model.Created_by = getData.Created_by;
+							reserves_replacement_model.Date_Updated = DateTime.Now;
+							reserves_replacement_model.Updated_by = WKPCompanyId;
+							_context.RESERVES_REPLACEMENT_RATIOs.Remove(getData);
+							await _context.RESERVES_REPLACEMENT_RATIOs.AddAsync(reserves_replacement_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.RESERVES_REPLACEMENT_RATIOs.Remove(getData);
+					}
 
-                    save += await _context.SaveChangesAsync();
+					save += await _context.SaveChangesAsync();
 
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.RESERVES_REPLACEMENT_RATIOs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
-                    }
-                }
+					}
+				}
 
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+  
+  
+  
+  
+  [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITIES_PROPOSED")]
+		public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITIES_PROPOSED([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED oil_condensate_monthly_model, string omlName, string fieldName, string year, string actionToDo)
+		{
 
-            }
-        }
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITIES_PROPOSED")]
-        public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_MONTHLY_ACTIVITIES_PROPOSED([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED oil_condensate_monthly_model, string omlName, string fieldName, string year, string actionToDo)
-        {
+			try
+			{
+				OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED getData;
+				#region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED data
+				if (oil_condensate_monthly_model != null)
+				{
+					if (concessionField?.Field_Name != null) {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Production_month == oil_condensate_monthly_model.Production_month select c).FirstOrDefaultAsync();
+					} else {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Production_month == oil_condensate_monthly_model.Production_month select c).FirstOrDefaultAsync();
+					}
+					
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+					oil_condensate_monthly_model.Companyemail = WKPCompanyEmail;
+					oil_condensate_monthly_model.CompanyName = WKPCompanyName;
+					oil_condensate_monthly_model.COMPANY_ID = WKPCompanyId;
+					oil_condensate_monthly_model.CompanyNumber = WKPCompanyNumber;
+					oil_condensate_monthly_model.Date_Updated = DateTime.Now;
+					oil_condensate_monthly_model.Updated_by = WKPCompanyId;
+					oil_condensate_monthly_model.Year_of_WP = year;
+					oil_condensate_monthly_model.OML_Name = omlName;
+					oil_condensate_monthly_model.Field_ID = concessionField?.Field_ID ?? null;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							oil_condensate_monthly_model.Date_Created = DateTime.Now;
+							oil_condensate_monthly_model.Created_by = WKPCompanyId;
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(oil_condensate_monthly_model);
+						}
+						else
+						{
+							oil_condensate_monthly_model.Date_Created = getData.Date_Created;
+							oil_condensate_monthly_model.Created_by = getData.Created_by;
+							oil_condensate_monthly_model.Date_Updated = DateTime.Now;
+							oil_condensate_monthly_model.Updated_by = WKPCompanyId;
+							_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(getData);
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(oil_condensate_monthly_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(getData);
+					}
 
-            try
-            {
+					save += await _context.SaveChangesAsync();
 
-                #region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSED data
-                if (oil_condensate_monthly_model != null)
-                {
-                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Production_month == oil_condensate_monthly_model.Production_month select c).FirstOrDefault();
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					}
+				}
 
-                    oil_condensate_monthly_model.Companyemail = WKPCompanyEmail;
-                    oil_condensate_monthly_model.CompanyName = WKPCompanyName;
-                    oil_condensate_monthly_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_monthly_model.CompanyNumber = WKPCompanyNumber;
-                    oil_condensate_monthly_model.Date_Updated = DateTime.Now;
-                    oil_condensate_monthly_model.Updated_by = WKPCompanyId;
-                    oil_condensate_monthly_model.Year_of_WP = year;
-                    oil_condensate_monthly_model.OML_Name = omlName;
-                    oil_condensate_monthly_model.Field_ID = concessionField.Field_ID;
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            oil_condensate_monthly_model.Date_Created = DateTime.Now;
-                            oil_condensate_monthly_model.Created_by = WKPCompanyId;
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(oil_condensate_monthly_model);
-                        }
-                        else
-                        {
-                            oil_condensate_monthly_model.Date_Created = getData.Date_Created;
-                            oil_condensate_monthly_model.Created_by = getData.Created_by;
-                            oil_condensate_monthly_model.Date_Updated = DateTime.Now;
-                            oil_condensate_monthly_model.Updated_by = WKPCompanyId;
-                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(getData);
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.AddAsync(oil_condensate_monthly_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs.Remove(getData);
-                    }
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
 
-                    save += await _context.SaveChangesAsync();
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_monthly_Activities_PROPOSEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                    }
-                }
+			}
+		}
 
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
+		[HttpPost("POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
+		public async Task<object> POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY([FromBody] GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY oil_gas_domestic_model, string omlName, string fieldName, string year, string actionToDo)
+		{
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-            }
-        }
+			try
+			{
 
-        [HttpPost("POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY")]
-        public async Task<object> POST_OIL_GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY([FromBody] GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY oil_gas_domestic_model, string omlName, string fieldName, string year, string actionToDo)
-        {
+				#region Saving GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY data
+				if (oil_gas_domestic_model != null)
+				{
+					var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+					oil_gas_domestic_model.Companyemail = WKPCompanyEmail;
+					oil_gas_domestic_model.CompanyName = WKPCompanyName;
+					oil_gas_domestic_model.COMPANY_ID = WKPCompanyId;
+					oil_gas_domestic_model.CompanyNumber = WKPCompanyNumber;
+					oil_gas_domestic_model.Date_Updated = DateTime.Now;
+					oil_gas_domestic_model.Updated_by = WKPCompanyId;
+					oil_gas_domestic_model.Year_of_WP = year;
+					oil_gas_domestic_model.OML_Name = omlName;
+					oil_gas_domestic_model.Field_ID = concessionField.Field_ID;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							oil_gas_domestic_model.Date_Created = DateTime.Now;
+							oil_gas_domestic_model.Created_by = WKPCompanyId;
+							await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(oil_gas_domestic_model);
+						}
+						else
+						{
+							oil_gas_domestic_model.Date_Created = getData.Date_Created;
+							oil_gas_domestic_model.Created_by = getData.Created_by;
+							oil_gas_domestic_model.Date_Updated = DateTime.Now;
+							oil_gas_domestic_model.Updated_by = WKPCompanyId;
+							_context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(getData);
+							await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(oil_gas_domestic_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(getData);
+					}
 
-            try
-            {
+					save += await _context.SaveChangesAsync();
 
-                #region Saving GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLY data
-                if (oil_gas_domestic_model != null)
-                {
-                    var getData = (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
-                    oil_gas_domestic_model.Companyemail = WKPCompanyEmail;
-                    oil_gas_domestic_model.CompanyName = WKPCompanyName;
-                    oil_gas_domestic_model.COMPANY_ID = WKPCompanyId;
-                    oil_gas_domestic_model.CompanyNumber = WKPCompanyNumber;
-                    oil_gas_domestic_model.Date_Updated = DateTime.Now;
-                    oil_gas_domestic_model.Updated_by = WKPCompanyId;
-                    oil_gas_domestic_model.Year_of_WP = year;
-                    oil_gas_domestic_model.OML_Name = omlName;
-                    oil_gas_domestic_model.Field_ID = concessionField.Field_ID;
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            oil_gas_domestic_model.Date_Created = DateTime.Now;
-                            oil_gas_domestic_model.Created_by = WKPCompanyId;
-                            await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(oil_gas_domestic_model);
-                        }
-                        else
-                        {
-                            oil_gas_domestic_model.Date_Created = getData.Date_Created;
-                            oil_gas_domestic_model.Created_by = getData.Created_by;
-                            oil_gas_domestic_model.Date_Updated = DateTime.Now;
-                            oil_gas_domestic_model.Updated_by = WKPCompanyId;
-                            _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(getData);
-                            await _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.AddAsync(oil_gas_domestic_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies.Remove(getData);
-                    }
+					}
+				}
 
-                    save += await _context.SaveChangesAsync();
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
 
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.GAS_PRODUCTION_ACTIVITIES_DOMESTIC_SUPPLies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
+			}
+		}
+   
+   
         [HttpPost("POST_BUDGET_ACTUAL_EXPENDITURE")]
         public async Task<object> POST_BUDGET_ACTUAL_EXPENDITURE([FromBody] BUDGET_ACTUAL_EXPENDITURE budget_actual_model, string omlName, string fieldName, string year, string id, string actionToDo)
         {
