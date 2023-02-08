@@ -6082,88 +6082,97 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
-        [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT")]
-        public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment oil_condensate_assessment_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
+      
+      	[HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_NEW_TECHNOLOGY_CONFORMITY_ASSESSMENT")]
+		public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment oil_condensate_assessment_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo;
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-            try
-            {
+			try
+			{
 
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.Id == int.Parse(id) select c).FirstOrDefault();
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.Id == int.Parse(id) select c).FirstOrDefault();
 
-                    if (action == GeneralModel.Delete)
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (oil_condensate_assessment_model != null)
-                {
-                    var getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    //var getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					if (action == GeneralModel.Delete)
+						_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (oil_condensate_assessment_model != null)
+				{
+					List<OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessment> getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					} else {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					}
+					//var getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
-                    oil_condensate_assessment_model.Companyemail = WKPCompanyEmail;
-                    oil_condensate_assessment_model.CompanyName = WKPCompanyName;
-                    oil_condensate_assessment_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_assessment_model.CompanyNumber = WKPCompanyNumber;
-                    oil_condensate_assessment_model.Date_Updated = DateTime.Now;
-                    oil_condensate_assessment_model.Updated_by = WKPCompanyId;
-                    oil_condensate_assessment_model.Year_of_WP = year;
-                    oil_condensate_assessment_model.OML_Name = omlName;
-                    oil_condensate_assessment_model.Field_ID = concessionField.Field_ID;
+					oil_condensate_assessment_model.Companyemail = WKPCompanyEmail;
+					oil_condensate_assessment_model.CompanyName = WKPCompanyName;
+					oil_condensate_assessment_model.COMPANY_ID = WKPCompanyId;
+					oil_condensate_assessment_model.CompanyNumber = WKPCompanyNumber;
+					oil_condensate_assessment_model.Date_Updated = DateTime.Now;
+					oil_condensate_assessment_model.Updated_by = WKPCompanyId;
+					oil_condensate_assessment_model.Year_of_WP = year;
+					oil_condensate_assessment_model.OML_Name = omlName;
+					oil_condensate_assessment_model.Field_ID = concessionField?.Field_ID ?? null;
 
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null || getData.Count == 0)
-                        {
-                            oil_condensate_assessment_model.Date_Created = DateTime.Now;
-                            oil_condensate_assessment_model.Created_by = WKPCompanyId;
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(oil_condensate_assessment_model);
-                        }
-                        else
-                        {
-                            //oil_condensate_assessment_model.Date_Created = getData.Date_Created;
-                            //oil_condensate_assessment_model.Created_by = getData.Created_by;
-                            oil_condensate_assessment_model.Date_Updated = DateTime.Now;
-                            oil_condensate_assessment_model.Updated_by = WKPCompanyId;
-                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.RemoveRange(getData);
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(oil_condensate_assessment_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.RemoveRange(getData);
-                    }
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null || getData.Count == 0)
+						{
+							oil_condensate_assessment_model.Date_Created = DateTime.Now;
+							oil_condensate_assessment_model.Created_by = WKPCompanyId;
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(oil_condensate_assessment_model);
+						}
+						else
+						{
+							//oil_condensate_assessment_model.Date_Created = getData.Date_Created;
+							//oil_condensate_assessment_model.Created_by = getData.Created_by;
+							oil_condensate_assessment_model.Date_Updated = DateTime.Now;
+							oil_condensate_assessment_model.Updated_by = WKPCompanyId;
+							_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.RemoveRange(getData);
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.AddAsync(oil_condensate_assessment_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments.RemoveRange(getData);
+					}
 
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    //var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                }
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_New_Technology_Conformity_Assessments where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-            }
-        }
+			}
+		}
+
+
 
         [HttpPost("POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT")]
         public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBody] OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT oil_gas_facility_model, string omlName, string fieldName, string year, string id, string actionToDo)
