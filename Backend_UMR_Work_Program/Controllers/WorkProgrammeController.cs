@@ -4201,8 +4201,8 @@ namespace Backend_UMR_Work_Program.Controllers
 					gas_production_model.Year_of_WP = year;
 					gas_production_model.OML_Name = omlName;
 					gas_production_model.Field_ID = concessionField?.Field_ID ?? null;
-					gas_production_model.Actual_year = year;
-					gas_production_model.proposed_year = (int.Parse(year) + 1).ToString();
+					//gas_production_model.Actual_year = year;
+					gas_production_model.proposed_year = year;
 
 					#region file section
 					//UploadedDocument Upload_NDR_payment_receipt_File = null;
