@@ -4605,92 +4605,97 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
        
+
+       [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT")]
+		public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT([FromBody] Condensate_Status_Model condensateModelCurrent, string omlName, string fieldName, string year, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+
+				var reserves_condensate_status_model = new RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE()
+				{
+					Company_Reserves_AG = condensateModelCurrent.Company_Reserves_AG,
+					Company_Reserves_Oil = condensateModelCurrent.Company_Reserves_Oil,
+					Company_Reserves_Year = condensateModelCurrent.Company_Reserves_Year,
+					Company_Reserves_Condensate = condensateModelCurrent.Company_Reserves_Condensate,
+					Company_Reserves_NAG = condensateModelCurrent.Company_Reserves_NAG
+				};
+
+				RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE getData;
+				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
+				if (reserves_condensate_status_model != null)
+				{
+					if (concessionField?.Field_Name != null) {
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
+					} else {
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
+					}
+					
+
+					reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
+					reserves_condensate_status_model.CompanyName = WKPCompanyName;
+					reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
+					reserves_condensate_status_model.CompanyNumber = WKPCompanyNumber;
+					reserves_condensate_status_model.Year_of_WP = year;
+					reserves_condensate_status_model.OML_Name = omlName;
+					reserves_condensate_status_model.Field_ID = concessionField?.Field_ID ?? null;
+					reserves_condensate_status_model.FLAG1 = "COMPANY_CURRENT_RESERVE";
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							reserves_condensate_status_model.Date_Created = DateTime.Now;
+							reserves_condensate_status_model.Created_by = WKPCompanyId;
+							await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(reserves_condensate_status_model);
+						}
+						else
+						{
+							reserves_condensate_status_model.Date_Created = getData.Date_Created;
+							reserves_condensate_status_model.Created_by = getData.Created_by;
+							reserves_condensate_status_model.Date_Updated = DateTime.Now;
+							reserves_condensate_status_model.Updated_by = WKPCompanyId;
+							_context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(getData);
+							await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(reserves_condensate_status_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
        
        
-        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT")]
-        public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE_CURRENT([FromBody] Condensate_Status_Model condensateModelCurrent, string omlName, string fieldName, string year, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-
-                var reserves_condensate_status_model = new RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE()
-                {
-                    Company_Reserves_AG = condensateModelCurrent.Company_Reserves_AG,
-                    Company_Reserves_Oil = condensateModelCurrent.Company_Reserves_Oil,
-                    Company_Reserves_Year = condensateModelCurrent.Company_Reserves_Year,
-                    Company_Reserves_Condensate = condensateModelCurrent.Company_Reserves_Condensate,
-                    Company_Reserves_NAG = condensateModelCurrent.Company_Reserves_NAG
-                };
-
-
-                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVE data
-                if (reserves_condensate_status_model != null)
-                {
-                    var getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.FLAG1 == "COMPANY_CURRENT_RESERVE" select c).FirstOrDefaultAsync();
-
-                    reserves_condensate_status_model.Companyemail = WKPCompanyEmail;
-                    reserves_condensate_status_model.CompanyName = WKPCompanyName;
-                    reserves_condensate_status_model.COMPANY_ID = WKPCompanyId;
-                    reserves_condensate_status_model.CompanyNumber = WKPCompanyNumber;
-                    reserves_condensate_status_model.Year_of_WP = year;
-                    reserves_condensate_status_model.OML_Name = omlName;
-                    reserves_condensate_status_model.Field_ID = concessionField.Field_ID;
-                    reserves_condensate_status_model.FLAG1 = "COMPANY_CURRENT_RESERVE";
-
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            reserves_condensate_status_model.Date_Created = DateTime.Now;
-                            reserves_condensate_status_model.Created_by = WKPCompanyId;
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(reserves_condensate_status_model);
-                        }
-                        else
-                        {
-                            reserves_condensate_status_model.Date_Created = getData.Date_Created;
-                            reserves_condensate_status_model.Created_by = getData.Created_by;
-                            reserves_condensate_status_model.Date_Updated = DateTime.Now;
-                            reserves_condensate_status_model.Updated_by = WKPCompanyId;
-                            _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(getData);
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.AddAsync(reserves_condensate_status_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_STATUS_OF_RESERVEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
         [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION")]
         public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Fiveyear_Projection reserves_condensate_status_model, string omlName, string fieldName, string year, string actionToDo)
         {
