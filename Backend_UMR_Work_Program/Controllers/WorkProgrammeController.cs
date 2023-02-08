@@ -3449,8 +3449,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
                     field_development_plan_model.OML_Name = omlName;
-                    field_development_plan_model.Field_ID = concessionField.Field_ID;
-                    field_development_plan_model.Field_Name = concessionField.Field_Name;
+                    field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
+                    field_development_plan_model.Field_Name = concessionField?.Field_Name ?? null;
 
                     if (action == GeneralModel.Insert)
                     {
@@ -3523,8 +3523,8 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
                     field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
-                    field_development_plan_model.Field_Name = concessionField.Field_Name;
-                    field_development_plan_model.Field_ID = concessionField.Field_ID;
+                    field_development_plan_model.Field_Name = concessionField?.Field_Name ?? null;
+                    field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
 
                     if (action == GeneralModel.Insert)
                     {
@@ -3597,9 +3597,9 @@ namespace Backend_UMR_Work_Program.Controllers
                     field_development_plan_model.Updated_by = WKPCompanyId;
                     field_development_plan_model.Year_of_WP = year;
                     field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
-                    field_development_plan_model.Field_ID = concessionField.Field_ID;
-                    field_development_plan_model.Field_Name = concessionField.Field_Name;
-                    field_development_plan_model.OML_ID = concessionField.Concession_ID.ToString();
+                    field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
+                    field_development_plan_model.Field_Name = concessionField?.Field_Name ?? null;
+                    field_development_plan_model.OML_ID = concessionField?.Concession_ID.ToString();
 
                     if (action == GeneralModel.Insert)
                     {
@@ -3685,7 +3685,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     initial_well_completion_model.Year_of_WP = year;
                     initial_well_completion_model.OML_Name = omlName.ToUpper();
-                    initial_well_completion_model.Field_ID = concessionField.Field_ID;
+                    initial_well_completion_model.Field_ID = concessionField?.Field_ID ?? null;
                     initial_well_completion_model.Actual_year = year;
                     initial_well_completion_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -3919,7 +3919,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     workovers_recompletion_model.CompanyNumber = WKPCompanyNumber;
                     workovers_recompletion_model.Year_of_WP = year;
                     workovers_recompletion_model.OML_Name = omlName.ToUpper();
-                    workovers_recompletion_model.Field_ID = concessionField?.Field_ID;
+                    workovers_recompletion_model.Field_ID = concessionField?.Field_ID ?? null;
                     //workovers_recompletion_model.Actual_year = year;
                     //	workovers_recompletion_model.proposed_year = (int.Parse(year) + 1).ToString();
                     workovers_recompletion_model.proposed_year = year;
@@ -3975,86 +3975,88 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
         [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITY")]
-        public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITY([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITy oil_condensate_activity_model, string omlName, string fieldName, string year, string actionToDo)
-        {
+		public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITY([FromBody] OIL_CONDENSATE_PRODUCTION_ACTIVITy oil_condensate_activity_model, string omlName, string fieldName, string year, string actionToDo)
+		{
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			OIL_CONDENSATE_PRODUCTION_ACTIVITy getData;
+			try
+			{
+				#region Saving Oil Condensate data
+				if (oil_condensate_activity_model != null)
+				{
 
-            try
-            {
+					if (concessionField?.Field_Name != null) {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					
 
-                #region Saving Oil Condensate data
-                if (oil_condensate_activity_model != null)
-                {
-                    var getData = (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    oil_condensate_activity_model.Companyemail = WKPCompanyEmail;
-                    oil_condensate_activity_model.CompanyName = WKPCompanyName;
-                    oil_condensate_activity_model.COMPANY_ID = WKPCompanyId;
-                    oil_condensate_activity_model.CompanyNumber = WKPCompanyNumber;
-                    oil_condensate_activity_model.Date_Updated = DateTime.Now;
-                    oil_condensate_activity_model.Updated_by = WKPCompanyId;
-                    oil_condensate_activity_model.Year_of_WP = year;
-                    oil_condensate_activity_model.OML_Name = omlName.ToUpper();
-                    oil_condensate_activity_model.Field_ID = concessionField.Field_ID;
-                    oil_condensate_activity_model.Actual_year = year;
-                    oil_condensate_activity_model.proposed_year = (int.Parse(year) + 1).ToString();
-
-
-                    if (action == GeneralModel.Insert)
-                    {
-                        if (getData == null)
-                        {
-                            oil_condensate_activity_model.Date_Created = DateTime.Now;
-                            oil_condensate_activity_model.Created_by = WKPCompanyId;
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(oil_condensate_activity_model);
-                        }
-                        else
-                        {
-                            oil_condensate_activity_model.Date_Created = getData.Date_Created;
-                            oil_condensate_activity_model.Created_by = getData.Created_by;
-                            oil_condensate_activity_model.Date_Updated = DateTime.Now;
-                            oil_condensate_activity_model.Updated_by = WKPCompanyId;
-                            _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(getData);
-                            await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(oil_condensate_activity_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
+					oil_condensate_activity_model.Companyemail = WKPCompanyEmail;
+					oil_condensate_activity_model.CompanyName = WKPCompanyName;
+					oil_condensate_activity_model.COMPANY_ID = WKPCompanyId;
+					oil_condensate_activity_model.CompanyNumber = WKPCompanyNumber;
+					oil_condensate_activity_model.Date_Updated = DateTime.Now;
+					oil_condensate_activity_model.Updated_by = WKPCompanyId;
+					oil_condensate_activity_model.Year_of_WP = year;
+					oil_condensate_activity_model.OML_Name = omlName.ToUpper();
+					oil_condensate_activity_model.Field_ID = concessionField?.Field_ID ?? null;
+					oil_condensate_activity_model.Actual_year = year;
+					oil_condensate_activity_model.proposed_year = (int.Parse(year) + 1).ToString();
 
 
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							oil_condensate_activity_model.Date_Created = DateTime.Now;
+							oil_condensate_activity_model.Created_by = WKPCompanyId;
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(oil_condensate_activity_model);
+						}
+						else
+						{
+							oil_condensate_activity_model.Date_Created = getData.Date_Created;
+							oil_condensate_activity_model.Created_by = getData.Created_by;
+							oil_condensate_activity_model.Date_Updated = DateTime.Now;
+							oil_condensate_activity_model.Updated_by = WKPCompanyId;
+							_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(getData);
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.AddAsync(oil_condensate_activity_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs.Remove(getData);
+					}
 
-                        string successMsg = Messager.ShowMessage(action);
+					save += await _context.SaveChangesAsync();
 
-                        var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
 
-                    }
-                }
+						//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
+					}
+				}
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
 
-            }
-        }
-
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
         [HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION")]
         public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_UNITIZATION([FromBody] Unitisation_Model unitisation_model, string omlName, string fieldName, string year, string actionToDo)
         {
