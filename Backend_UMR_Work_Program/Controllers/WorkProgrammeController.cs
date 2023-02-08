@@ -4781,7 +4781,102 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
+[HttpPost("POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION")]
+		public async Task<object> POST_OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION([FromForm] OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION oil_condensate_fiveyears_model, string omlName, string fieldName, string year, string actionToDo)
+		{
 
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION getData;
+				#region Saving OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTION data
+				if (oil_condensate_fiveyears_model != null)
+				{
+					if (concessionField?.Field_Name != null) {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Timeline == oil_condensate_fiveyears_model.Fiveyear_Timeline select c).FirstOrDefaultAsync();
+					} else {
+						getData = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year && c.Fiveyear_Timeline == oil_condensate_fiveyears_model.Fiveyear_Timeline select c).FirstOrDefaultAsync();
+					}
+				    
+
+					oil_condensate_fiveyears_model.Companyemail = WKPCompanyEmail;
+					oil_condensate_fiveyears_model.CompanyName = WKPCompanyName;
+					oil_condensate_fiveyears_model.COMPANY_ID = WKPCompanyId;
+					oil_condensate_fiveyears_model.CompanyNumber = WKPCompanyNumber;
+					oil_condensate_fiveyears_model.Date_Updated = DateTime.Now;
+					oil_condensate_fiveyears_model.Updated_by = WKPCompanyId;
+					oil_condensate_fiveyears_model.Year_of_WP = year;
+					oil_condensate_fiveyears_model.OML_Name = omlName;
+					oil_condensate_fiveyears_model.Field_ID = concessionField?.Field_ID ?? null;
+					oil_condensate_fiveyears_model.Actual_year = year;
+					oil_condensate_fiveyears_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+
+					#region file section
+					//var file1 = Request.Form.Files[0];
+					//var blobname1 = blobService.Filenamer(file1);
+
+					//if (file1 != null)
+					//{
+					//	string docName = "Production Oil Condensate AGNAG";
+					//	oil_condensate_fiveyears_model.ProductionOilCondensateAGNAGUFilename = blobname1;
+					//	oil_condensate_fiveyears_model.ProductionOilCondensateAGNAGUploadFilePath= await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"ProductionOilCondensateAGNAGDocument/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+					//	if (oil_condensate_fiveyears_model.ProductionOilCondensateAGNAGUploadFilePath == null)
+					//		return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+					//}
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							oil_condensate_fiveyears_model.Date_Created = DateTime.Now;
+							oil_condensate_fiveyears_model.Created_by = WKPCompanyId;
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(oil_condensate_fiveyears_model);
+						}
+						else
+						{
+							oil_condensate_fiveyears_model.Date_Created = getData.Date_Created;
+							oil_condensate_fiveyears_model.Created_by = getData.Created_by;
+							oil_condensate_fiveyears_model.Date_Updated = DateTime.Now;
+							oil_condensate_fiveyears_model.Updated_by = WKPCompanyId;
+							_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(getData);
+							await _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.AddAsync(oil_condensate_fiveyears_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.OIL_CONDENSATE_PRODUCTION_ACTIVITIES_FIVE_YEAR_PROJECTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
 
 
 
