@@ -39,7 +39,21 @@ namespace Backend_UMR_Work_Program.Controllers
 			_helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
 		}
 
-
+		[HttpGet("GetElpsStaff")]
+		public object GetElpsStaff()
+		{
+			try
+			{
+				var table = _account.GetData();
+				string JSONString = string.Empty;
+				JSONString = JsonConvert.SerializeObject(table);
+				return JSONString;
+			}
+			catch (Exception ex)
+			{
+				return new { message = ex.Message, trace = ex.StackTrace };
+			}
+		}
 
 		[HttpGet("GetData")]
 		public object GetData()
