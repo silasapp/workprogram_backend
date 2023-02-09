@@ -8672,15 +8672,6 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 
 
 
-
-
-
-
-
-
-
-
-
 [HttpPost("POST_HSE_WASTE_MANAGEMENT_NEW")]
 		public async Task<object> POST_HSE_WASTE_MANAGEMENT_NEW([FromBody] HSE_WASTE_MANAGEMENT_NEW hse_waste_management_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
@@ -9008,2582 +8999,2761 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         }
 
 
-        [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
-        public async Task<object> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW hse_compliance_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_compliance_model != null)
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_compliance_model.Companyemail = WKPCompanyEmail;
-                    hse_compliance_model.CompanyName = WKPCompanyName;
-                    hse_compliance_model.COMPANY_ID = WKPCompanyId;
-                    hse_compliance_model.CompanyNumber = WKPCompanyNumber;
-                    hse_compliance_model.Date_Updated = DateTime.Now;
-                    hse_compliance_model.Updated_by = WKPCompanyId;
-                    hse_compliance_model.Year_of_WP = year;
-                    hse_compliance_model.OML_Name = omlName;
-                    hse_compliance_model.Field_ID = concessionField.Field_ID;
-                    hse_compliance_model.ACTUAL_year = year;
-                    hse_compliance_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_compliance_model.Date_Created = DateTime.Now;
-                            hse_compliance_model.Created_by = WKPCompanyId;
-                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(hse_compliance_model);
-                        }
-                        else
-                        {
-                            hse_compliance_model.Date_Created = getData.Date_Created;
-                            hse_compliance_model.Created_by = getData.Created_by;
-                            hse_compliance_model.Date_Updated = DateTime.Now;
-                            hse_compliance_model.Updated_by = WKPCompanyId;
-                            _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
-                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(hse_compliance_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
-        public async Task<object> POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW([FromBody] HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW hse_environmental_studies_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_environmental_studies_model != null)
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.YEAR_ == hse_environmental_studies_model.YEAR_ && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_environmental_studies_model.Companyemail = WKPCompanyEmail;
-                    hse_environmental_studies_model.CompanyName = WKPCompanyName;
-                    hse_environmental_studies_model.COMPANY_ID = WKPCompanyId;
-                    hse_environmental_studies_model.CompanyNumber = WKPCompanyNumber;
-                    hse_environmental_studies_model.Date_Updated = DateTime.Now;
-                    hse_environmental_studies_model.Updated_by = WKPCompanyId;
-                    hse_environmental_studies_model.Year_of_WP = year;
-                    hse_environmental_studies_model.OML_Name = omlName;
-                    hse_environmental_studies_model.Field_ID = concessionField.Field_ID;
-                    hse_environmental_studies_model.ACTUAL_year = year;
-                    hse_environmental_studies_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_environmental_studies_model.Date_Created = DateTime.Now;
-                            hse_environmental_studies_model.Created_by = WKPCompanyId;
-                            await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(hse_environmental_studies_model);
-                        }
-                        else
-                        {
-                            hse_environmental_studies_model.Date_Created = getData.Date_Created;
-                            hse_environmental_studies_model.Created_by = getData.Created_by;
-                            hse_environmental_studies_model.Date_Updated = DateTime.Now;
-                            hse_environmental_studies_model.Updated_by = WKPCompanyId;
-                            _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
-                            await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(hse_environmental_studies_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            using var transaction = _context.Database.BeginTransaction();
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_sustainable_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
-                    hse_sustainable_model.CompanyName = WKPCompanyName;
-                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
-                    hse_sustainable_model.Date_Updated = DateTime.Now;
-                    hse_sustainable_model.Updated_by = WKPCompanyId;
-                    hse_sustainable_model.Year_of_WP = year;
-                    hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
-                    var blobname1 = blobService.Filenamer(file1);
-                    var blobname2 = blobService.Filenamer(file2);
-
-                    if (file1 != null)
-                    {
-                        string docName = "MOU Responder";
-                        hse_sustainable_model.MOUResponderFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"MOUResponderDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_sustainable_model.MOUResponderFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_sustainable_model.MOUResponderFilename = blobname1;
-                    }
-                    if (file2 != null)
-                    {
-                        string docName = "OSCP";
-                        hse_sustainable_model.MOUOSCPFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"MOUOSCPDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_sustainable_model.MOUOSCPFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_sustainable_model.MOUOSCPFilename = blobname2;
-
-                    }
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_sustainable_model.Date_Created = DateTime.Now;
-                            hse_sustainable_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.AddAsync(hse_sustainable_model);
-                        }
-                        else
-                        {
-                            hse_sustainable_model.Date_Created = getData.Date_Created;
-                            hse_sustainable_model.Created_by = getData.Created_by;
-                            hse_sustainable_model.Date_Updated = DateTime.Now;
-                            hse_sustainable_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.AddAsync(hse_sustainable_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    transaction.Commit();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_sustainable_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
-                    hse_sustainable_model.CompanyName = WKPCompanyName;
-                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
-                    hse_sustainable_model.Date_Updated = DateTime.Now;
-                    hse_sustainable_model.Updated_by = WKPCompanyId;
-                    hse_sustainable_model.Year_of_WP = year;
-                    hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var blobname1 = blobService.Filenamer(file1);
-
-                    if (file1 != null)
-                    {
-                        string docName = "GMOU";
-                        hse_sustainable_model.MOUUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"MOUDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_sustainable_model.MOUUploadFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-
-                    }
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_sustainable_model.Date_Created = DateTime.Now;
-                            hse_sustainable_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_sustainable_model);
-                        }
-                        else
-                        {
-                            hse_sustainable_model.Date_Created = getData.Date_Created;
-                            hse_sustainable_model.Created_by = getData.Created_by;
-                            hse_sustainable_model.Date_Updated = DateTime.Now;
-                            hse_sustainable_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_sustainable_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW")]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_sustainable_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
-                    hse_sustainable_model.CompanyName = WKPCompanyName;
-                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
-                    hse_sustainable_model.Date_Updated = DateTime.Now;
-                    hse_sustainable_model.Updated_by = WKPCompanyId;
-                    hse_sustainable_model.Year_of_WP = year;
-                    hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField.Field_ID;
-                    hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_sustainable_model.Date_Created = DateTime.Now;
-                            hse_sustainable_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
-                        }
-                        else
-                        {
-                            hse_sustainable_model.Date_Created = getData.Date_Created;
-                            hse_sustainable_model.Created_by = getData.Created_by;
-                            hse_sustainable_model.Date_Updated = DateTime.Now;
-                            hse_sustainable_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_sustainable_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
-                    hse_sustainable_model.CompanyName = WKPCompanyName;
-                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
-                    hse_sustainable_model.Date_Updated = DateTime.Now;
-                    hse_sustainable_model.Updated_by = WKPCompanyId;
-                    hse_sustainable_model.Year_of_WP = year;
-                    hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField?.Field_ID;
-                    hse_sustainable_model.ACTUAL_year = year;
-                    hse_sustainable_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_sustainable_model.Date_Created = DateTime.Now;
-                            hse_sustainable_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
-                        }
-                        else
-                        {
-                            hse_sustainable_model.Date_Created = getData.Date_Created;
-                            hse_sustainable_model.Created_by = getData.Created_by;
-                            hse_sustainable_model.Date_Updated = DateTime.Now;
-                            hse_sustainable_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition")]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_sustainable_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
-                    hse_sustainable_model.CompanyName = WKPCompanyName;
-                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
-                    hse_sustainable_model.Date_Updated = DateTime.Now;
-                    hse_sustainable_model.Updated_by = WKPCompanyId;
-                    hse_sustainable_model.Year_of_WP = year;
-                    hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField.Field_ID;
-                    hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_sustainable_model.Date_Created = DateTime.Now;
-                            hse_sustainable_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.AddAsync(hse_sustainable_model);
-                        }
-                        else
-                        {
-                            hse_sustainable_model.Date_Created = getData.Date_Created;
-                            hse_sustainable_model.Created_by = getData.Created_by;
-                            hse_sustainable_model.Date_Updated = DateTime.Now;
-                            hse_sustainable_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.AddAsync(hse_sustainable_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME"), DisableRequestSizeLimitAttribute]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_sustainable_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
-                    hse_sustainable_model.CompanyName = WKPCompanyName;
-                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
-                    hse_sustainable_model.Date_Updated = DateTime.Now;
-                    hse_sustainable_model.Updated_by = WKPCompanyId;
-                    hse_sustainable_model.Year_of_WP = year;
-                    hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var blobname1 = blobService.Filenamer(file1);
-
-                    if (file1 != null)
-                    {
-                        string docName = "TS";
-                        hse_sustainable_model.TSUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"TSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_sustainable_model.TSUploadFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-
-                    }
-                    #endregion
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_sustainable_model.Date_Created = DateTime.Now;
-                            hse_sustainable_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.AddAsync(hse_sustainable_model);
-                        }
-                        else
-                        {
-                            hse_sustainable_model.Date_Created = getData.Date_Created;
-                            hse_sustainable_model.Created_by = getData.Created_by;
-                            hse_sustainable_model.Date_Updated = DateTime.Now;
-                            hse_sustainable_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.AddAsync(hse_sustainable_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship")]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_sustainable_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_sustainable_model.Companyemail = WKPCompanyEmail;
-                    hse_sustainable_model.CompanyName = WKPCompanyName;
-                    hse_sustainable_model.COMPANY_ID = WKPCompanyId;
-                    hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
-                    hse_sustainable_model.Date_Updated = DateTime.Now;
-                    hse_sustainable_model.Updated_by = WKPCompanyId;
-                    hse_sustainable_model.Year_of_WP = year;
-                    hse_sustainable_model.OML_Name = omlName;
-                    hse_sustainable_model.Field_ID = concessionField.Field_ID;
-                    hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_sustainable_model.Date_Created = DateTime.Now;
-                            hse_sustainable_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.AddAsync(hse_sustainable_model);
-                        }
-                        else
-                        {
-                            hse_sustainable_model.Date_Created = getData.Date_Created;
-                            hse_sustainable_model.Created_by = getData.Created_by;
-                            hse_sustainable_model.Date_Updated = DateTime.Now;
-                            hse_sustainable_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.AddAsync(hse_sustainable_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
-        public async Task<object> POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED([FromBody] HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED hse_environmental_studies_new_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
-                    save += _context.SaveChanges();
-                    //Added by Musa
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                }
-                if (hse_environmental_studies_new_model != null)
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_environmental_studies_new_model.Companyemail = WKPCompanyEmail;
-                    hse_environmental_studies_new_model.CompanyName = WKPCompanyName;
-                    hse_environmental_studies_new_model.COMPANY_ID = WKPCompanyId;
-                    hse_environmental_studies_new_model.CompanyNumber = WKPCompanyNumber;
-                    hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
-                    hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
-                    hse_environmental_studies_new_model.Year_of_WP = year;
-                    hse_environmental_studies_new_model.OML_Name = omlName;
-                    hse_environmental_studies_new_model.Field_ID = concessionField.Field_ID;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_environmental_studies_new_model.Date_Created = DateTime.Now;
-                            hse_environmental_studies_new_model.Created_by = WKPCompanyId;
-                            await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(hse_environmental_studies_new_model);
-                        }
-                        else
-                        {
-                            hse_environmental_studies_new_model.Date_Created = getData.Date_Created;
-                            hse_environmental_studies_new_model.Created_by = getData.Created_by;
-                            hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
-                            hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
-                            _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
-                            await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(hse_environmental_studies_new_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_POINT_SOURCE_REGISTRATION")]
-        public async Task<object> POST_HSE_POINT_SOURCE_REGISTRATION([FromForm] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName,
-            string omlID, string areTherePointSourcePermit, string evidenceOfPSPFilename, string evidenceOfPSPPath, string actionToDo, string fieldName, string reasonForNoPSP)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-
-                if (!string.IsNullOrEmpty(omlID))
-                {
-                    var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
-                    save += _context.SaveChanges();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                }
-                if (hse_point_source_registration != null)
-                {
-                    var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).FirstOrDefault();
-
-                    hse_point_source_registration.OML_ID = omlID;
-                    hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
-                    hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
-                    hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
-                    hse_point_source_registration.OML_Name = omlName;
-                    hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
-
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
-                            hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
-                            hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
-                            hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
-                            await _context.HSE_POINT_SOURCE_REGISTRATIONs.AddAsync(hse_point_source_registration);
-                        }
-                        else
-                        {
-                            hse_point_source_registration.OML_ID = getData.OML_ID;
-                            hse_point_source_registration.OML_Name = getData.OML_Name;
-                            _context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
-                            await _context.HSE_POINT_SOURCE_REGISTRATIONs.AddAsync(hse_point_source_registration);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
-
-        [HttpPost("POST_HSE_REMEDIATION_FUND")]
-        public async Task<object> POST_HSE_REMEDIATION_FUND([FromForm] HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string fieldName, string year, string omlID, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(omlID))
-                {
-                    var getData = (from c in _context.HSE_REMEDIATION_FUNDs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_REMEDIATION_FUNDs.Remove(getData);
-                    save += _context.SaveChanges();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                }
-                if (hse_remediation_fund != null)
-                {
-                    var getData = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-
-                    hse_remediation_fund.OML_ID = omlID;
-                    hse_remediation_fund.Company_Email = WKPCompanyEmail;
-                    hse_remediation_fund.CompanyName = WKPCompanyName;
-                    hse_remediation_fund.Company_ID = WKPCompanyId;
-                    hse_remediation_fund.Company_Number = WKPCompanyNumber.ToString();
-                    hse_remediation_fund.OML_Name = omlName;
-
-
-                    #region Fileregion
-                    var file = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var blobname = blobService.Filenamer(file);
-
-                    if (file != null)
-                    {
-                        string docName = "Evidence of Payment";
-                        hse_remediation_fund.evidenceOfPaymentPath = await blobService.UploadFileBlobAsync("documents", file.OpenReadStream(), file.ContentType, $"Remediation Documents/{blobname}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_remediation_fund.evidenceOfPaymentPath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_remediation_fund.evidenceOfPaymentPath = blobname;
-                    }
-                    #endregion
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_REMEDIATION_FUNDs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_WASTE_MANAGEMENT_DZ")]
-        public async Task<object> POST_HSE_WASTE_MANAGEMENT_DZ([FromForm] HSE_WASTE_MANAGEMENT_DZ hSE_WASTE_MANAGEMENT_DZ, string omlName, string fieldName, string year, string omlID, string actionToDo)
-        {
-
-            int save = 0;
-            string action = actionToDo == null ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(omlID))
-                {
-                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_WASTE_MANAGEMENT_DZs.Remove(getData);
-                    save += _context.SaveChanges();
-
-                    if (save > 0)
-                    {
-                        string successMsg = "Form has been " + action == GeneralModel.Insert.ToLower() ? action + "ED" : action + "D" + " successfully.";
-                        var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.OML_ID == omlID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                }
-                if (hSE_WASTE_MANAGEMENT_DZ != null)
-                {
-                    var getData = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.OML_ID == omlID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-
-                    hSE_WASTE_MANAGEMENT_DZ.OML_ID = omlID;
-                    hSE_WASTE_MANAGEMENT_DZ.Companyemail = WKPCompanyEmail;
-                    hSE_WASTE_MANAGEMENT_DZ.CompanyName = WKPCompanyName;
-                    hSE_WASTE_MANAGEMENT_DZ.COMPANY_ID = WKPCompanyId;
-                    hSE_WASTE_MANAGEMENT_DZ.CompanyNumber = WKPCompanyNumber;
-                    hSE_WASTE_MANAGEMENT_DZ.OML_Name = omlName;
-
-
-                    #region Fileregion
-                    if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
-                    {
-                        IFormFile? file1 = null;
-                        string blobname1 = string.Empty;
-
-                        IFormFile? file2 = null;
-                        string blobname2 = string.Empty;
-
-                        IFormFile? file3 = null;
-                        string blobname3 = string.Empty;
-
-                        if (Request.Form.Files.Count == 1)
-                        {
-                            file1 = Request.Form.Files[0];
-                            blobname1 = blobService.Filenamer(file1);
-                            if (file1 != null)
-                            {
-                                string docName = "Upload Evidence of EWD";
-                                hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Filename = blobname1;
-
-                            }
-                        }
-                        if (Request.Form.Files.Count == 2)
-                        {
-                            file1 = Request.Form.Files[0];
-                            file2 = Request.Form.Files[1];
-                            blobname1 = blobService.Filenamer(file1);
-                            blobname2 = blobService.Filenamer(file2);
-                            if (file1 != null)
-                            {
-                                string docName = "Upload Evidence of EWD";
-                                hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Filename = blobname1;
-
-                            }
-                            if (file2 != null)
-                            {
-                                string docName = "Evidence Of Pay Trust Fund";
-                                hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCFilename = blobname2;
-
-                            }
-                        }
-                        if (Request.Form.Files.Count > 2)
-                        {
-                            file1 = Request.Form.Files[0];
-                            file2 = Request.Form.Files[1];
-                            file3 = Request.Form.Files[2];
-                            blobname1 = blobService.Filenamer(file1);
-                            blobname2 = blobService.Filenamer(file2);
-                            blobname3 = blobService.Filenamer(file3);
-                            if (file1 != null)
-                            {
-                                string docName = "Upload Evidence of EWD";
-                                hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Filename = blobname1;
-
-                            }
-                            if (file2 != null)
-                            {
-                                string docName = "Evidence Of Pay of DDCPath";
-                                hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCFilename = blobname2;
-
-                            }
-                            if (file3 != null)
-                            {
-                                string docName = "Evidence Of Reinjection Permit ";
-                                hSE_WASTE_MANAGEMENT_DZ.Evidence_of_Reinjection_Permit_Path = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_Reinjection_Permit_Path == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    hSE_WASTE_MANAGEMENT_DZ.Evidence_of_Reinjection_Permit_Filename = blobname3;
-
-                            }
-                        }
-                    }
-
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hSE_WASTE_MANAGEMENT_DZ.Date_Created = DateTime.Now;
-                            hSE_WASTE_MANAGEMENT_DZ.Created_by = WKPCompanyId;
-                            await _context.HSE_WASTE_MANAGEMENT_DZs.AddAsync(hSE_WASTE_MANAGEMENT_DZ);
-                        }
-                        else
-                        {
-                            hSE_WASTE_MANAGEMENT_DZ.Date_Created = getData.Date_Created;
-                            hSE_WASTE_MANAGEMENT_DZ.Created_by = getData.Created_by;
-                            hSE_WASTE_MANAGEMENT_DZ.Date_Updated = DateTime.Now;
-                            hSE_WASTE_MANAGEMENT_DZ.Updated_by = WKPCompanyId;
-                            _context.HSE_WASTE_MANAGEMENT_DZs.Remove(getData);
-                            await _context.HSE_WASTE_MANAGEMENT_DZs.AddAsync(hSE_WASTE_MANAGEMENT_DZ);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_WASTE_MANAGEMENT_DZs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
-
-
-
-        [HttpPost("POST_HSE_OSP_REGISTRATIONS_NEW")]
-        public async Task<object> POST_HSE_OSP_REGISTRATIONS_NEW([FromBody] HSE_OSP_REGISTRATIONS_NEW hse_osp_registrations_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_osp_registrations_model != null)
-                {
-                    var getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.VALUES_ == hse_osp_registrations_model.VALUES_ && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_osp_registrations_model.Companyemail = WKPCompanyEmail;
-                    hse_osp_registrations_model.CompanyName = WKPCompanyName;
-                    hse_osp_registrations_model.COMPANY_ID = WKPCompanyId;
-                    hse_osp_registrations_model.CompanyNumber = WKPCompanyNumber;
-                    hse_osp_registrations_model.Date_Updated = DateTime.Now;
-                    hse_osp_registrations_model.Updated_by = WKPCompanyId;
-                    hse_osp_registrations_model.Year_of_WP = year;
-                    hse_osp_registrations_model.OML_Name = omlName;
-                    hse_osp_registrations_model.Field_ID = concessionField.Field_ID;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_osp_registrations_model.Date_Created = DateTime.Now;
-                            hse_osp_registrations_model.Created_by = WKPCompanyId;
-                            await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(hse_osp_registrations_model);
-                        }
-                        else
-                        {
-                            hse_osp_registrations_model.Date_Created = getData.Date_Created;
-                            hse_osp_registrations_model.Created_by = getData.Created_by;
-                            hse_osp_registrations_model.Date_Updated = DateTime.Now;
-                            hse_osp_registrations_model.Updated_by = WKPCompanyId;
-                            _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
-                            await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(hse_osp_registrations_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
-        public async Task<object> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED hse_produced_water_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_produced_water_model != null)
-                {
-                    var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_produced_water_model.Companyemail = WKPCompanyEmail;
-                    hse_produced_water_model.CompanyName = WKPCompanyName;
-                    hse_produced_water_model.COMPANY_ID = WKPCompanyId;
-                    hse_produced_water_model.CompanyNumber = WKPCompanyNumber;
-                    hse_produced_water_model.Date_Updated = DateTime.Now;
-                    hse_produced_water_model.Updated_by = WKPCompanyId;
-                    hse_produced_water_model.Year_of_WP = year;
-                    hse_produced_water_model.OML_Name = omlName;
-                    hse_produced_water_model.Field_ID = concessionField.Field_ID;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_produced_water_model.Date_Created = DateTime.Now;
-                            hse_produced_water_model.Created_by = WKPCompanyId;
-                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(hse_produced_water_model);
-                        }
-                        else
-                        {
-                            hse_produced_water_model.Date_Created = getData.Date_Created;
-                            hse_produced_water_model.Created_by = getData.Created_by;
-                            hse_produced_water_model.Date_Updated = DateTime.Now;
-                            hse_produced_water_model.Updated_by = WKPCompanyId;
-                            _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
-                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(hse_produced_water_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
-        public async Task<object> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW hse_chemical_usage_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_chemical_usage_model != null)
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_chemical_usage_model.Companyemail = WKPCompanyEmail;
-                    hse_chemical_usage_model.CompanyName = WKPCompanyName;
-                    hse_chemical_usage_model.COMPANY_ID = WKPCompanyId;
-                    hse_chemical_usage_model.CompanyNumber = WKPCompanyNumber;
-                    hse_chemical_usage_model.Date_Updated = DateTime.Now;
-                    hse_chemical_usage_model.Updated_by = WKPCompanyId;
-                    hse_chemical_usage_model.Year_of_WP = year;
-                    hse_chemical_usage_model.OML_Name = omlName;
-                    hse_chemical_usage_model.Field_ID = concessionField.Field_ID;
-                    hse_chemical_usage_model.ACTUAL_year = year;
-                    hse_chemical_usage_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_chemical_usage_model.Date_Created = DateTime.Now;
-                            hse_chemical_usage_model.Created_by = WKPCompanyId;
-                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(hse_chemical_usage_model);
-                        }
-                        else
-                        {
-                            hse_chemical_usage_model.Date_Created = getData.Date_Created;
-                            hse_chemical_usage_model.Created_by = getData.Created_by;
-                            hse_chemical_usage_model.Date_Updated = DateTime.Now;
-                            hse_chemical_usage_model.Updated_by = WKPCompanyId;
-                            _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
-                            await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(hse_chemical_usage_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_CAUSES_OF_SPILL")]
-        public async Task<object> POST_HSE_CAUSES_OF_SPILL([FromBody] HSE_CAUSES_OF_SPILL hse_causes_of_spill_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_CAUSES_OF_SPILLs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_causes_of_spill_model != null)
-                {
-                    var getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_causes_of_spill_model.Companyemail = WKPCompanyEmail;
-                    hse_causes_of_spill_model.CompanyName = WKPCompanyName;
-                    hse_causes_of_spill_model.COMPANY_ID = WKPCompanyId;
-                    hse_causes_of_spill_model.CompanyNumber = WKPCompanyNumber;
-                    hse_causes_of_spill_model.Date_Updated = DateTime.Now;
-                    hse_causes_of_spill_model.Updated_by = WKPCompanyId;
-                    hse_causes_of_spill_model.Year_of_WP = year;
-                    hse_causes_of_spill_model.OML_Name = omlName;
-                    hse_causes_of_spill_model.Field_ID = concessionField.Field_ID;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_causes_of_spill_model.Date_Created = DateTime.Now;
-                            hse_causes_of_spill_model.Created_by = WKPCompanyId;
-                            await _context.HSE_CAUSES_OF_SPILLs.AddAsync(hse_causes_of_spill_model);
-                        }
-                        else
-                        {
-                            hse_causes_of_spill_model.Date_Created = getData.Date_Created;
-                            hse_causes_of_spill_model.Created_by = getData.Created_by;
-                            hse_causes_of_spill_model.Date_Updated = DateTime.Now;
-                            hse_causes_of_spill_model.Updated_by = WKPCompanyId;
-                            _context.HSE_CAUSES_OF_SPILLs.Remove(getData);
-                            await _context.HSE_CAUSES_OF_SPILLs.AddAsync(hse_causes_of_spill_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_CAUSES_OF_SPILLs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_CAUSES_OF_SPILLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME hse_scholarship_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_scholarship_model != null)
-                {
-                    var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_scholarship_model.Companyemail = WKPCompanyEmail;
-                    hse_scholarship_model.CompanyName = WKPCompanyName;
-                    hse_scholarship_model.COMPANY_ID = WKPCompanyId;
-                    hse_scholarship_model.CompanyNumber = WKPCompanyNumber;
-                    hse_scholarship_model.Date_Updated = DateTime.Now;
-                    hse_scholarship_model.Updated_by = WKPCompanyId;
-                    hse_scholarship_model.Year_of_WP = year;
-                    hse_scholarship_model.OML_Name = omlName;
-                    hse_scholarship_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var blobname1 = blobService.Filenamer(file1);
-
-                    if (file1 != null)
-                    {
-                        string docName = "SS";
-                        hse_scholarship_model.SSUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_scholarship_model.SSUploadFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_scholarship_model.SSUploadFilename = blobname1;
-                    }
-
-                    #endregion
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_scholarship_model.Date_Created = DateTime.Now;
-                            hse_scholarship_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
-                        }
-                        else
-                        {
-                            hse_scholarship_model.Date_Created = getData.Date_Created;
-                            hse_scholarship_model.Created_by = getData.Created_by;
-                            hse_scholarship_model.Date_Updated = DateTime.Now;
-                            hse_scholarship_model.Updated_by = WKPCompanyId;
-                            _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
-                            await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_MANAGEMENT_POSITION"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_MANAGEMENT_POSITION([FromForm] HSE_MANAGEMENT_POSITION hse_management_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
-
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-
-
-                    var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_MANAGEMENT_POSITIONs.Remove(getData);
-                    save += _context.SaveChanges();
-                    //Added By Musa
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                }
-                if (hse_management_model != null)
-                {
-                    var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-                    hse_management_model.Companyemail = WKPCompanyEmail;
-                    hse_management_model.CompanyName = WKPCompanyName;
-                    hse_management_model.COMPANY_ID = WKPCompanyId;
-                    hse_management_model.CompanyNumber = WKPCompanyNumber;
-                    hse_management_model.Date_Updated = DateTime.Now;
-                    hse_management_model.Updated_by = WKPCompanyId;
-                    hse_management_model.Year_of_WP = year;
-                    hse_management_model.OML_Name = omlName;
-                    hse_management_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
-                    var blobname1 = blobService.Filenamer(file1);
-                    var blobname2 = blobService.Filenamer(file2);
-
-                    if (file1 != null)
-                    {
-                        string docName = "Promotion Letter";
-                        hse_management_model.PromotionLetterFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"HRDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_management_model.PromotionLetterFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_management_model.PromotionLetterFilename = blobname1;
-                    }
-                    if (file2 != null)
-                    {
-                        string docName = "Organogram";
-                        hse_management_model.OrganogramrFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"OGDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_management_model.OrganogramrFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_management_model.OrganogramrFilename = blobname2;
-
-                    }
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData.Count <= 0)
-                        {
-                            hse_management_model.Date_Created = DateTime.Now;
-                            hse_management_model.Created_by = WKPCompanyId;
-                            await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
-                        }
-                        else
-                        {
-                            hse_management_model.Date_Created = getData.FirstOrDefault().Date_Created;
-                            hse_management_model.Created_by = getData.FirstOrDefault().Created_by;
-                            hse_management_model.Date_Updated = DateTime.Now;
-                            hse_management_model.Updated_by = WKPCompanyId;
-
-                            getData.ForEach(x =>
-                            {
-                                _context.HSE_MANAGEMENT_POSITIONs.Remove(x);
-                                save += _context.SaveChanges();
-
-                            });
-
-                            await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
-                        }
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                //else
-                //{
-                return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                //}
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_SAFETY_CULTURE_TRAINING"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_SAFETY_CULTURE_TRAINING([FromForm] HSE_SAFETY_CULTURE_TRAINING hse_safety_culture_model, string year, string omlName, string fieldName, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_safety_culture_model != null)
-                {
-                    var getData = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-                    hse_safety_culture_model.Companyemail = WKPCompanyEmail;
-                    hse_safety_culture_model.CompanyName = WKPCompanyName;
-                    hse_safety_culture_model.COMPANY_ID = WKPCompanyId;
-                    hse_safety_culture_model.CompanyNumber = WKPCompanyNumber;
-                    hse_safety_culture_model.Date_Updated = DateTime.Now;
-                    hse_safety_culture_model.Updated_by = WKPCompanyId;
-                    hse_safety_culture_model.Year_of_WP = year;
-                    hse_safety_culture_model.OML_Name = omlName;
-                    hse_safety_culture_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var filesLength = Request.Form.Files;
-
-                    IFormFile? file1 = null;
-                    IFormFile? file2 = null;
-                    IFormFile? file3 = null;
-                    var blobname3 = string.Empty;
-
-                    var blobname1 = string.Empty;
-                    var blobname2 = string.Empty;
-
-                    if (filesLength.Count > 2)
-                    {
-                        file1 = Request.Form.Files[0];
-                        file2 = Request.Form.Files[1];
-                        file3 = Request.Form.Files[2];
-
-                        blobname3 = blobService.Filenamer(file3);
-                        blobname1 = blobService.Filenamer(file1);
-                        blobname2 = blobService.Filenamer(file2);
-
-                        if (file3 != null)
-                        {
-                            string docName = "Evidence Of Training Plan";
-                            hse_safety_culture_model.EvidenceOfTrainingPlanPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfTrainingPlanDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (hse_safety_culture_model.EvidenceOfTrainingPlanPath == null)
-                                return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                            else
-                                hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
-                        }
-                        if (file1 != null)
-                        {
-                            string docName = "Safety Current Year";
-                            hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
-                                return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                            else
-                                hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
-                        }
-                        if (file2 != null)
-                        {
-                            string docName = "Safety Last Two Years";
-                            hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
-                                return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                            else
-                                hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
-                        }
-                    }
-                    if (filesLength.Count == 2)
-                    {
-                        file1 = Request.Form.Files[0];
-                        file2 = Request.Form.Files[1];
-
-                        blobname1 = blobService.Filenamer(file1);
-                        blobname2 = blobService.Filenamer(file2);
-
-                        if (file1 != null)
-                        {
-                            string docName = "Safety Current Year";
-                            hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
-                                return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                            else
-                                hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
-                        }
-                        if (file2 != null)
-                        {
-                            string docName = "Safety Last Two Years";
-                            hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
-                                return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                            else
-                                hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
-                        }
-
-                    }
-
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData.Count <= 0)
-                        {
-                            hse_safety_culture_model.Date_Created = DateTime.Now;
-                            hse_safety_culture_model.Created_by = WKPCompanyId;
-                            await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(hse_safety_culture_model);
-                        }
-                        else
-                        {
-                            hse_safety_culture_model.Date_Created = getData.FirstOrDefault().Date_Created;
-                            hse_safety_culture_model.Created_by = getData.FirstOrDefault().Created_by;
-                            hse_safety_culture_model.Date_Updated = DateTime.Now;
-                            hse_safety_culture_model.Updated_by = WKPCompanyId;
-                            hse_safety_culture_model.CompanyNumber = WKPCompanyNumber;
-
-                            getData.ForEach(x =>
-                            {
-                                _context.HSE_SAFETY_CULTURE_TRAININGs.Remove(x);
-                                save += _context.SaveChanges();
-
-                            });
-                            await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(hse_safety_culture_model);
-                        }
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-
-                }
-
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_QUALITY_CONTROL"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_QUALITY_CONTROL([FromForm] HSE_QUALITY_CONTROL hse_quality_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_QUALITY_CONTROLs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_QUALITY_CONTROLs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_quality_model != null)
-                {
-
-                    var getData = (from c in _context.HSE_QUALITY_CONTROLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_quality_model.Companyemail = WKPCompanyEmail;
-                    hse_quality_model.CompanyName = WKPCompanyName;
-                    hse_quality_model.COMPANY_ID = WKPCompanyId;
-                    hse_quality_model.CompanyNumber = WKPCompanyNumber;
-                    hse_quality_model.Date_Updated = DateTime.Now;
-                    hse_quality_model.Updated_by = WKPCompanyId;
-                    hse_quality_model.Year_of_WP = year;
-                    hse_quality_model.OML_Name = omlName;
-                    hse_quality_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0];
-                    var blobname1 = blobService.Filenamer(file1);
-
-                    if (file1 != null)
-                    {
-                        string docName = "Quality Control";
-                        hse_quality_model.QualityControlFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"COSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_quality_model.QualityControlFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_quality_model.QualityControlFilename = blobname1;
-                    }
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_quality_model.Date_Created = DateTime.Now;
-                            hse_quality_model.Created_by = WKPCompanyId;
-                            await _context.HSE_QUALITY_CONTROLs.AddAsync(hse_quality_model);
-                        }
-                        else
-                        {
-                            hse_quality_model.Date_Created = getData.Date_Created;
-                            hse_quality_model.Created_by = getData.Created_by;
-                            hse_quality_model.Date_Updated = DateTime.Now;
-                            hse_quality_model.Updated_by = WKPCompanyId;
-                            _context.HSE_QUALITY_CONTROLs.RemoveRange(getData);
-                            save += await _context.SaveChangesAsync();
-
-                            await _context.HSE_QUALITY_CONTROLs.AddAsync(hse_quality_model);
-                        }
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_QUALITY_CONTROLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY([FromForm] HSE_CLIMATE_CHANGE_AND_AIR_QUALITY hse_climate_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_climate_model != null)
-                {
-                    var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_climate_model.Companyemail = WKPCompanyEmail;
-                    hse_climate_model.CompanyName = WKPCompanyName;
-                    hse_climate_model.COMPANY_ID = WKPCompanyId;
-                    hse_climate_model.CompanyNumber = WKPCompanyNumber;
-                    hse_climate_model.Date_Updated = DateTime.Now;
-                    hse_climate_model.Updated_by = WKPCompanyId;
-                    hse_climate_model.Year_of_WP = year;
-                    hse_climate_model.OML_Name = omlName;
-                    hse_climate_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0];
-                    var blobname1 = blobService.Filenamer(file1);
-
-                    if (file1 != null)
-                    {
-                        string docName = "GHG";
-                        hse_climate_model.GHGFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_climate_model.GHGFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_climate_model.GHGFilename = blobname1;
-                    }
-
-                    #endregion
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_climate_model.Date_Created = DateTime.Now;
-                            hse_climate_model.Created_by = WKPCompanyId;
-                            await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
-                        }
-                        else
-                        {
-                            hse_climate_model.Date_Created = getData.Date_Created;
-                            hse_climate_model.Created_by = getData.Created_by;
-                            hse_climate_model.Date_Updated = DateTime.Now;
-                            hse_climate_model.Updated_by = WKPCompanyId;
-                            _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getData);
-                            await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
-                        }
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        // [HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT"), DisableRequestSizeLimit]
-        // public async Task<object> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromForm] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        // {
-
-        // 	int save = 0;
-        // 	string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-        // 	try
-        // 	{
-        // 		if (!string.IsNullOrEmpty(id))
-        // 		{
-        // 			var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-        // 			if (action == GeneralModel.Delete)
-        // 				_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
-        // 			save += _context.SaveChanges();
-        // 		}
-        // 		else if (hse_occupational_model != null)
-        // 		{
-        // 			var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-        // 			hse_occupational_model.Companyemail = WKPCompanyEmail;
-        // 			hse_occupational_model.CompanyName = WKPCompanyName;
-        // 			hse_occupational_model.COMPANY_ID = WKPCompanyId;
-        // 			hse_occupational_model.CompanyNumber = WKPCompanyNumber;
-        // 			hse_occupational_model.Date_Updated = DateTime.Now;
-        // 			hse_occupational_model.Updated_by = WKPCompanyId;
-        // 			hse_occupational_model.Year_of_WP = year;
-        // 			hse_occupational_model.OML_Name = omlName;
-        // 			hse_occupational_model.Field_ID = concessionField.Field_ID;
-
-        // 			#region file section
-        // 			//var files = Request.Form.Files;
-        // 			var file1 = Request.Form.Files[0];
-        // 			var file2 = Request.Form.Files[1];
-
-        // 			var blobname1 = blobService.Filenamer(file1);
-        // 			var blobname2 = blobService.Filenamer(file2);
-
-
-        // 			if (file1 != null)
-        // 			{
-        // 				string docName = "submission of OHM plan";
-        // 				hse_occupational_model.OHMplanCommunicationFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"OHMplanCommunicationDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-        // 				if (hse_occupational_model.OHMplanCommunicationFilePath == null)
-        // 					return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
-        // 				else
-        // 					hse_occupational_model.OHMplanCommunicationFilename = blobname1;
-        // 			}
-        // 			if (file2 != null)
-        // 			{
-        // 				string docName = "Reason Why Ohm Was Not Communicated To Staff";
-        // 				hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-        // 				if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
-        // 					return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
-        // 				else
-        // 					hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname2;
-        // 			}
-        // 			//}
-
-
-        // 			#endregion
-
-        // 			if (action == GeneralModel.Insert.ToLower())
-        // 			{
-        // 				if (getData == null)
-        // 				{
-        // 					hse_occupational_model.Date_Created = DateTime.Now;
-        // 					hse_occupational_model.Created_by = WKPCompanyId;
-        // 					await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
-        // 				}
-        // 				else
-        // 				{
-        // 					hse_occupational_model.Date_Created = getData.Date_Created;
-        // 					hse_occupational_model.Created_by = getData.Created_by;
-        // 					hse_occupational_model.Date_Updated = DateTime.Now;
-        // 					hse_occupational_model.Updated_by = WKPCompanyId;
-        // 					_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
-        // 					await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
-        // 				}
-        // 			}
-
-        // 			save += await _context.SaveChangesAsync();
-        // 		}
-        // 		else
-        // 		{
-        // 			return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
-        // 		}
-        // 		if (save > 0)
-        // 		{
-        // 			string successMsg = Messager.ShowMessage(action);
-        // 			var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-        // 			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-        // 		}
-        // 		else
-        // 		{
-        // 			return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
-
-        // 		}
-        // 	}
-        // 	catch (Exception e)
-        // 	{
-        // 		return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-        // 	}
-        // }
-
-        [HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT"), DisableRequestSizeLimit]
-        public async Task<WebApiResponse> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromForm] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_occupational_model != null)
-                {
-                    var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_occupational_model.Companyemail = WKPCompanyEmail;
-                    hse_occupational_model.CompanyName = WKPCompanyName;
-                    hse_occupational_model.COMPANY_ID = WKPCompanyId;
-                    hse_occupational_model.CompanyNumber = WKPCompanyNumber;
-                    hse_occupational_model.Date_Updated = DateTime.Now;
-                    hse_occupational_model.Updated_by = WKPCompanyId;
-                    hse_occupational_model.Year_of_WP = year;
-                    hse_occupational_model.OML_Name = omlName;
-                    hse_occupational_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    //var files = Request.Form.Files;
-                    var file1 = Request.Form.Files[0];
-                    var file2 = Request.Form.Files[1];
-
-                    var blobname1 = blobService.Filenamer(file1);
-                    var blobname2 = blobService.Filenamer(file2);
-
-
-                    if (file1 != null)
-                    {
-                        string docName = "submission of OHM plan";
-                        hse_occupational_model.OHMplanCommunicationFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"OHMplanCommunicationDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_occupational_model.OHMplanCommunicationFilePath == null)
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-                        else
-                            hse_occupational_model.OHMplanCommunicationFilename = blobname1;
-                    }
-                    if (file2 != null)
-                    {
-                        string docName = "OHM Plan";
-                        hse_occupational_model.OHMplanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_occupational_model.OHMplanFilePath == null)
-                            return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-                        else
-                            hse_occupational_model.OHMplanFilename = blobname2;
-                    }
-                    //}
-
-
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_occupational_model.Date_Created = DateTime.Now;
-                            hse_occupational_model.Created_by = WKPCompanyId;
-                            await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
-                        }
-                        else
-                        {
-                            hse_occupational_model.Date_Created = getData.Date_Created;
-                            hse_occupational_model.Created_by = getData.Created_by;
-                            hse_occupational_model.Date_Updated = DateTime.Now;
-                            hse_occupational_model.Updated_by = WKPCompanyId;
-                            _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
-                            await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
-                        }
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
-
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_WASTE_MANAGEMENT_SYSTEM"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_WASTE_MANAGEMENT_SYSTEM([FromForm] HSE_WASTE_MANAGEMENT_SYSTEM hse_waste_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
-                    save += await _context.SaveChangesAsync();
-                }
-                else if (hse_waste_model != null)
-                {
-                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_waste_model.Companyemail = WKPCompanyEmail;
-                    hse_waste_model.CompanyName = WKPCompanyName;
-                    hse_waste_model.COMPANY_ID = WKPCompanyId;
-                    hse_waste_model.CompanyNumber = WKPCompanyNumber;
-                    hse_waste_model.Date_Updated = DateTime.Now;
-                    hse_waste_model.Updated_by = WKPCompanyId;
-                    hse_waste_model.Year_of_WP = year;
-                    hse_waste_model.OML_Name = omlName;
-                    hse_waste_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
-                    var blobname1 = blobService.Filenamer(file1);
-                    var blobname2 = blobService.Filenamer(file2);
-
-                    if (file1 != null)
-                    {
-                        string docName = "Decom Certificate";
-                        hse_waste_model.DecomCertificateFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"DecomCertificateDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_waste_model.DecomCertificateFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_waste_model.DecomCertificateFilename = blobname1;
-                    }
-                    if (file2 != null)
-                    {
-                        string docName = "Waste Management Plan";
-                        hse_waste_model.WasteManagementPlanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"WasteManagementPlanDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_waste_model.WasteManagementPlanFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_waste_model.WasteManagementPlanFilename = blobname1;
-                    }
-
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_waste_model.Date_Created = DateTime.Now;
-                            hse_waste_model.Created_by = WKPCompanyId;
-                            await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(hse_waste_model);
-                        }
-                        else
-                        {
-                            hse_waste_model.Date_Created = getData.Date_Created;
-                            hse_waste_model.Created_by = getData.Created_by;
-                            hse_waste_model.Date_Updated = DateTime.Now;
-                            hse_waste_model.Updated_by = WKPCompanyId;
-                            _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
-                            await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(hse_waste_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM([FromForm] HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM hse_EMS_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
-                    save += _context.SaveChanges();
-
-                    if (save > 0)
-                    {
-
-
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                }
-                if (hse_EMS_model != null)
-                {
-                    var getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_EMS_model.Companyemail = WKPCompanyEmail;
-                    hse_EMS_model.CompanyName = WKPCompanyName;
-                    hse_EMS_model.COMPANY_ID = WKPCompanyId;
-                    hse_EMS_model.CompanyNumber = WKPCompanyNumber;
-                    hse_EMS_model.Date_Updated = DateTime.Now;
-                    hse_EMS_model.Updated_by = WKPCompanyId;
-                    hse_EMS_model.Year_of_WP = year;
-                    hse_EMS_model.OML_Name = omlName;
-                    hse_EMS_model.Field_ID = concessionField.Field_ID;
-
-                    #region file section
-                    var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
-                    var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
-                    var blobname1 = blobService.Filenamer(file1);
-                    var blobname2 = blobService.Filenamer(file2);
-
-                    if (file1 != null)
-                    {
-                        string docName = "EMS";
-                        hse_EMS_model.EMSFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EMSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_EMS_model.EMSFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_EMS_model.EMSFilename = blobname1;
-                    }
-                    if (file2 != null)
-                    {
-                        string docName = "Audit File";
-                        hse_EMS_model.AUDITFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"AUDITDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                        if (hse_EMS_model.AUDITFilePath == null)
-                            return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        else
-                            hse_EMS_model.AUDITFilename = blobname1;
-                    }
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_EMS_model.Date_Created = DateTime.Now;
-                            hse_EMS_model.Created_by = WKPCompanyId;
-                            await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(hse_EMS_model);
-                        }
-                        else
-                        {
-                            hse_EMS_model.Date_Created = getData.Date_Created;
-                            hse_EMS_model.Created_by = getData.Created_by;
-                            hse_EMS_model.Date_Updated = DateTime.Now;
-                            hse_EMS_model.Updated_by = WKPCompanyId;
-                            _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
-                            await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(hse_EMS_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	[HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW")]
+		public async Task<object> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW hse_compliance_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_compliance_model != null)
+				{
+					HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					hse_compliance_model.Companyemail = WKPCompanyEmail;
+					hse_compliance_model.CompanyName = WKPCompanyName;
+					hse_compliance_model.COMPANY_ID = WKPCompanyId;
+					hse_compliance_model.CompanyNumber = WKPCompanyNumber;
+					hse_compliance_model.Date_Updated = DateTime.Now;
+					hse_compliance_model.Updated_by = WKPCompanyId;
+					hse_compliance_model.Year_of_WP = year;
+					hse_compliance_model.OML_Name = omlName;
+					hse_compliance_model.Field_ID = concessionField?.Field_ID??null;
+					hse_compliance_model.ACTUAL_year = year;
+					hse_compliance_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_compliance_model.Date_Created = DateTime.Now;
+							hse_compliance_model.Created_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(hse_compliance_model);
+						}
+						else
+						{
+							hse_compliance_model.Date_Created = getData.Date_Created;
+							hse_compliance_model.Created_by = getData.Created_by;
+							hse_compliance_model.Date_Updated = DateTime.Now;
+							hse_compliance_model.Updated_by = WKPCompanyId;
+							_context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
+							await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.AddAsync(hse_compliance_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW")]
+		public async Task<object> POST_HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW([FromBody] HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW hse_environmental_studies_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_environmental_studies_model != null)
+				{
+					HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData=    (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.YEAR_ == hse_environmental_studies_model.YEAR_ && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData=(from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.YEAR_ == hse_environmental_studies_model.YEAR_ && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_environmental_studies_model.Companyemail = WKPCompanyEmail;
+					hse_environmental_studies_model.CompanyName = WKPCompanyName;
+					hse_environmental_studies_model.COMPANY_ID = WKPCompanyId;
+					hse_environmental_studies_model.CompanyNumber = WKPCompanyNumber;
+					hse_environmental_studies_model.Date_Updated = DateTime.Now;
+					hse_environmental_studies_model.Updated_by = WKPCompanyId;
+					hse_environmental_studies_model.Year_of_WP = year;
+					hse_environmental_studies_model.OML_Name = omlName;
+					hse_environmental_studies_model.Field_ID = concessionField?.Field_ID??null;
+					hse_environmental_studies_model.ACTUAL_year = year;
+					hse_environmental_studies_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_environmental_studies_model.Date_Created = DateTime.Now;
+							hse_environmental_studies_model.Created_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(hse_environmental_studies_model);
+						}
+						else
+						{
+							hse_environmental_studies_model.Date_Created = getData.Date_Created;
+							hse_environmental_studies_model.Created_by = getData.Created_by;
+							hse_environmental_studies_model.Date_Updated = DateTime.Now;
+							hse_environmental_studies_model.Updated_by = WKPCompanyId;
+							_context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
+							await _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.AddAsync(hse_environmental_studies_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_FIVE_YEAR_STRATEGIC_PLAN_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			using var transaction = _context.Database.BeginTransaction();
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_sustainable_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTION getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_sustainable_model.Companyemail = WKPCompanyEmail;
+					hse_sustainable_model.CompanyName = WKPCompanyName;
+					hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+					hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
+					hse_sustainable_model.Date_Updated = DateTime.Now;
+					hse_sustainable_model.Updated_by = WKPCompanyId;
+					hse_sustainable_model.Year_of_WP = year;
+					hse_sustainable_model.OML_Name = omlName;
+					hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+
+					#region file section
+					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
+					var blobname1 = blobService.Filenamer(file1);
+					var blobname2 = blobService.Filenamer(file2);
+
+					if (file1 != null)
+					{
+						string docName = "MOU Responder";
+						hse_sustainable_model.MOUResponderFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"MOUResponderDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_sustainable_model.MOUResponderFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_sustainable_model.MOUResponderFilename = blobname1;
+					}
+					if (file2 != null)
+					{
+						string docName = "OSCP";
+						hse_sustainable_model.MOUOSCPFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"MOUOSCPDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_sustainable_model.MOUOSCPFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_sustainable_model.MOUOSCPFilename = blobname2;
+
+					}
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_sustainable_model.Date_Created = DateTime.Now;
+							hse_sustainable_model.Created_by = WKPCompanyId;
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.AddAsync(hse_sustainable_model);
+						}
+						else
+						{
+							hse_sustainable_model.Date_Created = getData.Date_Created;
+							hse_sustainable_model.Created_by = getData.Created_by;
+							hse_sustainable_model.Date_Updated = DateTime.Now;
+							hse_sustainable_model.Updated_by = WKPCompanyId;
+							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.Remove(getData);
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.AddAsync(hse_sustainable_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					transaction.Commit();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU hse_sustainable_model, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_sustainable_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU getData;
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					hse_sustainable_model.Companyemail = WKPCompanyEmail;
+					hse_sustainable_model.CompanyName = WKPCompanyName;
+					hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+					hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
+					hse_sustainable_model.Date_Updated = DateTime.Now;
+					hse_sustainable_model.Updated_by = WKPCompanyId;
+					hse_sustainable_model.Year_of_WP = year;
+
+					#region file section
+					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var blobname1 = blobService.Filenamer(file1);
+
+					if (file1 != null)
+					{
+						string docName = "GMOU";
+						hse_sustainable_model.MOUUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"MOUDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_sustainable_model.MOUUploadFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+
+					}
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						//if (getData == null)
+						//{
+							hse_sustainable_model.Date_Created = DateTime.Now;
+							hse_sustainable_model.Created_by = WKPCompanyId;
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_sustainable_model);
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_sustainable_model);
+						// }
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW")]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_sustainable_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW getData;
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					hse_sustainable_model.Companyemail = WKPCompanyEmail;
+					hse_sustainable_model.CompanyName = WKPCompanyName;
+					hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+					hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
+					hse_sustainable_model.Date_Updated = DateTime.Now;
+					hse_sustainable_model.Updated_by = WKPCompanyId;
+					hse_sustainable_model.Year_of_WP = year;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID ?? null;
+					hse_sustainable_model.Actual_Proposed_Year= (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						//if (getData == null)
+						//{
+							hse_sustainable_model.Date_Created = DateTime.Now;
+							hse_sustainable_model.Created_by = WKPCompanyId;
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
+						// }
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.Id == int.Parse(id) select c).FirstOrDefaultAsync();
+
+					if (action.ToLower() == GeneralModel.Delete.ToLower()) {
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
+						save += await _context.SaveChangesAsync();
+					}
+				}
+				else if (hse_sustainable_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL getData;	
+					getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					hse_sustainable_model.Companyemail = WKPCompanyEmail;
+					hse_sustainable_model.CompanyName = WKPCompanyName;
+					hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+					hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
+					hse_sustainable_model.Date_Updated = DateTime.Now;
+					hse_sustainable_model.Updated_by = WKPCompanyId;
+					hse_sustainable_model.Year_of_WP = year;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID ?? null;
+					hse_sustainable_model.ACTUAL_year = year;
+					hse_sustainable_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						// if (getData == null)
+						// {
+							hse_sustainable_model.Date_Created = DateTime.Now;
+							hse_sustainable_model.Created_by = WKPCompanyId;
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
+						// }
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition")]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition hse_sustainable_model, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_sustainable_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition getData;
+					getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					hse_sustainable_model.Companyemail = WKPCompanyEmail;
+					hse_sustainable_model.CompanyName = WKPCompanyName;
+					hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+					hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
+					hse_sustainable_model.Date_Updated = DateTime.Now;
+					hse_sustainable_model.Updated_by = WKPCompanyId;
+					hse_sustainable_model.Year_of_WP = year;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						// if (getData == null)
+						// {
+							hse_sustainable_model.Date_Created = DateTime.Now;
+							hse_sustainable_model.Created_by = WKPCompanyId;
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.AddAsync(hse_sustainable_model);
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.AddAsync(hse_sustainable_model);
+						// }
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME"), DisableRequestSizeLimitAttribute]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME hse_sustainable_model, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_sustainable_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME getData;
+					
+						getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					hse_sustainable_model.Companyemail = WKPCompanyEmail;
+					hse_sustainable_model.CompanyName = WKPCompanyName;
+					hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+					hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
+					hse_sustainable_model.Date_Updated = DateTime.Now;
+					hse_sustainable_model.Updated_by = WKPCompanyId;
+					hse_sustainable_model.Year_of_WP = year;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+
+					#region file section
+					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var blobname1 = blobService.Filenamer(file1);
+
+					if (file1 != null)
+					{
+						string docName = "TS";
+						hse_sustainable_model.TSUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"TSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_sustainable_model.TSUploadFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+
+					}
+					#endregion
+					if (action == GeneralModel.Insert)
+					{
+						// if (getData == null)
+						// {
+							hse_sustainable_model.Date_Created = DateTime.Now;
+							hse_sustainable_model.Created_by = WKPCompanyId;
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.AddAsync(hse_sustainable_model);
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.AddAsync(hse_sustainable_model);
+						// }
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship")]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship hse_sustainable_model, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_sustainable_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship getData;
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					hse_sustainable_model.Companyemail = WKPCompanyEmail;
+					hse_sustainable_model.CompanyName = WKPCompanyName;
+					hse_sustainable_model.COMPANY_ID = WKPCompanyId;
+					hse_sustainable_model.CompanyNumber = WKPCompanyNumber;
+					hse_sustainable_model.Date_Updated = DateTime.Now;
+					hse_sustainable_model.Updated_by = WKPCompanyId;
+					hse_sustainable_model.Year_of_WP = year;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						//if (getData == null)
+						//{
+							hse_sustainable_model.Date_Created = DateTime.Now;
+							hse_sustainable_model.Created_by = WKPCompanyId;
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.AddAsync(hse_sustainable_model);
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.AddAsync(hse_sustainable_model);
+						// }
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED")]
+		public async Task<object> POST_HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED([FromBody] HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED hse_environmental_studies_new_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
+					save += _context.SaveChanges();
+					//Added by Musa
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+				}
+				if (hse_environmental_studies_new_model != null)
+				{
+					HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATED getData;
+					if (concessionField?.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_environmental_studies_new_model.Companyemail = WKPCompanyEmail;
+					hse_environmental_studies_new_model.CompanyName = WKPCompanyName;
+					hse_environmental_studies_new_model.COMPANY_ID = WKPCompanyId;
+					hse_environmental_studies_new_model.CompanyNumber = WKPCompanyNumber;
+					hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
+					hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
+					hse_environmental_studies_new_model.Year_of_WP = year;
+					hse_environmental_studies_new_model.OML_Name = omlName;
+					hse_environmental_studies_new_model.Field_ID = concessionField?.Field_ID??null;
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_environmental_studies_new_model.Date_Created = DateTime.Now;
+							hse_environmental_studies_new_model.Created_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(hse_environmental_studies_new_model);
+						}
+						else
+						{
+							hse_environmental_studies_new_model.Date_Created = getData.Date_Created;
+							hse_environmental_studies_new_model.Created_by = getData.Created_by;
+							hse_environmental_studies_new_model.Date_Updated = DateTime.Now;
+							hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
+							_context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
+							await _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.AddAsync(hse_environmental_studies_new_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_STUDIES_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_POINT_SOURCE_REGISTRATION")]
+		public async Task<object> POST_HSE_POINT_SOURCE_REGISTRATION([FromForm] HSE_POINT_SOURCE_REGISTRATION hse_point_source_registration, string omlName,
+			string omlID, string areTherePointSourcePermit, string evidenceOfPSPFilename, string evidenceOfPSPPath, string actionToDo, string fieldName, string reasonForNoPSP)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+
+				if (!string.IsNullOrEmpty(omlID))
+				{
+					var getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
+					save += _context.SaveChanges();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+				}
+				if (hse_point_source_registration != null)
+				{
+					HSE_POINT_SOURCE_REGISTRATION getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.Field_ID==concessionField.Field_ID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).FirstOrDefault();
+					}
+
+					hse_point_source_registration.OML_ID = omlID;
+					hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
+					hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
+					hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
+					hse_point_source_registration.OML_Name = omlName;
+					hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
+					hse_point_source_registration.Field_ID=concessionField?.Field_ID??null;
+
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_point_source_registration.are_there_point_source_permit = areTherePointSourcePermit;
+							hse_point_source_registration.evidence_of_PSP_filename = evidenceOfPSPFilename;
+							hse_point_source_registration.evidence_of_PSP_path = evidenceOfPSPPath;
+							hse_point_source_registration.reason_for_no_PSP = reasonForNoPSP;
+							await _context.HSE_POINT_SOURCE_REGISTRATIONs.AddAsync(hse_point_source_registration);
+						}
+						else
+						{
+							hse_point_source_registration.OML_ID = getData.OML_ID;
+							hse_point_source_registration.OML_Name = getData.OML_Name;
+							_context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
+							await _context.HSE_POINT_SOURCE_REGISTRATIONs.AddAsync(hse_point_source_registration);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_POINT_SOURCE_REGISTRATIONs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_POINT_SOURCE_REGISTRATIONs where c.OML_ID == omlID && c.OML_Name == omlName && c.are_there_point_source_permit == areTherePointSourcePermit && c.evidence_of_PSP_filename == evidenceOfPSPFilename && c.evidence_of_PSP_path == evidenceOfPSPPath && c.reason_for_no_PSP == reasonForNoPSP select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_HSE_REMEDIATION_FUND")]
+		public async Task<object> POST_HSE_REMEDIATION_FUND([FromForm] HSE_REMEDIATION_FUND hse_remediation_fund, string omlName, string fieldName, string year, string omlID, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(omlID))
+				{
+					var getData = (from c in _context.HSE_REMEDIATION_FUNDs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
+					save += _context.SaveChanges();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+				}
+				if (hse_remediation_fund != null)
+				{
+					HSE_REMEDIATION_FUND getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName && c.Company_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					hse_remediation_fund.OML_ID = omlID;
+					hse_remediation_fund.Company_Email = WKPCompanyEmail;
+					hse_remediation_fund.CompanyName = WKPCompanyName;
+					hse_remediation_fund.Company_ID = WKPCompanyId;
+					hse_remediation_fund.Company_Number = WKPCompanyNumber.ToString();
+					hse_remediation_fund.OML_Name = omlName;
+					hse_remediation_fund.Field_ID=concessionField?.Field_ID??null;
+
+
+					#region Fileregion
+					var file = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var blobname = blobService.Filenamer(file);
+
+					if (file != null)
+					{
+						string docName = "Evidence of Payment";
+						hse_remediation_fund.evidenceOfPaymentPath = await blobService.UploadFileBlobAsync("documents", file.OpenReadStream(), file.ContentType, $"Remediation Documents/{blobname}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_remediation_fund.evidenceOfPaymentPath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_remediation_fund.evidenceOfPaymentPath = blobname;
+					}
+					#endregion
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							await _context.HSE_REMEDIATION_FUNDs.AddAsync(hse_remediation_fund);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_REMEDIATION_FUNDs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_REMEDIATION_FUNDs where c.OML_ID == omlID && c.OML_Name == omlName select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_WASTE_MANAGEMENT_DZ")]
+		public async Task<object> POST_HSE_WASTE_MANAGEMENT_DZ([FromForm] HSE_WASTE_MANAGEMENT_DZ hSE_WASTE_MANAGEMENT_DZ, string omlName, string fieldName, string year, string omlID, string actionToDo)
+		{
+
+			int save = 0;
+			string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(omlID))
+				{
+					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.Id == int.Parse(omlID) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_WASTE_MANAGEMENT_DZs.Remove(getData);
+					save += _context.SaveChanges();
+
+					if (save > 0)
+					{
+						string successMsg = "Form has been " + action == GeneralModel.Insert ? action + "ED" : action + "D" + " successfully.";
+						var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.OML_ID == omlID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+				}
+				if (hSE_WASTE_MANAGEMENT_DZ != null)
+				{
+					HSE_WASTE_MANAGEMENT_DZ getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.OML_ID == omlID && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.OML_ID == omlID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					hSE_WASTE_MANAGEMENT_DZ.OML_ID = omlID;
+					hSE_WASTE_MANAGEMENT_DZ.Companyemail = WKPCompanyEmail;
+					hSE_WASTE_MANAGEMENT_DZ.CompanyName = WKPCompanyName;
+					hSE_WASTE_MANAGEMENT_DZ.COMPANY_ID = WKPCompanyId;
+					hSE_WASTE_MANAGEMENT_DZ.CompanyNumber = WKPCompanyNumber;
+					hSE_WASTE_MANAGEMENT_DZ.OML_Name = omlName;
+					hSE_WASTE_MANAGEMENT_DZ.Field_ID=concessionField?.Field_ID??null;
+
+					#region Fileregion
+					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
+					{
+						IFormFile? file1 = null;
+						string blobname1 = string.Empty;
+
+						IFormFile? file2 = null;
+						string blobname2 = string.Empty;
+
+						IFormFile? file3 = null;
+						string blobname3 = string.Empty;
+
+						if (Request.Form.Files.Count == 1)
+						{
+							file1 = Request.Form.Files[0];
+							blobname1 = blobService.Filenamer(file1);
+							if (file1 != null)
+							{
+								string docName = "Upload Evidence of EWD";
+								hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Filename = blobname1;
+
+							}
+						}
+						if (Request.Form.Files.Count == 2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							if (file1 != null)
+							{
+								string docName = "Upload Evidence of EWD";
+								hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Filename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "Evidence Of Pay Trust Fund";
+								hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCFilename = blobname2;
+
+							}
+						}
+						if (Request.Form.Files.Count > 2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							file3 = Request.Form.Files[2];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							blobname3 = blobService.Filenamer(file3);
+							if (file1 != null)
+							{
+								string docName = "Upload Evidence of EWD";
+								hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Path == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									hSE_WASTE_MANAGEMENT_DZ.Evidence_of_EWD_Filename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "Evidence Of Pay of DDCPath";
+								hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCFilename = blobname2;
+
+							}
+							if (file3 != null)
+							{
+								string docName = "Evidence Of Reinjection Permit ";
+								hSE_WASTE_MANAGEMENT_DZ.Evidence_of_Reinjection_Permit_Path = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_Reinjection_Permit_Path == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									hSE_WASTE_MANAGEMENT_DZ.Evidence_of_Reinjection_Permit_Filename = blobname3;
+
+							}
+						}
+					}
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hSE_WASTE_MANAGEMENT_DZ.Date_Created = DateTime.Now;
+							hSE_WASTE_MANAGEMENT_DZ.Created_by = WKPCompanyId;
+							await _context.HSE_WASTE_MANAGEMENT_DZs.AddAsync(hSE_WASTE_MANAGEMENT_DZ);
+						}
+						else
+						{
+							hSE_WASTE_MANAGEMENT_DZ.Date_Created = getData.Date_Created;
+							hSE_WASTE_MANAGEMENT_DZ.Created_by = getData.Created_by;
+							hSE_WASTE_MANAGEMENT_DZ.Date_Updated = DateTime.Now;
+							hSE_WASTE_MANAGEMENT_DZ.Updated_by = WKPCompanyId;
+							_context.HSE_WASTE_MANAGEMENT_DZs.Remove(getData);
+							await _context.HSE_WASTE_MANAGEMENT_DZs.AddAsync(hSE_WASTE_MANAGEMENT_DZ);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_WASTE_MANAGEMENT_DZs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = "Form has been " + action == GeneralModel.Insert ? action + "ED" : action + "D" + " successfully.";
+						var All_Data = new object();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
+
+		[HttpPost("POST_HSE_OSP_REGISTRATIONS_NEW")]
+		public async Task<object> POST_HSE_OSP_REGISTRATIONS_NEW([FromBody] HSE_OSP_REGISTRATIONS_NEW hse_osp_registrations_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_osp_registrations_model != null)
+				{
+					HSE_OSP_REGISTRATIONS_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.VALUES_ == hse_osp_registrations_model.VALUES_ && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.VALUES_ == hse_osp_registrations_model.VALUES_ && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_osp_registrations_model.Companyemail = WKPCompanyEmail;
+					hse_osp_registrations_model.CompanyName = WKPCompanyName;
+					hse_osp_registrations_model.COMPANY_ID = WKPCompanyId;
+					hse_osp_registrations_model.CompanyNumber = WKPCompanyNumber;
+					hse_osp_registrations_model.Date_Updated = DateTime.Now;
+					hse_osp_registrations_model.Updated_by = WKPCompanyId;
+					hse_osp_registrations_model.Year_of_WP = year;
+					hse_osp_registrations_model.OML_Name = omlName;
+					hse_osp_registrations_model.Field_ID = concessionField?.Field_ID??null;
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_osp_registrations_model.Date_Created = DateTime.Now;
+							hse_osp_registrations_model.Created_by = WKPCompanyId;
+							await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(hse_osp_registrations_model);
+						}
+						else
+						{
+							hse_osp_registrations_model.Date_Created = getData.Date_Created;
+							hse_osp_registrations_model.Created_by = getData.Created_by;
+							hse_osp_registrations_model.Date_Updated = DateTime.Now;
+							hse_osp_registrations_model.Updated_by = WKPCompanyId;
+							_context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
+							await _context.HSE_OSP_REGISTRATIONS_NEWs.AddAsync(hse_osp_registrations_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_OSP_REGISTRATIONS_NEWs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_OSP_REGISTRATIONS_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED")]
+		public async Task<object> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED hse_produced_water_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_produced_water_model != null)
+				{
+					HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATED getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_produced_water_model.Companyemail = WKPCompanyEmail;
+					hse_produced_water_model.CompanyName = WKPCompanyName;
+					hse_produced_water_model.COMPANY_ID = WKPCompanyId;
+					hse_produced_water_model.CompanyNumber = WKPCompanyNumber;
+					hse_produced_water_model.Date_Updated = DateTime.Now;
+					hse_produced_water_model.Updated_by = WKPCompanyId;
+					hse_produced_water_model.Year_of_WP = year;
+					hse_produced_water_model.OML_Name = omlName;
+					hse_produced_water_model.Field_ID = concessionField?.Field_ID??null;
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_produced_water_model.Date_Created = DateTime.Now;
+							hse_produced_water_model.Created_by = WKPCompanyId;
+							await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(hse_produced_water_model);
+						}
+						else
+						{
+							hse_produced_water_model.Date_Created = getData.Date_Created;
+							hse_produced_water_model.Created_by = getData.Created_by;
+							hse_produced_water_model.Date_Updated = DateTime.Now;
+							hse_produced_water_model.Updated_by = WKPCompanyId;
+							_context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
+							await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.AddAsync(hse_produced_water_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW")]
+		public async Task<object> POST_HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW([FromBody] HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW hse_chemical_usage_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_chemical_usage_model != null)
+				{
+					HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_chemical_usage_model.Companyemail = WKPCompanyEmail;
+					hse_chemical_usage_model.CompanyName = WKPCompanyName;
+					hse_chemical_usage_model.COMPANY_ID = WKPCompanyId;
+					hse_chemical_usage_model.CompanyNumber = WKPCompanyNumber;
+					hse_chemical_usage_model.Date_Updated = DateTime.Now;
+					hse_chemical_usage_model.Updated_by = WKPCompanyId;
+					hse_chemical_usage_model.Year_of_WP = year;
+					hse_chemical_usage_model.OML_Name = omlName;
+					hse_chemical_usage_model.Field_ID = concessionField?.Field_ID ?? null;
+					hse_chemical_usage_model.ACTUAL_year = year;
+					hse_chemical_usage_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_chemical_usage_model.Date_Created = DateTime.Now;
+							hse_chemical_usage_model.Created_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(hse_chemical_usage_model);
+						}
+						else
+						{
+							hse_chemical_usage_model.Date_Created = getData.Date_Created;
+							hse_chemical_usage_model.Created_by = getData.Created_by;
+							hse_chemical_usage_model.Date_Updated = DateTime.Now;
+							hse_chemical_usage_model.Updated_by = WKPCompanyId;
+							_context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
+							await _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.AddAsync(hse_chemical_usage_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_CAUSES_OF_SPILL")]
+		public async Task<object> POST_HSE_CAUSES_OF_SPILL([FromBody] HSE_CAUSES_OF_SPILL hse_causes_of_spill_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_CAUSES_OF_SPILLs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_causes_of_spill_model != null)
+				{
+					HSE_CAUSES_OF_SPILL getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_CAUSES_OF_SPILLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_causes_of_spill_model.Companyemail = WKPCompanyEmail;
+					hse_causes_of_spill_model.CompanyName = WKPCompanyName;
+					hse_causes_of_spill_model.COMPANY_ID = WKPCompanyId;
+					hse_causes_of_spill_model.CompanyNumber = WKPCompanyNumber;
+					hse_causes_of_spill_model.Date_Updated = DateTime.Now;
+					hse_causes_of_spill_model.Updated_by = WKPCompanyId;
+					hse_causes_of_spill_model.Year_of_WP = year;
+					hse_causes_of_spill_model.OML_Name = omlName;
+					hse_causes_of_spill_model.Field_ID = concessionField?.Field_ID ?? null;
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_causes_of_spill_model.Date_Created = DateTime.Now;
+							hse_causes_of_spill_model.Created_by = WKPCompanyId;
+							await _context.HSE_CAUSES_OF_SPILLs.AddAsync(hse_causes_of_spill_model);
+						}
+						else
+						{
+							hse_causes_of_spill_model.Date_Created = getData.Date_Created;
+							hse_causes_of_spill_model.Created_by = getData.Created_by;
+							hse_causes_of_spill_model.Date_Updated = DateTime.Now;
+							hse_causes_of_spill_model.Updated_by = WKPCompanyId;
+							_context.HSE_CAUSES_OF_SPILLs.Remove(getData);
+							await _context.HSE_CAUSES_OF_SPILLs.AddAsync(hse_causes_of_spill_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_CAUSES_OF_SPILLs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_CAUSES_OF_SPILLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME hse_scholarship_model, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			// var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_scholarship_model != null)
+				{
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME getData;
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+
+					hse_scholarship_model.Companyemail = WKPCompanyEmail;
+					hse_scholarship_model.CompanyName = WKPCompanyName;
+					hse_scholarship_model.COMPANY_ID = WKPCompanyId;
+					hse_scholarship_model.CompanyNumber = WKPCompanyNumber;
+					hse_scholarship_model.Date_Updated = DateTime.Now;
+					hse_scholarship_model.Updated_by = WKPCompanyId;
+					hse_scholarship_model.Year_of_WP = year;
+					//hse_scholarship_model.OML_Name = omlName;
+					//hse_scholarship_model.Field_ID = concessionField?.Field_ID??null;
+
+					#region file section
+					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var blobname1 = blobService.Filenamer(file1);
+
+					if (file1 != null)
+					{
+						string docName = "SS";
+						hse_scholarship_model.SSUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_scholarship_model.SSUploadFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_scholarship_model.SSUploadFilename = blobname1;
+					}
+
+					#endregion
+					if (action == GeneralModel.Insert)
+					{
+						//if (getData == null)
+						//{
+							hse_scholarship_model.Date_Created = DateTime.Now;
+							hse_scholarship_model.Created_by = WKPCompanyId;
+							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
+						// }
+						// else
+						// {
+						// 	hse_scholarship_model.Date_Created = getData.Date_Created;
+						// 	hse_scholarship_model.Created_by = getData.Created_by;
+						// 	hse_scholarship_model.Date_Updated = DateTime.Now;
+						// 	hse_scholarship_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
+						// }
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
+					}
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_HSE_MANAGEMENT_POSITION"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_MANAGEMENT_POSITION([FromForm] HSE_MANAGEMENT_POSITION hse_management_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_MANAGEMENT_POSITIONs.Remove(getData);
+					save += _context.SaveChanges();
+					//Added By Musa
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+				}
+				if (hse_management_model != null)
+				{
+					List<HSE_MANAGEMENT_POSITION> getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData =await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					}
+					else
+					{
+						getData =await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					}
+
+					hse_management_model.Companyemail = WKPCompanyEmail;
+					hse_management_model.CompanyName = WKPCompanyName;
+					hse_management_model.COMPANY_ID = WKPCompanyId;
+					hse_management_model.CompanyNumber = WKPCompanyNumber;
+					hse_management_model.Date_Updated = DateTime.Now;
+					hse_management_model.Updated_by = WKPCompanyId;
+					hse_management_model.Year_of_WP = year;
+					hse_management_model.OML_Name = omlName;
+					hse_management_model.Field_ID = concessionField?.Field_ID ?? null;
+
+					#region file section
+					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
+					var blobname1 = blobService.Filenamer(file1);
+					var blobname2 = blobService.Filenamer(file2);
+
+					if (file1 != null)
+					{
+						string docName = "Promotion Letter";
+						hse_management_model.PromotionLetterFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"HRDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_management_model.PromotionLetterFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_management_model.PromotionLetterFilename = blobname1;
+					}
+					if (file2 != null)
+					{
+						string docName = "Organogram";
+						hse_management_model.OrganogramrFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"OGDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_management_model.OrganogramrFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_management_model.OrganogramrFilename = blobname2;
+
+					}
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData.Count <= 0)
+						{
+							hse_management_model.Date_Created = DateTime.Now;
+							hse_management_model.Created_by = WKPCompanyId;
+							await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
+						}
+						else
+						{
+							hse_management_model.Date_Created = getData.FirstOrDefault().Date_Created;
+							hse_management_model.Created_by = getData.FirstOrDefault().Created_by;
+							hse_management_model.Date_Updated = DateTime.Now;
+							hse_management_model.Updated_by = WKPCompanyId;
+
+							getData.ForEach(x =>
+							{
+								_context.HSE_MANAGEMENT_POSITIONs.Remove(x);
+								save += _context.SaveChanges();
+
+							});
+
+							await _context.HSE_MANAGEMENT_POSITIONs.AddAsync(hse_management_model);
+						}
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				//else
+				//{
+				return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				//}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_SAFETY_CULTURE_TRAINING"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_SAFETY_CULTURE_TRAINING([FromForm] HSE_SAFETY_CULTURE_TRAINING hse_safety_culture_model, string year, string omlName, string fieldName, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_SAFETY_CULTURE_TRAININGs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_safety_culture_model != null)
+				{
+					List<HSE_SAFETY_CULTURE_TRAINING> getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.Field_ID==concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					}
+
+					hse_safety_culture_model.Companyemail = WKPCompanyEmail;
+					hse_safety_culture_model.CompanyName = WKPCompanyName;
+					hse_safety_culture_model.COMPANY_ID = WKPCompanyId;
+					hse_safety_culture_model.CompanyNumber = WKPCompanyNumber;
+					hse_safety_culture_model.Date_Updated = DateTime.Now;
+					hse_safety_culture_model.Updated_by = WKPCompanyId;
+					hse_safety_culture_model.Year_of_WP = year;
+					hse_safety_culture_model.OML_Name = omlName;
+					hse_safety_culture_model.Field_ID = concessionField?.Field_ID ?? null;
+
+					#region file section
+					var filesLength = Request.Form.Files;
+
+					IFormFile? file1 = null;
+					IFormFile? file2 = null;
+					IFormFile? file3 = null;
+					var blobname3 = string.Empty;
+
+					var blobname1 = string.Empty;
+					var blobname2 = string.Empty;
+
+					if (filesLength.Count>2)
+					{
+						file1 = Request.Form.Files[0];
+						file2 = Request.Form.Files[1];
+						file3 = Request.Form.Files[2];
+
+						blobname3 = blobService.Filenamer(file3);
+						blobname1 = blobService.Filenamer(file1);
+						blobname2 = blobService.Filenamer(file2);
+
+						if (file3 != null)
+						{
+							string docName = "Evidence Of Training Plan";
+							hse_safety_culture_model.EvidenceOfTrainingPlanPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfTrainingPlanDocuments/{blobname3}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.EvidenceOfTrainingPlanPath == null)
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+							else
+								hse_safety_culture_model.EvidenceOfTrainingPlanFilename = blobname3;
+						}
+						if (file1 != null)
+						{
+							string docName = "Safety Current Year";
+							hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+							else
+								hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
+						}
+						if (file2 != null)
+						{
+							string docName = "Safety Last Two Years";
+							hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+							else
+								hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
+						}
+					}
+					if (filesLength.Count==2)
+					{
+						file1 = Request.Form.Files[0];
+						file2 = Request.Form.Files[1];
+
+						blobname1 = blobService.Filenamer(file1);
+						blobname2 = blobService.Filenamer(file2);
+
+						if (file1 != null)
+						{
+							string docName = "Safety Current Year";
+							hse_safety_culture_model.SafetyCurrentYearFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"SafetyCurrentYearDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyCurrentYearFilePath == null)
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+							else
+								hse_safety_culture_model.SafetyCurrentYearFilename = blobname1;
+						}
+						if (file2 != null)
+						{
+							string docName = "Safety Last Two Years";
+							hse_safety_culture_model.SafetyLast2YearsFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"SafetyLast2YearsDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (hse_safety_culture_model.SafetyLast2YearsFilePath == null)
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+							else
+								hse_safety_culture_model.SafetyLast2YearsFilename = blobname2;
+						}
+
+					}
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData.Count <= 0)
+						{
+							hse_safety_culture_model.Date_Created = DateTime.Now;
+							hse_safety_culture_model.Created_by = WKPCompanyId;
+							await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(hse_safety_culture_model);
+						}
+						else
+						{
+							hse_safety_culture_model.Date_Created = getData.FirstOrDefault().Date_Created;
+							hse_safety_culture_model.Created_by = getData.FirstOrDefault().Created_by;
+							hse_safety_culture_model.Date_Updated = DateTime.Now;
+							hse_safety_culture_model.Updated_by = WKPCompanyId;
+							hse_safety_culture_model.CompanyNumber = WKPCompanyNumber;
+
+							getData.ForEach(x =>
+							{
+								_context.HSE_SAFETY_CULTURE_TRAININGs.Remove(x);
+								save += _context.SaveChanges();
+
+							});
+							await _context.HSE_SAFETY_CULTURE_TRAININGs.AddAsync(hse_safety_culture_model);
+						}
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+
+				}
+
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_HSE_QUALITY_CONTROL"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_QUALITY_CONTROL([FromForm] HSE_QUALITY_CONTROL hse_quality_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_QUALITY_CONTROLs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_QUALITY_CONTROLs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_quality_model != null)
+				{
+					HSE_QUALITY_CONTROL getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.HSE_QUALITY_CONTROLs where c.Field_ID==concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_QUALITY_CONTROLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					hse_quality_model.Companyemail = WKPCompanyEmail;
+					hse_quality_model.CompanyName = WKPCompanyName;
+					hse_quality_model.COMPANY_ID = WKPCompanyId;
+					hse_quality_model.CompanyNumber = WKPCompanyNumber;
+					hse_quality_model.Date_Updated = DateTime.Now;
+					hse_quality_model.Updated_by = WKPCompanyId;
+					hse_quality_model.Year_of_WP = year;
+					hse_quality_model.OML_Name = omlName;
+					hse_quality_model.Field_ID = concessionField?.Field_ID??null;
+
+					#region file section
+					var file1 = Request.Form.Files[0];
+					var blobname1 = blobService.Filenamer(file1);
+
+					if (file1 != null)
+					{
+						string docName = "Quality Control";
+						hse_quality_model.QualityControlFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"COSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_quality_model.QualityControlFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_quality_model.QualityControlFilename = blobname1;
+					}
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_quality_model.Date_Created = DateTime.Now;
+							hse_quality_model.Created_by = WKPCompanyId;
+							await _context.HSE_QUALITY_CONTROLs.AddAsync(hse_quality_model);
+						}
+						else
+						{
+							hse_quality_model.Date_Created = getData.Date_Created;
+							hse_quality_model.Created_by = getData.Created_by;
+							hse_quality_model.Date_Updated = DateTime.Now;
+							hse_quality_model.Updated_by = WKPCompanyId;
+							_context.HSE_QUALITY_CONTROLs.RemoveRange(getData);
+							save += await _context.SaveChangesAsync();
+
+							await _context.HSE_QUALITY_CONTROLs.AddAsync(hse_quality_model);
+						}
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_QUALITY_CONTROLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_CLIMATE_CHANGE_AND_AIR_QUALITY([FromForm] HSE_CLIMATE_CHANGE_AND_AIR_QUALITY hse_climate_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_climate_model != null)
+				{
+					HSE_CLIMATE_CHANGE_AND_AIR_QUALITY getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					hse_climate_model.Companyemail = WKPCompanyEmail;
+					hse_climate_model.CompanyName = WKPCompanyName;
+					hse_climate_model.COMPANY_ID = WKPCompanyId;
+					hse_climate_model.CompanyNumber = WKPCompanyNumber;
+					hse_climate_model.Date_Updated = DateTime.Now;
+					hse_climate_model.Updated_by = WKPCompanyId;
+					hse_climate_model.Year_of_WP = year;
+					hse_climate_model.OML_Name = omlName;
+					hse_climate_model.Field_ID = concessionField?.Field_ID??null;
+
+					#region file section
+					var file1 = Request.Form.Files[0];
+					var blobname1 = blobService.Filenamer(file1);
+
+					if (file1 != null)
+					{
+						string docName = "GHG";
+						hse_climate_model.GHGFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_climate_model.GHGFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_climate_model.GHGFilename = blobname1;
+					}
+
+					#endregion
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_climate_model.Date_Created = DateTime.Now;
+							hse_climate_model.Created_by = WKPCompanyId;
+							await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
+						}
+						else
+						{
+							hse_climate_model.Date_Created = getData.Date_Created;
+							hse_climate_model.Created_by = getData.Created_by;
+							hse_climate_model.Date_Updated = DateTime.Now;
+							hse_climate_model.Updated_by = WKPCompanyId;
+							_context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.Remove(getData);
+							await _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies.AddAsync(hse_climate_model);
+						}
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		// [HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT"), DisableRequestSizeLimit]
+		// public async Task<object> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromForm] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		// {
+
+		// 	int save = 0;
+		// 	string action = (actionToDo == null || actionToDo =="")? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+		// 	try
+		// 	{
+		// 		if (!string.IsNullOrEmpty(id))
+		// 		{
+		// 			var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+		// 			if (action == GeneralModel.Delete)
+		// 				_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
+		// 			save += _context.SaveChanges();
+		// 		}
+		// 		else if (hse_occupational_model != null)
+		// 		{
+		// 			var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+		// 			hse_occupational_model.Companyemail = WKPCompanyEmail;
+		// 			hse_occupational_model.CompanyName = WKPCompanyName;
+		// 			hse_occupational_model.COMPANY_ID = WKPCompanyId;
+		// 			hse_occupational_model.CompanyNumber = WKPCompanyNumber;
+		// 			hse_occupational_model.Date_Updated = DateTime.Now;
+		// 			hse_occupational_model.Updated_by = WKPCompanyId;
+		// 			hse_occupational_model.Year_of_WP = year;
+		// 			hse_occupational_model.OML_Name = omlName;
+		// 			hse_occupational_model.Field_ID = concessionField.Field_ID;
+
+		// 			#region file section
+		// 			//var files = Request.Form.Files;
+		// 			var file1 = Request.Form.Files[0];
+		// 			var file2 = Request.Form.Files[1];
+
+		// 			var blobname1 = blobService.Filenamer(file1);
+		// 			var blobname2 = blobService.Filenamer(file2);
+
+
+		// 			if (file1 != null)
+		// 			{
+		// 				string docName = "submission of OHM plan";
+		// 				hse_occupational_model.OHMplanCommunicationFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"OHMplanCommunicationDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+		// 				if (hse_occupational_model.OHMplanCommunicationFilePath == null)
+		// 					return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+		// 				else
+		// 					hse_occupational_model.OHMplanCommunicationFilename = blobname1;
+		// 			}
+		// 			if (file2 != null)
+		// 			{
+		// 				string docName = "Reason Why Ohm Was Not Communicated To Staff";
+		// 				hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+		// 				if (hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffPath == null)
+		// 					return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document."});
+		// 				else
+		// 					hse_occupational_model.ReasonWhyOhmWasNotCommunicatedToStaffFileName = blobname2;
+		// 			}
+		// 			//}
+
+
+		// 			#endregion
+
+		// 			if (action == GeneralModel.Insert)
+		// 			{
+		// 				if (getData == null)
+		// 				{
+		// 					hse_occupational_model.Date_Created = DateTime.Now;
+		// 					hse_occupational_model.Created_by = WKPCompanyId;
+		// 					await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+		// 				}
+		// 				else
+		// 				{
+		// 					hse_occupational_model.Date_Created = getData.Date_Created;
+		// 					hse_occupational_model.Created_by = getData.Created_by;
+		// 					hse_occupational_model.Date_Updated = DateTime.Now;
+		// 					hse_occupational_model.Updated_by = WKPCompanyId;
+		// 					_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
+		// 					await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+		// 				}
+		// 			}
+
+		// 			save += await _context.SaveChangesAsync();
+		// 		}
+		// 		else
+		// 		{
+		// 			return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed."});
+		// 		}
+		// 		if (save > 0)
+		// 		{
+		// 			string successMsg = Messager.ShowMessage(action);
+		// 			var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+		// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+		// 		}
+		// 		else
+		// 		{
+		// 			return BadRequest(new { message = "Error : An error occured while trying to submit this form."});
+
+		// 		}
+		// 	}
+		// 	catch (Exception e)
+		// 	{
+		// 		return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+		// 	}
+		// }
+
+		[HttpPost("POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT"), DisableRequestSizeLimit]
+		public async Task<WebApiResponse> POST_HSE_OCCUPATIONAL_HEALTH_MANAGEMENT([FromForm] HSE_OCCUPATIONAL_HEALTH_MANAGEMENT hse_occupational_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_occupational_model != null)
+				{
+					HSE_OCCUPATIONAL_HEALTH_MANAGEMENT getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					hse_occupational_model.Companyemail = WKPCompanyEmail;
+					hse_occupational_model.CompanyName = WKPCompanyName;
+					hse_occupational_model.COMPANY_ID = WKPCompanyId;
+					hse_occupational_model.CompanyNumber = WKPCompanyNumber;
+					hse_occupational_model.Date_Updated = DateTime.Now;
+					hse_occupational_model.Updated_by = WKPCompanyId;
+					hse_occupational_model.Year_of_WP = year;
+					hse_occupational_model.OML_Name = omlName;
+					hse_occupational_model.Field_ID = concessionField?.Field_ID??null;
+
+					#region file section
+					//var files = Request.Form.Files;
+					var file1 = Request.Form.Files[0];
+					var file2 = Request.Form.Files[1];
+
+					var blobname1 = blobService.Filenamer(file1);
+					var blobname2 = blobService.Filenamer(file2);
+
+
+					if (file1 != null)
+					{
+						string docName = "submission of OHM plan";
+						hse_occupational_model.OHMplanCommunicationFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"OHMplanCommunicationDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_occupational_model.OHMplanCommunicationFilePath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							hse_occupational_model.OHMplanCommunicationFilename = blobname1;
+					}
+					if (file2 != null)
+					{
+						string docName = "OHM Plan";
+						hse_occupational_model.OHMplanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_occupational_model.OHMplanFilePath == null)
+							return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+						else
+							hse_occupational_model.OHMplanFilename = blobname2;
+					}
+					//}
+
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_occupational_model.Date_Created = DateTime.Now;
+							hse_occupational_model.Created_by = WKPCompanyId;
+							await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+						}
+						else
+						{
+							hse_occupational_model.Date_Created = getData.Date_Created;
+							hse_occupational_model.Created_by = getData.Created_by;
+							hse_occupational_model.Date_Updated = DateTime.Now;
+							hse_occupational_model.Updated_by = WKPCompanyId;
+							_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
+							await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+						}
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = $"Error : No data was passed for {actionToDo} process to be completed.", StatusCode = ResponseCodes.Failure };
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Error : An error occured while trying to submit this form.", StatusCode = ResponseCodes.Failure };
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_WASTE_MANAGEMENT_SYSTEM"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_WASTE_MANAGEMENT_SYSTEM([FromForm] HSE_WASTE_MANAGEMENT_SYSTEM hse_waste_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
+					save += await _context.SaveChangesAsync();
+				}
+				else if (hse_waste_model != null)
+				{
+					HSE_WASTE_MANAGEMENT_SYSTEM getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+
+					hse_waste_model.Companyemail = WKPCompanyEmail;
+					hse_waste_model.CompanyName = WKPCompanyName;
+					hse_waste_model.COMPANY_ID = WKPCompanyId;
+					hse_waste_model.CompanyNumber = WKPCompanyNumber;
+					hse_waste_model.Date_Updated = DateTime.Now;
+					hse_waste_model.Updated_by = WKPCompanyId;
+					hse_waste_model.Year_of_WP = year;
+					hse_waste_model.OML_Name = omlName;
+					hse_waste_model.Field_ID = concessionField?.Field_ID ?? null;
+
+					#region file section
+					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
+					var blobname1 = blobService.Filenamer(file1);
+					var blobname2 = blobService.Filenamer(file2);
+
+					if (file1 != null)
+					{
+						string docName = "Decom Certificate";
+						hse_waste_model.DecomCertificateFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"DecomCertificateDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_waste_model.DecomCertificateFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_waste_model.DecomCertificateFilename = blobname1;
+					}
+					if (file2 != null)
+					{
+						string docName = "Waste Management Plan";
+						hse_waste_model.WasteManagementPlanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"WasteManagementPlanDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_waste_model.WasteManagementPlanFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_waste_model.WasteManagementPlanFilename = blobname1;
+					}
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_waste_model.Date_Created = DateTime.Now;
+							hse_waste_model.Created_by = WKPCompanyId;
+							await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(hse_waste_model);
+						}
+						else
+						{
+							hse_waste_model.Date_Created = getData.Date_Created;
+							hse_waste_model.Created_by = getData.Created_by;
+							hse_waste_model.Date_Updated = DateTime.Now;
+							hse_waste_model.Updated_by = WKPCompanyId;
+							_context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
+							await _context.HSE_WASTE_MANAGEMENT_SYSTEMs.AddAsync(hse_waste_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_WASTE_MANAGEMENT_SYSTEMs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM([FromForm] HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM hse_EMS_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
+					save += _context.SaveChanges();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+				}
+				if (hse_EMS_model != null)
+				{
+					HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+
+					hse_EMS_model.Companyemail = WKPCompanyEmail;
+					hse_EMS_model.CompanyName = WKPCompanyName;
+					hse_EMS_model.COMPANY_ID = WKPCompanyId;
+					hse_EMS_model.CompanyNumber = WKPCompanyNumber;
+					hse_EMS_model.Date_Updated = DateTime.Now;
+					hse_EMS_model.Updated_by = WKPCompanyId;
+					hse_EMS_model.Year_of_WP = year;
+					hse_EMS_model.OML_Name = omlName;
+					hse_EMS_model.Field_ID = concessionField?.Field_ID??null;
+
+					#region file section
+					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
+					var file2 = Request.Form.Files[1] != null ? Request.Form.Files[1] : null;
+					var blobname1 = blobService.Filenamer(file1);
+					var blobname2 = blobService.Filenamer(file2);
+
+					if (file1 != null)
+					{
+						string docName = "EMS";
+						hse_EMS_model.EMSFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"EMSDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_EMS_model.EMSFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_EMS_model.EMSFilename = blobname1;
+					}
+					if (file2 != null)
+					{
+						string docName = "Audit File";
+						hse_EMS_model.AUDITFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"AUDITDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+						if (hse_EMS_model.AUDITFilePath == null)
+							return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						else
+							hse_EMS_model.AUDITFilename = blobname1;
+					}
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_EMS_model.Date_Created = DateTime.Now;
+							hse_EMS_model.Created_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(hse_EMS_model);
+						}
+						else
+						{
+							hse_EMS_model.Date_Created = getData.Date_Created;
+							hse_EMS_model.Created_by = getData.Created_by;
+							hse_EMS_model.Date_Updated = DateTime.Now;
+							hse_EMS_model.Updated_by = WKPCompanyId;
+							_context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
+							await _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.AddAsync(hse_EMS_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost("POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT"), DisableRequestSizeLimit]
         public async Task<object> POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT([FromForm] PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT picture_upload_model, string omlName, string fieldName, string year, string id, string actionToDo)
