@@ -57,7 +57,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpPost("login-redirect")]
-		public async Task<IActionResult> Login([FromBody] LoginParam loginParam)
+		public async Task<IActionResult> Login([FromForm] LoginParam loginParam)
 		{
 			var email = loginParam.Email;
 			var code = loginParam.Code;
