@@ -461,7 +461,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					{
 						string companyAccessCode = string.Empty;
 repeat:
-						var accessCode = GenerateAccessCode(data.COMPANY_NAME);
+						var accessCode = GENERATE_ACCESS_CODE(data.COMPANY_NAME);
 
 						var getAccessCodeFromDb = await _context.ADMIN_COMPANY_CODEs.FirstOrDefaultAsync(x => x.CompanyCode==accessCode);
 
