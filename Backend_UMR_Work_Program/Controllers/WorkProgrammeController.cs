@@ -8665,255 +8665,312 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
             }
         }
 
-        [HttpPost("POST_HSE_WASTE_MANAGEMENT_NEW")]
-        public async Task<object> POST_HSE_WASTE_MANAGEMENT_NEW([FromBody] HSE_WASTE_MANAGEMENT_NEW hse_waste_management_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
-
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_waste_management_model != null)
-                {
-                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    hse_waste_management_model.Companyemail = WKPCompanyEmail;
-                    hse_waste_management_model.CompanyName = WKPCompanyName;
-                    hse_waste_management_model.COMPANY_ID = WKPCompanyId;
-                    hse_waste_management_model.CompanyNumber = WKPCompanyNumber;
-                    hse_waste_management_model.Date_Updated = DateTime.Now;
-                    hse_waste_management_model.Updated_by = WKPCompanyId;
-                    hse_waste_management_model.Year_of_WP = year;
-                    hse_waste_management_model.OML_Name = omlName;
-                    hse_waste_management_model.Field_ID = concessionField.Field_ID;
-                    hse_waste_management_model.ACTUAL_year = year;
-                    hse_waste_management_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_waste_management_model.Date_Created = DateTime.Now;
-                            hse_waste_management_model.Created_by = WKPCompanyId;
-                            await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(hse_waste_management_model);
-                        }
-                        else
-                        {
-                            hse_waste_management_model.Date_Created = getData.Date_Created;
-                            hse_waste_management_model.Created_by = getData.Created_by;
-                            hse_waste_management_model.Date_Updated = DateTime.Now;
-                            hse_waste_management_model.Updated_by = WKPCompanyId;
-                            _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
-                            await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(hse_waste_management_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                }
 
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-            }
-        }
 
-        [HttpPost("POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
-        public async Task<object> POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW([FromBody] HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW hse_waste_management_facility_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-            try
-            {
 
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_waste_management_facility_model != null)
-                {
-                    var getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
-                    hse_waste_management_facility_model.Companyemail = WKPCompanyEmail;
-                    hse_waste_management_facility_model.CompanyName = WKPCompanyName;
-                    hse_waste_management_facility_model.COMPANY_ID = WKPCompanyId;
-                    hse_waste_management_facility_model.CompanyNumber = WKPCompanyNumber;
-                    hse_waste_management_facility_model.Date_Updated = DateTime.Now;
-                    hse_waste_management_facility_model.Updated_by = WKPCompanyId;
-                    hse_waste_management_facility_model.Year_of_WP = year;
-                    hse_waste_management_facility_model.OML_Name = omlName;
-                    hse_waste_management_facility_model.Field_ID = concessionField.Field_ID;
-                    hse_waste_management_facility_model.ACTUAL_year = year;
-                    hse_waste_management_facility_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_waste_management_facility_model.Date_Created = DateTime.Now;
-                            hse_waste_management_facility_model.Created_by = WKPCompanyId;
-                            await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(hse_waste_management_facility_model);
-                        }
-                        else
-                        {
-                            hse_waste_management_facility_model.Date_Created = getData.Date_Created;
-                            hse_waste_management_facility_model.Created_by = getData.Created_by;
-                            hse_waste_management_facility_model.Date_Updated = DateTime.Now;
-                            hse_waste_management_facility_model.Updated_by = WKPCompanyId;
-                            _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
-                            await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(hse_waste_management_facility_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
-                    }
 
-                    save += await _context.SaveChangesAsync();
 
-                }
-                else
-                {
-                    return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
 
-                }
-                if (save > 0)
-                {
-                    string successMsg = Messager.ShowMessage(action);
-                    var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
-                }
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-            }
-        }
 
-        [HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
-        public async Task<object> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW hse_produced_water_model, string omlName, string fieldName, string year, string id, string actionToDo)
-        {
+[HttpPost("POST_HSE_WASTE_MANAGEMENT_NEW")]
+		public async Task<object> POST_HSE_WASTE_MANAGEMENT_NEW([FromBody] HSE_WASTE_MANAGEMENT_NEW hse_waste_management_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
-            try
-            {
+			try
+			{
 
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
-                    if (action == GeneralModel.Delete)
-                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
-                    save += _context.SaveChanges();
-                }
-                else if (hse_produced_water_model != null)
-                {
-                    var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+					if (action == GeneralModel.Delete)
+						_context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_waste_management_model != null)
+				{
+					HSE_WASTE_MANAGEMENT_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
 
-                    hse_produced_water_model.Companyemail = WKPCompanyEmail;
-                    hse_produced_water_model.CompanyName = WKPCompanyName;
-                    hse_produced_water_model.COMPANY_ID = WKPCompanyId;
-                    hse_produced_water_model.CompanyNumber = WKPCompanyNumber;
-                    hse_produced_water_model.Date_Updated = DateTime.Now;
-                    hse_produced_water_model.Updated_by = WKPCompanyId;
-                    hse_produced_water_model.Year_of_WP = year;
-                    hse_produced_water_model.OML_Name = omlName;
-                    hse_produced_water_model.Field_ID = concessionField.Field_ID;
-                    hse_produced_water_model.ACTUAL_year = year;
-                    hse_produced_water_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
+					hse_waste_management_model.Companyemail = WKPCompanyEmail;
+					hse_waste_management_model.CompanyName = WKPCompanyName;
+					hse_waste_management_model.COMPANY_ID = WKPCompanyId;
+					hse_waste_management_model.CompanyNumber = WKPCompanyNumber;
+					hse_waste_management_model.Date_Updated = DateTime.Now;
+					hse_waste_management_model.Updated_by = WKPCompanyId;
+					hse_waste_management_model.Year_of_WP = year;
+					hse_waste_management_model.OML_Name = omlName;
+					hse_waste_management_model.Field_ID = concessionField?.Field_ID??null;
+					hse_waste_management_model.ACTUAL_year = year;
+					hse_waste_management_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            hse_produced_water_model.Date_Created = DateTime.Now;
-                            hse_produced_water_model.Created_by = WKPCompanyId;
-                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(hse_produced_water_model);
-                        }
-                        else
-                        {
-                            hse_produced_water_model.Date_Created = getData.Date_Created;
-                            hse_produced_water_model.Created_by = getData.Created_by;
-                            hse_produced_water_model.Date_Updated = DateTime.Now;
-                            hse_produced_water_model.Updated_by = WKPCompanyId;
-                            _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
-                            await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(hse_produced_water_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
-                    }
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_waste_management_model.Date_Created = DateTime.Now;
+							hse_waste_management_model.Created_by = WKPCompanyId;
+							await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(hse_waste_management_model);
+						}
+						else
+						{
+							hse_waste_management_model.Date_Created = getData.Date_Created;
+							hse_waste_management_model.Created_by = getData.Created_by;
+							hse_waste_management_model.Date_Updated = DateTime.Now;
+							hse_waste_management_model.Updated_by = WKPCompanyId;
+							_context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
+							await _context.HSE_WASTE_MANAGEMENT_NEWs.AddAsync(hse_waste_management_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_WASTE_MANAGEMENT_NEWs.Remove(getData);
+					}
 
-                    save += await _context.SaveChangesAsync();
+					save += await _context.SaveChangesAsync();
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+				}
 
-                    }
-                }
 
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
+			}
+		}
+
+		[HttpPost("POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW")]
+		public async Task<object> POST_HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW([FromBody] HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW hse_waste_management_facility_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_waste_management_facility_model != null)
+				{
+					HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEW getData;
+					if (concessionField.Field_Name!=null)
+					{
+						getData = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.Field_ID==concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					hse_waste_management_facility_model.Companyemail = WKPCompanyEmail;
+					hse_waste_management_facility_model.CompanyName = WKPCompanyName;
+					hse_waste_management_facility_model.COMPANY_ID = WKPCompanyId;
+					hse_waste_management_facility_model.CompanyNumber = WKPCompanyNumber;
+					hse_waste_management_facility_model.Date_Updated = DateTime.Now;
+					hse_waste_management_facility_model.Updated_by = WKPCompanyId;
+					hse_waste_management_facility_model.Year_of_WP = year;
+					hse_waste_management_facility_model.OML_Name = omlName;
+					hse_waste_management_facility_model.Field_ID = concessionField?.Field_ID??null;
+					hse_waste_management_facility_model.ACTUAL_year = year;
+					hse_waste_management_facility_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_waste_management_facility_model.Date_Created = DateTime.Now;
+							hse_waste_management_facility_model.Created_by = WKPCompanyId;
+							await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(hse_waste_management_facility_model);
+						}
+						else
+						{
+							hse_waste_management_facility_model.Date_Created = getData.Date_Created;
+							hse_waste_management_facility_model.Created_by = getData.Created_by;
+							hse_waste_management_facility_model.Date_Updated = DateTime.Now;
+							hse_waste_management_facility_model.Updated_by = WKPCompanyId;
+							_context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
+							await _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.AddAsync(hse_waste_management_facility_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+				}
+				else
+				{
+					return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+
+				}
+				if (save > 0)
+				{
+					string successMsg = Messager.ShowMessage(action);
+					//var All_Data = await (from c in _context.HSE_WASTE_MANAGEMENT_TYPE_OF_FACILITY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+				}
+				else
+				{
+					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+				}
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW")]
+		public async Task<object> POST_HSE_PRODUCED_WATER_MANAGEMENT_NEW([FromBody] HSE_PRODUCED_WATER_MANAGEMENT_NEW hse_produced_water_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				if (!string.IsNullOrEmpty(id))
+				{
+					var getData = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+					if (action == GeneralModel.Delete)
+						_context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
+					save += _context.SaveChanges();
+				}
+				else if (hse_produced_water_model != null)
+				{
+					HSE_PRODUCED_WATER_MANAGEMENT_NEW getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					hse_produced_water_model.Companyemail = WKPCompanyEmail;
+					hse_produced_water_model.CompanyName = WKPCompanyName;
+					hse_produced_water_model.COMPANY_ID = WKPCompanyId;
+					hse_produced_water_model.CompanyNumber = WKPCompanyNumber;
+					hse_produced_water_model.Date_Updated = DateTime.Now;
+					hse_produced_water_model.Updated_by = WKPCompanyId;
+					hse_produced_water_model.Year_of_WP = year;
+					hse_produced_water_model.OML_Name = omlName;
+					hse_produced_water_model.Field_ID = concessionField?.Field_ID ?? null;
+					hse_produced_water_model.ACTUAL_year = year;
+					hse_produced_water_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							hse_produced_water_model.Date_Created = DateTime.Now;
+							hse_produced_water_model.Created_by = WKPCompanyId;
+							await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(hse_produced_water_model);
+						}
+						else
+						{
+							hse_produced_water_model.Date_Created = getData.Date_Created;
+							hse_produced_water_model.Created_by = getData.Created_by;
+							hse_produced_water_model.Date_Updated = DateTime.Now;
+							hse_produced_water_model.Updated_by = WKPCompanyId;
+							_context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
+							await _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.AddAsync(hse_produced_water_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpGet("FetchConcessionsByCompanies")]
         public async Task<object> FetchConcessionsByCompanies()
