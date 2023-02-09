@@ -8,6 +8,7 @@ C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\postdeploy.sql
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\predeploy.sql
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.dll
 C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.pdb
+<<<<<<< HEAD
 C:\Sandbox\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dacpac
 C:\Sandbox\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.dll
 C:\Sandbox\WorkProgram_BEnd\WKP_Database\bin\Debug\WKP_Database.pdb
@@ -28,3 +29,5 @@ C:\Sandbox\WorkProgram_BEnd - Copy (6)\WKP_Database\obj\Debug\postdeploy.sql
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\WKP_Database\obj\Debug\predeploy.sql
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\WKP_Database\obj\Debug\WKP_Database.dll
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\WKP_Database\obj\Debug\WKP_Database.pdb
+=======
+>>>>>>> 142df32b90adbbac3cab3fa8d3d1ab2735aa5c74
