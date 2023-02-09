@@ -5223,74 +5223,92 @@ namespace Backend_UMR_Work_Program.Controllers
         }
 
 
-        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_Addition")]
-        public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_Addition([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition reserve_update_addition_model, string omlName, string fieldName, string year, string actionToDo)
-        {
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionFields = GET_CONCESSION_FIELD(omlName, fieldName);
 
-            try
-            {
-                #region Saving RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition data
-                if (reserve_update_addition_model != null)
-                {
-                    var getData = (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
-                    reserve_update_addition_model.Companyemail = WKPCompanyEmail;
-                    reserve_update_addition_model.CompanyName = WKPCompanyName;
-                    reserve_update_addition_model.COMPANY_ID = WKPCompanyId;
-                    reserve_update_addition_model.CompanyNumber = WKPCompanyNumber;
-                    reserve_update_addition_model.Date_Updated = DateTime.Now;
-                    reserve_update_addition_model.Updated_by = WKPCompanyId;
-                    reserve_update_addition_model.Year_of_WP = year;
-                    reserve_update_addition_model.OML_Name = omlName;
-                    reserve_update_addition_model.Field_ID = concessionFields.Field_ID;
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            reserve_update_addition_model.Date_Created = DateTime.Now;
-                            reserve_update_addition_model.Created_by = WKPCompanyId;
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.AddAsync(reserve_update_addition_model);
-                        }
-                        else
-                        {
-                            reserve_update_addition_model.Date_Created = getData.Date_Created;
-                            reserve_update_addition_model.Created_by = getData.Created_by;
-                            reserve_update_addition_model.Date_Updated = DateTime.Now;
-                            reserve_update_addition_model.Updated_by = WKPCompanyId;
-                            _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Remove(getData);
-                            await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.AddAsync(reserve_update_addition_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Remove(getData);
-                    }
 
-                    save += await _context.SaveChangesAsync();
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                    }
+ [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_Addition")]
+		public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_Addition([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition reserve_update_addition_model, string omlName, string fieldName, string year, string actionToDo)
+		{
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			var concessionFields = GET_CONCESSION_FIELD(omlName, fieldName);
 
-                }
+			try
+			{
+				RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition getData;
+				#region Saving RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Addition data
+				if (reserve_update_addition_model != null)
+				{
+					if (concessionFields?.Field_Name != null)
+					{
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.Field_ID == concessionFields.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
 
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-            }
-            catch (Exception e)
-            {
 
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
+					reserve_update_addition_model.Companyemail = WKPCompanyEmail;
+					reserve_update_addition_model.CompanyName = WKPCompanyName;
+					reserve_update_addition_model.COMPANY_ID = WKPCompanyId;
+					reserve_update_addition_model.CompanyNumber = WKPCompanyNumber;
+					reserve_update_addition_model.Date_Updated = DateTime.Now;
+					reserve_update_addition_model.Updated_by = WKPCompanyId;
+					reserve_update_addition_model.Year_of_WP = year;
+					reserve_update_addition_model.OML_Name = omlName;
+					reserve_update_addition_model.Field_ID = concessionFields?.Field_ID ?? null;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							reserve_update_addition_model.Date_Created = DateTime.Now;
+							reserve_update_addition_model.Created_by = WKPCompanyId;
+							await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.AddAsync(reserve_update_addition_model);
+						}
+						else
+						{
+							reserve_update_addition_model.Date_Created = getData.Date_Created;
+							reserve_update_addition_model.Created_by = getData.Created_by;
+							reserve_update_addition_model.Date_Updated = DateTime.Now;
+							reserve_update_addition_model.Updated_by = WKPCompanyId;
+							_context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Remove(getData);
+							await _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.AddAsync(reserve_update_addition_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.RESERVES_UPDATES_OIL_CONDENSATE_Reserves_Additions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					}
+
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+			}
+			catch (Exception e)
+			{
+
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
+
+
+
 
 
         [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_DECLINE")]
