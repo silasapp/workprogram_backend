@@ -415,7 +415,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 		//Added by Musa
-		[HttpPost("CREATE_USER")]
+		[HttpPost("CREATE_USER_NEW")]
 		public async Task<WebApiResponse> CreateUserNew([FromBody] ADMIN_COMPANY_INFORMATION_Model userModel)
 		{
 
