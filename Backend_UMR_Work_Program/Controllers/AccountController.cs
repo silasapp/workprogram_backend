@@ -54,9 +54,8 @@ namespace Backend_UMR_Work_Program.Controllers
 				request.AddUrlSegment("apiHash", apiHash);
 
 				var client = new RestClient(_appSettings.elpsBaseUrl);
-				//_generalLogger.LogRequest($"{"About to GetCompanyDetail On Elps with Email => "}{" "}{" - "}{DateTime.Now}", false, directory);
+
 				RestResponse response = client.Execute(request);
-				//_generalLogger.LogRequest($"{"Response Exception =>" + response.ErrorException + "\r\nResponse Status =>" + response.ResponseStatus + "\r\nStatus Code =>" + response.StatusCode}{" "}{" - "}{DateTime.Now}", false, directory);
 				if (response.ErrorException != null)
 				{
 					webApiResponse.Message = response.ErrorMessage;
@@ -79,13 +78,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 			catch (Exception ex)
 			{
-				//_generalLogger.LogRequest($"{"Last Exception =>" + ex.ToString()}{" - "}{DateTime.Now}", true, directory);
 				webApiResponse.Message = ex.Message;
-			}
-			finally
-			{
-				//_generalLogger.LogRequest($"{"About to Return with Message => " + webApiResponse.Message}{" - "}{DateTime.Now}", true, directory);
-
 			}
 
 			return webApiResponse;
@@ -124,6 +117,22 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var tokenData = await _account.isAutheticate(logine.email, logine.password);
+				string JSONString = string.Empty;
+				JSONString = JsonConvert.SerializeObject(tokenData);
+				return Ok(tokenData);
+			}
+			catch (Exception e)
+			{
+				return Ok(e.Message);
+			}
+		}
+
+		[HttpGet("AuthenticateById")]
+		public async Task<IActionResult> AuthenticateById(int Id)
+		{
+			try
+			{
+				var tokenData = await _account.AutheticateById(Id);
 				string JSONString = string.Empty;
 				JSONString = JsonConvert.SerializeObject(tokenData);
 				return Ok(tokenData);
