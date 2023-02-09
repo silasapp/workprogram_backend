@@ -2460,6 +2460,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					operations_Sefety_Case_model.Year_of_WP = year;
 					operations_Sefety_Case_model.OML_Name = omlName;
 					operations_Sefety_Case_model.Field_ID = concessionField.Field_ID;
+
 					//operations_Sefety_Case_model.Actual_year = year;
 					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
 
