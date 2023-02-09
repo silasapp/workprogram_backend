@@ -475,9 +475,6 @@ repeat:
 						}
 
 
-
-
-
 						//Added company Code info
 						var CompanyInfoCode = new ADMIN_COMPANY_CODE
 						{
