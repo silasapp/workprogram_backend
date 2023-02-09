@@ -640,7 +640,7 @@ repeat:
 		}
 		//Create a method to Generate AccessCode
 		[HttpGet("GENERATE_ACCESS_CODE")]
-		private string GENERATE_ACCESS_CODE(string companyName)
+		public string GENERATE_ACCESS_CODE(string companyName)
 		{
 			try
 			{
@@ -662,7 +662,6 @@ repeat:
 					}
 				}
 
-
 				//var rndmize=new Randomize
 				var rnd = new Random();
 
@@ -682,7 +681,7 @@ repeat:
 		}
 
 		[HttpGet("GET_COMPANY_INFORMATION_BY_ACCESSCODE")]
-		private async Task<ADMIN_COMPANY_CODE> GET_COMPANY_INFORMATION_BY_ACCESSCODE(string accessCode)
+		public async Task<ADMIN_COMPANY_CODE> GET_COMPANY_INFORMATION_BY_ACCESSCODE(string accessCode)
 		{
 			try
 			{
@@ -701,7 +700,7 @@ repeat:
 		}
 
 		[HttpPost("UPDATE_COMPANY_INFORMATION_BY_ACCESSCODE")]
-		private async Task<ADMIN_COMPANY_INFORMATION> UPDATE_COMPANY_INFORMATION_BY_ACCESSCODE(ADMIN_COMPANY_CODE companyCode)
+		public async Task<ADMIN_COMPANY_INFORMATION> UPDATE_COMPANY_INFORMATION_BY_ACCESSCODE(ADMIN_COMPANY_CODE companyCode)
 		{
 			try
 			{
