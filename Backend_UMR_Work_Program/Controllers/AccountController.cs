@@ -58,9 +58,14 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpPost]
-		[Route("login-redirect")]
-		public async Task<IActionResult> LoginRedirect(string email, string code)
+		[Route("login")]
+
+		//LoginParam
+		//public async Task<IActionResult> LoginRedirect(string email, string code)
+		public async Task<IActionResult> Login(LoginParam loginParam)
 		{
+			var email = loginParam.Email;
+			var code = loginParam.Code;
 			var login = await ValidateLogin(email, code);
 			if (login.ResponseCode.Equals("00"))
 				return Redirect($"{_appSettings.LoginUrl}/home?id={login.Data}");
@@ -236,7 +241,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 					else
 					{
-						response = new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Unable to fetch user details from Nelps with the email " + email, StatusCode = ResponseCodes.RecordNotFound };
+						response = new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Unable to fetch user details from Celps with the email " + email, StatusCode = ResponseCodes.RecordNotFound };
 					}
 				}
 				else
