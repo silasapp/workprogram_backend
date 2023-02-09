@@ -2507,82 +2507,97 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-        [HttpPost("POST_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN")]
-        public async Task<object> POST_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN([FromBody] HSE_ENVIRONMENTAL_MANAGEMENT_PLAN environment_Management_Plan_model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
+       
+       
+       
 
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            try
-            {
 
-                #region Saving Operation Safety Case
-                if (environment_Management_Plan_model != null)
-                {
-                    var getOperationSafetyCaseData = (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
 
-                    environment_Management_Plan_model.Companyemail = WKPCompanyEmail;
-                    environment_Management_Plan_model.CompanyName = WKPCompanyName;
-                    environment_Management_Plan_model.COMPANY_ID = WKPCompanyId;
-                    environment_Management_Plan_model.CompanyNumber = WKPCompanyNumber;
-                    environment_Management_Plan_model.Date_Updated = DateTime.Now;
-                    environment_Management_Plan_model.Updated_by = WKPCompanyId;
-                    environment_Management_Plan_model.Year_of_WP = year;
-                    environment_Management_Plan_model.OML_Name = omlName;
-                    environment_Management_Plan_model.Field_ID = concessionField.Field_ID;
-                    //operations_Sefety_Case_model.Actual_year = year;
-                    //operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+	[HttpPost("POST_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN")]
+		public async Task<object> POST_HSE_ENVIRONMENTAL_MANAGEMENT_PLAN([FromBody] HSE_ENVIRONMENTAL_MANAGEMENT_PLAN environment_Management_Plan_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
 
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getOperationSafetyCaseData == null)
-                        {
-                            environment_Management_Plan_model.Date_Created = DateTime.Now;
-                            environment_Management_Plan_model.Created_by = WKPCompanyId;
-                            await _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.AddAsync(environment_Management_Plan_model);
-                        }
-                        else
-                        {
-                            _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
 
-                            environment_Management_Plan_model.Date_Created = environment_Management_Plan_model.Date_Created;
-                            environment_Management_Plan_model.Created_by = environment_Management_Plan_model.Created_by;
-                            environment_Management_Plan_model.Date_Updated = DateTime.Now;
-                            environment_Management_Plan_model.Updated_by = WKPCompanyId;
-                            await _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.AddAsync(environment_Management_Plan_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
-                    }
+				#region Saving Operation Safety Case
+				if (environment_Management_Plan_model != null)
+				{
+					HSE_ENVIRONMENTAL_MANAGEMENT_PLAN getOperationSafetyCaseData;
+					if (concessionField.Field_Name !=null)
+					{
+						getOperationSafetyCaseData = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getOperationSafetyCaseData = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
 
-                    save += await _context.SaveChangesAsync();
+					environment_Management_Plan_model.Companyemail = WKPCompanyEmail;
+					environment_Management_Plan_model.CompanyName = WKPCompanyName;
+					environment_Management_Plan_model.COMPANY_ID = WKPCompanyId;
+					environment_Management_Plan_model.CompanyNumber = WKPCompanyNumber;
+					environment_Management_Plan_model.Date_Updated = DateTime.Now;
+					environment_Management_Plan_model.Updated_by = WKPCompanyId;
+					environment_Management_Plan_model.Year_of_WP = year;
+					environment_Management_Plan_model.OML_Name = omlName;
+					environment_Management_Plan_model.Field_ID = concessionField?.Field_ID ?? null;
+					//operations_Sefety_Case_model.Actual_year = year;
+					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
 
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					if (action == GeneralModel.Insert)
+					{
+						if (getOperationSafetyCaseData == null)
+						{
+							environment_Management_Plan_model.Date_Created = DateTime.Now;
+							environment_Management_Plan_model.Created_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.AddAsync(environment_Management_Plan_model);
+						}
+						else
+						{
+							_context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
 
-                    }
-                }
+							environment_Management_Plan_model.Date_Created = environment_Management_Plan_model.Date_Created;
+							environment_Management_Plan_model.Created_by = environment_Management_Plan_model.Created_by;
+							environment_Management_Plan_model.Date_Updated = DateTime.Now;
+							environment_Management_Plan_model.Updated_by = WKPCompanyId;
+							await _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.AddAsync(environment_Management_Plan_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
+					}
 
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
+					save += await _context.SaveChangesAsync();
 
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
 
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
+       
         [HttpPost("POST_HSE_EFFLUENT_MONITORING_COMPLIANCE"), DisableRequestSizeLimit]
         public async Task<object> POST_HSE_EFFLUENT_MONITORING_COMPLIANCE([FromForm] HSE_EFFLUENT_MONITORING_COMPLIANCE Effluenct_Monitoring_Complience_Mode, string omlName, string fieldName, string year, string actionToDo = null)
         {
