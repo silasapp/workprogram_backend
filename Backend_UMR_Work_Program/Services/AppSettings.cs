@@ -15,7 +15,9 @@ namespace Backend_UMR_Work_Program.Services
 		public string? LoginUrl { get; set; }
 		public string? AppEmail { get; set; }
 		public string? SecreteKey { get; set; }
-		public string? ElpsUrl { get; set; }
-		public string? sessionEmail { get; set; }
+		public string? elpsBaseUrl { get; set; }
+		public string? PK { get; set; }
+		public string? sessionKey { get; set; }
+
 	}
 }
