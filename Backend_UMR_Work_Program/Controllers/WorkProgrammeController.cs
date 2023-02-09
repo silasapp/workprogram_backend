@@ -595,6 +595,7 @@ namespace Backend_UMR_Work_Program.Controllers
             }
         }
 
+        #endregion
 
         [HttpGet("GET_FORM_ONE_GEOPHYSICAL")]
         public async Task<object> GET_FORM_ONE_GEOPHYSICAL(string omlName, string fieldName, string myyear)
@@ -5333,7 +5334,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					}
 				}
 
-=======
+                return null;
 			}
 			catch (Exception e)
 			{
