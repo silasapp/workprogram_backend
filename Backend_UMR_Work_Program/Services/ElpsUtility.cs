@@ -21,6 +21,7 @@ namespace Backend_UMR_Work_Program.Services
 		public static async Task<WebApiResponse> ValidateLogin(string email, string code, WKP_DBContext _context, AppSettings appSettings, WebApiResponse webApiResponse)
 		{
 			var company = new ADMIN_COMPANY_INFORMATION();
+			var staff = new staff();
 			var response = new WebApiResponse();
 			try
 			{
@@ -34,7 +35,8 @@ namespace Backend_UMR_Work_Program.Services
 						company = _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefault(x => x.EMAIL == email);
 
 
-						if (company == null) {
+						if (company == null)
+						{
 							company = new ADMIN_COMPANY_INFORMATION
 							{
 								EMAIL = email,
@@ -67,20 +69,24 @@ namespace Backend_UMR_Work_Program.Services
 						response = GetStaff(email, appSettings, webApiResponse);
 						if (response.Message == "SUCCESS")
 						{
-							var staff = (StaffResponseDto)response.Data;
+							var elpsstaff = (StaffResponseDto)response.Data;
 
-							company = _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefault(x => x.EMAIL == staff.email);
+							//company = _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefault(x => x.EMAIL == elpsstaff.email);
 
-							if (company != null)
+							staff= await _context.staff.FirstOrDefaultAsync(x => x.StaffEmail==elpsstaff.email);
+
+							if (staff != null)
 							{
-								if (!company.EMAIL.ToLower().Equals(email.ToLower()))
+								if (!staff.StaffEmail.ToLower().Equals(email.ToLower()))
 								{
-									company.EMAIL = email;
-									company.NAME = email;
+									staff.StaffEmail = email;
+									staff.FirstName = elpsstaff.firstName;
+									staff.LastName = elpsstaff.lastName;
+									//staff.pho
 								}
 								//user.FirstName = staff.firstName;
-								company.PHONE_NO = staff?.phoneNo?.ToString();
-								_context.ADMIN_COMPANY_INFORMATIONs.Update(company);
+								//staff.PHONE = elpsstaff();
+								_context.staff.Update(staff);
 								var save = await _context.SaveChangesAsync();
 								//await _userManager.UpdateAsync(user);
 							}
@@ -94,6 +100,7 @@ namespace Backend_UMR_Work_Program.Services
 							Message = "Successful",
 							StatusCode = ResponseCodes.Success,
 							Data = company.Id
+
 						};
 					}
 					else
