@@ -12,11 +12,7 @@
 		</CustomData>
 		<CustomData Category="Reference" Type="Assembly">
 			<Metadata Name="LogicalName" Value="WKP_Database.dll" />
-<<<<<<< HEAD
 			<Metadata Name="FileName" Value="C:\SANDBOX\WORKPROGRAM_BEND - COPY (6)\WKP_DATABASE\OBJ\DEBUG\WKP_DATABASE.DLL" />
-=======
-			<Metadata Name="FileName" Value="C:\USERS\SUPPO\TEMPO\WORKPROGRAM_BEND\WKP_DATABASE\OBJ\DEBUG\WKP_DATABASE.DLL" />
->>>>>>> 142df32b90adbbac3cab3fa8d3d1ab2735aa5c74
 			<Metadata Name="AssemblyName" Value="WKP_Database" />
 			<Metadata Name="PermissionSet" Value="SAFE" />
 			<Metadata Name="Owner" Value="" />
@@ -24,11 +20,7 @@
 			<Metadata Name="IsVisible" Value="True" />
 			<Metadata Name="IsModelAware" Value="True" />
 			<Metadata Name="SkipCreationIfEmpty" Value="True" />
-<<<<<<< HEAD
 			<Metadata Name="AssemblySymbolsName" Value="C:\Sandbox\WorkProgram_BEnd - Copy (6)\WKP_Database\obj\Debug\WKP_Database.pdb" />
-=======
-			<Metadata Name="AssemblySymbolsName" Value="C:\Users\suppo\tempo\WorkProgram_BEnd\WKP_Database\obj\Debug\WKP_Database.pdb" />
->>>>>>> 142df32b90adbbac3cab3fa8d3d1ab2735aa5c74
 		</CustomData>
 		<CustomData Category="SqlCmdVariables" Type="SqlCmdVariable" />
 	</Header>
