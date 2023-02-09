@@ -230,7 +230,7 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<object> POST_ADMIN_CONCESSIONS_INFORMATION([FromBody] ADMIN_CONCESSIONS_INFORMATION ADMIN_CONCESSIONS_INFORMATION_model, string id, string actionToDo)
         {
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
 
             try
             {
@@ -2044,7 +2044,7 @@ namespace Backend_UMR_Work_Program.Controllers
             int save = 0;
 
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
 
             Royalty myRoyalty;
             try
@@ -2186,7 +2186,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             int save = 0;
             var ConcessionCONCESSION_SITUATION_Model = concession_situation_model;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldID);
             CONCESSION_SITUATION concessionDbData;
 
@@ -2265,7 +2265,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             try
             {
@@ -2347,7 +2347,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             try
             {
                 GEOPHYSICAL_ACTIVITIES_PROCESSING getGeophysicalActivitesData;
@@ -3122,7 +3122,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_operations_categories_of_well_model.OML_Name = omlName;
 					drilling_operations_categories_of_well_model.Field_ID = concessionField?.Field_ID ?? null;
 					drilling_operations_categories_of_well_model.Actual_year = year;
-					drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
+					//drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
 
 					// #region file section
 					// var files = Request.Form.Files;
@@ -3228,7 +3228,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_each_well_cost_model.Updated_by = WKPCompanyId;
 					drilling_each_well_cost_model.Year_of_WP = year;
 					drilling_each_well_cost_model.OML_Name = omlName;
-					drilling_each_well_cost_model.Field_ID = concessionField.Field_ID??null;
+					drilling_each_well_cost_model.Field_ID = concessionField?.Field_ID??null;
 
 					if (action == GeneralModel.Insert)
 					{
@@ -3308,7 +3308,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
 					drilling_each_well_cost_proposed_model.Year_of_WP = year;
 					drilling_each_well_cost_proposed_model.OML_Name = omlName;
-					drilling_each_well_cost_proposed_model.Field_ID = concessionField.Field_ID;
+					drilling_each_well_cost_proposed_model.Field_ID = concessionField?.Field_ID??null;
 					if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
@@ -3397,7 +3397,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		//			field_development_plan_model.Updated_by = WKPCompanyId;
 		//			field_development_plan_model.Year_of_WP = year;
 		//			field_development_plan_model.OML_Name = omlName.ToUpper();
-		//			field_development_plan_model.Field_ID = concessionField.Field_ID;
+		//			field_development_plan_model.Field_ID = concessionField?.Field_ID??null;
 		//			#region file section
 		//			//string approved_FDP_Document = null;
 		//			var file1 = Request.Form.Files[0];
@@ -3856,7 +3856,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             INITIAL_WELL_COMPLETION_JOB1 getData = new INITIAL_WELL_COMPLETION_JOB1();
             try
             {
@@ -3884,7 +3884,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     initial_well_completion_model.Year_of_WP = year;
                     initial_well_completion_model.OML_Name = omlName.ToUpper();
-                    initial_well_completion_model.Field_ID = concessionField?.Field_ID??null;
+                    initial_well_completion_model.Field_ID = concessionField?.Field_ID
                     initial_well_completion_model.Actual_year = year;
                     initial_well_completion_model.proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -4092,7 +4092,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             WORKOVERS_RECOMPLETION_JOB1 getData;
 
@@ -4118,7 +4118,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     workovers_recompletion_model.CompanyNumber = WKPCompanyNumber;
                     workovers_recompletion_model.Year_of_WP = year;
                     workovers_recompletion_model.OML_Name = omlName.ToUpper();
-                    workovers_recompletion_model.Field_ID = concessionField?.Field_ID??null;
+                    workovers_recompletion_model.Field_ID = concessionField?.Field_ID
                     //workovers_recompletion_model.Actual_year = year;
                     //	workovers_recompletion_model.proposed_year = (int.Parse(year) + 1).ToString();
                     workovers_recompletion_model.proposed_year = year;
@@ -4516,7 +4516,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					ndr_model.Updated_by = WKPCompanyId;
 					ndr_model.Year_of_WP = year;
 					ndr_model.OML_Name = omlName;
-					ndr_model.Field_ID = concessionField?.Field_ID??null;
+					ndr_model.Field_ID = concessionField?.Field_ID
 
                     
                     if (action == GeneralModel.Insert)
@@ -5155,7 +5155,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -5172,7 +5172,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_update_production_model.Updated_by = WKPCompanyId;
                     reserves_update_production_model.Year_of_WP = year;
                     reserves_update_production_model.OML_Name = omlName;
-                    reserves_update_production_model.Field_ID = concessionField.Field_ID;
+                    reserves_update_production_model.Field_ID = concessionField?.Field_ID??null;
                     if (action == GeneralModel.Insert.ToLower())
                     {
                         if (getData == null)
@@ -5315,7 +5315,7 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_RESERVES_DECLINE([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Reserves_DECLINE reserves_update_decline_model, string omlName, string fieldName, string year, string actionToDo)
         {
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -5332,7 +5332,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     reserves_update_decline_model.Updated_by = WKPCompanyId;
                     reserves_update_decline_model.Year_of_WP = year;
                     reserves_update_decline_model.OML_Name = omlName;
-                    reserves_update_decline_model.Field_ID = concessionField.Field_ID;
+                    reserves_update_decline_model.Field_ID = concessionField?.Field_ID??null;
                     if (action == GeneralModel.Insert.ToLower())
                     {
                         if (getData == null)
@@ -5659,7 +5659,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -5677,7 +5677,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_gas_domestic_model.Updated_by = WKPCompanyId;
                     oil_gas_domestic_model.Year_of_WP = year;
                     oil_gas_domestic_model.OML_Name = omlName;
-                    oil_gas_domestic_model.Field_ID = concessionField.Field_ID;
+                    oil_gas_domestic_model.Field_ID = concessionField?.Field_ID??null;
                     if (action == GeneralModel.Insert.ToLower())
                     {
                         if (getData == null)
@@ -5732,7 +5732,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -5759,7 +5759,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_actual_model.Updated_by = WKPCompanyId;
                     budget_actual_model.Year_of_WP = year;
                     budget_actual_model.OML_Name = omlName;
-                    budget_actual_model.Field_ID = concessionField.Field_ID;
+                    budget_actual_model.Field_ID = concessionField?.Field_ID??null;
                     budget_actual_model.Actual_year = year;
                     budget_actual_model.Proposed_year = (int.Parse(year) + 1).ToString();
                     if (action == GeneralModel.Insert.ToLower())
@@ -5815,7 +5815,7 @@ namespace Backend_UMR_Work_Program.Controllers
         public async Task<object> POST_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT([FromBody] Budget_Proposal_Ngn_Usd_Model budgetProposal_model, string omlName, string fieldName, string year, string id, string actionToDo)
         {
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             List<BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT> getData;
             BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT budget_proposal_model = new BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT()
@@ -5926,7 +5926,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 REPROCESSING_planned = budget.AcquisitioN_planned,
                 Year_of_WP = budget.Year_of_WP
             };
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             List<BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITy> getData;
 
@@ -6026,7 +6026,7 @@ namespace Backend_UMR_Work_Program.Controllers
             };
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             List<BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy> getData = new List<BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy>();
 
@@ -6119,7 +6119,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             List<BUDGET_PERFORMANCE_PRODUCTION_COST> getData;
             try
@@ -6154,7 +6154,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     budget_performance_model.CompanyNumber = WKPCompanyNumber;
                     budget_performance_model.Year_of_WP = year;
                     budget_performance_model.OML_Name = omlName;
-                    budget_performance_model.Field_ID = concessionField.Field_ID;
+                    budget_performance_model.Field_ID = concessionField?.Field_ID??null;
                     if (action == GeneralModel.Insert.ToLower())
                     {
                         if (getData == null || getData.Count == 0)
@@ -6210,7 +6210,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             List<BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT> getData;
             BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT budget_facilities_model = new BUDGET_PERFORMANCE_FACILITIES_DEVELOPMENT_PROJECT()
@@ -6316,7 +6316,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -6341,7 +6341,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     oil_gas_facility_model.Updated_by = WKPCompanyId;
                     oil_gas_facility_model.Year_of_WP = year;
                     oil_gas_facility_model.OML_Name = omlName;
-                    oil_gas_facility_model.Field_ID = concessionField.Field_ID;
+                    oil_gas_facility_model.Field_ID = concessionField?.Field_ID??null;
                     oil_gas_facility_model.Actual_year = year;
                     oil_gas_facility_model.Proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -6531,7 +6531,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 			oil_gas_facility_model.Updated_by = WKPCompanyId;
 			oil_gas_facility_model.Year_of_WP = year;
 			oil_gas_facility_model.OML_Name = omlName;
-			oil_gas_facility_model.Field_ID = concessionField.Field_ID ?? null;
+			oil_gas_facility_model.Field_ID = concessionField?.Field_ID ?? null;
 			oil_gas_facility_model.Actual_year = year;
 			oil_gas_facility_model.Proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -6617,7 +6617,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 		// 			oil_gas_facility_model.Updated_by = WKPCompanyId;
 		// 			oil_gas_facility_model.Year_of_WP = year;
 		// 			oil_gas_facility_model.OML_Name = omlName;
-		// 			oil_gas_facility_model.Field_ID = concessionField.Field_ID;
+		// 			oil_gas_facility_model.Field_ID = concessionField?.Field_ID??null;
 		// 			oil_gas_facility_model.Actual_year = year;
 		// 			oil_gas_facility_model.Proposed_year = (int.Parse(year) + 1).ToString();
 
@@ -6789,7 +6789,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         public async Task<object> POST_BUDGET_CAPEX_OPEX([FromBody] Capex_Opex_Model capex_Opex, string omlName, string fieldName, string year, string id, string actionToDo)
         {
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
             List<BUDGET_CAPEX_OPEX> getData = new List<BUDGET_CAPEX_OPEX>();
             BUDGET_CAPEX_OPEX budget_capex_opex_model = new BUDGET_CAPEX_OPEX()
@@ -6896,7 +6896,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             //var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -6915,7 +6915,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     nigeria_content_training_model.Updated_by = WKPCompanyId;
                     nigeria_content_training_model.Year_of_WP = year;
                     //nigeria_content_training_model.OML_Name = omlName;
-                    //nigeria_content_training_model.Field_ID = concessionField.Field_ID;
+                    //nigeria_content_training_model.Field_ID = concessionField?.Field_ID??null;
                     nigeria_content_training_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
 
                     if (action == GeneralModel.Insert.ToLower())
@@ -6972,7 +6972,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -6990,7 +6990,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     nigeria_content_succession_model.Updated_by = WKPCompanyId;
                     nigeria_content_succession_model.Year_of_WP = year;
                     nigeria_content_succession_model.OML_Name = omlName;
-                    nigeria_content_succession_model.Field_ID = concessionField.Field_ID;
+                    nigeria_content_succession_model.Field_ID = concessionField?.Field_ID??null;
                     nigeria_content_succession_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
 
                     if (action == GeneralModel.Insert.ToLower())
@@ -7047,7 +7047,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             //var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -7066,7 +7066,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     nigeria_content_question_model.Year_of_WP = year;
                     // nigeria_content_question_model.OML_Name = omlName.ToUpper();
                     // nigeria_content_question_model.OML_Name = omlName;
-                    // nigeria_content_question_model.Field_ID = concessionField.Field_ID;
+                    // nigeria_content_question_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -7122,7 +7122,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             //var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -7141,7 +7141,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     legal_litigation_model.Updated_by = WKPCompanyId;
                     legal_litigation_model.Year_of_WP = year;
                     //legal_litigation_model.OML_Name = omlName;
-                    //legal_litigation_model.Field_ID = concessionField.Field_ID;
+                    //legal_litigation_model.Field_ID = concessionField?.Field_ID??null;
                     if (action == GeneralModel.Insert.ToLower())
                     {
                         // if (getData == null)
@@ -7195,7 +7195,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             //var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -7214,7 +7214,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     legal_arbitration_model.Updated_by = WKPCompanyId;
                     legal_arbitration_model.Year_of_WP = year;
                     //legal_arbitration_model.OML_Name = omlName;
-                    //legal_arbitration_model.Field_ID = concessionField.Field_ID;
+                    //legal_arbitration_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -7270,7 +7270,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             //var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -7289,7 +7289,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     strategic_plans_model.Updated_by = WKPCompanyId;
                     strategic_plans_model.Year_of_WP = year;
                     // strategic_plans_model.OML_Name = omlName;
-                    // strategic_plans_model.Field_ID = concessionField.Field_ID;
+                    // strategic_plans_model.Field_ID = concessionField?.Field_ID??null;
                     if (action == GeneralModel.Insert.ToLower())
                     {
                         if (getData == null || getData.Count == 0)
@@ -7344,7 +7344,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -7362,7 +7362,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_question_model.Updated_by = WKPCompanyId;
                     hse_question_model.Year_of_WP = year;
                     hse_question_model.OML_Name = omlName;
-                    hse_question_model.Field_ID = concessionField.Field_ID;
+                    hse_question_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -7418,7 +7418,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -7436,7 +7436,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_fatality_model.Updated_by = WKPCompanyId;
                     hse_fatality_model.Year_of_WP = year;
                     hse_fatality_model.OML_Name = omlName;
-                    hse_fatality_model.Field_ID = concessionField?.Field_ID;
+                    hse_fatality_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -7492,7 +7492,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -7510,7 +7510,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_designs_safety_model.Updated_by = WKPCompanyId;
                     hse_designs_safety_model.Year_of_WP = year;
                     hse_designs_safety_model.OML_Name = omlName;
-                    hse_designs_safety_model.Field_ID = concessionField.Field_ID;
+                    hse_designs_safety_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -7566,7 +7566,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
@@ -7585,7 +7585,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_IM_model.Updated_by = WKPCompanyId;
                     hse_IM_model.Year_of_WP = year;
                     hse_IM_model.OML_Name = omlName;
-                    hse_IM_model.Field_ID = concessionField.Field_ID;
+                    hse_IM_model.Field_ID = concessionField?.Field_ID??null;
                     hse_IM_model.ACTUAL_year = year;
                     hse_IM_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -7643,7 +7643,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -7661,7 +7661,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_IM_facility_model.Updated_by = WKPCompanyId;
                     hse_IM_facility_model.Year_of_WP = year;
                     hse_IM_facility_model.OML_Name = omlName;
-                    hse_IM_facility_model.Field_ID = concessionField.Field_ID;
+                    hse_IM_facility_model.Field_ID = concessionField?.Field_ID??null;
                     hse_IM_facility_model.ACTUAL_year = year;
                     hse_IM_facility_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -7720,7 +7720,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
             string omlName, string fieldName, string year, string id, string actionToDo)
         {
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -7745,7 +7745,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_technical_safety_model.Updated_by = WKPCompanyId;
                     hse_technical_safety_model.Year_of_WP = year;
                     hse_technical_safety_model.OML_Name = omlName;
-                    hse_technical_safety_model.Field_ID = concessionField.Field_ID;
+                    hse_technical_safety_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -7800,7 +7800,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -7835,7 +7835,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_safety_studies_model.Updated_by = WKPCompanyId;
                     hse_safety_studies_model.Year_of_WP = year;
                     hse_safety_studies_model.OML_Name = omlName;
-                    hse_safety_studies_model.Field_ID = concessionField.Field_ID;
+                    hse_safety_studies_model.Field_ID = concessionField?.Field_ID??null;
                     hse_safety_studies_model.ACTUAL_year = year;
                     hse_safety_studies_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -7902,7 +7902,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
 
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
@@ -7922,7 +7922,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_asset_register_model.Updated_by = WKPCompanyId;
                     hse_asset_register_model.Year_of_WP = year;
                     hse_asset_register_model.OML_Name = omlName;
-                    hse_asset_register_model.Field_ID = concessionField.Field_ID;
+                    hse_asset_register_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -7982,7 +7982,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -8006,7 +8006,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_oil_spill_model.Updated_by = WKPCompanyId;
                     hse_oil_spill_model.Year_of_WP = year;
                     hse_oil_spill_model.OML_Name = omlName;
-                    hse_oil_spill_model.Field_ID = concessionField.Field_ID;
+                    hse_oil_spill_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -8065,7 +8065,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -8090,7 +8090,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_asset_register_model.Updated_by = WKPCompanyId;
                     hse_asset_register_model.Year_of_WP = year;
                     hse_asset_register_model.OML_Name = omlName;
-                    hse_asset_register_model.Field_ID = concessionField.Field_ID;
+                    hse_asset_register_model.Field_ID = concessionField?.Field_ID??null;
 
                     if (action == GeneralModel.Insert.ToLower())
                     {
@@ -8147,7 +8147,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             var HSE_Accident_Incidence = new HSE_ACCIDENT_INCIDENCE_REPORTING_NEW();
@@ -8344,7 +8344,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         public async Task<object> POST_HSE_ACCIDENT_INCIDENCE_REPORTING_NEW([FromBody] HSE_ACCIDENT_INCIDENCE_REPORTING_NEW hse_accident_model, string omlName, string fieldName, string year, string id, string actionToDo)
         {
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -8368,7 +8368,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_accident_model.Updated_by = WKPCompanyId;
                     hse_accident_model.Year_of_WP = year;
                     hse_accident_model.OML_Name = omlName;
-                    hse_accident_model.Field_ID = concessionField.Field_ID;
+                    hse_accident_model.Field_ID = concessionField?.Field_ID??null;
                     hse_accident_model.ACTUAL_year = year;
                     hse_accident_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8426,7 +8426,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -8444,7 +8444,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_accident_reporting_model.Updated_by = WKPCompanyId;
                     hse_accident_reporting_model.Year_of_WP = year;
                     hse_accident_reporting_model.OML_Name = omlName;
-                    hse_accident_reporting_model.Field_ID = concessionField.Field_ID;
+                    hse_accident_reporting_model.Field_ID = concessionField?.Field_ID??null;
                     hse_accident_reporting_model.ACTUAL_year = year;
                     hse_accident_reporting_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8501,7 +8501,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -8526,7 +8526,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_community_model.Updated_by = WKPCompanyId;
                     hse_community_model.Year_of_WP = year;
                     hse_community_model.OML_Name = omlName;
-                    hse_community_model.Field_ID = concessionField.Field_ID;
+                    hse_community_model.Field_ID = concessionField?.Field_ID??null;
                     hse_community_model.ACTUAL_year = year;
                     hse_community_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8588,7 +8588,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -8613,7 +8613,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                     hse_environmental_model.Updated_by = WKPCompanyId;
                     hse_environmental_model.Year_of_WP = year;
                     hse_environmental_model.OML_Name = omlName;
-                    hse_environmental_model.Field_ID = concessionField.Field_ID;
+                    hse_environmental_model.Field_ID = concessionField?.Field_ID??null;
                     hse_environmental_model.ACTUAL_year = year;
                     hse_environmental_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8710,7 +8710,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_waste_management_model.Updated_by = WKPCompanyId;
 					hse_waste_management_model.Year_of_WP = year;
 					hse_waste_management_model.OML_Name = omlName;
-					hse_waste_management_model.Field_ID = concessionField?.Field_ID??null;
+					hse_waste_management_model.Field_ID = concessionField?.Field_ID
 					hse_waste_management_model.ACTUAL_year = year;
 					hse_waste_management_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -8802,7 +8802,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_waste_management_facility_model.Updated_by = WKPCompanyId;
 					hse_waste_management_facility_model.Year_of_WP = year;
 					hse_waste_management_facility_model.OML_Name = omlName;
-					hse_waste_management_facility_model.Field_ID = concessionField?.Field_ID??null;
+					hse_waste_management_facility_model.Field_ID = concessionField?.Field_ID
 					hse_waste_management_facility_model.ACTUAL_year = year;
 					hse_waste_management_facility_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -9054,7 +9054,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_compliance_model.Updated_by = WKPCompanyId;
 					hse_compliance_model.Year_of_WP = year;
 					hse_compliance_model.OML_Name = omlName;
-					hse_compliance_model.Field_ID = concessionField?.Field_ID??null;
+					hse_compliance_model.Field_ID = concessionField?.Field_ID
 					hse_compliance_model.ACTUAL_year = year;
 					hse_compliance_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -9145,7 +9145,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_environmental_studies_model.Updated_by = WKPCompanyId;
 					hse_environmental_studies_model.Year_of_WP = year;
 					hse_environmental_studies_model.OML_Name = omlName;
-					hse_environmental_studies_model.Field_ID = concessionField?.Field_ID??null;
+					hse_environmental_studies_model.Field_ID = concessionField?.Field_ID
 					hse_environmental_studies_model.ACTUAL_year = year;
 					hse_environmental_studies_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
@@ -9237,7 +9237,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
 					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					hse_sustainable_model.Field_ID = concessionField?.Field_ID
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -9609,7 +9609,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
 					//hse_sustainable_model.OML_Name = omlName;
-					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID
 					hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
 
 					if (action == GeneralModel.Insert)
@@ -9693,7 +9693,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
 					//hse_sustainable_model.OML_Name = omlName;
-					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -9789,7 +9789,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
 					//hse_sustainable_model.OML_Name = omlName;
-					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID
 					hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
 
 					if (action == GeneralModel.Insert)
@@ -9888,7 +9888,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_environmental_studies_new_model.Updated_by = WKPCompanyId;
 					hse_environmental_studies_new_model.Year_of_WP = year;
 					hse_environmental_studies_new_model.OML_Name = omlName;
-					hse_environmental_studies_new_model.Field_ID = concessionField?.Field_ID??null;
+					hse_environmental_studies_new_model.Field_ID = concessionField?.Field_ID
 
 					if (action == GeneralModel.Insert)
 					{
@@ -10370,7 +10370,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_osp_registrations_model.Updated_by = WKPCompanyId;
 					hse_osp_registrations_model.Year_of_WP = year;
 					hse_osp_registrations_model.OML_Name = omlName;
-					hse_osp_registrations_model.Field_ID = concessionField?.Field_ID??null;
+					hse_osp_registrations_model.Field_ID = concessionField?.Field_ID
 
 					if (action == GeneralModel.Insert)
 					{
@@ -10458,7 +10458,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_produced_water_model.Updated_by = WKPCompanyId;
 					hse_produced_water_model.Year_of_WP = year;
 					hse_produced_water_model.OML_Name = omlName;
-					hse_produced_water_model.Field_ID = concessionField?.Field_ID??null;
+					hse_produced_water_model.Field_ID = concessionField?.Field_ID
 
 					if (action == GeneralModel.Insert)
 					{
@@ -10717,7 +10717,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_scholarship_model.Updated_by = WKPCompanyId;
 					hse_scholarship_model.Year_of_WP = year;
 					//hse_scholarship_model.OML_Name = omlName;
-					//hse_scholarship_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_scholarship_model.Field_ID = concessionField?.Field_ID
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -11114,7 +11114,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_quality_model.Updated_by = WKPCompanyId;
 					hse_quality_model.Year_of_WP = year;
 					hse_quality_model.OML_Name = omlName;
-					hse_quality_model.Field_ID = concessionField?.Field_ID??null;
+					hse_quality_model.Field_ID = concessionField?.Field_ID
 
 					#region file section
 					var file1 = Request.Form.Files[0];
@@ -11216,7 +11216,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_climate_model.Updated_by = WKPCompanyId;
 					hse_climate_model.Year_of_WP = year;
 					hse_climate_model.OML_Name = omlName;
-					hse_climate_model.Field_ID = concessionField?.Field_ID??null;
+					hse_climate_model.Field_ID = concessionField?.Field_ID
 
 					#region file section
 					var file1 = Request.Form.Files[0];
@@ -11307,7 +11307,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 		// 			hse_occupational_model.Updated_by = WKPCompanyId;
 		// 			hse_occupational_model.Year_of_WP = year;
 		// 			hse_occupational_model.OML_Name = omlName;
-		// 			hse_occupational_model.Field_ID = concessionField.Field_ID;
+		// 			hse_occupational_model.Field_ID = concessionField?.Field_ID??null;
 
 		// 			#region file section
 		// 			//var files = Request.Form.Files;
@@ -11422,7 +11422,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_occupational_model.Updated_by = WKPCompanyId;
 					hse_occupational_model.Year_of_WP = year;
 					hse_occupational_model.OML_Name = omlName;
-					hse_occupational_model.Field_ID = concessionField?.Field_ID??null;
+					hse_occupational_model.Field_ID = concessionField?.Field_ID
 
 					#region file section
 					//var files = Request.Form.Files;
@@ -11661,7 +11661,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_EMS_model.Updated_by = WKPCompanyId;
 					hse_EMS_model.Year_of_WP = year;
 					hse_EMS_model.OML_Name = omlName;
-					hse_EMS_model.Field_ID = concessionField?.Field_ID??null;
+					hse_EMS_model.Field_ID = concessionField?.Field_ID
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
