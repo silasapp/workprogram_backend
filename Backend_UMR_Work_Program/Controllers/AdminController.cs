@@ -639,7 +639,8 @@ repeat:
 			}
 		}
 		//Create a method to Generate AccessCode
-		private string GenerateAccessCode(string companyName)
+		[HttpGet("GENERATE_ACCESS_CODE")]
+		private string GENERATE_ACCESS_CODE(string companyName)
 		{
 			try
 			{
@@ -680,7 +681,8 @@ repeat:
 			}
 		}
 
-		private async Task<ADMIN_COMPANY_CODE> Get_CompanyInformationByAccessCode(string accessCode)
+		[HttpGet("GET_COMPANY_INFORMATION_BY_ACCESSCODE")]
+		private async Task<ADMIN_COMPANY_CODE> GET_COMPANY_INFORMATION_BY_ACCESSCODE(string accessCode)
 		{
 			try
 			{
@@ -698,7 +700,8 @@ repeat:
 			}
 		}
 
-		private async Task<ADMIN_COMPANY_INFORMATION> UpdateCompanyInformationByAccessCode(ADMIN_COMPANY_CODE companyCode)
+		[HttpPost("UPDATE_COMPANY_INFORMATION_BY_ACCESSCODE")]
+		private async Task<ADMIN_COMPANY_INFORMATION> UPDATE_COMPANY_INFORMATION_BY_ACCESSCODE(ADMIN_COMPANY_CODE companyCode)
 		{
 			try
 			{
