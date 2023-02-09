@@ -398,3 +398,6 @@ C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.csproj.CopyComplete
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\EntityFramework.SqlServer.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\EntityFramework.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.Web.Providers.dll
