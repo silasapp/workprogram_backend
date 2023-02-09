@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
-using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
 using Backend_UMR_Work_Program.Services;
 using LinqToDB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using RestSharp;
-using System.Net;
 using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using static Backend_UMR_Work_Program.Models.ViewModel;
@@ -30,9 +28,10 @@ namespace Backend_UMR_Work_Program.Controllers
 		WebApiResponse webApiResponse = new WebApiResponse();
 		private readonly IMapper _mapper;
 
-		public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper)
+		public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper, IOptions<AppSettings> appSettings)
 		{
 			//_httpContextAccessor = httpContextAccessor;
+			_appSettings=appSettings.Value;
 			_account = account;
 			_context = context;
 			_configuration = configuration;
@@ -57,227 +56,16 @@ namespace Backend_UMR_Work_Program.Controllers
 				return new { message = ex.Message, trace = ex.StackTrace };
 			}
 		}
-		[HttpPost]
-		[Route("login")]
-
-		//LoginParam
-		//public async Task<IActionResult> LoginRedirect(string email, string code)
-		public async Task<IActionResult> Login(LoginParam loginParam)
+		[HttpPost("login-redirect")]
+		public async Task<IActionResult> Login([FromBody] LoginParam loginParam)
 		{
 			var email = loginParam.Email;
 			var code = loginParam.Code;
-			var login = await ValidateLogin(email, code);
+			var login = await ElpsUtility.ValidateLogin(email, code, _context, _appSettings, webApiResponse);
 			if (login.ResponseCode.Equals("00"))
 				return Redirect($"{_appSettings.LoginUrl}/home?id={login.Data}");
 
 			return Redirect($"{_appSettings.LoginUrl}/home");
-		}
-
-		public WebApiResponse GetCompanyDetailByEmail(string email)
-		{
-			try
-			{
-				var encrpt = $"{_appSettings.AppEmail}{_appSettings.SecreteKey}";
-				var apiHash = MyUtils.GenerateSha512(encrpt);
-				var request = new RestRequest("api/company/{compemail}/{email}/{apiHash}", Method.Get);
-				request.AddUrlSegment("compemail", email);
-				request.AddUrlSegment("email", _appSettings.AppEmail);
-				request.AddUrlSegment("apiHash", apiHash);
-
-				var client = new RestClient(_appSettings.ElpsUrl);
-				RestResponse response = client.Execute(request);
-
-				if (response.ErrorException != null)
-				{
-					webApiResponse.Message = response.ErrorMessage;
-				}
-				else if (response.ResponseStatus != ResponseStatus.Completed)
-				{
-					webApiResponse.Message = response.ResponseStatus.ToString();
-				}
-				else if (response.StatusCode != HttpStatusCode.OK)
-				{
-					webApiResponse.Message = response.StatusCode.ToString();
-				}
-				else
-				{
-					webApiResponse.Message = "SUCCESS";
-					webApiResponse.Data = JsonConvert.DeserializeObject<LpgLicense.Models.CompanyDetail>(response.Content);
-				}
-			}
-			catch (Exception ex)
-			{
-				//_generalLogger.LogRequest($"{"Last Exception =>" + ex.Message}{" - "}{DateTime.Now}", true, directory);
-
-				webApiResponse.Message = ex.Message;
-			}
-			finally
-			{
-				//_generalLogger.LogRequest($"{"About to Return with Message => " + webApiResponse.Message}{" - "}{DateTime.Now}", false, directory);
-
-			}
-			return webApiResponse;
-		}
-		public WebApiResponse GetStaff(string email)
-		{
-			try
-			{
-				var encrpt = $"{_appSettings.AppEmail}{_appSettings.SecreteKey}";
-				var apiHash = MyUtils.GenerateSha512(encrpt);
-				var request = new RestRequest($"/api/Accounts/Staff/{email}/{_appSettings.AppEmail}/{apiHash}", Method.Get);
-				;
-
-				var client = new RestClient(_appSettings.ElpsUrl);
-				//_generalLogger.LogRequest($"{"About to GetCompanyDetail On Elps with Email => "}{" "}{" - "}{DateTime.Now}", false, directory);
-				RestResponse response = client.Execute(request);
-				//_generalLogger.LogRequest($"{"Response Exception =>" + response.ErrorException + "\r\nResponse Status =>" + response.ResponseStatus + "\r\nStatus Code =>" + response.StatusCode}{" "}{" - "}{DateTime.Now}", false, directory);
-				if (response.ErrorException != null)
-				{
-					webApiResponse.Message = response.ErrorMessage;
-				}
-
-				else if (response.ResponseStatus != ResponseStatus.Completed)
-				{
-					webApiResponse.Message = response.ResponseStatus.ToString();
-				}
-
-				else if (response.StatusCode != HttpStatusCode.OK)
-				{
-					webApiResponse.Message = response.StatusCode.ToString();
-				}
-				else
-				{
-					webApiResponse.Data = JsonConvert.DeserializeObject<StaffResponseDto>(response.Content);
-					webApiResponse.Message = "SUCCESS";
-				}
-			}
-			catch (Exception ex)
-			{
-				//_generalLogger.LogRequest($"{"Last Exception =>" + ex.ToString()}{" - "}{DateTime.Now}", true, directory);
-				webApiResponse.Message = ex.Message;
-			}
-			finally
-			{
-				//_generalLogger.LogRequest($"{"About to Return with Message => " + webApiResponse.Message}{" - "}{DateTime.Now}", true, directory);
-
-			}
-
-			return webApiResponse;
-		}
-
-		public async Task<WebApiResponse> ValidateLogin(string email, string code)
-		{
-			var company = new ADMIN_COMPANY_INFORMATION();
-			var response = new WebApiResponse();
-			try
-			{
-				if (!string.IsNullOrEmpty(code))
-				{
-					response = GetCompanyDetailByEmail(email);
-					if (response.Message == "SUCCESS")
-					{
-						var companyDetail = (LpgLicense.Models.CompanyDetail)response.Data;
-
-						company = _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefault(x => x.EMAIL == email);
-
-
-						if (company == null)
-							company = new ADMIN_COMPANY_INFORMATION
-							{
-								EMAIL = email,
-								NAME = companyDetail.name,
-								PHONE_NO = companyDetail.contact_Phone,
-								ELPS_ID = companyDetail.id,
-								Created_by = "System",
-								Date_Created = DateTime.UtcNow,
-								STATUS_ = "True",
-								COMPANY_NAME = companyDetail.name,
-							};
-						else
-						{
-							if (!company.EMAIL.ToLower().Equals(email.ToLower()))
-							{
-								company.EMAIL = email;
-								company.COMPANY_NAME = companyDetail.name;
-							}
-
-							_context.ADMIN_COMPANY_INFORMATIONs.Update(company);
-							var save = await _context.SaveChangesAsync();
-						}
-					}
-					else
-					{
-						response = GetStaff(email);
-						if (response.Message == "SUCCESS")
-						{
-							var staff = (StaffResponseDto)response.Data;
-
-							company = _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefault(x => x.EMAIL == staff.email);
-
-							if (company != null)
-							{
-								if (!company.EMAIL.ToLower().Equals(email.ToLower()))
-								{
-									company.EMAIL = email;
-									company.NAME = email;
-								}
-								//user.FirstName = staff.firstName;
-								company.PHONE_NO = staff?.phoneNo?.ToString();
-								_context.ADMIN_COMPANY_INFORMATIONs.Update(company);
-								var save = await _context.SaveChangesAsync();
-								//await _userManager.UpdateAsync(user);
-							}
-						}
-					}
-					if (response.Message.ToLower().Equals("success"))
-					{
-						response = new WebApiResponse
-						{
-							ResponseCode = AppResponseCodes.Success,
-							Message = "Successful",
-							StatusCode = ResponseCodes.Success,
-							Data = company.Id
-						};
-					}
-					else
-					{
-						response = new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Unable to fetch user details from Celps with the email " + email, StatusCode = ResponseCodes.RecordNotFound };
-					}
-				}
-				else
-				{
-					company= await _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefaultAsync(x => x.EMAIL.Equals(email));
-
-					if (company != null)
-					{
-
-						response = new WebApiResponse
-						{
-							ResponseCode = AppResponseCodes.Success,
-							Message = "Successful",
-							Data = new
-							{
-								UserId = company.EMAIL,
-								//UserType = user.UserType,
-								ElpsId = company.ELPS_ID,
-								//CaCNumber = user?.Company?.CacNumber,
-								CompantName = company.COMPANY_NAME,
-								CreatedBy = company.Created_by,
-								CreatedOn = company.Date_Created,
-								//Status = company.STATUS_,
-							},
-							StatusCode = ResponseCodes.Success
-						};
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-
-				response = new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Internal error occured " + ex.ToString(), StatusCode = ResponseCodes.InternalError };
-
-			}
-			return response;
 		}
 
 		[HttpPost("Authenticate")]
