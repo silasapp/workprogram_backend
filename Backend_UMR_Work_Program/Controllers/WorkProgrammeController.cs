@@ -30,6 +30,9 @@ namespace Backend_UMR_Work_Program.Controllers
             _mapper = mapper;
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
             blobService = blobservice;
+            GeneralModel.Insert = GeneralModel.Insert.ToLower().Trim();
+            GeneralModel.Delete = GeneralModel.Delete.ToLower().Trim();
+            GeneralModel.Update = GeneralModel.Update.ToLower().Trim();
         }
         //Added by Musa for Testing
         //private string WKPCompanyId = GeneralModel.CompanyId;
