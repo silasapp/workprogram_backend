@@ -34,7 +34,7 @@ namespace Backend_UMR_Work_Program.Services
 						company = _context.ADMIN_COMPANY_INFORMATIONs.FirstOrDefault(x => x.EMAIL == email);
 
 
-						if (company == null)
+						if (company == null) {
 							company = new ADMIN_COMPANY_INFORMATION
 							{
 								EMAIL = email,
@@ -46,6 +46,10 @@ namespace Backend_UMR_Work_Program.Services
 								STATUS_ = "True",
 								COMPANY_NAME = companyDetail.name,
 							};
+							await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(company);
+
+						}
+
 						else
 						{
 							if (!company.EMAIL.ToLower().Equals(email.ToLower()))
@@ -55,8 +59,8 @@ namespace Backend_UMR_Work_Program.Services
 							}
 
 							_context.ADMIN_COMPANY_INFORMATIONs.Update(company);
-							var save = await _context.SaveChangesAsync();
 						}
+						var save = await _context.SaveChangesAsync();
 					}
 					else
 					{
