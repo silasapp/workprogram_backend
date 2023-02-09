@@ -2706,959 +2706,1150 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
-        [HttpPost("POST_HSE_GHG_MANAGEMENT_PLAN"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_GHG_MANAGEMENT_PLAN([FromForm] HSE_GHG_MANAGEMENT_PLAN ghg_Mgt_Plan_Model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            try
-            {
-
-                #region Saving Operation Safety Case
-                if (ghg_Mgt_Plan_Model != null)
-                {
-                    var getOperationSafetyCaseData = (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.OmL_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    ghg_Mgt_Plan_Model.companyemail = WKPCompanyEmail;
-                    ghg_Mgt_Plan_Model.CompanyName = WKPCompanyName;
-                    ghg_Mgt_Plan_Model.CompanY_ID = WKPCompanyId;
-                    ghg_Mgt_Plan_Model.CompanyNumber = WKPCompanyNumber;
-                    ghg_Mgt_Plan_Model.Date_Updated = DateTime.Now;
-                    ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
-                    ghg_Mgt_Plan_Model.Year_of_WP = year;
-                    ghg_Mgt_Plan_Model.OmL_Name = omlName;
-                    ghg_Mgt_Plan_Model.Field_ID = concessionField.Field_ID;
-                    //operations_Sefety_Case_model.Actual_year = year;
-                    //operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
-
-                    #region File processing
-                    //var files = Request.Form.Files;
-
-                    if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
-                    {
-
-                        IFormFile? file1 = null;
-                        string blobname1 = string.Empty;
-                        IFormFile? file2 = null;
-                        string blobname2 = string.Empty;
-                        IFormFile? file3 = null;
-                        string blobname3 = string.Empty;
-                        if (Request.Form.Files.Count == 1)
-                        {
-                            file1 = Request.Form.Files[0];
-                            blobname1 = blobService.Filenamer(file1);
-                            if (file1 != null)
-                            {
-                                string docName = "GHG Approval";
-                                ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
-
-                            }
-                        }
-
-                        if (Request.Form.Files.Count == 2)
-                        {
-                            file1 = Request.Form.Files[0];
-                            file2 = Request.Form.Files[1];
-                            blobname1 = blobService.Filenamer(file1);
-                            blobname2 = blobService.Filenamer(file2);
-                            if (file1 != null)
-                            {
-                                string docName = "GHG Approval";
-                                ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
-
-                            }
-                            if (file2 != null)
-                            {
-                                string docName = "LDR Certificate";
-                                ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
-
-                            }
-                        }
-                        if (Request.Form.Files.Count > 2)
-                        {
-                            file1 = Request.Form.Files[0];
-                            file2 = Request.Form.Files[1];
-                            file3 = Request.Form.Files[2];
-                            blobname1 = blobService.Filenamer(file1);
-                            blobname2 = blobService.Filenamer(file2);
-                            blobname3 = blobService.Filenamer(file3);
-                            if (file1 != null)
-                            {
-                                string docName = "GHG Approval";
-                                ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
-
-                            }
-                            if (file2 != null)
-                            {
-                                string docName = "LDR Certificate";
-                                ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
-
-                            }
-                            if (file3 != null)
-                            {
-                                string docName = "LDR Certificate";
-                                ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname3;
-
-                            }
-                        }
-                    }
-
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getOperationSafetyCaseData == null)
-                        {
-                            ghg_Mgt_Plan_Model.Date_Created = DateTime.Now;
-                            ghg_Mgt_Plan_Model.Created_by = WKPCompanyId;
-                            await _context.HSE_GHG_MANAGEMENT_PLANs.AddAsync(ghg_Mgt_Plan_Model);
-                        }
-                        else
-                        {
-                            _context.HSE_GHG_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
-
-                            ghg_Mgt_Plan_Model.Date_Created = ghg_Mgt_Plan_Model.Date_Created;
-                            ghg_Mgt_Plan_Model.Created_by = ghg_Mgt_Plan_Model.Created_by;
-                            ghg_Mgt_Plan_Model.Date_Updated = DateTime.Now;
-                            ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
-                            await _context.HSE_GHG_MANAGEMENT_PLANs.AddAsync(ghg_Mgt_Plan_Model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_GHG_MANAGEMENT_PLANs.Remove(ghg_Mgt_Plan_Model);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
-
-        [HttpPost("POST_HSE_HOST_COMMUNITIES_DEVELOPMENT"), DisableRequestSizeLimit]
-        public async Task<object> POST_HSE_HOST_COMMUNITIES_DEVELOPMENT([FromForm] HSE_HOST_COMMUNITIES_DEVELOPMENT host_Community_Devt_Model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            try
-            {
-
-                #region Saving Operation Safety Case
-                if (host_Community_Devt_Model != null)
-                {
-                    var getOperationSafetyCaseData = (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    host_Community_Devt_Model.Companyemail = WKPCompanyEmail;
-                    host_Community_Devt_Model.CompanyName = WKPCompanyName;
-                    host_Community_Devt_Model.COMPANY_ID = WKPCompanyId;
-                    host_Community_Devt_Model.CompanyNumber = WKPCompanyNumber.ToString();
-                    host_Community_Devt_Model.Date_Updated = DateTime.Now;
-                    host_Community_Devt_Model.Updated_by = WKPCompanyId;
-                    host_Community_Devt_Model.Year_of_WP = year;
-                    host_Community_Devt_Model.OML_Name = omlName;
-                    host_Community_Devt_Model.Field_ID = concessionField.Field_ID;
-                    //operations_Sefety_Case_model.Actual_year = year;
-                    //operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
-
-
-
-                    #region File processing
-                    //var files = Request.Form.Files;
-
-                    if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
-                    {
-                        IFormFile? file1 = null;
-                        string blobname1 = string.Empty;
-
-                        IFormFile? file2 = null;
-                        string blobname2 = string.Empty;
-
-                        IFormFile? file3 = null;
-                        string blobname3 = string.Empty;
-
-                        if (Request.Form.Files.Count == 1)
-                        {
-                            file1 = Request.Form.Files[0];
-                            blobname1 = blobService.Filenamer(file1);
-                            if (file1 != null)
-                            {
-                                string docName = "Upload Comm Dev Plan Approval";
-                                host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
-
-                            }
-                        }
-                        if (Request.Form.Files.Count == 2)
-                        {
-                            file1 = Request.Form.Files[0];
-                            file2 = Request.Form.Files[1];
-                            blobname1 = blobService.Filenamer(file1);
-                            blobname2 = blobService.Filenamer(file2);
-                            if (file1 != null)
-                            {
-                                string docName = "Upload Comm Dev Plan Approval";
-                                host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
-
-                            }
-                            if (file2 != null)
-                            {
-                                string docName = "Evidence Of Pay Trust Fund";
-                                host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
-
-                            }
-                        }
-                        if (Request.Form.Files.Count > 2)
-                        {
-                            file1 = Request.Form.Files[0];
-                            file2 = Request.Form.Files[1];
-                            file3 = Request.Form.Files[2];
-                            blobname1 = blobService.Filenamer(file1);
-                            blobname2 = blobService.Filenamer(file2);
-                            blobname3 = blobService.Filenamer(file3);
-                            if (file1 != null)
-                            {
-                                string docName = "Upload Comm Dev Plan Approval";
-                                host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
-
-                            }
-                            if (file2 != null)
-                            {
-                                string docName = "Evidence Of Pay Trust Fund";
-                                host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
-
-                            }
-                            if (file3 != null)
-                            {
-                                string docName = "Evidence Of Reg Trust Fund ";
-                                host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-
-                                if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
-                                    return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                                else
-                                    host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname3;
-
-                            }
-                        }
-                    }
-
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getOperationSafetyCaseData == null)
-                        {
-                            host_Community_Devt_Model.Date_Created = DateTime.Now;
-                            host_Community_Devt_Model.Created_by = WKPCompanyId;
-                            await _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.AddAsync(host_Community_Devt_Model);
-                        }
-                        else
-                        {
-                            _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(getOperationSafetyCaseData);
-
-                            host_Community_Devt_Model.Date_Created = host_Community_Devt_Model.Date_Created;
-                            host_Community_Devt_Model.Created_by = host_Community_Devt_Model.Created_by;
-                            host_Community_Devt_Model.Date_Updated = DateTime.Now;
-                            host_Community_Devt_Model.Updated_by = WKPCompanyId;
-                            await _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.AddAsync(host_Community_Devt_Model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(getOperationSafetyCaseData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
-
-        [HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL"), DisableRequestSizeLimit]
-        public async Task<object> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                #region Saving drilling data
-                if (drilling_operations_categories_of_well_model != null)
-                {
-                    var getData = (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    drilling_operations_categories_of_well_model.Companyemail = WKPCompanyEmail;
-                    drilling_operations_categories_of_well_model.CompanyName = WKPCompanyName;
-                    drilling_operations_categories_of_well_model.COMPANY_ID = WKPCompanyId;
-                    drilling_operations_categories_of_well_model.CompanyNumber = WKPCompanyNumber;
-                    drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
-                    drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
-                    drilling_operations_categories_of_well_model.Year_of_WP = year;
-                    drilling_operations_categories_of_well_model.OML_Name = omlName;
-                    drilling_operations_categories_of_well_model.Field_ID = concessionField.Field_ID;
-                    drilling_operations_categories_of_well_model.Actual_year = year;
-                    drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
-
-                    #region file section
-                    var files = Request.Form.Files;
-                    if (files.Count > 1)
-                    {
-                        var file1 = Request.Form.Files[0];
-                        var file2 = Request.Form.Files[1];
-                        var blobname1 = blobService.Filenamer(file1);
-                        var blobname2 = blobService.Filenamer(file2);
-
-                        if (file1 != null)
-                        {
-                            string docName = "Field Discovery";
-                            drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-                        }
-                        if (file2 != null)
-                        {
-                            string docName = "Hydrocarbon Count";
-                            drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
-                                return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
-                        }
-                    }
-                    #endregion
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            drilling_operations_categories_of_well_model.Date_Created = DateTime.Now;
-                            drilling_operations_categories_of_well_model.Created_by = WKPCompanyId;
-                            await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
-                        }
-                        else
-                        {
-                            drilling_operations_categories_of_well_model.Date_Created = getData.Date_Created;
-                            drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
-                            drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
-                            drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
-                            _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(getData);
-                            await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(drilling_operations_categories_of_well_model);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-
-
-
-                    #endregion
-
-                }
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_DRILLING_EACH_WELL_COST")]
-        public async Task<object> POST_DRILLING_EACH_WELL_COST([FromBody] DRILLING_EACH_WELL_COST drilling_each_well_cost_model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            try
-            {
-
-                #region Saving drilling data
-                if (drilling_each_well_cost_model != null)
-                {
-                    var getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    drilling_each_well_cost_model.Companyemail = WKPCompanyEmail;
-                    drilling_each_well_cost_model.CompanyName = WKPCompanyName;
-                    drilling_each_well_cost_model.COMPANY_ID = WKPCompanyId;
-                    drilling_each_well_cost_model.CompanyNumber = WKPCompanyNumber;
-                    drilling_each_well_cost_model.Date_Updated = DateTime.Now;
-                    drilling_each_well_cost_model.Updated_by = WKPCompanyId;
-                    drilling_each_well_cost_model.Year_of_WP = year;
-                    drilling_each_well_cost_model.OML_Name = omlName;
-                    drilling_each_well_cost_model.Field_ID = concessionField.Field_ID;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            drilling_each_well_cost_model.Date_Created = DateTime.Now;
-                            drilling_each_well_cost_model.Created_by = WKPCompanyId;
-                            await _context.DRILLING_EACH_WELL_COSTs.AddAsync(drilling_each_well_cost_model);
-                        }
-                        else
-                        {
-                            _context.DRILLING_EACH_WELL_COSTs.Remove(getData);
-                            drilling_each_well_cost_model.Date_Created = getData.Date_Created;
-                            drilling_each_well_cost_model.Created_by = getData.Created_by;
-                            drilling_each_well_cost_model.Date_Updated = DateTime.Now;
-                            drilling_each_well_cost_model.Updated_by = WKPCompanyId;
-                            await _context.DRILLING_EACH_WELL_COSTs.AddAsync(drilling_each_well_cost_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.DRILLING_EACH_WELL_COSTs.Remove(drilling_each_well_cost_model);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
-
-        [HttpPost("POST_DRILLING_EACH_WELL_COST_PROPOSED")]
-        public async Task<object> POST_DRILLING_EACH_WELL_COST_PROPOSED([FromBody] DRILLING_EACH_WELL_COST_PROPOSED drilling_each_well_cost_proposed_model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-                #region Saving drilling data
-                if (drilling_each_well_cost_proposed_model != null)
-                {
-                    var getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    drilling_each_well_cost_proposed_model.Companyemail = WKPCompanyEmail;
-                    drilling_each_well_cost_proposed_model.CompanyName = WKPCompanyName;
-                    drilling_each_well_cost_proposed_model.COMPANY_ID = WKPCompanyId;
-                    drilling_each_well_cost_proposed_model.CompanyNumber = WKPCompanyNumber;
-                    drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
-                    drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
-                    drilling_each_well_cost_proposed_model.Year_of_WP = year;
-                    drilling_each_well_cost_proposed_model.OML_Name = omlName;
-                    drilling_each_well_cost_proposed_model.Field_ID = concessionField.Field_ID;
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            drilling_each_well_cost_proposed_model.Date_Created = DateTime.Now;
-                            drilling_each_well_cost_proposed_model.Created_by = WKPCompanyId;
-                            await _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(drilling_each_well_cost_proposed_model);
-                        }
-                        else
-                        {
-                            drilling_each_well_cost_proposed_model.Date_Created = getData.Date_Created;
-                            drilling_each_well_cost_proposed_model.Created_by = getData.Created_by;
-                            drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
-                            drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
-                            _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(getData);
-                            await _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(drilling_each_well_cost_proposed_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(drilling_each_well_cost_proposed_model);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_FIELD_DEVELOPMENT_PLAN")]
-        public async Task<object> POST_FIELD_DEVELOPMENT_PLAN([FromForm] FIELD_DEVELOPMENT_PLAN field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            List<FIELD_DEVELOPMENT_PLAN> getData;
-
-
-
-            try
-            {
-
-                #region Saving FDP data
-                if (field_development_plan_model != null)
-                {
-
-
-                    if (concessionField?.Field_Name != null)
-                    {
-                        getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
-
-                    }
-                    else
-                    {
-                        getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
-
-                    }
-
-
-                    field_development_plan_model.Companyemail = WKPCompanyEmail;
-                    field_development_plan_model.CompanyName = WKPCompanyName;
-                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = WKPCompanyNumber;
-                    field_development_plan_model.Date_Updated = DateTime.Now;
-                    field_development_plan_model.Updated_by = WKPCompanyId;
-                    field_development_plan_model.Year_of_WP = year;
-                    field_development_plan_model.OML_Name = omlName.ToUpper();
-                    field_development_plan_model.Field_ID = concessionField?.Field_ID;
-
-                    if (field_development_plan_model.Uploaded_approved_FDP_Document != null && field_development_plan_model.Uploaded_approved_FDP_Document != "null")
-                    {
-                        #region file section
-                        //string approved_FDP_Document = null;
-                        var file1 = Request.Form.Files[0];
-                        var blobname1 = blobService.Filenamer(file1);
-                        field_development_plan_model.FDPDocumentFilename = blobname1;
-
-                        if (file1 != null)
-                        {
-                            string docName = "Approved FDP";
-                            field_development_plan_model.Uploaded_approved_FDP_Document = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FDPDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
-                            if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
-                                return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
-                        }
-                    }
-
-
-                    // if (file1 != null)
-                    // {
-                    //     string docName = "Approved FDP";
-                    //     approved_FDP_Document = _helpersController.UploadDocument(file1, "FDPDocuments");
-                    //     if (approved_FDP_Document == null)
-                    //         return BadRequest(new { message = "Error : An error occured while trying to upload " + docName + " document."});
-                    // }
-                    #endregion
-
-                    // field_development_plan_model.Uploaded_approved_FDP_Document = file1 != null ? approved_FDP_Document.filePath : null;
-                    // field_development_plan_model.FDPDocumentFilename = file1 != null ? approved_FDP_Document.fileName : null;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null || getData.Count == 0)
-                        {
-                            field_development_plan_model.Date_Created = DateTime.Now;
-                            field_development_plan_model.Created_by = WKPCompanyId;
-                            await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
-                        }
-                        else
-                        {
-                            field_development_plan_model.Date_Created = getData.FirstOrDefault().Date_Created;
-                            field_development_plan_model.Created_by = getData.FirstOrDefault().Created_by;
-                            field_development_plan_model.Date_Updated = DateTime.Now;
-                            field_development_plan_model.Updated_by = WKPCompanyId;
-                            _context.FIELD_DEVELOPMENT_PLANs.RemoveRange(getData);
-                            await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.FIELD_DEVELOPMENT_PLANs.Remove(field_development_plan_model);
-                    }
-                    save += await _context.SaveChangesAsync();
-
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-            }
-        }
-
-
-        //	//do delete for this
-        [HttpPost("POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE")]
-        public async Task<object> POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE([FromBody] FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                #region Saving FDP data
-                if (field_development_plan_model != null)
-                {
-                    var getData = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year && c.Proposed_Development_well_name == field_development_plan_model.Proposed_Development_well_name select c).FirstOrDefaultAsync();
-
-                    field_development_plan_model.Companyemail = WKPCompanyEmail;
-                    field_development_plan_model.CompanyName = WKPCompanyName;
-                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = WKPCompanyNumber;
-                    field_development_plan_model.Date_Updated = DateTime.Now;
-                    field_development_plan_model.Updated_by = WKPCompanyId;
-                    field_development_plan_model.Year_of_WP = year;
-                    field_development_plan_model.OML_Name = omlName;
-                    field_development_plan_model.Field_ID = concessionField.Field_ID;
-                    field_development_plan_model.Field_Name = concessionField.Field_Name;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            field_development_plan_model.Date_Created = DateTime.Now;
-                            field_development_plan_model.Created_by = WKPCompanyId;
-                            await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(field_development_plan_model);
-                        }
-                        else
-                        {
-                            field_development_plan_model.Date_Created = getData.Date_Created;
-                            field_development_plan_model.Created_by = getData.Created_by;
-                            field_development_plan_model.Date_Updated = DateTime.Now;
-                            field_development_plan_model.Updated_by = WKPCompanyId;
-                            _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(getData);
-                            await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(field_development_plan_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(getData);
-                    }
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP")]
-        public async Task<object> POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP([FromBody] FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                #region Saving FDP data
-                if (field_development_plan_model != null)
-                {
-                    var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    field_development_plan_model.Companyemail = WKPCompanyEmail;
-                    field_development_plan_model.CompanyName = WKPCompanyName;
-                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = WKPCompanyNumber;
-                    field_development_plan_model.Date_Updated = DateTime.Now;
-                    field_development_plan_model.Updated_by = WKPCompanyId;
-                    field_development_plan_model.Year_of_WP = year;
-                    field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
-                    field_development_plan_model.Field_Name = concessionField.Field_Name;
-                    field_development_plan_model.Field_ID = concessionField.Field_ID;
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            field_development_plan_model.Date_Created = DateTime.Now;
-                            field_development_plan_model.Created_by = WKPCompanyId;
-                            await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(field_development_plan_model);
-                        }
-                        else
-                        {
-                            field_development_plan_model.Date_Created = getData.Date_Created;
-                            field_development_plan_model.Created_by = getData.Created_by;
-                            field_development_plan_model.Date_Updated = DateTime.Now;
-                            field_development_plan_model.Updated_by = WKPCompanyId;
-                            await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(field_development_plan_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(field_development_plan_model);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        [HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS")]
-        public async Task<object> POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS([FromBody] FIELD_DEVELOPMENT_FIELDS_AND_STATUS field_development_plan_model, string omlName, string fieldName, string year, string actionToDo)
-        {
-
-            int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
-            try
-            {
-
-                #region Saving FDP data
-                if (field_development_plan_model != null)
-                {
-                    var getData = (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-
-                    field_development_plan_model.Companyemail = WKPCompanyEmail;
-                    field_development_plan_model.CompanyName = WKPCompanyName;
-                    field_development_plan_model.COMPANY_ID = WKPCompanyId;
-                    field_development_plan_model.CompanyNumber = WKPCompanyNumber;
-                    field_development_plan_model.Date_Updated = DateTime.Now;
-                    field_development_plan_model.Updated_by = WKPCompanyId;
-                    field_development_plan_model.Year_of_WP = year;
-                    field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
-                    field_development_plan_model.Field_ID = concessionField.Field_ID;
-                    field_development_plan_model.Field_Name = concessionField.Field_Name;
-                    field_development_plan_model.OML_ID = concessionField.Concession_ID.ToString();
-
-                    if (action == GeneralModel.Insert.ToLower())
-                    {
-                        if (getData == null)
-                        {
-                            field_development_plan_model.Date_Created = DateTime.Now;
-                            field_development_plan_model.Created_by = WKPCompanyId;
-                            await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(field_development_plan_model);
-                        }
-                        else
-                        {
-                            field_development_plan_model.Date_Created = getData.Date_Created;
-                            field_development_plan_model.Created_by = getData.Created_by;
-                            field_development_plan_model.Date_Updated = DateTime.Now;
-                            field_development_plan_model.Updated_by = WKPCompanyId;
-                            _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(getData);
-                            await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(field_development_plan_model);
-                        }
-                    }
-                    else if (action == GeneralModel.Delete)
-                    {
-                        _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(getData);
-                    }
-
-                    save += await _context.SaveChangesAsync();
-
-                    if (save > 0)
-                    {
-                        string successMsg = Messager.ShowMessage(action);
-                        var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                        return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
-                    }
-                }
-
-                return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
-                #endregion
-
-            }
-            catch (Exception e)
-            {
-                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
-            }
-        }
-
-        //do delete for this
+
+
+
+
+
+
+[HttpPost("POST_HSE_GHG_MANAGEMENT_PLAN"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_GHG_MANAGEMENT_PLAN([FromForm] HSE_GHG_MANAGEMENT_PLAN ghg_Mgt_Plan_Model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+
+				#region Saving Operation Safety Case
+				if (ghg_Mgt_Plan_Model != null)
+				{
+					HSE_GHG_MANAGEMENT_PLAN getOperationSafetyCaseData;
+					if (concessionField.Field_Name!=null)
+					{
+						getOperationSafetyCaseData = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.OmL_Name == omlName &&c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getOperationSafetyCaseData = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.OmL_Name == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					ghg_Mgt_Plan_Model.companyemail = WKPCompanyEmail;
+					ghg_Mgt_Plan_Model.CompanyName = WKPCompanyName;
+					ghg_Mgt_Plan_Model.CompanY_ID = WKPCompanyId;
+					ghg_Mgt_Plan_Model.CompanyNumber = WKPCompanyNumber;
+					ghg_Mgt_Plan_Model.Date_Updated = DateTime.Now;
+					ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
+					ghg_Mgt_Plan_Model.Year_of_WP = year;
+					ghg_Mgt_Plan_Model.OmL_Name = omlName;
+					ghg_Mgt_Plan_Model.Field_ID = concessionField?.Field_ID ?? null;
+					//operations_Sefety_Case_model.Actual_year = year;
+					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+					#region File processing
+					//var files = Request.Form.Files;
+
+					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
+					{
+
+						IFormFile? file1 = null;
+						string blobname1 = string.Empty;
+						IFormFile? file2 = null;
+						string blobname2 = string.Empty;
+						IFormFile? file3 = null;
+						string blobname3 = string.Empty;
+						if (Request.Form.Files.Count == 1)
+						{
+							file1 = Request.Form.Files[0];
+							blobname1 = blobService.Filenamer(file1);
+							if (file1 != null)
+							{
+								string docName = "GHG Approval";
+								ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
+
+							}
+						}
+
+						if (Request.Form.Files.Count == 2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							if (file1 != null)
+							{
+								string docName = "GHG Approval";
+								ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "LDR Certificate";
+								ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
+
+							}
+						}
+						if (Request.Form.Files.Count > 2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							file3 = Request.Form.Files[2];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							blobname3 = blobService.Filenamer(file3);
+							if (file1 != null)
+							{
+								string docName = "GHG Approval";
+								ghg_Mgt_Plan_Model.GHGApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"GHGApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (ghg_Mgt_Plan_Model.GHGApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									ghg_Mgt_Plan_Model.GHGApprovalFilename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "LDR Certificate";
+								ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname2;
+
+							}
+							if (file3 != null)
+							{
+								string docName = "LDR Certificate";
+								ghg_Mgt_Plan_Model.LDRCertificatePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"LDRCertificateDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (ghg_Mgt_Plan_Model.LDRCertificatePath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									ghg_Mgt_Plan_Model.LDRCertificateFilename = blobname3;
+
+							}
+						}
+					}
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getOperationSafetyCaseData == null)
+						{
+							ghg_Mgt_Plan_Model.Date_Created = DateTime.Now;
+							ghg_Mgt_Plan_Model.Created_by = WKPCompanyId;
+							await _context.HSE_GHG_MANAGEMENT_PLANs.AddAsync(ghg_Mgt_Plan_Model);
+						}
+						else
+						{
+							_context.HSE_GHG_MANAGEMENT_PLANs.Remove(getOperationSafetyCaseData);
+
+							ghg_Mgt_Plan_Model.Date_Created = ghg_Mgt_Plan_Model.Date_Created;
+							ghg_Mgt_Plan_Model.Created_by = ghg_Mgt_Plan_Model.Created_by;
+							ghg_Mgt_Plan_Model.Date_Updated = DateTime.Now;
+							ghg_Mgt_Plan_Model.Updated_by = WKPCompanyId;
+							await _context.HSE_GHG_MANAGEMENT_PLANs.AddAsync(ghg_Mgt_Plan_Model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_GHG_MANAGEMENT_PLANs.Remove(ghg_Mgt_Plan_Model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.HSE_GHG_MANAGEMENT_PLANs where c.CompanY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_HSE_HOST_COMMUNITIES_DEVELOPMENT"), DisableRequestSizeLimit]
+		public async Task<object> POST_HSE_HOST_COMMUNITIES_DEVELOPMENT([FromForm] HSE_HOST_COMMUNITIES_DEVELOPMENT host_Community_Devt_Model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+
+				#region Saving Operation Safety Case
+				if (host_Community_Devt_Model != null)
+				{
+					HSE_HOST_COMMUNITIES_DEVELOPMENT getOperationSafetyCaseData;
+					if (concessionField.Field_Name !=null)
+					{
+						getOperationSafetyCaseData = await (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getOperationSafetyCaseData = await (from c in _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					host_Community_Devt_Model.Companyemail = WKPCompanyEmail;
+					host_Community_Devt_Model.CompanyName = WKPCompanyName;
+					host_Community_Devt_Model.COMPANY_ID = WKPCompanyId;
+					host_Community_Devt_Model.CompanyNumber = WKPCompanyNumber.ToString();
+					host_Community_Devt_Model.Date_Updated = DateTime.Now;
+					host_Community_Devt_Model.Updated_by = WKPCompanyId;
+					host_Community_Devt_Model.Year_of_WP = year;
+					host_Community_Devt_Model.OML_Name = omlName;
+					host_Community_Devt_Model.Field_ID = concessionField?.Field_ID ?? null;
+					//operations_Sefety_Case_model.Actual_year = year;
+					//operations_Sefety_Case_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+
+
+					#region File processing
+					//var files = Request.Form.Files;
+
+					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
+					{
+						IFormFile? file1 = null;
+						string blobname1 = string.Empty;
+
+						IFormFile? file2 = null;
+						string blobname2 = string.Empty;
+
+						IFormFile? file3 = null;
+						string blobname3 = string.Empty;
+
+						if (Request.Form.Files.Count==1)
+						{
+							file1 = Request.Form.Files[0];
+							blobname1 = blobService.Filenamer(file1);
+							if (file1 != null)
+							{
+								string docName = "Upload Comm Dev Plan Approval";
+								host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
+
+							}
+						}
+						if (Request.Form.Files.Count==2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							if (file1 != null)
+							{
+								string docName = "Upload Comm Dev Plan Approval";
+								host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "Evidence Of Pay Trust Fund";
+								host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
+
+							}
+						}
+						if (Request.Form.Files.Count>2)
+						{
+							file1 = Request.Form.Files[0];
+							file2 = Request.Form.Files[1];
+							file3 = Request.Form.Files[2];
+							blobname1 = blobService.Filenamer(file1);
+							blobname2 = blobService.Filenamer(file2);
+							blobname3 = blobService.Filenamer(file3);
+							if (file1 != null)
+							{
+								string docName = "Upload Comm Dev Plan Approval";
+								host_Community_Devt_Model.UploadCommDevPlanApprovalPath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"UploadCommDevPlanApprovalDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.UploadCommDevPlanApprovalPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.UploadCommDevPlanApprovalFilename = blobname1;
+
+							}
+							if (file2 != null)
+							{
+								string docName = "Evidence Of Pay Trust Fund";
+								host_Community_Devt_Model.EvidenceOfPayTrustFundPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.EvidenceOfPayTrustFundPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.EvidenceOfPayTrustFundFilename = blobname2;
+
+							}
+							if (file3 != null)
+							{
+								string docName = "Evidence Of Reg Trust Fund ";
+								host_Community_Devt_Model.EvidenceOfRegTrustFundPath = await blobService.UploadFileBlobAsync("documents", file3.OpenReadStream(), file3.ContentType, $"EvidenceOfRegTrustFundDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+
+								if (host_Community_Devt_Model.EvidenceOfRegTrustFundPath == null)
+									return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+								else
+									host_Community_Devt_Model.EvidenceOfRegTrustFundFilename = blobname3;
+
+							}
+						}
+					}
+
+					#endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getOperationSafetyCaseData == null)
+						{
+							host_Community_Devt_Model.Date_Created = DateTime.Now;
+							host_Community_Devt_Model.Created_by = WKPCompanyId;
+							await _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.AddAsync(host_Community_Devt_Model);
+						}
+						else
+						{
+							_context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(getOperationSafetyCaseData);
+
+							host_Community_Devt_Model.Date_Created = host_Community_Devt_Model.Date_Created;
+							host_Community_Devt_Model.Created_by = host_Community_Devt_Model.Created_by;
+							host_Community_Devt_Model.Date_Updated = DateTime.Now;
+							host_Community_Devt_Model.Updated_by = WKPCompanyId;
+							await _context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.AddAsync(host_Community_Devt_Model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.HSE_HOST_COMMUNITIES_DEVELOPMENTs.Remove(getOperationSafetyCaseData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						var All_Data = await (from c in _context.HSE_EFFLUENT_MONITORING_COMPLIANCEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL")]
+		public async Task<object> POST_DRILLING_OPERATIONS_CATEGORIES_OF_WELL([FromForm] DRILLING_OPERATIONS_CATEGORIES_OF_WELL drilling_operations_categories_of_well_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				DRILLING_OPERATIONS_CATEGORIES_OF_WELL getData;
+				#region Saving drilling data
+
+				//var getData = new DRILLING_OPERATIONS_CATEGORIES_OF_WELL();
+				if (drilling_operations_categories_of_well_model != null)
+				{
+					if (concessionField?.Field_Name != null)
+					{
+						getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_operations_categories_of_well_model.QUATER && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+
+					drilling_operations_categories_of_well_model.Companyemail = WKPCompanyEmail;
+					drilling_operations_categories_of_well_model.CompanyName = WKPCompanyName;
+					drilling_operations_categories_of_well_model.COMPANY_ID = WKPCompanyId;
+					drilling_operations_categories_of_well_model.CompanyNumber = WKPCompanyNumber;
+					drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
+					drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
+					drilling_operations_categories_of_well_model.Year_of_WP = year;
+					drilling_operations_categories_of_well_model.OML_Name = omlName;
+					drilling_operations_categories_of_well_model.Field_ID = concessionField?.Field_ID ?? null;
+					drilling_operations_categories_of_well_model.Actual_year = year;
+					drilling_operations_categories_of_well_model.proposed_year = (int.Parse(year) + 1).ToString();
+
+					// #region file section
+					// var files = Request.Form.Files;
+					// if (files.Count>1)
+					// {
+					// 	var file1 = Request.Form.Files[0];
+					// 	var file2 = Request.Form.Files[1];
+					// 	var blobname1 = blobService.Filenamer(file1);
+					// 	var blobname2 = blobService.Filenamer(file2);
+
+					// 	if (file1 != null)
+					// 	{
+					// 		string docName = "Field Discovery";
+					// 		drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FieldDiscoveryDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+					// 		if (drilling_operations_categories_of_well_model.FieldDiscoveryUploadFilePath == null)
+					// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+					// 	}
+					// 	if (file2 != null)
+					// 	{
+					// 		string docName = "Hydrocarbon Count";
+					// 		drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"HydrocarbonCountDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+					// 		if (drilling_operations_categories_of_well_model.HydrocarbonCountUploadFilePath == null)
+					// 			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
+					// 	}
+					// }
+					// #endregion
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							drilling_operations_categories_of_well_model.Date_Created = DateTime.Now;
+							drilling_operations_categories_of_well_model.Created_by = WKPCompanyId;
+							await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
+						}
+						else
+						{
+							drilling_operations_categories_of_well_model.Date_Created = getData.Date_Created;
+							drilling_operations_categories_of_well_model.Created_by = getData.Created_by;
+							drilling_operations_categories_of_well_model.Date_Updated = DateTime.Now;
+							drilling_operations_categories_of_well_model.Updated_by = WKPCompanyId;
+							_context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(getData);
+							await _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.AddAsync(drilling_operations_categories_of_well_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs.Remove(drilling_operations_categories_of_well_model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.DRILLING_OPERATIONS_CATEGORIES_OF_WELLs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+					#endregion
+
+				}
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_DRILLING_EACH_WELL_COST")]
+		public async Task<object> POST_DRILLING_EACH_WELL_COST([FromBody] DRILLING_EACH_WELL_COST drilling_each_well_cost_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			try
+			{
+
+				#region Saving drilling data
+				if (drilling_each_well_cost_model != null)
+				{
+					DRILLING_EACH_WELL_COST getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					drilling_each_well_cost_model.Companyemail = WKPCompanyEmail;
+					drilling_each_well_cost_model.CompanyName = WKPCompanyName;
+					drilling_each_well_cost_model.COMPANY_ID = WKPCompanyId;
+					drilling_each_well_cost_model.CompanyNumber = WKPCompanyNumber;
+					drilling_each_well_cost_model.Date_Updated = DateTime.Now;
+					drilling_each_well_cost_model.Updated_by = WKPCompanyId;
+					drilling_each_well_cost_model.Year_of_WP = year;
+					drilling_each_well_cost_model.OML_Name = omlName;
+					drilling_each_well_cost_model.Field_ID = concessionField.Field_ID??null;
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							drilling_each_well_cost_model.Date_Created = DateTime.Now;
+							drilling_each_well_cost_model.Created_by = WKPCompanyId;
+							await _context.DRILLING_EACH_WELL_COSTs.AddAsync(drilling_each_well_cost_model);
+						}
+						else
+						{
+							_context.DRILLING_EACH_WELL_COSTs.Remove(getData);
+							drilling_each_well_cost_model.Date_Created = getData.Date_Created;
+							drilling_each_well_cost_model.Created_by = getData.Created_by;
+							drilling_each_well_cost_model.Date_Updated = DateTime.Now;
+							drilling_each_well_cost_model.Updated_by = WKPCompanyId;
+							await _context.DRILLING_EACH_WELL_COSTs.AddAsync(drilling_each_well_cost_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.DRILLING_EACH_WELL_COSTs.Remove(drilling_each_well_cost_model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action); //getMsg(action);
+						var All_Data = await (from c in _context.DRILLING_EACH_WELL_COSTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+		[HttpPost("POST_DRILLING_EACH_WELL_COST_PROPOSED")]
+		public async Task<object> POST_DRILLING_EACH_WELL_COST_PROPOSED([FromBody] DRILLING_EACH_WELL_COST_PROPOSED drilling_each_well_cost_proposed_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+				#region Saving drilling data
+				if (drilling_each_well_cost_proposed_model != null)
+				{
+					DRILLING_EACH_WELL_COST_PROPOSED getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+					else
+					{
+						getData = (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.QUATER == drilling_each_well_cost_proposed_model.QUATER && c.Year_of_WP == year select c).FirstOrDefault();
+					}
+
+					drilling_each_well_cost_proposed_model.Companyemail = WKPCompanyEmail;
+					drilling_each_well_cost_proposed_model.CompanyName = WKPCompanyName;
+					drilling_each_well_cost_proposed_model.COMPANY_ID = WKPCompanyId;
+					drilling_each_well_cost_proposed_model.CompanyNumber = WKPCompanyNumber;
+					drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
+					drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
+					drilling_each_well_cost_proposed_model.Year_of_WP = year;
+					drilling_each_well_cost_proposed_model.OML_Name = omlName;
+					drilling_each_well_cost_proposed_model.Field_ID = concessionField.Field_ID;
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							drilling_each_well_cost_proposed_model.Date_Created = DateTime.Now;
+							drilling_each_well_cost_proposed_model.Created_by = WKPCompanyId;
+							await _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(drilling_each_well_cost_proposed_model);
+						}
+						else
+						{
+							drilling_each_well_cost_proposed_model.Date_Created = getData.Date_Created;
+							drilling_each_well_cost_proposed_model.Created_by = getData.Created_by;
+							drilling_each_well_cost_proposed_model.Date_Updated = DateTime.Now;
+							drilling_each_well_cost_proposed_model.Updated_by = WKPCompanyId;
+							_context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(getData);
+							await _context.DRILLING_EACH_WELL_COST_PROPOSEDs.AddAsync(drilling_each_well_cost_proposed_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.DRILLING_EACH_WELL_COST_PROPOSEDs.Remove(drilling_each_well_cost_proposed_model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.DRILLING_EACH_WELL_COST_PROPOSEDs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		//[HttpPost("POST_FIELD_DEVELOPMENT_PLAN")]
+		//public async Task<object> POST_FIELD_DEVELOPMENT_PLAN([FromForm] FIELD_DEVELOPMENT_PLAN field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
+		//{
+
+
+		//	int save = 0;
+		//	string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+		//	var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+		//	List<FIELD_DEVELOPMENT_PLAN> getData;
+		//	try
+		//	{
+
+		//		#region Saving FDP data
+		//		if (field_development_plan_model != null)
+		//		{
+
+		//			//var getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+
+
+		//			if (concessionField?.Field_Name != null)
+		//			{
+		//				getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
+
+		//			}
+		//			else
+		//			{
+		//				getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+
+		//			}
+
+
+		//			field_development_plan_model.Companyemail = WKPCompanyEmail;
+		//			field_development_plan_model.CompanyName = WKPCompanyName;
+		//			field_development_plan_model.COMPANY_ID = WKPCompanyId;
+		//			field_development_plan_model.CompanyNumber = WKPCompanyNumber;
+		//			field_development_plan_model.Date_Updated = DateTime.Now;
+		//			field_development_plan_model.Updated_by = WKPCompanyId;
+		//			field_development_plan_model.Year_of_WP = year;
+		//			field_development_plan_model.OML_Name = omlName.ToUpper();
+		//			field_development_plan_model.Field_ID = concessionField.Field_ID;
+		//			#region file section
+		//			//string approved_FDP_Document = null;
+		//			var file1 = Request.Form.Files[0];
+		//			var blobname1 = blobService.Filenamer(file1);
+		//			field_development_plan_model.FDPDocumentFilename = blobname1;
+
+		//			if (file1 != null)
+		//			{
+		//				string docName = "Approved FDP";
+		//				field_development_plan_model.Uploaded_approved_FDP_Document = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FDPDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+		//				if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
+		//					return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+		//			}
+		//		}
+
+
+		//		// if (file1 != null)
+		//		// {
+		//		//     string docName = "Approved FDP";
+		//		//     approved_FDP_Document = _helpersController.UploadDocument(file1, "FDPDocuments");
+		//		//     if (approved_FDP_Document == null)
+		//		//         return BadRequest(new { message = "Error : An error occured while trying to upload " + docName + " document."});
+		//		// }
+		//		#endregion
+
+		//		// field_development_plan_model.Uploaded_approved_FDP_Document = file1 != null ? approved_FDP_Document.filePath : null;
+		//		// field_development_plan_model.FDPDocumentFilename = file1 != null ? approved_FDP_Document.fileName : null;
+
+		//		if (action == GeneralModel.Insert)
+		//		{
+		//			if (getData == null || getData.Count == 0)
+		//			{
+		//				field_development_plan_model.Date_Created = DateTime.Now;
+		//				field_development_plan_model.Created_by = WKPCompanyId;
+		//				await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
+		//			}
+		//			else
+		//			{
+		//				field_development_plan_model.Date_Created = getData.FirstOrDefault().Date_Created;
+		//				field_development_plan_model.Created_by = getData.FirstOrDefault().Created_by;
+		//				field_development_plan_model.Date_Updated = DateTime.Now;
+		//				field_development_plan_model.Updated_by = WKPCompanyId;
+		//				_context.FIELD_DEVELOPMENT_PLANs.RemoveRange(getData);
+		//				await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
+		//			}
+		//		}
+		//		else if (action == GeneralModel.Delete)
+		//		{
+		//			_context.FIELD_DEVELOPMENT_PLANs.Remove(field_development_plan_model);
+		//		}
+		//		save += await _context.SaveChangesAsync();
+
+
+		//		if (save > 0)
+		//		{
+		//			string successMsg = getMsg(action);
+		//			var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, Data = All_Data, StatusCode = ResponseCodes.Success };
+		//		}
+		//		else
+		//		{
+		//			return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+		//		}
+
+
+		//		return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+		//	#endregion
+
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError
+		//			};
+		//	}
+		//}
+
+
+
+		[HttpPost("POST_FIELD_DEVELOPMENT_PLAN")]
+		public async Task<object> POST_FIELD_DEVELOPMENT_PLAN([FromForm] FIELD_DEVELOPMENT_PLAN field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+
+			try
+			{
+				List<FIELD_DEVELOPMENT_PLAN> getData;
+				#region Saving FDP data
+				if (field_development_plan_model != null)
+				{
+
+					//var getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+
+
+					if (concessionField?.Field_Name != null)
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).ToListAsync();
+
+					}
+					else
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+
+					}
+
+					field_development_plan_model.Companyemail = WKPCompanyEmail;
+					field_development_plan_model.CompanyName = WKPCompanyName;
+					field_development_plan_model.COMPANY_ID = WKPCompanyId;
+					field_development_plan_model.CompanyNumber = WKPCompanyNumber;
+					field_development_plan_model.Date_Updated = DateTime.Now;
+					field_development_plan_model.Updated_by = WKPCompanyId;
+					field_development_plan_model.Year_of_WP = year;
+					field_development_plan_model.OML_Name = omlName.ToUpper();
+					field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
+
+					if (field_development_plan_model.Uploaded_approved_FDP_Document != null && field_development_plan_model.Uploaded_approved_FDP_Document != "null")
+					{
+						#region file section
+						//string approved_FDP_Document = null;
+						var file1 = Request.Form.Files[0];
+						var blobname1 = blobService.Filenamer(file1);
+						field_development_plan_model.FDPDocumentFilename = blobname1;
+
+						if (file1 != null)
+						{
+							string docName = "Approved FDP";
+							field_development_plan_model.Uploaded_approved_FDP_Document = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"FDPDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+							if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
+								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
+						}
+
+						if (action == GeneralModel.Insert)
+						{
+							if (getData == null || getData.Count == 0)
+							{
+								field_development_plan_model.Date_Created = DateTime.Now;
+								field_development_plan_model.Created_by = WKPCompanyId;
+								await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
+							}
+							else
+							{
+								field_development_plan_model.Date_Created = getData.FirstOrDefault().Date_Created;
+								field_development_plan_model.Created_by = getData.FirstOrDefault().Created_by;
+								field_development_plan_model.Date_Updated = DateTime.Now;
+								field_development_plan_model.Updated_by = WKPCompanyId;
+								_context.FIELD_DEVELOPMENT_PLANs.RemoveRange(getData);
+								await _context.FIELD_DEVELOPMENT_PLANs.AddAsync(field_development_plan_model);
+							}
+						}
+						else if (action == GeneralModel.Delete)
+						{
+							_context.FIELD_DEVELOPMENT_PLANs.Remove(field_development_plan_model);
+						}
+					}
+
+
+					// if (file1 != null)
+					// {
+					//     string docName = "Approved FDP";
+					//     approved_FDP_Document = _helpersController.UploadDocument(file1, "FDPDocuments");
+					//     if (approved_FDP_Document == null)
+					//         return BadRequest(new { message = "Error : An error occured while trying to upload " + docName + " document."});
+					// }
+					#endregion
+
+					// field_development_plan_model.Uploaded_approved_FDP_Document = file1 != null ? approved_FDP_Document.filePath : null;
+					// field_development_plan_model.FDPDocumentFilename = file1 != null ? approved_FDP_Document.fileName : null;
+
+
+					save += await _context.SaveChangesAsync();
+
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLANs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+					}
+				}
+
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+			}
+		}
+
+
+
+
+		//	//do delete for this
+		[HttpPost("POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE")]
+		public async Task<object> POST_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVE([FromBody] FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				#region Saving FDP data
+				if (field_development_plan_model != null)
+				{
+					FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERf getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year && c.Proposed_Development_well_name== field_development_plan_model.Proposed_Development_well_name select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year && c.Proposed_Development_well_name== field_development_plan_model.Proposed_Development_well_name select c).FirstOrDefaultAsync();
+					}
+
+					field_development_plan_model.Companyemail = WKPCompanyEmail;
+					field_development_plan_model.CompanyName = WKPCompanyName;
+					field_development_plan_model.COMPANY_ID = WKPCompanyId;
+					field_development_plan_model.CompanyNumber = WKPCompanyNumber;
+					field_development_plan_model.Date_Updated = DateTime.Now;
+					field_development_plan_model.Updated_by = WKPCompanyId;
+					field_development_plan_model.Year_of_WP = year;
+					field_development_plan_model.OML_Name = omlName;
+					field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
+					field_development_plan_model.Field_Name = concessionField?.Field_Name ?? null;
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							field_development_plan_model.Date_Created = DateTime.Now;
+							field_development_plan_model.Created_by = WKPCompanyId;
+							await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(field_development_plan_model);
+						}
+						else
+						{
+							field_development_plan_model.Date_Created = getData.Date_Created;
+							field_development_plan_model.Created_by = getData.Created_by;
+							field_development_plan_model.Date_Updated = DateTime.Now;
+							field_development_plan_model.Updated_by = WKPCompanyId;
+							_context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(getData);
+							await _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.AddAsync(field_development_plan_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs.Remove(getData);
+					}
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP")]
+		public async Task<object> POST_FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP([FromBody] FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP field_development_plan_model, string omlName, string fieldName, string year, string actionToDo = null)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				#region Saving FDP data
+				if (field_development_plan_model != null)
+				{
+
+					FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDP getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.OML_Name == omlName && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					field_development_plan_model.Companyemail = WKPCompanyEmail;
+					field_development_plan_model.CompanyName = WKPCompanyName;
+					field_development_plan_model.COMPANY_ID = WKPCompanyId;
+					field_development_plan_model.CompanyNumber = WKPCompanyNumber;
+					field_development_plan_model.Date_Updated = DateTime.Now;
+					field_development_plan_model.Updated_by = WKPCompanyId;
+					field_development_plan_model.Year_of_WP = year;
+					field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
+					field_development_plan_model.Field_Name = concessionField?.Field_Name ?? null;
+					field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							field_development_plan_model.Date_Created = DateTime.Now;
+							field_development_plan_model.Created_by = WKPCompanyId;
+							await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(field_development_plan_model);
+						}
+						else
+						{
+							field_development_plan_model.Date_Created = getData.Date_Created;
+							field_development_plan_model.Created_by = getData.Created_by;
+							field_development_plan_model.Date_Updated = DateTime.Now;
+							field_development_plan_model.Updated_by = WKPCompanyId;
+							await _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.AddAsync(field_development_plan_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs.Remove(field_development_plan_model);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_TO_SUBMIT_FDPs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		[HttpPost("POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS")]
+		public async Task<object> POST_FIELD_DEVELOPMENT_FIELDS_AND_STATUS([FromBody] FIELD_DEVELOPMENT_FIELDS_AND_STATUS field_development_plan_model, string omlName, string fieldName, string year, string actionToDo)
+		{
+
+			int save = 0;
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+
+			try
+			{
+
+				#region Saving FDP data
+				if (field_development_plan_model != null)
+				{
+					FIELD_DEVELOPMENT_FIELDS_AND_STATUS getData;
+					if (concessionField.Field_Name !=null)
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+					else
+					{
+						getData = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
+					}
+
+					field_development_plan_model.Companyemail = WKPCompanyEmail;
+					field_development_plan_model.CompanyName = WKPCompanyName;
+					field_development_plan_model.COMPANY_ID = WKPCompanyId;
+					field_development_plan_model.CompanyNumber = WKPCompanyNumber;
+					field_development_plan_model.Date_Updated = DateTime.Now;
+					field_development_plan_model.Updated_by = WKPCompanyId;
+					field_development_plan_model.Year_of_WP = year;
+					field_development_plan_model.OML_Name = field_development_plan_model.OML_Name.ToUpper();
+					field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
+					field_development_plan_model.Field_Name = concessionField?.Field_Name ?? null;
+					field_development_plan_model.OML_ID = concessionField.Concession_ID.ToString();
+
+					if (action == GeneralModel.Insert)
+					{
+						if (getData == null)
+						{
+							field_development_plan_model.Date_Created = DateTime.Now;
+							field_development_plan_model.Created_by = WKPCompanyId;
+							await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(field_development_plan_model);
+						}
+						else
+						{
+							field_development_plan_model.Date_Created = getData.Date_Created;
+							field_development_plan_model.Created_by = getData.Created_by;
+							field_development_plan_model.Date_Updated = DateTime.Now;
+							field_development_plan_model.Updated_by = WKPCompanyId;
+							_context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(getData);
+							await _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.AddAsync(field_development_plan_model);
+						}
+					}
+					else if (action == GeneralModel.Delete)
+					{
+						_context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes.Remove(getData);
+					}
+
+					save += await _context.SaveChangesAsync();
+
+					if (save > 0)
+					{
+						string successMsg = Messager.ShowMessage(action);
+						//var All_Data = await (from c in _context.FIELD_DEVELOPMENT_FIELDS_AND_STATUSes where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
+					}
+					else
+					{
+						return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
+
+					}
+				}
+
+				return BadRequest(new { message = $"Error : No data was passed for {actionToDo} process to be completed." });
+				#endregion
+
+			}
+			catch (Exception e)
+			{
+				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+
+			}
+		}
+
+		//do delete for this
+
 
         [HttpPost("POST_INITIAL_WELL_COMPLETION_JOB")]
         public async Task<object> POST_INITIAL_WELL_COMPLETION_JOB([FromBody] INITIAL_WELL_COMPLETION_JOB1 initial_well_completion_model, string omlName, string fieldName, string year, string actionToDo)
