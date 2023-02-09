@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
+using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
 using Backend_UMR_Work_Program.Services;
 using LinqToDB;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using RestSharp;
+using System.Net;
 using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using static Backend_UMR_Work_Program.Models.ViewModel;
@@ -44,15 +47,48 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			try
 			{
-				var table = _account.GetData();
-				string JSONString = string.Empty;
-				JSONString = JsonConvert.SerializeObject(table);
-				return JSONString;
+				var encrpt = $"{_appSettings.AppEmail}{_appSettings.SecreteKey}";
+				var apiHash = MyUtils.GenerateSha512(encrpt);
+				var request = new RestRequest("api/Accounts/Staff/{email}/{apiHash}", Method.Get);
+				request.AddUrlSegment("email", _appSettings.AppEmail);
+				request.AddUrlSegment("apiHash", apiHash);
+
+				var client = new RestClient(_appSettings.elpsBaseUrl);
+				//_generalLogger.LogRequest($"{"About to GetCompanyDetail On Elps with Email => "}{" "}{" - "}{DateTime.Now}", false, directory);
+				RestResponse response = client.Execute(request);
+				//_generalLogger.LogRequest($"{"Response Exception =>" + response.ErrorException + "\r\nResponse Status =>" + response.ResponseStatus + "\r\nStatus Code =>" + response.StatusCode}{" "}{" - "}{DateTime.Now}", false, directory);
+				if (response.ErrorException != null)
+				{
+					webApiResponse.Message = response.ErrorMessage;
+				}
+
+				else if (response.ResponseStatus != ResponseStatus.Completed)
+				{
+					webApiResponse.Message = response.ResponseStatus.ToString();
+				}
+
+				else if (response.StatusCode != HttpStatusCode.OK)
+				{
+					webApiResponse.Message = response.StatusCode.ToString();
+				}
+				else
+				{
+					webApiResponse.Data = JsonConvert.DeserializeObject<List<StaffResponseDto>>(response.Content);
+					webApiResponse.Message = "SUCCESS";
+				}
 			}
 			catch (Exception ex)
 			{
-				return new { message = ex.Message, trace = ex.StackTrace };
+				//_generalLogger.LogRequest($"{"Last Exception =>" + ex.ToString()}{" - "}{DateTime.Now}", true, directory);
+				webApiResponse.Message = ex.Message;
 			}
+			finally
+			{
+				//_generalLogger.LogRequest($"{"About to Return with Message => " + webApiResponse.Message}{" - "}{DateTime.Now}", true, directory);
+
+			}
+
+			return webApiResponse;
 		}
 
 		[HttpGet("GetData")]
