@@ -2117,86 +2117,55 @@ namespace Backend_UMR_Work_Program.Controllers
 		[HttpGet("GET_FORM_FIVE_SDCP")]
 		public async Task<object> GET_FORM_FIVE_SDCP(string omlName, string fieldName, string year)
 		{
-			try
-			{
-				var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-				if (concessionField != null && concessionField.Consession_Type != "OPL" && int.Parse(year) > 2022)
+            try
+            {
+                var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+                var HSESustainable_CSR = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                var HSESustainable_Question = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+
+                var HSESustainable_Capital = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                var HSESustainable_Schorlarship_CSR = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                var HSESustainable_Schorlarship = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                var HSESustainable_Training_CSR = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                //Musa
+                var HSESustainableDevProgramCsr = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                var HSESustainable_TrainingDetails_CSR = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+                var PictureUpload = await (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
+				List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU> HSESustainable_MOU;
+				if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
 				{
-					var HSESustainable_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Question = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_MOU = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Capital = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Schorlarship_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Schorlarship = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Training_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					//Musa
-					var HSESustainableDevProgramCsr = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-
-					var HSESustainable_TrainingDetails_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var PictureUpload = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					return new
-					{
-						HSESustainable_CSR = HSESustainable_CSR,
-						HSESustainable_Question = HSESustainable_Question,
-						HSESustainableDevProjProgramCsr = HSESustainableDevProgramCsr,
-						HSESustainable_Schorlarship_CSR = HSESustainable_Schorlarship_CSR,
-						HSESustainable_MOU = HSESustainable_MOU,
-						HSESustainable_Schorlarship = HSESustainable_Schorlarship,
-						HSESustainable_Training_CSR = HSESustainable_Training_CSR,
-						HSESustainable_TrainingDetails_CSR = HSESustainable_TrainingDetails_CSR,
-						PictureUpload = PictureUpload
-					};
+					HSESustainable_MOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+				} else {
+					HSESustainable_MOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 				}
-				else
-				{
-					var HSESustainable_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
-					var HSESustainable_Question = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+                return new
+                {
+                    HSESustainable_CSR = HSESustainable_CSR,
+                    HSESustainable_Question = HSESustainable_Question,
+                    HSESustainableDevProjProgramCsr = HSESustainableDevProgramCsr,
+                    HSESustainable_Schorlarship_CSR = HSESustainable_Schorlarship_CSR,
+                    HSESustainable_MOU = HSESustainable_MOU,
+                    HSESustainable_Schorlarship = HSESustainable_Schorlarship,
+                    HSESustainable_Training_CSR = HSESustainable_Training_CSR,
+                    HSESustainable_TrainingDetails_CSR = HSESustainable_TrainingDetails_CSR,
+                    PictureUpload = PictureUpload
+                };
 
-					var HSESustainable_MOU = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Capital = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Schorlarship_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_Schorlarship = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					//Musa
-					var HSESustainableDevProgramCsr = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-
-					var HSESustainable_Training_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var HSESustainable_TrainingDetails_CSR = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					var PictureUpload = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-
-					return new
-					{
-						HSESustainable_CSR = HSESustainable_CSR,
-						HSESustainableDevProjProgramCsr = HSESustainableDevProgramCsr,
-						HSESustainable_Question = HSESustainable_Question,
-						HSESustainable_Schorlarship_CSR = HSESustainable_Schorlarship_CSR,
-						HSESustainable_MOU = HSESustainable_MOU,
-						HSESustainable_Schorlarship = HSESustainable_Schorlarship,
-						HSESustainable_Training_CSR = HSESustainable_Training_CSR,
-						HSESustainable_TrainingDetails_CSR = HSESustainable_TrainingDetails_CSR,
-						PictureUpload = PictureUpload
-					};
-				}
-			}
-			catch (Exception e)
-			{
-				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-			}
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
+            }
 		}
 
 		[HttpPost("POST_CONCESSION_SITUATION")]
@@ -9223,11 +9192,12 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 			}
 		}
 		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU"), DisableRequestSizeLimit]
-		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU hse_sustainable_model, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9242,14 +9212,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else if (hse_sustainable_model != null)
 				{
 					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU getData;
-					if (concessionField.Field_Name !=null)
-					{
-						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Field_ID==concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefault();
-					}
-					else
-					{
-						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-					}
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_sustainable_model.Companyemail = WKPCompanyEmail;
 					hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -9258,8 +9221,6 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Date_Updated = DateTime.Now;
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
-					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -9277,21 +9238,21 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						//if (getData == null)
+						//{
 							hse_sustainable_model.Date_Created = DateTime.Now;
 							hse_sustainable_model.Created_by = WKPCompanyId;
 							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_sustainable_model);
-						}
-						else
-						{
-							hse_sustainable_model.Date_Created = getData.Date_Created;
-							hse_sustainable_model.Created_by = getData.Created_by;
-							hse_sustainable_model.Date_Updated = DateTime.Now;
-							hse_sustainable_model.Updated_by = WKPCompanyId;
-							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_sustainable_model);
-						}
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs.AddAsync(hse_sustainable_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
@@ -9345,14 +9306,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else if (hse_sustainable_model != null)
 				{
 					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW getData;
-					if (concessionField.Field_Name!=null)
-					{
-						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-					}
-					else
-					{
-						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-					}
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_sustainable_model.Companyemail = WKPCompanyEmail;
 					hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -9361,27 +9315,27 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Date_Updated = DateTime.Now;
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
-					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField?.Field_ID ?? null;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID ?? null;
 					hse_sustainable_model.Actual_Proposed_Year= (int.Parse(year) + 1).ToString();
 
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						//if (getData == null)
+						//{
 							hse_sustainable_model.Date_Created = DateTime.Now;
 							hse_sustainable_model.Created_by = WKPCompanyId;
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
-						}
-						else
-						{
-							hse_sustainable_model.Date_Created = getData.Date_Created;
-							hse_sustainable_model.Created_by = getData.Created_by;
-							hse_sustainable_model.Date_Updated = DateTime.Now;
-							hse_sustainable_model.Updated_by = WKPCompanyId;
-							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
-						}
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs.AddAsync(hse_sustainable_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
@@ -9414,36 +9368,29 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 			}
 		}
 		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL")]
-		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL hse_sustainable_model, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
 
 				if (!string.IsNullOrEmpty(id))
 				{
-					var getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.Id == int.Parse(id) select c).FirstOrDefault();
+					var getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.Id == int.Parse(id) select c).FirstOrDefaultAsync();
 
-					if (action == GeneralModel.Delete)
+					if (action.ToLower() == GeneralModel.Delete.ToLower()) {
 						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
-					save += _context.SaveChanges();
+						save += await _context.SaveChangesAsync();
+					}
 				}
 				else if (hse_sustainable_model != null)
 				{
-					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL getData;
-
-					if (concessionField?.Field_Name !=null)
-					{
-						getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Field_ID== concessionField.Field_ID && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-					else
-					{
-						getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-
+					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUAL getData;	
+					getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_sustainable_model.Companyemail = WKPCompanyEmail;
 					hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -9452,28 +9399,28 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Date_Updated = DateTime.Now;
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
-					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField?.Field_ID ?? null;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID ?? null;
 					hse_sustainable_model.ACTUAL_year = year;
 					hse_sustainable_model.PROPOSED_year = (int.Parse(year) + 1).ToString();
 
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						// if (getData == null)
+						// {
 							hse_sustainable_model.Date_Created = DateTime.Now;
 							hse_sustainable_model.Created_by = WKPCompanyId;
 							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
-						}
-						else
-						{
-							hse_sustainable_model.Date_Created = getData.Date_Created;
-							hse_sustainable_model.Created_by = getData.Created_by;
-							hse_sustainable_model.Date_Updated = DateTime.Now;
-							hse_sustainable_model.Updated_by = WKPCompanyId;
-							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
-						}
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_PLANNED_AND_ACTUALs.AddAsync(hse_sustainable_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
@@ -9506,11 +9453,12 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 			}
 		}
 		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition")]
-		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition hse_sustainable_model, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9525,15 +9473,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else if (hse_sustainable_model != null)
 				{
 					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisition getData;
-					if (concessionField?.Field_Name !=null)
-					{
-						getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-					else
-					{
-						getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-
+					getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_sustainable_model.Companyemail = WKPCompanyEmail;
 					hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -9542,27 +9482,27 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Date_Updated = DateTime.Now;
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
-					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
 					hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
 
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						// if (getData == null)
+						// {
 							hse_sustainable_model.Date_Created = DateTime.Now;
 							hse_sustainable_model.Created_by = WKPCompanyId;
 							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.AddAsync(hse_sustainable_model);
-						}
-						else
-						{
-							hse_sustainable_model.Date_Created = getData.Date_Created;
-							hse_sustainable_model.Created_by = getData.Created_by;
-							hse_sustainable_model.Date_Updated = DateTime.Now;
-							hse_sustainable_model.Updated_by = WKPCompanyId;
-							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.AddAsync(hse_sustainable_model);
-						}
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Training_Skill_Acquisitions.AddAsync(hse_sustainable_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
@@ -9596,11 +9536,12 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 			}
 		}
 		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME"), DisableRequestSizeLimitAttribute]
-		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME hse_sustainable_model, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9615,15 +9556,8 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else if (hse_sustainable_model != null)
 				{
 					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEME getData;
-					if (concessionField?.Field_Name !=null)
-					{
-						getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-					else
-					{
-						getData =await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-
+					
+						getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_sustainable_model.Companyemail = WKPCompanyEmail;
 					hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -9632,8 +9566,8 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Date_Updated = DateTime.Now;
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
-					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -9650,21 +9584,21 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					#endregion
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						// if (getData == null)
+						// {
 							hse_sustainable_model.Date_Created = DateTime.Now;
 							hse_sustainable_model.Created_by = WKPCompanyId;
 							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.AddAsync(hse_sustainable_model);
-						}
-						else
-						{
-							hse_sustainable_model.Date_Created = getData.Date_Created;
-							hse_sustainable_model.Created_by = getData.Created_by;
-							hse_sustainable_model.Date_Updated = DateTime.Now;
-							hse_sustainable_model.Updated_by = WKPCompanyId;
-							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.AddAsync(hse_sustainable_model);
-						}
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_TRAINING_SCHEMEs.AddAsync(hse_sustainable_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
@@ -9699,11 +9633,12 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 		}
 
 		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship")]
-		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship hse_sustainable_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship([FromBody] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship hse_sustainable_model, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -9718,15 +9653,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else if (hse_sustainable_model != null)
 				{
 					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarship getData;
-					if (concessionField.Field_Name!=null)
-					{
-						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-					}
-					else
-					{
-						getData = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-					}
-
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.Actual_proposed == hse_sustainable_model.Actual_proposed && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_sustainable_model.Companyemail = WKPCompanyEmail;
 					hse_sustainable_model.CompanyName = WKPCompanyName;
@@ -9735,27 +9662,27 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_sustainable_model.Date_Updated = DateTime.Now;
 					hse_sustainable_model.Updated_by = WKPCompanyId;
 					hse_sustainable_model.Year_of_WP = year;
-					hse_sustainable_model.OML_Name = omlName;
-					hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_sustainable_model.OML_Name = omlName;
+					//hse_sustainable_model.Field_ID = concessionField?.Field_ID??null;
 					hse_sustainable_model.Actual_Proposed_Year = (int.Parse(year) + 1).ToString();
 
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						//if (getData == null)
+						//{
 							hse_sustainable_model.Date_Created = DateTime.Now;
 							hse_sustainable_model.Created_by = WKPCompanyId;
 							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.AddAsync(hse_sustainable_model);
-						}
-						else
-						{
-							hse_sustainable_model.Date_Created = getData.Date_Created;
-							hse_sustainable_model.Created_by = getData.Created_by;
-							hse_sustainable_model.Date_Updated = DateTime.Now;
-							hse_sustainable_model.Updated_by = WKPCompanyId;
-							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.AddAsync(hse_sustainable_model);
-						}
+						// }
+						// else
+						// {
+						// 	hse_sustainable_model.Date_Created = getData.Date_Created;
+						// 	hse_sustainable_model.Created_by = getData.Created_by;
+						// 	hse_sustainable_model.Date_Updated = DateTime.Now;
+						// 	hse_sustainable_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships.AddAsync(hse_sustainable_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
@@ -10634,11 +10561,12 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 		}
 
 		[HttpPost("POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME"), DisableRequestSizeLimit]
-		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME hse_scholarship_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME([FromForm] HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME hse_scholarship_model, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo;
+			// var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -10653,15 +10581,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else if (hse_scholarship_model != null)
 				{
 					HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEME getData;
-					if (concessionField.Field_Name !=null)
-					{
-						getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.Field_ID==concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-					else
-					{
-						getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
-					}
-
+					getData = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					hse_scholarship_model.Companyemail = WKPCompanyEmail;
 					hse_scholarship_model.CompanyName = WKPCompanyName;
@@ -10670,8 +10590,8 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_scholarship_model.Date_Updated = DateTime.Now;
 					hse_scholarship_model.Updated_by = WKPCompanyId;
 					hse_scholarship_model.Year_of_WP = year;
-					hse_scholarship_model.OML_Name = omlName;
-					hse_scholarship_model.Field_ID = concessionField?.Field_ID??null;
+					//hse_scholarship_model.OML_Name = omlName;
+					//hse_scholarship_model.Field_ID = concessionField?.Field_ID??null;
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -10690,29 +10610,27 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					#endregion
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						//if (getData == null)
+						//{
 							hse_scholarship_model.Date_Created = DateTime.Now;
 							hse_scholarship_model.Created_by = WKPCompanyId;
 							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
-						}
-						else
-						{
-							hse_scholarship_model.Date_Created = getData.Date_Created;
-							hse_scholarship_model.Created_by = getData.Created_by;
-							hse_scholarship_model.Date_Updated = DateTime.Now;
-							hse_scholarship_model.Updated_by = WKPCompanyId;
-							_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
-							await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
-						}
+						// }
+						// else
+						// {
+						// 	hse_scholarship_model.Date_Created = getData.Date_Created;
+						// 	hse_scholarship_model.Created_by = getData.Created_by;
+						// 	hse_scholarship_model.Date_Updated = DateTime.Now;
+						// 	hse_scholarship_model.Updated_by = WKPCompanyId;
+						// 	_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
+						// 	await _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.AddAsync(hse_scholarship_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
 						_context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs.Remove(getData);
 					}
-
 					save += await _context.SaveChangesAsync();
-
 				}
 				else
 				{
@@ -10727,14 +10645,12 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else
 				{
 					return BadRequest(new { message = "Error : An error occured while trying to submit this form." });
-
 				}
 
 			}
 			catch (Exception e)
 			{
 				return new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Error : " + e.Message, StatusCode = ResponseCodes.InternalError };
-
 			}
 		}
 
@@ -10750,8 +10666,6 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 			{
 				if (!string.IsNullOrEmpty(id))
 				{
-
-
 					var getData = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
 					if (action == GeneralModel.Delete)
@@ -11698,11 +11612,12 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 		}
 
 		[HttpPost("POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT"), DisableRequestSizeLimit]
-		public async Task<object> POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT([FromForm] PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT picture_upload_model, string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT([FromForm] PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT picture_upload_model, string year, string id, string actionToDo)
 		{
 
 			int save = 0;
-			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; 
+			//var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
 			try
 			{
@@ -11717,15 +11632,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				else if (picture_upload_model != null)
 				{
 					PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECT getData;
-					if (concessionField.Field_Name !=null)
-					{
-						getData = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.Field_ID==concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-					}
-					else
-					{
-						getData = (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
-					}
-
+				    getData = await (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefaultAsync();
 
 					picture_upload_model.Companyemail = WKPCompanyEmail;
 					picture_upload_model.CompanyName = WKPCompanyName;
@@ -11734,8 +11641,8 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					picture_upload_model.Date_Updated = DateTime.Now;
 					picture_upload_model.Updated_by = WKPCompanyId;
 					picture_upload_model.Year_of_WP = year;
-					picture_upload_model.OML_Name = omlName;
-					picture_upload_model.Field_ID = concessionField?.Field_ID ?? null;
+					//picture_upload_model.OML_Name = omlName;
+					//picture_upload_model.Field_ID = concessionField?.Field_ID ?? null;
 
 					#region file section
 					var file1 = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
@@ -11752,21 +11659,21 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						// if (getData == null)
+						// {
 							picture_upload_model.Date_Created = DateTime.Now;
 							picture_upload_model.Created_by = WKPCompanyId;
 							await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(picture_upload_model);
-						}
-						else
-						{
-							picture_upload_model.Date_Created = getData.Date_Created;
-							picture_upload_model.Created_by = getData.Created_by;
-							picture_upload_model.Date_Updated = DateTime.Now;
-							picture_upload_model.Updated_by = WKPCompanyId;
-							_context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(getData);
-							await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(picture_upload_model);
-						}
+						// }
+						// else
+						// {
+						// 	picture_upload_model.Date_Created = getData.Date_Created;
+						// 	picture_upload_model.Created_by = getData.Created_by;
+						// 	picture_upload_model.Date_Updated = DateTime.Now;
+						// 	picture_upload_model.Updated_by = WKPCompanyId;
+						// 	_context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.Remove(getData);
+						// 	await _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs.AddAsync(picture_upload_model);
+						// }
 					}
 					else if (action == GeneralModel.Delete)
 					{
