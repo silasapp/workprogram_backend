@@ -89,7 +89,7 @@ namespace Backend_UMR_Work_Program.Models
 				this.Password = password;
 				if (await CheckEmail(email))
 				{
-					var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL == email.Trim() /*&& a.PASSWORDS == Encrypt(password)*/ && a.STATUS_ == "Activated" select a).FirstOrDefaultAsync();
+					var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL.ToLower().Trim().Equals(email.ToLower().Trim()) && a.STATUS_.ToLower() == "activated" && !a.EMAIL.Contains(".gov.ng") select a).FirstOrDefaultAsync();
 					if (getUser != null)
 					{
 						getUser.LAST_LOGIN_DATE = DateTime.Now;
@@ -97,7 +97,7 @@ namespace Backend_UMR_Work_Program.Models
 						await _context.SaveChangesAsync();
 						var concessionInfo = await (from c in _context.ADMIN_CONCESSIONS_INFORMATIONs where c.COMPANY_EMAIL == email.Trim() select c).FirstOrDefaultAsync();
 						var contractType = concessionInfo?.Contract_Type ?? "";
-						var companyName = getUser?.COMPANY_NAME == "Admin" ? "Admin" : "Company";
+						var companyName = "Company";
 						#region add staff to staff table for application process flow
 						if (companyName == GeneralModel.Admin)
 						{
