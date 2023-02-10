@@ -77,6 +77,7 @@ namespace Backend_UMR_Work_Program.Services
 							{
 								company.EMAIL = email;
 								company.COMPANY_NAME = companyDetail.name;
+								company.ELPS_ID = companyDetail.id;
 							}
 
 							_context.ADMIN_COMPANY_INFORMATIONs.Update(company);
