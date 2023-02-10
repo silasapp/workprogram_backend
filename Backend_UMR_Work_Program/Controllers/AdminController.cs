@@ -488,6 +488,13 @@ repeat:
 							GUID=Guid.NewGuid().ToString()
 						};
 						await _context.ADMIN_COMPANY_CODEs.AddAsync(CompanyInfoCode);
+
+						var newCompany = await _context.ADMIN_COMPANY_INFORMATIONs.FindAsync(CompanyInfoId);
+						newCompany.COMPANY_ID = companyAccessCode;
+						_context.ADMIN_COMPANY_INFORMATIONs.Update(newCompany);
+
+
+
 						//add user to staff table
 						staff staff = new staff()
 						{

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
+using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
 using Backend_UMR_Work_Program.Services;
 using LinqToDB;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using RestSharp;
+using System.Net;
 using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 using static Backend_UMR_Work_Program.Models.ViewModel;
@@ -27,8 +30,9 @@ namespace Backend_UMR_Work_Program.Controllers
 		private readonly AppSettings _appSettings;
 		WebApiResponse webApiResponse = new WebApiResponse();
 		private readonly IMapper _mapper;
+		public ElpsUtility _elpsObj;
 
-		public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper, IOptions<AppSettings> appSettings)
+		public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper, IOptions<AppSettings> appSettings, ElpsUtility elpsObj)
 		{
 			//_httpContextAccessor = httpContextAccessor;
 			_appSettings=appSettings.Value;
@@ -37,9 +41,50 @@ namespace Backend_UMR_Work_Program.Controllers
 			_configuration = configuration;
 			_mapper = mapper;
 			_helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
+			_elpsObj = elpsObj;
 		}
 
+		[HttpGet("GetElpsStaff")]
+		public object GetElpsStaff()
+		{
+			try
+			{
+				var encrpt = $"{_appSettings.AppEmail}{_appSettings.SecreteKey}";
+				var apiHash = MyUtils.GenerateSha512(encrpt);
+				var request = new RestRequest("api/Accounts/Staff/{email}/{apiHash}", Method.Get);
+				request.AddUrlSegment("email", _appSettings.AppEmail);
+				request.AddUrlSegment("apiHash", apiHash);
 
+				var client = new RestClient(_appSettings.elpsBaseUrl);
+
+				RestResponse response = client.Execute(request);
+				if (response.ErrorException != null)
+				{
+					webApiResponse.Message = response.ErrorMessage;
+				}
+
+				else if (response.ResponseStatus != ResponseStatus.Completed)
+				{
+					webApiResponse.Message = response.ResponseStatus.ToString();
+				}
+
+				else if (response.StatusCode != HttpStatusCode.OK)
+				{
+					webApiResponse.Message = response.StatusCode.ToString();
+				}
+				else
+				{
+					webApiResponse.Data = JsonConvert.DeserializeObject<List<StaffResponseDto>>(response.Content);
+					webApiResponse.Message = "SUCCESS";
+				}
+			}
+			catch (Exception ex)
+			{
+				webApiResponse.Message = ex.Message;
+			}
+
+			return webApiResponse;
+		}
 
 		[HttpGet("GetData")]
 		public object GetData()
@@ -61,7 +106,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			var email = loginParam.Email;
 			var code = loginParam.Code;
-			var login = await ElpsUtility.ValidateLogin(email, code, _context, _appSettings, webApiResponse);
+			var login = await _elpsObj.ValidateLogin(email, code, _context, _appSettings, webApiResponse);
 			if (login.ResponseCode.Equals("00"))
 				return Redirect($"{_appSettings.LoginUrl}/login?id={login.Data}");
 
@@ -74,6 +119,22 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var tokenData = await _account.isAutheticate(logine.email, logine.password);
+				string JSONString = string.Empty;
+				JSONString = JsonConvert.SerializeObject(tokenData);
+				return Ok(tokenData);
+			}
+			catch (Exception e)
+			{
+				return Ok(e.Message);
+			}
+		}
+
+		[HttpGet("AuthenticateById")]
+		public async Task<IActionResult> AuthenticateById(int Id)
+		{
+			try
+			{
+				var tokenData = await _account.AutheticateById(Id);
 				string JSONString = string.Empty;
 				JSONString = JsonConvert.SerializeObject(tokenData);
 				return Ok(tokenData);
