@@ -174,7 +174,7 @@ namespace Backend_UMR_Work_Program.Models
 			{
 				if (id>0)
 				{
-					var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.Id == id && a.STATUS_ == "Activated" select a).FirstOrDefaultAsync();
+					var getUser = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.Id == id && a.STATUS_.ToLower() == "activated" select a).FirstOrDefaultAsync();
 
 					if (getUser != null)
 					{
@@ -202,7 +202,7 @@ namespace Backend_UMR_Work_Program.Models
 						//GeneralModel.CompanyId=getUser.COMPANY_ID;
 
 						var token = tokenHandler.CreateToken(tokenDescriptor);
-						UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, CompanyNumber = getUser.CompanyNumber, Name = getUser.NAME, token = tokenHandler.WriteToken(token), code = 1 };
+						UserToken tok = new UserToken { CompanyId = getUser.COMPANY_ID, CompanyName = getUser.COMPANY_NAME, CompanyEmail = getUser.EMAIL, CompanyNumber = getUser.Id, Name = getUser.NAME, token = tokenHandler.WriteToken(token), code = 1 };
 						return tok;
 					}
 					else
