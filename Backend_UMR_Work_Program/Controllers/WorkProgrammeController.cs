@@ -7632,8 +7632,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 		}
 
 		[HttpPost("POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW")]
-		public async Task<object> POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW([FromBody] HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW hse_technical_safety_model,
-			string omlName, string fieldName, string year, string id, string actionToDo)
+		public async Task<object> POST_HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW([FromBody] HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW hse_technical_safety_model, string omlName, string fieldName, string year, string id, string actionToDo)
 		{
 			int save = 0;
 			string action = (actionToDo == null || actionToDo =="") ? GeneralModel.Insert : actionToDo; var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
@@ -7651,6 +7650,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 				}
 				else if (hse_technical_safety_model != null)
 				{
+
 					var getData = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 					hse_technical_safety_model.Companyemail = WKPCompanyEmail;
@@ -7661,7 +7661,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					hse_technical_safety_model.Updated_by = WKPCompanyId;
 					hse_technical_safety_model.Year_of_WP = year;
 					hse_technical_safety_model.OML_Name = omlName;
-					hse_technical_safety_model.Field_ID = concessionField.Field_ID;
+					hse_technical_safety_model.Field_ID = concessionField?.Field_ID ?? null;
 
 					if (action == GeneralModel.Insert)
 					{
