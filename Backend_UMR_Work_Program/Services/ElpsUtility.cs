@@ -336,25 +336,6 @@ namespace Backend_UMR_Work_Program.Services
 						newCompany.COMPANY_ID = companyAccessCode;
 						_context.ADMIN_COMPANY_INFORMATIONs.Update(newCompany);
 
-
-
-						//add user to staff table
-						staff staff = new staff()
-						{
-							AdminCompanyInfo_ID = data.Id,
-							StaffElpsID = "123456",
-							Staff_SBU = userModel.SBU_ID,
-							RoleID = userModel.ROLE_ID,
-							LocationID = 1,
-							StaffEmail = data.EMAIL,
-							FirstName = "ADMIN",
-							LastName = "STAFF",
-							CreatedAt = DateTime.Now,
-							ActiveStatus = true,
-							DeleteStatus = false,
-						};
-
-						await _context.staff.AddAsync(staff);
 						int saved = await _context.SaveChangesAsync();
 
 						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"{userModel.EMAIL} has been added successfully", Data = CompanyInfoId, StatusCode = ResponseCodes.Success };
