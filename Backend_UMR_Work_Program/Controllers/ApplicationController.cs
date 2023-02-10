@@ -1065,7 +1065,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			int save = 0;
 			var concessionField = GET_CONCESSION_FIELD(omlName, "");
-			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert : actionToDo;
+			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
 			try
 			{
 				#region Saving Field
@@ -1174,7 +1174,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			int save = 0;
 			var concessionField = GET_CONCESSION_FIELD(omlName, "");
 
-			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert : actionToDo;
+			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
 			try
 			{
 				#region Saving Field
@@ -1278,7 +1278,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			int save = 0;
 			var concessionField = GET_CONCESSION_FIELD(omlName, "");
-			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert : actionToDo;
+			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
 			try
 			{
 				#region Saving Data
@@ -1375,7 +1375,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 			int save = 0;
 			var concessionField = GET_CONCESSION_FIELD(omlName, "");
-			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert : actionToDo;
+			string action = (id == "undefined" || actionToDo == null) ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
 			try
 			{
 				#region Saving Data

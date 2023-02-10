@@ -2182,7 +2182,7 @@ repeat:
 		{
 
 			int save = 0;
-			string action = actionToDo == null ? GeneralModel.Insert : actionToDo;
+			string action = actionToDo == null ? GeneralModel.Insert.Trim().ToLower() : actionToDo.Trim().ToLower();
 
 			try
 			{
