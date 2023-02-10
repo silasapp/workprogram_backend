@@ -30,8 +30,9 @@ namespace Backend_UMR_Work_Program.Controllers
 		private readonly AppSettings _appSettings;
 		WebApiResponse webApiResponse = new WebApiResponse();
 		private readonly IMapper _mapper;
+		public ElpsUtility _elpsObj;
 
-		public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper, IOptions<AppSettings> appSettings)
+		public AccountController(WKP_DBContext context, IConfiguration configuration, HelpersController helpersController, Account account, IMapper mapper, IOptions<AppSettings> appSettings, ElpsUtility elpsObj)
 		{
 			//_httpContextAccessor = httpContextAccessor;
 			_appSettings=appSettings.Value;
@@ -40,6 +41,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			_configuration = configuration;
 			_mapper = mapper;
 			_helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
+			_elpsObj = elpsObj;
 		}
 
 		[HttpGet("GetElpsStaff")]
@@ -104,7 +106,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		{
 			var email = loginParam.Email;
 			var code = loginParam.Code;
-			var login = await ElpsUtility.ValidateLogin(email, code, _context, _appSettings, webApiResponse);
+			var login = await _elpsObj.ValidateLogin(email, code, _context, _appSettings, webApiResponse);
 			if (login.ResponseCode.Equals("00"))
 				return Redirect($"{_appSettings.LoginUrl}/login?id={login.Data}");
 
