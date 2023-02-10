@@ -287,7 +287,7 @@ namespace Backend_UMR_Work_Program.Services
 					var data = _mapper.Map<ADMIN_COMPANY_INFORMATION>(userModel);
 
 					data.EMAIL = userModel.EMAIL.ToLower();
-					data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
+					//data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
 					data.STATUS_ = "Activated";
 					data.Date_Created = DateTime.Now;
 					data.Created_by = userModel.EMAIL;
@@ -306,7 +306,7 @@ namespace Backend_UMR_Work_Program.Services
 
 						var getAccessCodeFromDb = await _context.ADMIN_COMPANY_CODEs.FirstOrDefaultAsync(x => x.CompanyCode == accessCode);
 
-						if (getAccessCodeFromDb != null)
+						if (getAccessCodeFromDb == null)
 						{
 							companyAccessCode = accessCode;
 						}
