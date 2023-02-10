@@ -108,8 +108,10 @@ namespace Backend_UMR_Work_Program.Services
 								//staff.PHONE = elpsstaff();
 								_context.staff.Update(staff);
 								var save = await _context.SaveChangesAsync();
-								//await _userManager.UpdateAsync(user);
-							}
+
+								company.Id = staff.AdminCompanyInfo_ID.Value;
+                                //await _userManager.UpdateAsync(user);
+                            }
 						}
 					}
 					if (response.Message.ToLower().Equals("success"))
