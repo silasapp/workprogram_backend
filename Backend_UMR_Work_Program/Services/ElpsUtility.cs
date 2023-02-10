@@ -287,10 +287,12 @@ namespace Backend_UMR_Work_Program.Services
 					var data = _mapper.Map<ADMIN_COMPANY_INFORMATION>(userModel);
 
 					data.EMAIL = userModel.EMAIL.ToLower();
-					data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
+					//data.PASSWORDS = _helpersController.Encrypt(userModel.PASSWORDS);
 					data.STATUS_ = "Activated";
 					data.Date_Created = DateTime.Now;
 					data.Created_by = userModel.EMAIL;
+					data.NAME = userModel.NAME.Trim();
+					data.COMPANY_NAME = userModel.COMPANY_NAME.Trim();
 					await _context.ADMIN_COMPANY_INFORMATIONs.AddAsync(data);
 					int save = await _context.SaveChangesAsync();
 
@@ -306,7 +308,7 @@ namespace Backend_UMR_Work_Program.Services
 
 						var getAccessCodeFromDb = await _context.ADMIN_COMPANY_CODEs.FirstOrDefaultAsync(x => x.CompanyCode == accessCode);
 
-						if (getAccessCodeFromDb != null)
+						if (getAccessCodeFromDb == null)
 						{
 							companyAccessCode = accessCode;
 						}
@@ -388,7 +390,7 @@ namespace Backend_UMR_Work_Program.Services
 				{
 					foreach (var item in companyNames)
 					{
-						strIntitials += item.Substring(0);
+						strIntitials += item[0];
 					}
 				}
 
