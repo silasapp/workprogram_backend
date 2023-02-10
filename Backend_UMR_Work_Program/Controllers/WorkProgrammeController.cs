@@ -5141,15 +5141,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
-
-
-
-
-
-
- 
-        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_FIVEYEARS_PROJECTION")]
-
        [HttpPost("POST_RESERVES_UPDATES_OIL_CONDENSATE_COMPANY_ANNUAL_PRODUCTION")]
         public async Task<object> POST_RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION([FromBody] RESERVES_UPDATES_OIL_CONDENSATE_Company_Annual_PRODUCTION reserves_update_production_model, string omlName, string fieldName, string year, string actionToDo)
         {
@@ -7716,7 +7707,8 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
             string omlName, string fieldName, string year, string id, string actionToDo)
         {
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); 
+			var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
             try
             {
@@ -7731,7 +7723,15 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
                 }
                 else if (hse_technical_safety_model != null)
                 {
-                    var getData = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					List<HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEW> getData;
+					if (concessionField?.Field_Name != null)
+					{
+						getData = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					} else
+                    {
+						getData = await (from c in _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+					}
+						
 
                     hse_technical_safety_model.Companyemail = WKPCompanyEmail;
                     hse_technical_safety_model.CompanyName = WKPCompanyName;
@@ -7745,26 +7745,26 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 
                     if (action == GeneralModel.Insert)
                     {
-                        if (getData.Count() <= 0)
-                        {
+                        //if (getData.Count() <= 0)
+                        //{
                             hse_technical_safety_model.Date_Created = DateTime.Now;
                             hse_technical_safety_model.Created_by = WKPCompanyId;
                             await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
-                        }
-                        else
-                        {
-                            hse_technical_safety_model.Date_Created = getData.FirstOrDefault()?.Date_Created;
-                            hse_technical_safety_model.Created_by = getData.FirstOrDefault()?.Created_by;
-                            hse_technical_safety_model.Date_Updated = DateTime.Now;
-                            hse_technical_safety_model.Updated_by = WKPCompanyId;
-                            // getData.ForEach(x =>
-                            // {
-                            //     _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(x);
-                            //     save += _context.SaveChanges();
+                        //}
+                        //else
+                        //{
+                        //    hse_technical_safety_model.Date_Created = getData.FirstOrDefault()?.Date_Created;
+                        //    hse_technical_safety_model.Created_by = getData.FirstOrDefault()?.Created_by;
+                        //    hse_technical_safety_model.Date_Updated = DateTime.Now;
+                        //    hse_technical_safety_model.Updated_by = WKPCompanyId;
+                        //    // getData.ForEach(x =>
+                        //    // {
+                        //    //     _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.Remove(x);
+                        //    //     save += _context.SaveChanges();
 
-                            // });
-                            await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
-                        }
+                        //    // });
+                        //    await _context.HSE_TECHNICAL_SAFETY_CONTROL_STUDIES_NEWs.AddAsync(hse_technical_safety_model);
+                        //}
                     }
 
                     save += await _context.SaveChangesAsync();
@@ -11454,21 +11454,21 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 
 					if (action == GeneralModel.Insert)
 					{
-						if (getData == null)
-						{
+						//if (getData == null)
+						//{
 							hse_occupational_model.Date_Created = DateTime.Now;
 							hse_occupational_model.Created_by = WKPCompanyId;
 							await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
-						}
-						else
-						{
-							hse_occupational_model.Date_Created = getData.Date_Created;
-							hse_occupational_model.Created_by = getData.Created_by;
-							hse_occupational_model.Date_Updated = DateTime.Now;
-							hse_occupational_model.Updated_by = WKPCompanyId;
-							_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
-							await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
-						}
+						//}
+						//else
+						//{
+						//	hse_occupational_model.Date_Created = getData.Date_Created;
+						//	hse_occupational_model.Created_by = getData.Created_by;
+						//	hse_occupational_model.Date_Updated = DateTime.Now;
+						//	hse_occupational_model.Updated_by = WKPCompanyId;
+						//	_context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.Remove(getData);
+						//	await _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs.AddAsync(hse_occupational_model);
+						//}
 					}
 
 					save += await _context.SaveChangesAsync();
