@@ -3515,7 +3515,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					field_development_plan_model.OML_Name = omlName.ToUpper();
 					field_development_plan_model.Field_ID = concessionField?.Field_ID ?? null;
 
-					if (field_development_plan_model.Uploaded_approved_FDP_Document != null && field_development_plan_model.Uploaded_approved_FDP_Document != "null")
+					if (field_development_plan_model.Status== "Approved")
 					{
 						#region file section
 						//string approved_FDP_Document = null;
@@ -3530,6 +3530,7 @@ namespace Backend_UMR_Work_Program.Controllers
 							if (field_development_plan_model.Uploaded_approved_FDP_Document == null)
 								return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
 						}
+					}
 
 						if (action == GeneralModel.Insert)
 						{
@@ -3553,7 +3554,7 @@ namespace Backend_UMR_Work_Program.Controllers
 						{
 							_context.FIELD_DEVELOPMENT_PLANs.Remove(field_development_plan_model);
 						}
-					}
+					
 
 
 					// if (file1 != null)
