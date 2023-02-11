@@ -6706,6 +6706,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					facilities_project_model.OML_Name = omlName;
 					facilities_project_model.Field_ID = concessionField?.Field_ID ?? null;
 
+if(facilities_project_model.areThereEvidenceOfDesignSafetyCaseApproval=="Yes"){
 
 					#region file section
 					if (Request.HasFormContentType && Request.Form != null && Request.Form.Count() > 0)
@@ -6733,7 +6734,7 @@ public async Task<object> POST_OIL_AND_GAS_FACILITY_MAINTENANCE_PROJECT([FromBod
 					}
 
 					#endregion
-
+                }
 					if (action == GeneralModel.Insert)
 					{
 						facilities_project_model.Date_Created = DateTime.Now;
