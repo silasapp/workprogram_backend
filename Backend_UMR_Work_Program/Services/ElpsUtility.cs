@@ -77,6 +77,7 @@ namespace Backend_UMR_Work_Program.Services
 							{
 								company.EMAIL = email;
 								company.COMPANY_NAME = companyDetail.name;
+								company.ELPS_ID = companyDetail.id;
 							}
 
 							_context.ADMIN_COMPANY_INFORMATIONs.Update(company);
@@ -107,9 +108,10 @@ namespace Backend_UMR_Work_Program.Services
 								//staff.PHONE = elpsstaff();
 								_context.staff.Update(staff);
 								var save = await _context.SaveChangesAsync();
-								//await _userManager.UpdateAsync(user);
-							}
 
+								company.Id = staff.AdminCompanyInfo_ID.Value;
+                                //await _userManager.UpdateAsync(user);
+                            }
 						}
 					}
 					if (response.Message.ToLower().Equals("success"))
