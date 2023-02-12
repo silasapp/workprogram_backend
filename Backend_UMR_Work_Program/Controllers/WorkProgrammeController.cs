@@ -10080,7 +10080,7 @@ if(facilities_project_model.areThereEvidenceOfDesignSafetyCaseApproval=="Yes"){
 					hse_remediation_fund.OML_Name = omlName;
 					hse_remediation_fund.Field_ID=concessionField?.Field_ID ?? null;
 
-
+if(hse_remediation_fund.areThereRemediationFund=="YES"){
 					#region Fileregion
 					var file = Request.Form.Files[0] != null ? Request.Form.Files[0] : null;
 					var blobname = blobService.Filenamer(file);
@@ -10095,7 +10095,9 @@ if(facilities_project_model.areThereEvidenceOfDesignSafetyCaseApproval=="Yes"){
 							hse_remediation_fund.evidenceOfPaymentPath = blobname;
 					}
 					#endregion
-					if (action == GeneralModel.Insert)
+                }
+                    
+                    if (action == GeneralModel.Insert)
 					{
 						if (getData == null)
 						{
