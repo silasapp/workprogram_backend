@@ -257,6 +257,8 @@ namespace Backend_UMR_Work_Program.DataModels
 		public virtual DbSet<STRATEGIC_PLANS_ON_COMPANY_BASI> STRATEGIC_PLANS_ON_COMPANY_BAses { get; set; } = null!;
 		public virtual DbSet<SafetyManagement> SafetyManagements { get; set; } = null!;
 		public virtual DbSet<StrategicBusinessUnit> StrategicBusinessUnits { get; set; } = null!;
+		public virtual DbSet<ProcessStatus> ProcessStatuses { get; set; } = null!;
+		public virtual DbSet<ProcessAction> ProcessActions { get; set; } = null!;
 		public virtual DbSet<SubmittedDocument> SubmittedDocuments { get; set; } = null!;
 		public virtual DbSet<SubstainableDevelopment> SubstainableDevelopments { get; set; } = null!;
 		public virtual DbSet<Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELL> Sum_DRILLING_OPERATIONS_CATEGORIES_OF_WELLs { get; set; } = null!;
