@@ -7913,6 +7913,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
             int save = 0;
             string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower();
+            HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEW getData;
 
             var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
 
@@ -7922,14 +7923,24 @@ namespace Backend_UMR_Work_Program.Controllers
                 #region Saving HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs data
                 if (hse_asset_register_model != null)
                 {
-                    var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    if (concessionField.Field_Name != null)
+                    {
+                        getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.Field_ID==concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    }
+                    else
+                    {
+                        getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_PRESCRIPTIVE_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    }
+
 
                     hse_asset_register_model.Companyemail = WKPCompanyEmail;
                     hse_asset_register_model.CompanyName = WKPCompanyName;
                     hse_asset_register_model.COMPANY_ID = WKPCompanyId;
                     hse_asset_register_model.CompanyNumber = WKPCompanyNumber;
-                    hse_asset_register_model.Date_Updated = DateTime.Now;
-                    hse_asset_register_model.Updated_by = WKPCompanyId;
+                  //  hse_asset_register_model.Date_Updated = DateTime.Now;
+                   // hse_asset_register_model.Updated_by = WKPCompanyId;
                     hse_asset_register_model.Year_of_WP = year;
                     hse_asset_register_model.OML_Name = omlName;
                     hse_asset_register_model.Field_ID = concessionField?.Field_ID ?? null;
@@ -7993,27 +8004,34 @@ namespace Backend_UMR_Work_Program.Controllers
 
             int save = 0;
             string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-
+            HSE_OIL_SPILL_REPORTING_NEW getData;
             try
             {
                 if (!string.IsNullOrEmpty(id))
                 {
-                    var getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+                    var _getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
                     if (action == GeneralModel.Delete)
-                        _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(getData);
+                        _context.HSE_OIL_SPILL_REPORTING_NEWs.Remove(_getData);
                     save += _context.SaveChanges();
                 }
                 else if (hse_oil_spill_model != null)
                 {
-                    var getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    if (concessionField.Field_Name != null)
+                    {
+                        getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.Field_ID == concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    }
+                    else
+                    {
+                        getData = (from c in _context.HSE_OIL_SPILL_REPORTING_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
 
+                    }
                     hse_oil_spill_model.Companyemail = WKPCompanyEmail;
                     hse_oil_spill_model.CompanyName = WKPCompanyName;
                     hse_oil_spill_model.COMPANY_ID = WKPCompanyId;
                     hse_oil_spill_model.CompanyNumber = WKPCompanyNumber;
-                    hse_oil_spill_model.Date_Updated = DateTime.Now;
-                    hse_oil_spill_model.Updated_by = WKPCompanyId;
+                    //hse_oil_spill_model.Date_Updated = DateTime.Now;
+                   // hse_oil_spill_model.Updated_by = WKPCompanyId;
                     hse_oil_spill_model.Year_of_WP = year;
                     hse_oil_spill_model.OML_Name = omlName;
                     hse_oil_spill_model.Field_ID = concessionField?.Field_ID ?? null;
@@ -8076,21 +8094,32 @@ namespace Backend_UMR_Work_Program.Controllers
 
             int save = 0;
             string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEW getData;
 
             try
             {
 
                 if (!string.IsNullOrEmpty(id))
                 {
-                    var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
+
+                    var _getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.Id == int.Parse(id) select c).FirstOrDefault();
 
                     if (action == GeneralModel.Delete)
-                        _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(getData);
+                        _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs.Remove(_getData);
                     save += _context.SaveChanges();
                 }
                 else if (hse_asset_register_model != null)
                 {
-                    var getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+                    if (concessionField.Field_Name != null)
+                    {
+                        getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.Field_ID ==concessionField.Field_ID && c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    }
+                    else
+                    {
+                        getData = (from c in _context.HSE_ASSET_REGISTER_TEMPLATE_RBI_EQUIPMENT_INSPECTION_STRATEGY_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).FirstOrDefault();
+
+                    }
 
                     hse_asset_register_model.Companyemail = WKPCompanyEmail;
                     hse_asset_register_model.CompanyName = WKPCompanyName;
