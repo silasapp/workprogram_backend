@@ -9214,8 +9214,9 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            using var transaction = _context.Database.BeginTransaction();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); 
+            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+            //using var transaction = _context.Database.BeginTransaction();
 
             try
             {
@@ -9301,7 +9302,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     save += await _context.SaveChangesAsync();
 
-                    transaction.Commit();
+                    //transaction.Commit();
 
                 }
                 else
