@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
-//using LinqToDB;
+using Backend_UMR_Work_Program.Models.Enurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+//using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -494,11 +495,14 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				int yearID = Convert.ToInt32(year);
 				var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Concession_Held.ToLower() == omlName.ToLower() select d).FirstOrDefaultAsync();
+
 				var field = await (from d in _context.COMPANY_FIELDs where d.Field_Name.ToLower() == fieldName.ToLower() || d.Field_ID.ToString() == fieldName select d).FirstOrDefaultAsync();
+
 				var checkApplication = (from ap in _context.Applications
 										where ap.YearOfWKP == yearID && ap.ConcessionID == concession.Consession_Id
 										 && ap.DeleteStatus != true
 										select ap).FirstOrDefault();
+
 				if (field != null)
 				{
 					checkApplication = (from ap in _context.Applications
@@ -1024,6 +1028,116 @@ namespace Backend_UMR_Work_Program.Controllers
 
 		}
 
+
+		//Added Musa
+		[HttpPost("createprocessaction")]
+		//public async Task<object> CreateProcessAction([FromBody] ProcessAction processAction)
+		//{
+		//	var responseMessage = "";
+		//	try
+		//	{
+
+		//		var getProcessAction = await _context.ProcessActions.FirstOrDefaultAsync(x => x.ActionName==processAction.ActionName);
+
+		//		if (getProcessAction != null)
+		//		{
+		//			responseMessage="Process Action Name Already Exists.";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = responseMessage, StatusCode = ResponseCodes.Failure };
+		//		}
+		//		processAction.UpdatedOn = DateTime.Now;
+		//		processAction.CreateOn= DateTime.Now;
+		//		processAction.CreatedBy=WKPCompanyEmail;
+		//		processAction.UpdatedBy=WKPCompanyEmail;
+
+		//		await _context.ProcessActions.AddAsync(processAction);
+
+		//		var save = await _context.SaveChangesAsync();
+		//		if (save>1)
+		//		{
+		//			responseMessage="Process Action Created Successfully.!";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+		//		}
+		//		responseMessage="Error has occured. Please check and try again!";
+		//		return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+
+
+		//	}
+		//	catch (Exception x)
+		//	{
+		//		_helpersController.LogMessages($"Creation Error:: {x}");
+		//		return BadRequest(new { message = $"An error occured while Creating Process Action." });
+		//	}
+
+		//}
+
+		//[HttpPost("createprocessstatus")]
+		//public async Task<object> CreateProcessStatus([FromBody] ProcessStatus processStatus)
+		//{
+		//	var responseMessage = "";
+		//	try
+		//	{
+
+		//		var getProcessAction = await _context.ProcessStatuses.FirstOrDefaultAsync(x => x.StatusName==processStatus.StatusName);
+
+		//		if (getProcessAction != null)
+		//		{
+		//			responseMessage="Process Status Name Already Exists.";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = responseMessage, StatusCode = ResponseCodes.Failure };
+		//		}
+		//		processStatus.UpdatedOn = DateTime.Now;
+		//		processStatus.CreateOn= DateTime.Now;
+		//		processStatus.CreatedBy=WKPCompanyEmail;
+		//		processStatus.UpdatedBy=WKPCompanyEmail;
+		//		await _context.ProcessStatuses.AddAsync(processStatus);
+
+		//		var save = await _context.SaveChangesAsync();
+		//		if (save>1)
+		//		{
+		//			responseMessage="Process Status Created Successfully.!";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+		//		}
+		//		responseMessage="Error has occured. Please check and try again!";
+		//		return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+
+
+		//	}
+		//	catch (Exception x)
+		//	{
+		//		_helpersController.LogMessages($"Creation Error:: {x}");
+		//		return BadRequest(new { message = $"An error occured while Creating Process Status." });
+		//	}
+
+		//}
+
+		//[HttpGet("GetAllProcessActions")]
+		//public async Task<object> GetAllProcessActions()
+		//{
+		//	try
+		//	{
+		//		var companies = await _context.ProcessActions.ToListAsync();
+
+		//		return new WebApiResponse { Data = companies, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(new { message = "Error : " + e.Message });
+		//	}
+		//}
+		//[HttpGet("GetAllProcessStatuses")]
+		//public async Task<object> GetAllProcessStatuses()
+		//{
+		//	try
+		//	{
+		//		var companies = await _context.ProcessStatuses.ToListAsync();
+
+		//		return new WebApiResponse { Data = companies, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(new { message = "Error : " + e.Message });
+		//	}
+		//}
+
 		[HttpGet("All-Companies")]
 		public async Task<object> AllCompanies()
 		{
@@ -1124,7 +1238,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 					var allData = await (from d in _context.Planning_MinimumRequirements
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
 										 select d).ToListAsync();
@@ -1232,7 +1346,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 
 					var allData = await (from d in _context.HSE_MinimumRequirements
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
@@ -1330,7 +1444,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 					var allData = await (from d in _context.DecommissioningAbandonments
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
 										 select d).ToListAsync();
@@ -1427,7 +1541,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 					var allData = await (from d in _context.Development_And_Productions
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
 										 select d).ToListAsync();
@@ -1488,6 +1602,10 @@ namespace Backend_UMR_Work_Program.Controllers
 										   Id = prc.ProccessID,
 										   Type = "New",
 										   Sort = prc.Sort,
+										   ProcessAction = prc.ProcessAction,
+										   ProcessStatus = prc.ProcessStatus,
+										   TriggeredBy = prc.TriggeredBy,
+										   TargetTo = prc.TargetTo,
 										   Role = role.RoleName,
 										   SBU = sbu.SBU_Name,
 										   Process = prc.Sort,
@@ -1509,17 +1627,17 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpPost("CreateProcess")]
-		public async Task<object> CreateProcess(int roleID, int sbuID, int sort)
+		public async Task<object> CreateProcess(int roleID, int sbuID, string triggeredBy, string targetTo, int processAction, int processStatus, int sort = 0)
 		{
 			try
 			{
-				if (roleID <= 0 || sbuID <= 0 || sort <= 0)
+				if (roleID <= 0 || sbuID <= 0 || processAction <=0 || processStatus <=0 || string.IsNullOrEmpty(triggeredBy) || string.IsNullOrEmpty(targetTo))
 				{
 					return BadRequest(new { message = $"Error : Role/SBU/Sort ID was not passed correctly." });
 				}
 
 				var process = await (from prc in _context.ApplicationProccesses
-									 where prc.RoleID == roleID && prc.SBU_ID == sbuID && prc.Sort == sort && prc.DeleteStatus != true
+									 where prc.RoleID == roleID && prc.SBU_ID == sbuID && prc.Sort == sort && prc.ProcessAction==(PROCESS_ACTION)processAction && prc.ProcessStatus==(PROCESS_STATUS)processStatus && prc.DeleteStatus != true
 									 select prc).FirstOrDefaultAsync();
 				if (process != null)
 				{
@@ -1529,10 +1647,17 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					var nProcess = new ApplicationProccess()
 					{
+						ProcessStatus=(PROCESS_STATUS)processStatus,
+						ProcessAction=(PROCESS_ACTION)processAction,
+						TriggeredBy=triggeredBy,
+						TargetTo=targetTo,
 						Sort = sort,
 						RoleID = roleID,
 						SBU_ID = sbuID,
 						CreatedAt = DateTime.Now,
+						CreatedBy=WKPCompanyEmail,
+						UpdatedBy=WKPCompanyEmail,
+						UpdatedAt=DateTime.Now,
 						DeleteStatus = false,
 						CategoryID = 1 //Default for new applications
 					};
@@ -1574,7 +1699,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpPost("EditProcess")]
-		public async Task<object> EditProcess(int id, int roleID, int sbuID, int sort)
+		public async Task<object> EditProcess(int id, int roleID, int sbuID, string triggeredBy, string targetTo, int processAction, int processStatus, int sort = 0)
 		{
 			try
 			{
@@ -1590,6 +1715,13 @@ namespace Backend_UMR_Work_Program.Controllers
 					process.Sort = sort;
 					process.RoleID = roleID;
 					process.SBU_ID = sbuID;
+					process.ProcessStatus=(PROCESS_STATUS)processStatus;
+					process.ProcessAction=(PROCESS_ACTION)processAction;
+					process.TriggeredBy= triggeredBy;
+					process.TargetTo= targetTo;
+					process.UpdatedAt= DateTime.Now;
+					process.UpdatedBy= WKPCompanyEmail;
+
 
 					if (await _context.SaveChangesAsync() > 0)
 					{
