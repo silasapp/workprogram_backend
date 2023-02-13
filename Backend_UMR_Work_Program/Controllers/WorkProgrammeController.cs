@@ -1322,7 +1322,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     var HSEProducedWaterMgtUpdated = await (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var HSEEnvironmentalComplianceChemical = await (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var HSECausesOfSpill = await (from c in _context.HSE_CAUSES_OF_SPILLs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    var HSESustainableDevMOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                   // var HSESustainableDevMOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
                     var HSESustainableDevProgramCsr = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
@@ -1446,7 +1446,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     var HSEProducedWaterMgtUpdated = (from c in _context.HSE_PRODUCED_WATER_MANAGEMENT_NEW_UPDATEDs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
                     var HSEEnvironmentalComplianceChemical = (from c in _context.HSE_ENVIRONMENTAL_COMPLIANCE_MONITORING_CHEMICAL_USAGE_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
                     var HSECausesOfSpill = (from c in _context.HSE_CAUSES_OF_SPILLs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
-                    var HSESustainableDevMOU = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
+                   // var HSESustainableDevMOU = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
                     var HSESustainableDevScheme = (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_SCHOLASHIP_SCHEMEs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
                     var HSEManagementPosition = (from c in _context.HSE_MANAGEMENT_POSITIONs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToList();
 
@@ -2136,7 +2136,9 @@ namespace Backend_UMR_Work_Program.Controllers
                 var HSESustainable_Question = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_QUESTIONs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
 
-                var HSESustainable_Capital = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+               // var HSESustainable_Capital = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                var HSESustainable_MOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+
 
                 var HSESustainable_Schorlarship_CSR = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEW_Scholarships where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
@@ -2151,15 +2153,15 @@ namespace Backend_UMR_Work_Program.Controllers
 
                 var PictureUpload = await (from c in _context.PICTURE_UPLOAD_COMMUNITY_DEVELOPMENT_PROJECTs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
 
-                List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU> HSESustainable_MOU;
-                if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
-                {
-                    HSESustainable_MOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                }
-                else
-                {
-                    HSESustainable_MOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                }
+                //List<HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU> HSESustainable_MOU;
+                //if ((concessionField?.Consession_Type == "OML" || concessionField?.Consession_Type == "PML") && concessionField.Field_Name != null)
+                //{
+                //    HSESustainable_MOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                //}
+                //else
+                //{
+                //    HSESustainable_MOU = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                //}
 
                 return new
                 {
@@ -9403,7 +9405,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = Messager.ShowMessage(action);
-                    //var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOUs where c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
                 }
                 else
@@ -9487,7 +9489,7 @@ namespace Backend_UMR_Work_Program.Controllers
                 if (save > 0)
                 {
                     string successMsg = Messager.ShowMessage(action);
-                    //var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                    var All_Data = await (from c in _context.HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_CSR_NEWs where c.OML_Name == omlName && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = successMsg, StatusCode = ResponseCodes.Success };
                 }
                 else
@@ -10106,7 +10108,7 @@ namespace Backend_UMR_Work_Program.Controllers
                             if (hse_remediation_fund.evidenceOfPaymentPath == null)
                                 return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
                             else
-                                hse_remediation_fund.evidenceOfPaymentPath = blobname;
+                            hse_remediation_fund.evidenceOfPaymentFilename = blobname;
                         }
                         #endregion
                     }
