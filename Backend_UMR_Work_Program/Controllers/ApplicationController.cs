@@ -2,8 +2,6 @@
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Models;
 //using LinqToDB;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +11,7 @@ using static Backend_UMR_Work_Program.Models.GeneralModel;
 
 namespace Backend_UMR_Work_Program.Controllers
 {
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
 
 	public class ApplicationController : Controller
@@ -493,26 +491,91 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				int yearID = Convert.ToInt32(year);
+
 				var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Concession_Held.ToLower() == omlName.ToLower() select d).FirstOrDefaultAsync();
+
 				var field = await (from d in _context.COMPANY_FIELDs where d.Field_Name.ToLower() == fieldName.ToLower() || d.Field_ID.ToString() == fieldName select d).FirstOrDefaultAsync();
+
+				//Getting application by Concession
 				var checkApplication = (from ap in _context.Applications
 										where ap.YearOfWKP == yearID && ap.ConcessionID == concession.Consession_Id
 										 && ap.DeleteStatus != true
 										select ap).FirstOrDefault();
+
 				if (field != null)
 				{
+					//Checking with both concession and field
 					checkApplication = (from ap in _context.Applications
 										where ap.YearOfWKP == yearID && ap.ConcessionID == concession.Consession_Id
 														&& ap.FieldID == field.Field_ID && ap.DeleteStatus != true
 										select ap).FirstOrDefault();
 
 				}
-				if (checkApplication != null)
+
+
+				if (checkApplication == null)
 				{
 					return BadRequest(new { message = "Sorry, this application details could not be found." });
 				}
+				var targetSBUList = new List<int?>();
+				var targetRoleList = new List<int?>();
+				//Check for the triggeredBy and targetTo by action
+
+				// Get AppProcessFlow 
+				// What are criteria i will to get the right process flow
+				//Get the process flow for the action=Submit for all SBUs
+
+				//When configuring the process flow we use the following
+				// action
+				// SBU
+				// TriggeredBy => coming from the company
+				//TriggeredByRole =>
+				// TargetedToSBU  => going to staff in a given SBU
+				//TargetedToRole => 
+
+
+				//When submitting application
+				//We get the configured process flow with a given action
+
+				var applicationProcesses = await _helpersController.GetApplicationProccessByAction(GeneralModel.Submit);
+
+				var staffLists = new List<staff>();
+				//var
+
+				foreach (var item in applicationProcesses)
+				{
+					//Get all SBU and Roles from the processFlow
+					//targetSBUList = await _helpersController.GetAllSUBsFromProcessFlow(item.ProccessID);
+					//targetRoleList = await _helpersController.GetAllRolesFromProcessFlow(item.ProccessID);
+					var processFlowModel = await _helpersController.GetAllSUBsFromProcessFlow(item.ProccessID);
+
+					var triggeredBySBUIds = processFlowModel.TargetedBySUBId;
+					var triggereByRoleIds = processFlowModel.TargetedByRoleId;
+					var targetedBySBUIds = processFlowModel.TargetedBySUBId;
+					var targetedByRoleIds = processFlowModel.TargetedByRoleId;
+
+
+					// get all stafff from the above SBUs with the designated roles
+					//foreach (var item in targetSBUList)
+					//{
+					//	//GetStaffPerSBU(int SBUId)
+					//	var staffs = await _helpersController.GetStaffPerSBU(item);
+					//	staffLists.AddRange(staffs);
+					//}
+
+				}
+
+
+
+				// GetAllStaffForEachRoleId(foreach RoleId)
+
+				// 
+
+
+
 
 				Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, 0);
+
 
 				if (getApplicationProcess.Result.Count <= 0)
 				{
@@ -520,12 +583,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 
 				Application application = new Application();
+
 				application.ReferenceNo = _helpersController.Generate_Reference_Number();
 				application.YearOfWKP = yearID;
 				application.ConcessionID = concession.Consession_Id;
 				application.FieldID = field?.Field_ID;
 				application.CompanyID = (int)WKPCompanyNumber;
+
 				application.CategoryID = _context.ApplicationCategories.Where(x => x.Name == GeneralModel.New).FirstOrDefault().Id;
+
 				application.Status = GeneralModel.Processing;
 				application.PaymentStatus = GeneralModel.PaymentPending;
 				application.CurrentDesk = getApplicationProcess.Result.FirstOrDefault().StaffId; //to change
@@ -552,8 +618,11 @@ namespace Backend_UMR_Work_Program.Controllers
 											join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
 											where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
 											select stf).FirstOrDefault();
+
 							string content2 = $"{WKPCompanyName} have submitted their WORK PROGRAM application for year {year}.";
+
 							var emailMsg2 = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject2, content2, "Staff");
+
 							var sendEmail2 = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg2, null);
 
 							_helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
@@ -1024,6 +1093,116 @@ namespace Backend_UMR_Work_Program.Controllers
 
 		}
 
+
+		//Added Musa
+		//[HttpPost("createprocessaction")]
+		//public async Task<object> CreateProcessAction([FromBody] ProcessAction processAction)
+		//{
+		//	var responseMessage = "";
+		//	try
+		//	{
+
+		//		var getProcessAction = await _context.ProcessActions.FirstOrDefaultAsync(x => x.ActionName==processAction.ActionName);
+
+		//		if (getProcessAction != null)
+		//		{
+		//			responseMessage="Process Action Name Already Exists.";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = responseMessage, StatusCode = ResponseCodes.Failure };
+		//		}
+		//		processAction.UpdatedOn = DateTime.Now;
+		//		processAction.CreateOn= DateTime.Now;
+		//		processAction.CreatedBy=WKPCompanyEmail;
+		//		processAction.UpdatedBy=WKPCompanyEmail;
+
+		//		await _context.ProcessActions.AddAsync(processAction);
+
+		//		var save = await _context.SaveChangesAsync();
+		//		if (save>1)
+		//		{
+		//			responseMessage="Process Action Created Successfully.!";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+		//		}
+		//		responseMessage="Error has occured. Please check and try again!";
+		//		return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+
+
+		//	}
+		//	catch (Exception x)
+		//	{
+		//		_helpersController.LogMessages($"Creation Error:: {x}");
+		//		return BadRequest(new { message = $"An error occured while Creating Process Action." });
+		//	}
+
+		//}
+
+		//[HttpPost("createprocessstatus")]
+		//public async Task<object> CreateProcessStatus([FromBody] ProcessStatus processStatus)
+		//{
+		//	var responseMessage = "";
+		//	try
+		//	{
+
+		//		var getProcessAction = await _context.ProcessStatuses.FirstOrDefaultAsync(x => x.StatusName==processStatus.StatusName);
+
+		//		if (getProcessAction != null)
+		//		{
+		//			responseMessage="Process Status Name Already Exists.";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = responseMessage, StatusCode = ResponseCodes.Failure };
+		//		}
+		//		processStatus.UpdatedOn = DateTime.Now;
+		//		processStatus.CreateOn= DateTime.Now;
+		//		processStatus.CreatedBy=WKPCompanyEmail;
+		//		processStatus.UpdatedBy=WKPCompanyEmail;
+		//		await _context.ProcessStatuses.AddAsync(processStatus);
+
+		//		var save = await _context.SaveChangesAsync();
+		//		if (save>1)
+		//		{
+		//			responseMessage="Process Status Created Successfully.!";
+		//			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+		//		}
+		//		responseMessage="Error has occured. Please check and try again!";
+		//		return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = responseMessage, StatusCode = ResponseCodes.Success };
+
+
+		//	}
+		//	catch (Exception x)
+		//	{
+		//		_helpersController.LogMessages($"Creation Error:: {x}");
+		//		return BadRequest(new { message = $"An error occured while Creating Process Status." });
+		//	}
+
+		//}
+
+		//[HttpGet("GetAllProcessActions")]
+		//public async Task<object> GetAllProcessActions()
+		//{
+		//	try
+		//	{
+		//		var companies = await _context.ProcessActions.ToListAsync();
+
+		//		return new WebApiResponse { Data = companies, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(new { message = "Error : " + e.Message });
+		//	}
+		//}
+		//[HttpGet("GetAllProcessStatuses")]
+		//public async Task<object> GetAllProcessStatuses()
+		//{
+		//	try
+		//	{
+		//		var companies = await _context.ProcessStatuses.ToListAsync();
+
+		//		return new WebApiResponse { Data = companies, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(new { message = "Error : " + e.Message });
+		//	}
+		//}
+
 		[HttpGet("All-Companies")]
 		public async Task<object> AllCompanies()
 		{
@@ -1124,7 +1303,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 					var allData = await (from d in _context.Planning_MinimumRequirements
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
 										 select d).ToListAsync();
@@ -1232,7 +1411,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 
 					var allData = await (from d in _context.HSE_MinimumRequirements
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
@@ -1330,7 +1509,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 					var allData = await (from d in _context.DecommissioningAbandonments
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
 										 select d).ToListAsync();
@@ -1427,7 +1606,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
 				if (save > 0)
 				{
-					string successMsg =Messager.ShowMessage(action);
+					string successMsg = Messager.ShowMessage(action);
 					var allData = await (from d in _context.Development_And_Productions
 										 where d.CompanyNumber == WKPCompanyNumber && d.ConcessionID == concessionField.Result.Concession_ID
 										 select d).ToListAsync();
@@ -1488,6 +1667,12 @@ namespace Backend_UMR_Work_Program.Controllers
 										   Id = prc.ProccessID,
 										   Type = "New",
 										   Sort = prc.Sort,
+										   ProcessAction = prc.ProcessAction,
+										   ProcessStatus = prc.ProcessStatus,
+										   TriggeredByRole = prc.TriggeredByRole,
+										   TargetedToRole = prc.TargetedToRole,
+										   TriggeredBySBU = prc.TriggeredBySBU,
+										   TargetedBySBU = prc.TriggeredBySBU,
 										   Role = role.RoleName,
 										   SBU = sbu.SBU_Name,
 										   Process = prc.Sort,
@@ -1508,18 +1693,90 @@ namespace Backend_UMR_Work_Program.Controllers
 				return BadRequest(new { message = "Error : " + e.Message });
 			}
 		}
+		//[HttpPost("CreateProcess")]
+		//public async Task<object> CreateProcess(int roleID, int sbuID, int triggeredByRole, int targetedToRole, int triggeredBySBU, int targetedBySBU, string processAction, string processStatus, int sort = 0)
+		//{
+		//	try
+		//	{
+		//		if (roleID <= 0 || sbuID <= 0 || string.IsNullOrEmpty(processAction) || string.IsNullOrEmpty(processStatus) || triggeredByRole<=0 || targetedToRole<=0)
+		//		{
+		//			return BadRequest(new { message = $"Error : Role/SBU/Sort ID was not passed correctly." });
+		//		}
+
+		//		var process = await (from prc in _context.ApplicationProccesses
+		//							 where prc.RoleID == roleID && prc.SBU_ID == sbuID && prc.Sort == sort && prc.ProcessAction==processAction && prc.ProcessStatus==processStatus && prc.DeleteStatus != true
+		//							 select prc).FirstOrDefaultAsync();
+		//		if (process != null)
+		//		{
+		//			return BadRequest(new { message = $"Error : Process is already existing and can not be duplicated." });
+		//		}
+		//		else
+		//		{
+		//			var nProcess = new ApplicationProccess()
+		//			{
+		//				ProcessStatus=processStatus,
+		//				ProcessAction=processAction,
+		//				TriggeredBy=triggeredByRole,
+		//				TargetTo=targetedToRole,
+		//				Sort = sort,
+		//				RoleID = roleID,
+		//				SBU_ID = sbuID,
+		//				CreatedAt = DateTime.Now,
+		//				CreatedBy=WKPCompanyEmail,
+		//				UpdatedBy=WKPCompanyEmail,
+		//				UpdatedAt=DateTime.Now,
+		//				DeleteStatus = false,
+		//				CategoryID = 1 //Default for new applications
+		//			};
+		//			await _context.ApplicationProccesses.AddAsync(nProcess);
+
+		//			if (await _context.SaveChangesAsync() > 0)
+		//			{
+		//				var processes = await (from prc in _context.ApplicationProccesses
+		//									   join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
+		//									   join role in _context.Roles on prc.RoleID equals role.id
+		//									   where prc.DeleteStatus != true
+		//									   select new
+		//									   {
+		//										   Type = "New",
+		//										   Sort = prc.Sort,
+		//										   Role = role.RoleName,
+		//										   SBU = sbu.SBU_Name,
+		//										   Process = prc.Sort,
+		//									   }).ToListAsync();
+		//				var roles = await _context.Roles.ToListAsync();
+		//				var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+		//				return new
+		//				{
+		//					Processes = processes,
+		//					Roles = roles,
+		//					SBUs = SBUs,
+		//				};
+		//			}
+		//			else
+		//			{
+		//				return BadRequest(new { message = $"Error : An error occured while trying to create this process." });
+		//			}
+		//		}
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(new { message = "Error : " + e.Message });
+		//	}
+		//}
 		[HttpPost("CreateProcess")]
-		public async Task<object> CreateProcess(int roleID, int sbuID, int sort)
+		public async Task<object> CreateProcess([FromBody] ApplicationProccess proccess)
 		{
 			try
 			{
-				if (roleID <= 0 || sbuID <= 0 || sort <= 0)
+				if (string.IsNullOrEmpty(proccess.ProcessAction) || string.IsNullOrEmpty(proccess.ProcessStatus) || proccess.TriggeredByRole<=0 || proccess.TargetedToRole<=0)
 				{
 					return BadRequest(new { message = $"Error : Role/SBU/Sort ID was not passed correctly." });
 				}
 
 				var process = await (from prc in _context.ApplicationProccesses
-									 where prc.RoleID == roleID && prc.SBU_ID == sbuID && prc.Sort == sort && prc.DeleteStatus != true
+									 where prc.ProcessAction==proccess.ProcessAction && prc.ProcessStatus==proccess.ProcessStatus && prc.TriggeredByRole==proccess.TriggeredByRole && prc.TriggeredBySBU==proccess.TriggeredBySBU && prc.TargetedToRole==proccess.TargetedToRole && prc.TargetedToSBU==proccess.TargetedToSBU && prc.DeleteStatus != true
 									 select prc).FirstOrDefaultAsync();
 				if (process != null)
 				{
@@ -1527,16 +1784,17 @@ namespace Backend_UMR_Work_Program.Controllers
 				}
 				else
 				{
-					var nProcess = new ApplicationProccess()
-					{
-						Sort = sort,
-						RoleID = roleID,
-						SBU_ID = sbuID,
-						CreatedAt = DateTime.Now,
-						DeleteStatus = false,
-						CategoryID = 1 //Default for new applications
-					};
-					await _context.ApplicationProccesses.AddAsync(nProcess);
+
+
+					process.CreatedAt = DateTime.Now;
+					process.CreatedBy=WKPCompanyEmail;
+					process.UpdatedBy=WKPCompanyEmail;
+					process.UpdatedAt=DateTime.Now;
+					process.DeleteStatus = false;
+					process.CategoryID = 1; //Default for new applications
+
+
+					await _context.ApplicationProccesses.AddAsync(process);
 
 					if (await _context.SaveChangesAsync() > 0)
 					{
@@ -1574,7 +1832,7 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 		[HttpPost("EditProcess")]
-		public async Task<object> EditProcess(int id, int roleID, int sbuID, int sort)
+		public async Task<object> EditProcess(int id, int roleID, int sbuID, int triggeredByRole, int targetedToRole, int triggeredBySBU, int targetedBySBU, string processAction, string processStatus, int sort = 0)
 		{
 			try
 			{
@@ -1590,6 +1848,17 @@ namespace Backend_UMR_Work_Program.Controllers
 					process.Sort = sort;
 					process.RoleID = roleID;
 					process.SBU_ID = sbuID;
+					//process.ProcessStatus=(PROCESS_STATUS)processStatus;
+					//process.ProcessAction=(PROCESS_ACTION)processAction;
+					process.ProcessStatus=processStatus;
+					process.ProcessAction=processAction;
+					process.TriggeredByRole= triggeredByRole;
+					process.TargetedToRole= targetedToRole;
+					process.TriggeredBySBU= triggeredBySBU;
+					process.TargetedToSBU= targetedBySBU;
+					process.UpdatedAt= DateTime.Now;
+					process.UpdatedBy= WKPCompanyEmail;
+
 
 					if (await _context.SaveChangesAsync() > 0)
 					{
