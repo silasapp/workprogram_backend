@@ -3146,8 +3146,8 @@ public partial class WKP_DBContext : DbContext
             entity.Property(e => e.DeletedBy).HasMaxLength(500);
             entity.Property(e => e.ProcessAction).HasMaxLength(100);
             entity.Property(e => e.ProcessStatus).HasMaxLength(100);
-            entity.Property(e => e.TargetTo).HasMaxLength(500);
-            entity.Property(e => e.TriggeredBy).HasMaxLength(500);
+            //entity.Property(e => e.TargetTo).HasMaxLength(500);
+            //entity.Property(e => e.TriggeredBy).HasMaxLength(500);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.UpdatedBy).HasMaxLength(500);
         });

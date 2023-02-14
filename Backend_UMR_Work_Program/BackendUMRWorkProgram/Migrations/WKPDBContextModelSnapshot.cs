@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendUMRWorkProgram.Migrations
 {
     [DbContext(typeof(WKP_DBContext))]
-    partial class WKPDBContextModelSnapshot : ModelSnapshot
+    partial class WKP_DBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

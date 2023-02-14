@@ -522,5 +522,6 @@
     <Build Include="dbo\Tables\BUDGET_OPEX.sql" />
     <Build Include="dbo\Tables\ProcessStatuses.sql" />
     <Build Include="dbo\Tables\ProcessActions.sql" />
+    <Build Include="dbo\Tables\FlowStages.sql" />
   </ItemGroup>
 </Project>

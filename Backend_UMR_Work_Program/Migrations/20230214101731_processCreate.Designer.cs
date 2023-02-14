@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendUMRWorkProgram.Migrations
 {
     [DbContext(typeof(WKP_DBContext))]
-    [Migration("20230213163441_ProcessAction")]
-    partial class ProcessAction
+    [Migration("20230214101731_processCreate")]
+    partial class processCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -4210,6 +4210,9 @@ namespace BackendUMRWorkProgram.Migrations
                     b.Property<int?>("CurrentDesk")
                         .HasColumnType("int");
 
+                    b.Property<string>("CurrentUserEmail")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool?>("DeleteStatus")
                         .HasColumnType("bit");
 
@@ -4220,6 +4223,9 @@ namespace BackendUMRWorkProgram.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("FieldID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlowStageId")
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentStatus")
@@ -4310,6 +4316,12 @@ namespace BackendUMRWorkProgram.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("ActionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AppAction")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("AppId")
                         .HasColumnType("int");
 
@@ -4322,6 +4334,9 @@ namespace BackendUMRWorkProgram.Migrations
                         .HasPrecision(0)
                         .HasColumnType("datetime2(0)");
 
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("StaffID")
                         .HasColumnType("int");
 
@@ -4329,6 +4344,15 @@ namespace BackendUMRWorkProgram.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TargetedTo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TriggeredBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TriggeredByRole")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -4390,14 +4414,15 @@ namespace BackendUMRWorkProgram.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProccessID"));
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int?>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("DeleteStatus")
                         .HasColumnType("bit");
@@ -4406,34 +4431,44 @@ namespace BackendUMRWorkProgram.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("ProcessAction")
+                    b.Property<string>("ProcessAction")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ProcessStatus")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("RoleID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProcessStatus")
+                    b.Property<int?>("SBU_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleID")
+                    b.Property<int?>("Sort")
                         .HasColumnType("int");
 
-                    b.Property<int>("SBU_ID")
+                    b.Property<int?>("TargetedToRole")
                         .HasColumnType("int");
 
-                    b.Property<int>("Sort")
+                    b.Property<int?>("TargetedToSBU")
                         .HasColumnType("int");
 
-                    b.Property<string>("TargetTo")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TriggeredByRole")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TriggeredBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TriggeredBySBU")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("ProccessID")
                         .HasName("PK_WorkProccess_");
@@ -4924,9 +4959,6 @@ namespace BackendUMRWorkProgram.Migrations
 
                     b.Property<DateTime?>("Date_Updated")
                         .HasColumnType("datetime");
-
-                    b.Property<int?>("Field_ID")
-                        .HasColumnType("int");
 
                     b.Property<string>("Fixed_Cost")
                         .HasMaxLength(1000)
@@ -8816,7 +8848,8 @@ namespace BackendUMRWorkProgram.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_Geophysical_Activities_");
 
                     b.ToTable("Geophysical_Activities");
                 });
@@ -28680,13 +28713,9 @@ namespace BackendUMRWorkProgram.Migrations
             modelBuilder.Entity("RoleFunctionalityRef", b =>
                 {
                     b.Property<string>("RoleId")
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("FuncId")
-                        .HasMaxLength(6)
-                        .IsUnicode(false)
                         .HasColumnType("varchar(6)");
 
                     b.HasKey("RoleId", "FuncId");
