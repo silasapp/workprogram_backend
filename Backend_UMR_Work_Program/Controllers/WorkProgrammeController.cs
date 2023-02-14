@@ -9243,9 +9243,8 @@ namespace Backend_UMR_Work_Program.Controllers
         {
 
             int save = 0;
-            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); 
-            var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
-            //using var transaction = _context.Database.BeginTransaction();
+            string action = (actionToDo == null || actionToDo == "") ? GeneralModel.Insert : actionToDo.Trim().ToLower(); var concessionField = GET_CONCESSION_FIELD(omlName, fieldName);
+           // using var transaction = _context.Database.BeginTransaction();
 
             try
             {
@@ -9331,7 +9330,7 @@ namespace Backend_UMR_Work_Program.Controllers
 
                     save += await _context.SaveChangesAsync();
 
-                    //transaction.Commit();
+                  //  transaction.Commit();
 
                 }
                 else
@@ -10285,12 +10284,12 @@ namespace Backend_UMR_Work_Program.Controllers
                             if (file2 != null)
                             {
                                 string docName = "Evidence Of Pay Trust Fund";
-                                hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
+                                hSE_WASTE_MANAGEMENT_DZ.Waste_Service_Permit_Path = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"EvidenceOfPayTrustFundDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
 
-                                if (hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCPath == null)
+                                if (hSE_WASTE_MANAGEMENT_DZ.Waste_Service_Permit_Path == null)
                                     return BadRequest(new { message = "Failure : An error occured while trying to upload " + docName + " document." });
                                 else
-                                    hSE_WASTE_MANAGEMENT_DZ.Evidence_of_pay_of_DDCFilename = blobname2;
+                                    hSE_WASTE_MANAGEMENT_DZ.Waste_Service_Permit_Filename = blobname2;
 
                             }
                         }
