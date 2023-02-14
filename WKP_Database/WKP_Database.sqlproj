@@ -520,5 +520,8 @@
     <Build Include="dbo\Tables\HSE_WASTE_MANAGEMENT_DZs.sql" />
     <Build Include="dbo\Tables\BUDGET_CAPEX.sql" />
     <Build Include="dbo\Tables\BUDGET_OPEX.sql" />
+    <Build Include="dbo\Tables\ProcessStatuses.sql" />
+    <Build Include="dbo\Tables\ProcessActions.sql" />
+    <Build Include="dbo\Tables\FlowStages.sql" />
   </ItemGroup>
 </Project>
