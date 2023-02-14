@@ -187,11 +187,11 @@ public partial class WKP_DBContext : DbContext
 
     public virtual DbSet<BUDGET_ACTUAL_EXPENDITURE> BUDGET_ACTUAL_EXPENDITUREs { get; set; }
 
-    public virtual DbSet<BUDGET_CAPEX> BUDGET_CAPEXes { get; set; }
+    public virtual DbSet<BUDGET_CAPEX> BUDGET_CAPices { get; set; }
 
-    public virtual DbSet<BUDGET_CAPEX_OPEX> BUDGET_CAPEX_OPEXes { get; set; }
+    public virtual DbSet<BUDGET_CAPEX_OPEX> BUDGET_CAPEX_OPices { get; set; }
 
-    public virtual DbSet<BUDGET_OPEX> BUDGET_OPEXes { get; set; }
+    public virtual DbSet<BUDGET_OPEX> BUDGET_OPices { get; set; }
 
     public virtual DbSet<BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITy> BUDGET_PERFORMANCE_DEVELOPMENT_DRILLING_ACTIVITIEs { get; set; }
 
