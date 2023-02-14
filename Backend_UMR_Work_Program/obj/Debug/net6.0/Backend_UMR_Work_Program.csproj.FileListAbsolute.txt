@@ -130,7 +130,14 @@ C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Azure.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Identity.Client.dll
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Identity.Client.Extensions.Msal.dll
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
@@ -198,11 +205,3 @@ C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.pdb
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0\Backend_UMR_Work_Program.genruntimeconfig.cache
 C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\obj\Debug\net6.0\ref\Backend_UMR_Work_Program.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
-C:\Sandbox\WorkProgram_BEnd - Copy (6)\Backend_UMR_Work_Program\bin\Debug\net6.0\System.CodeDom.dll
