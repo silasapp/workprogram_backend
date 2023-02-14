@@ -15,7 +15,7 @@
 		public bool? Submitted { get; set; }
 		public string? ApprovalRef { get; set; }
 		public string? CurrentUserEmail { get; set; }
-		public int FlowStageId { get; set; }
+		public int? FlowStageId { get; set; }
 		public DateTime? CreatedAt { get; set; }
 		public DateTime? SubmittedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
