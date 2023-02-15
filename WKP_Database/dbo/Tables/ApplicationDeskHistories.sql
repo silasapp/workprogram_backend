@@ -10,9 +10,14 @@
     [Message]         NVARCHAR (MAX) NULL,
     [TargetedTo]      NVARCHAR (MAX) NULL,
     [TriggeredBy]     NVARCHAR (MAX) NULL,
-    [TriggeredByRole] NVARCHAR (MAX) NULL,
+    [TriggeredByRole] INT            NULL,
+    [TargetedToSBU]   INT            NULL,
+    [TriggeredBySBU]  INT            NULL,
+    [TargetedToRole]  INT            NULL,
     CONSTRAINT [PK_ApplicationDeskHistories] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
 
 
