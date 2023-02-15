@@ -41,6 +41,7 @@ namespace Backend_UMR_Work_Program.Models
 		public static string PaymentPending = "Payment Confirmation Pending";
 		public static string PaymentCompleted = "PaymentCompleted";
 		public static string Approved = "Approved";
+		public static string Submitted = "Submitted";
 		public static string Processing = "Processing";
 		public static string Rejected = "Rejected";
 		public static string OML = "OML";
@@ -49,6 +50,8 @@ namespace Backend_UMR_Work_Program.Models
 		public static string Completed = "Completed";
 		public static string Submit = "Submit";
 		public static string Push = "Push";
+		public static string FinalApproval = "FinalApproval";
+		public static string Approve = "Approve";
 		public static string Reject = "Reject";
 		public static string Delegate = "Delegate";
 		public static string PLANNING_CODE = "ER&SP";
@@ -61,7 +64,7 @@ namespace Backend_UMR_Work_Program.Models
 		public static string Reviewer = "Reviewer";
 		public static string Supervisor = "Supervisor";
 		public static string Approval = "Approving Authority";
-		public static string FinalApproval = "Final Approving Authority";
+		public static string FinalApprovalAuthority = "Final Approving Authority";
 
 
 

@@ -2774,49 +2774,95 @@ generate:
 			}
 		}
 		private Object lockThis = new object();
-		public int RecordStaffDesk(int appID, ApplicationProcessModel appProcess)
+		//ApplicationProccess
+		//public int RecordStaffDesk(int appID, DataModels.staff staf, string comapnyEmail)
+		//{
+		//	try
+		//	{
+		//		//if (appProcess != null)
+		//		//{
+		//		MyDesk drop = new MyDesk()
+
+		//		{
+
+		//			//ProcessID = appProcess.ProccessID,
+
+		//			//Sort = (int)appProcess.Sort,
+
+		//			AppId = appID,
+
+		//			StaffID = staf.StaffID,
+
+		//			FromStaffID = comapnyEmail,
+
+		//			FromSBU = staf.Staff_SBU,
+		//			FromRole=staf.RoleID,
+		//			HasWork = false,
+
+		//			HasPushed = false,
+
+		//			CreatedAt = DateTime.Now
+
+		//		};
+		//		_context.MyDesks.Add(drop);
+
+		//		if (_context.SaveChanges() > 0)
+		//		{
+		//			return 1;
+		//		}
+		//		//}
+		//		return 0;
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return 0;
+		//	}
+		//}
+
+		public int RecordStaffDesks(int appID, staff staff, string companyEmail)
 		{
 			try
 			{
-				if (appProcess != null)
+				//if (appProcess != null)
+				//{
+				MyDesk drop = new MyDesk()
+
 				{
-					MyDesk drop = new MyDesk()
 
-					{
+					//ProcessID = appProcess.ProccessID,
 
-						ProcessID = appProcess.ProcessId,
+					//Sort = (int)appProcess.Sort,
 
-						Sort = appProcess.Sort,
+					AppId = appID,
 
-						AppId = appID,
+					StaffID = staff.StaffID,
 
-						StaffID = appProcess.StaffId,
+					FromStaffID = companyEmail,
 
-						FromStaffID = appProcess.FromStaffId,
+					FromSBU = (int)staff.Staff_SBU,
+					FromRoleId=(int)staff.RoleID,
+					HasWork = false,
 
-						FromSBU = appProcess.SBU_Id.ToString(),
+					HasPushed = false,
 
-						HasWork = false,
+					CreatedAt = DateTime.Now
 
-						HasPushed = false,
+				};
+				_context.MyDesks.Add(drop);
 
-						CreatedAt = DateTime.Now
-
-					};
-					_context.MyDesks.Add(drop);
-
-					if (_context.SaveChanges() > 0)
-					{
-						return 1;
-					}
+				if (_context.SaveChanges() > 0)
+				{
+					return 1;
 				}
+				//}
 				return 0;
 			}
 			catch (Exception e)
 			{
-				return 0;
+				throw e;
 			}
 		}
+
 		public async Task<List<ApplicationProcessModel>> GetApplicationProccess(string appType, int sortID = 0, int SBU_ID = 0)
 		{
 			try
@@ -2883,6 +2929,23 @@ generate:
 			}
 		}
 
+		public async Task<List<staff>> GetReviewerStafff(List<ApplicationProccess> applicationProccesses)
+		{
+			try
+			{
+				var staffLists = new List<staff>();
+				foreach (var item in applicationProccesses)
+				{
+					staffLists=_context.staff.Where(x => x.Staff_SBU==item.TargetedToSBU && x.RoleID==item.TargetedToRole).ToList();
+				}
+				return staffLists;
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
 		public async Task<List<ApplicationProccess>> GetApplicationProccessByAction(string processAction)
 		{
 			try
@@ -2892,12 +2955,12 @@ generate:
 				//Get Processes by action
 				var applicationProcesses = await _context.ApplicationProccesses.Where(x => x.ProcessAction==processAction).ToListAsync();
 
-				if (applicationProcesses.Count>0)
-				{
-					return applicationProcesses;
-				}
+				//if (applicationProcesses.Count>0)
+				//{
+				//	return applicationProcesses;
+				//}
 
-				return null;
+				return applicationProcesses;
 			}
 			catch (Exception ex)
 			{
@@ -3002,7 +3065,24 @@ generate:
 		{
 			var getStaff = (from u in _context.staff where u.StaffID == staffid select u).FirstOrDefault();
 
-			ApplicationDeskHistory appDeskHistory = new ApplicationDeskHistory()
+			var appDeskHistory = new ApplicationDeskHistory()
+			{
+				//StaffEmail = getStaff.StaffEmail,
+				AppId = appid,
+				StaffID = staffid,
+				Comment = comment,
+				Status = status,
+				CreatedAt = DateTime.Now
+			};
+
+			_context.ApplicationDeskHistories.Add(appDeskHistory);
+			_context.SaveChanges();
+		}
+		public void SaveHistory(int appid, int staffid, int triggeredFromRole, int targetedToRole, string status, string comment)
+		{
+			var getStaff = (from u in _context.staff where u.StaffID == staffid select u).FirstOrDefault();
+
+			var appDeskHistory = new ApplicationDeskHistory()
 			{
 				//StaffEmail = getStaff.StaffEmail,
 				AppId = appid,
@@ -3101,7 +3181,7 @@ generate:
 		}
 		public string CompanyMessageTemplate(List<AppMessage> AppMessages)
 		{
-			var msg = AppMessages.FirstOrDefault();
+			var msg = AppMessages?.FirstOrDefault();
 			string body = "<div>";
 
 			body += "<div style='width: 800px; background-color: #ece8d4; padding: 5px 0 5px 0;'><img style='width: 98%; height: 120px; display: block; margin: 0 auto;' src='~/images/NUPRC Logo.JPG' alt='Logo'/></div>";
