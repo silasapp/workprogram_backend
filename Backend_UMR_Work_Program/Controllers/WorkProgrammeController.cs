@@ -1332,7 +1332,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     var HSEQualityControl = await (from c in _context.HSE_QUALITY_CONTROLs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var HSEClimateChange = await (from c in _context.HSE_CLIMATE_CHANGE_AND_AIR_QUALITies where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var HSESafetyCulture = await (from c in _context.HSE_SAFETY_CULTURE_TRAININGs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
-                    // var HSEOccupationalHealth = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
+                   var HSEOccupationalHealth = await (from c in _context.HSE_OCCUPATIONAL_HEALTH_MANAGEMENTs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     //  var HSEWasteManagementSystems = await (from c in _context.HSE_WASTE_MANAGEMENT_SYSTEMs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var HSEWastManagementDZs = await (from c in _context.HSE_WASTE_MANAGEMENT_DZs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
                     var HSEEnvironmentalManagementSystems = await (from c in _context.HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEMs where c.Field_ID == concessionField.Field_ID && c.COMPANY_ID == WKPCompanyId && c.Year_of_WP == year select c).ToListAsync();
@@ -1386,7 +1386,7 @@ namespace Backend_UMR_Work_Program.Controllers
                         HSEManagementPosition = HSEManagementPosition,
                         HSEClimateChange = HSEClimateChange,
                         HSESafetyCulture = HSESafetyCulture,
-                        //   HSEOccupationalHealth = HSEOccupationalHealth,
+                        HSEOccupationalHealth = HSEOccupationalHealth,
                         //   HSEWasteManagementSystems = HSEWasteManagementSystems,
                         HSEEnvironmentalManagementSystems = HSEEnvironmentalManagementSystems,
                         HSEOperationSafetyCases = HSEOPERATIONSSAFETYCASEs,
@@ -11497,33 +11497,36 @@ namespace Backend_UMR_Work_Program.Controllers
                     hse_occupational_model.Field_ID = concessionField?.Field_ID ?? null;
 
                     #region file section
-                    //var files = Request.Form.Files;
-                    var file1 = Request.Form.Files[0];
-                    var file2 = Request.Form.Files[1];
-
-                    var blobname1 = blobService.Filenamer(file1);
-                    var blobname2 = blobService.Filenamer(file2);
+                    var files = Request.Form.Files;
+                    if(files.Count>0)
+                    { 
+                       // if(files.Count)
+                    var file1 = Request.Form?.Files[0];
+                    
 
 
                     if (file1 != null)
                     {
-                        string docName = "submission of OHM plan";
+                            var blobname1 = blobService.Filenamer(file1);
+                            string docName = "submission of OHM plan";
                         hse_occupational_model.OHMplanCommunicationFilePath = await blobService.UploadFileBlobAsync("documents", file1.OpenReadStream(), file1.ContentType, $"OHMplanCommunicationDocuments/{blobname1}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
                         if (hse_occupational_model.OHMplanCommunicationFilePath == null)
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
                         else
                             hse_occupational_model.OHMplanCommunicationFilename = blobname1;
                     }
-                    if (file2 != null)
+                    if (files.Count ==2)
                     {
-                        string docName = "OHM Plan";
+                            var file2 = Request.Form?.Files[1];
+                            var blobname2 = blobService.Filenamer(file2);
+                            string docName = "OHM Plan";
                         hse_occupational_model.OHMplanFilePath = await blobService.UploadFileBlobAsync("documents", file2.OpenReadStream(), file2.ContentType, $"FieldDiscoveryDocuments/{blobname2}", docName.ToUpper(), (int)WKPCompanyNumber, int.Parse(year));
                         if (hse_occupational_model.OHMplanFilePath == null)
                             return new WebApiResponse { ResponseCode = AppResponseCodes.Failed, Message = "Failure : An error occured while trying to upload " + docName + " document.", StatusCode = ResponseCodes.Badrequest };
                         else
                             hse_occupational_model.OHMplanFilename = blobname2;
                     }
-                    //}
+                    }
 
 
                     #endregion
