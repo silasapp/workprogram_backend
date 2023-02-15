@@ -10,11 +10,11 @@
 		public DateTime CreatedAt { get; set; }
 		public string? AppAction { get; set; }
 		public DateTime ActionDate { get; set; }
-		public string? TriggeredBy { get; set; }
-		public string? TriggeredByRole { get; set; }
+		public int? TriggeredBySBU { get; set; }
+		public int? TriggeredByRole { get; set; }
 		public string? Message { get; set; }
-		public string? TargetedTo { get; set; }
-		public string? TargetedToRole { get; }
+		public int? TargetedToSBU { get; set; }
+		public int? TargetedToRole { get; }
 		public int? FlowStageId { get; }
 	}
 }
