@@ -9101,24 +9101,39 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\suppo\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+=======
+    "C:\\Users\\suppo\\.nuget\\packages\\": {}
+>>>>>>> c512c65752a42d809d68fc029823e679944e3159
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
       "projectName": "Backend_UMR_Work_Program",
       "projectPath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
       "packagesPath": "C:\\Users\\suppo\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\suppo\\tempo\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\obj\\",
+=======
+      "projectUniqueName": "C:\\Sandbox\\WorkProgram_BEnd - Copy (6)\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+      "projectName": "Backend_UMR_Work_Program",
+      "projectPath": "C:\\Sandbox\\WorkProgram_BEnd - Copy (6)\\Backend_UMR_Work_Program\\Backend_UMR_Work_Program.csproj",
+      "packagesPath": "C:\\Users\\suppo\\.nuget\\packages\\",
+      "outputPath": "C:\\Sandbox\\WorkProgram_BEnd - Copy (6)\\Backend_UMR_Work_Program\\obj\\",
+>>>>>>> c512c65752a42d809d68fc029823e679944e3159
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
         "C:\\Users\\suppo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+<<<<<<< HEAD
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
+>>>>>>> c512c65752a42d809d68fc029823e679944e3159
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -9264,7 +9279,11 @@
             "privateAssets": "all"
           }
         },
+<<<<<<< HEAD
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+=======
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+>>>>>>> c512c65752a42d809d68fc029823e679944e3159
       }
     }
   },

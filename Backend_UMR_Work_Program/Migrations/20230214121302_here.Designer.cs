@@ -4,6 +4,7 @@ using Backend_UMR_Work_Program.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendUMRWorkProgram.Migrations
 {
     [DbContext(typeof(WKP_DBContext))]
-    partial class WKPDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230214121302_here")]
+    partial class here
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4222,7 +4225,7 @@ namespace BackendUMRWorkProgram.Migrations
                     b.Property<int?>("FieldID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FlowStageId")
+                    b.Property<int>("FlowStageId")
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentStatus")
@@ -4342,14 +4345,14 @@ namespace BackendUMRWorkProgram.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("TargetedToSBU")
-                        .HasColumnType("int");
+                    b.Property<string>("TargetedTo")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TriggeredByRole")
-                        .HasColumnType("int");
+                    b.Property<string>("TriggeredBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TriggeredBySBU")
-                        .HasColumnType("int");
+                    b.Property<string>("TriggeredByRole")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -4414,7 +4417,7 @@ namespace BackendUMRWorkProgram.Migrations
                     b.Property<int?>("CategoryID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("CreatedBy")
@@ -15715,19 +15718,16 @@ namespace BackendUMRWorkProgram.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("FromRoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FromSBU")
+                    b.Property<string>("FromSBU")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("int");
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<string>("FromStaffID")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("FromStaffID")
+                        .HasColumnType("int");
 
                     b.Property<bool>("HasPushed")
                         .HasColumnType("bit");
@@ -15735,10 +15735,10 @@ namespace BackendUMRWorkProgram.Migrations
                     b.Property<bool>("HasWork")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ProcessID")
+                    b.Property<int>("ProcessID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Sort")
+                    b.Property<int>("Sort")
                         .HasColumnType("int");
 
                     b.Property<int>("StaffID")
