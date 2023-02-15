@@ -3078,6 +3078,23 @@ generate:
 			_context.ApplicationDeskHistories.Add(appDeskHistory);
 			_context.SaveChanges();
 		}
+		public void SaveHistory(int appid, int staffid, int triggeredFromRole, int targetedToRole, string status, string comment)
+		{
+			var getStaff = (from u in _context.staff where u.StaffID == staffid select u).FirstOrDefault();
+
+			var appDeskHistory = new ApplicationDeskHistory()
+			{
+				//StaffEmail = getStaff.StaffEmail,
+				AppId = appid,
+				StaffID = staffid,
+				Comment = comment,
+				Status = status,
+				CreatedAt = DateTime.Now
+			};
+
+			_context.ApplicationDeskHistories.Add(appDeskHistory);
+			_context.SaveChanges();
+		}
 		public List<AppMessage> SaveMessage(int appID, int userID, string subject, string content, string type)
 		{
 
