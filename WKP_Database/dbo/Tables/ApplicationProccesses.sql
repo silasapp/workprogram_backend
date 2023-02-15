@@ -4,7 +4,7 @@
     [RoleID]          INT            NULL,
     [SBU_ID]          INT            NULL,
     [Sort]            INT            NULL,
-    [CreatedAt]       DATETIME       NOT NULL,
+    [CreatedAt]       DATETIME       NULL,
     [CreatedBy]       NVARCHAR (500) NULL,
     [UpdatedAt]       DATETIME       NULL,
     [UpdatedBy]       NVARCHAR (500) NULL,
@@ -19,6 +19,8 @@
     [TargetedToRole]  INT            NULL,
     CONSTRAINT [PK_WorkProccess_] PRIMARY KEY CLUSTERED ([ProccessID] ASC)
 );
+
+
 
 
 
