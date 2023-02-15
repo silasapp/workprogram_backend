@@ -264,7 +264,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		//								  join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
 		//								  join dsk in _context.MyDesks on app.Id equals dsk.AppId into desks
 		//								  join con in _context.ADMIN_CONCESSIONS_INFORMATIONs on app.ConcessionID equals con.Consession_Id
-		//								  //join SBU in _context.StrategicBusinessUnits on desks.OrderByDescending(x => x.DeskID).FirstOrDefault().FromSBU equals SBU.Id.ToString()
+		//								  join SBU in _context.StrategicBusinessUnits on desks.OrderByDescending(x => x.DeskID).FirstOrDefault().FromSBU equals SBU.Id.ToString()
 		//								  where app.DeleteStatus != true && app.Status == GeneralModel.Rejected
 		//								  select new Application_Model
 		//								  {
@@ -282,6 +282,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		//									  PaymentStatus = app.PaymentStatus,
 		//									  YearOfWKP = app.YearOfWKP
 		//								  }).ToListAsync();
+
 		//		return new WebApiResponse { Data= applications, ResponseCode = AppResponseCodes.Success, Message = "Success", StatusCode = ResponseCodes.Success };
 		//	}
 		//	catch (Exception e)
@@ -422,9 +423,14 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 					return BadRequest(new { message = "Sorry, this application details could not be found." });
 				}
+
 				var field = await _context.COMPANY_FIELDs.Where(x => x.Field_ID == application.FieldID).FirstOrDefaultAsync();
+
 				var concession = await _context.ADMIN_CONCESSIONS_INFORMATIONs.Where(x => x.Consession_Id == application.ConcessionID).FirstOrDefaultAsync();
+
 				var company = await _context.ADMIN_COMPANY_INFORMATIONs.Where(x => x.Id == application.CompanyID).FirstOrDefaultAsync();
+
+
 				var appHistory = await (from his in _context.ApplicationDeskHistories
 										join stf in _context.staff on his.StaffID equals stf.StaffID
 										join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
@@ -455,7 +461,9 @@ namespace Backend_UMR_Work_Program.Controllers
 									 Staff_Role = rol.RoleName,
 									 Sort = (int)dsk.Sort
 								 }).ToList();
+
 				var documents = await _context.SubmittedDocuments.Where(x => x.CreatedBy == application.CompanyID.ToString() && x.YearOfWKP == application.YearOfWKP).Take(10).ToListAsync();
+
 				var getStaffSBU = (from stf in _context.staff
 								   join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
 								   where stf.StaffEmail == WKPCompanyEmail
@@ -1380,10 +1388,10 @@ namespace Backend_UMR_Work_Program.Controllers
 										   Sort = prc.Sort,
 										   ProcessAction = prc.ProcessAction,
 										   ProcessStatus = prc.ProcessStatus,
-										   TriggeredByRole = prc.TriggeredByRole,
-										   TargetedToRole = prc.TargetedToRole,
-										   TriggeredBySBU = prc.TriggeredBySBU,
-										   TargetedBySBU = prc.TriggeredBySBU,
+										   TriggeredByRole = role.RoleName, //prc.TriggeredByRole,
+										   TargetedToRole = role.RoleName, //prc.TargetedToRole,
+										   TriggeredBySBU = sbu.SBU_Name, //prc.TriggeredBySBU,
+										   TargetedBySBU = sbu.SBU_Name, //prc.TriggeredBySBU,
 										   Role = role.RoleName,
 										   SBU = sbu.SBU_Name,
 										   Process = prc.Sort,
@@ -1392,11 +1400,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				var roles = await _context.Roles.ToListAsync();
 				var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
 
+				var processActions = new string[] { GeneralModel.Submit, GeneralModel.Reject, GeneralModel.Approve, GeneralModel.Push, GeneralModel.Delegate, GeneralModel.FinalApproval };
+				var processStatuses = new string[] { GeneralModel.Processing, GeneralModel.Submitted, GeneralModel.Rejected, GeneralModel.Approved };
 				return new
 				{
 					Processes = processes.OrderBy(x => x.SBU).ThenBy(x => x.Sort),
 					Roles = roles,
 					SBUs = SBUs,
+					processActions = processActions,
+					processStatuses = processStatuses
 				};
 			}
 			catch (Exception e)
@@ -1486,10 +1498,10 @@ namespace Backend_UMR_Work_Program.Controllers
 					return BadRequest(new { message = $"Error : Role/SBU/Sort ID was not passed correctly." });
 				}
 
-				var process = await (from prc in _context.ApplicationProccesses
-									 where prc.ProcessAction==proccess.ProcessAction && prc.ProcessStatus==proccess.ProcessStatus && prc.TriggeredByRole==proccess.TriggeredByRole && prc.TriggeredBySBU==proccess.TriggeredBySBU && prc.TargetedToRole==proccess.TargetedToRole && prc.TargetedToSBU==proccess.TargetedToSBU && prc.DeleteStatus != true
-									 select prc).FirstOrDefaultAsync();
-				if (process != null)
+				var getProcess = await (from prc in _context.ApplicationProccesses
+										where prc.ProcessAction==proccess.ProcessAction && prc.ProcessStatus==proccess.ProcessStatus && prc.TriggeredByRole==proccess.TriggeredByRole && prc.TriggeredBySBU==proccess.TriggeredBySBU && prc.TargetedToRole==proccess.TargetedToRole && prc.TargetedToSBU==proccess.TargetedToSBU && prc.DeleteStatus != true
+										select prc).FirstOrDefaultAsync();
+				if (getProcess != null)
 				{
 					return BadRequest(new { message = $"Error : Process is already existing and can not be duplicated." });
 				}
@@ -1497,15 +1509,15 @@ namespace Backend_UMR_Work_Program.Controllers
 				{
 
 
-					process.CreatedAt = DateTime.Now;
-					process.CreatedBy=WKPCompanyEmail;
-					process.UpdatedBy=WKPCompanyEmail;
-					process.UpdatedAt=DateTime.Now;
-					process.DeleteStatus = false;
-					process.CategoryID = 1; //Default for new applications
+					proccess.CreatedAt = DateTime.Now;
+					proccess.CreatedBy=WKPCompanyEmail;
+					proccess.UpdatedBy=WKPCompanyEmail;
+					proccess.UpdatedAt=DateTime.Now;
+					proccess.DeleteStatus = false;
+					proccess.CategoryID = 1; //Default for new applications
 
 
-					await _context.ApplicationProccesses.AddAsync(process);
+					await _context.ApplicationProccesses.AddAsync(proccess);
 
 					if (await _context.SaveChangesAsync() > 0)
 					{
