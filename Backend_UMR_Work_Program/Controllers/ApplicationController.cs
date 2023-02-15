@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 //using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Data.SqlClient;
 using System.Security.Claims;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
 
@@ -431,6 +431,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				var company = await _context.ADMIN_COMPANY_INFORMATIONs.Where(x => x.Id == application.CompanyID).FirstOrDefaultAsync();
 
 
+
 				var appHistory = await (from his in _context.ApplicationDeskHistories
 										join stf in _context.staff on his.StaffID equals stf.StaffID
 										join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
@@ -446,21 +447,22 @@ namespace Backend_UMR_Work_Program.Controllers
 											Comment = his.Comment
 										}).ToListAsync();
 
-				var staffDesk = (from dsk in _context.MyDesks
-								 join stf in _context.staff on dsk.StaffID equals stf.StaffID
-								 join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
-								 join rol in _context.Roles on stf.RoleID equals rol.id
-								 join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
-								 where admin.Id == WKPCompanyNumber && dsk.AppId == appID && dsk.HasWork != true && stf.ActiveStatus != false && stf.DeleteStatus != true
-								 select new Staff_Model
-								 {
-									 Desk_ID =Convert.ToInt32(dsk.DeskID),
-									 Staff_Name = stf.FirstName + " " + stf.LastName,
-									 Staff_Email = stf.StaffEmail,
-									 Staff_SBU = sbu.SBU_Name,
-									 Staff_Role = rol.RoleName,
-									 Sort = (int)dsk.Sort
-								 }).ToList();
+				var staffDesk = await (from dsk in _context.MyDesks
+									   join stf in _context.staff on dsk.StaffID equals stf.StaffID
+									   join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+									   join rol in _context.Roles on stf.RoleID equals rol.id
+									   join sbu in _context.StrategicBusinessUnits on stf.Staff_SBU equals sbu.Id
+									   where admin.Id == WKPCompanyNumber && dsk.AppId == appID && dsk.HasWork != true && stf.ActiveStatus != false && stf.DeleteStatus != true
+									   select new Staff_Model
+									   {
+										   Desk_ID =dsk.DeskID,
+										   Staff_Email = stf.StaffEmail,
+										   Staff_SBU = sbu.SBU_Name,
+										   Staff_Role = rol.RoleName,
+										   //Sort = (int)dsk.Sort
+									   }).ToListAsync();
+
+
 
 				var documents = await _context.SubmittedDocuments.Where(x => x.CreatedBy == application.CompanyID.ToString() && x.YearOfWKP == application.YearOfWKP).Take(10).ToListAsync();
 
@@ -478,7 +480,7 @@ namespace Backend_UMR_Work_Program.Controllers
 					Field = field,
 					Concession = concession,
 					Company = company,
-					Staff = staffDesk,
+					Staff =staffDesk,
 					Application_History = appHistory.OrderByDescending(x => x.ID).Take(3).ToList(),
 					Document = documents,
 					SBU_TableDetails=getSBU_TablesToDisplay,
@@ -698,6 +700,7 @@ namespace Backend_UMR_Work_Program.Controllers
 		//	}
 
 		//}
+
 		[HttpPost("RejectApplication")]
 		public async Task<object> RejectApplication(/*[FromBody] ActionModel model,*/ int deskID, string comment, string[] selectedApps, string[] SBU_IDs, string[] selectedTables)
 		{
@@ -716,8 +719,11 @@ namespace Backend_UMR_Work_Program.Controllers
 												select stf).FirstOrDefault();
 
 						var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId).FirstOrDefault();
+
 						var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
+
 						var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
+
 						var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID select d).FirstOrDefaultAsync();
 
 						if (application.FieldID != null)
@@ -725,10 +731,15 @@ namespace Backend_UMR_Work_Program.Controllers
 							var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
 						}
 
-						if (staffDesk.Sort == 1) //Rejection to company
+
+						//Determine if the app is in the reviewer's desk
+						var appStatus = application.Status;
+						if (appStatus ==GeneralModel.Submit)
 						{
 							var getStaff = (from stf in _context.staff where stf.StaffID == staffDesk.StaffID select stf).FirstOrDefault();
+
 							var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
+
 							if (NRejectApp == null)
 							{
 								List<string> RejectedForms = new List<string>();
@@ -759,10 +770,13 @@ namespace Backend_UMR_Work_Program.Controllers
 
 								};
 								await _context.SBU_ApplicationComments.AddAsync(nReject);
+
 								if (await _context.SaveChangesAsync() > 0)
 								{
 									var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == getStaff.Staff_SBU select sb).FirstOrDefaultAsync();
+
 									string subject = $"Comment for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+
 									string content = $"{SBU?.SBU_Name} made comment on your WORK PROGRAM application for year {application.YearOfWKP}. See comment :- " + comment;
 									var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
 									var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
@@ -772,6 +786,60 @@ namespace Backend_UMR_Work_Program.Controllers
 								}
 							}
 						}
+
+
+						//if (staffDesk.Sort == 1) //Rejection to company
+						//{
+						//	var getStaff = (from stf in _context.staff where stf.StaffID == staffDesk.StaffID select stf).FirstOrDefault();
+
+						//	var NRejectApp = await _context.SBU_ApplicationComments.Where(x => x.AppID == appId && x.SBU_ID == getStaff.Staff_SBU && x.ActionStatus == GeneralModel.Initiated).FirstOrDefaultAsync();
+
+						//	if (NRejectApp == null)
+						//	{
+						//		List<string> RejectedForms = new List<string>();
+						//		string RejectedTables = "";
+						//		if (selectedTables.Count() > 0)
+						//		{
+						//			foreach (var table in selectedTables)
+						//			{
+						//				int tableID = table != "undefined" ? int.Parse(table) : 0;
+						//				var getSBU_TablesToDisplay = await _context.Table_Details.Where(x => x.TableId == tableID).FirstOrDefaultAsync();
+
+						//				if (getSBU_TablesToDisplay != null)
+						//					RejectedTables = RejectedTables != "" ? $"{RejectedTables}|{getSBU_TablesToDisplay.TableName}" : getSBU_TablesToDisplay.TableName;
+
+						//			}
+						//		}
+
+
+						//		var nReject = new SBU_ApplicationComment()
+						//		{
+						//			SBU_Comment = comment,
+						//			SBU_ID = getStaff.Staff_SBU,
+						//			Staff_ID = getStaff.StaffID,
+						//			ActionStatus = GeneralModel.Initiated,
+						//			SBU_Tables = RejectedTables,
+						//			AppID = appId,
+						//			DateCreated = DateTime.Now,
+
+						//		};
+						//		await _context.SBU_ApplicationComments.AddAsync(nReject);
+
+						//		if (await _context.SaveChangesAsync() > 0)
+						//		{
+						//			var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == getStaff.Staff_SBU select sb).FirstOrDefaultAsync();
+
+						//			string subject = $"Comment for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+
+						//			string content = $"{SBU?.SBU_Name} made comment on your WORK PROGRAM application for year {application.YearOfWKP}. See comment :- " + comment;
+						//			var emailMsg = _helpersController.SaveMessage(application.Id, Company.Id, subject, content, "Company");
+						//			var sendEmail = _helpersController.SendEmailMessage(Company.EMAIL, Company.NAME, emailMsg, null);
+
+						//			return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Rejection for application {concession.Concession_Held} has been sent to the company.", StatusCode = ResponseCodes.Success };
+
+						//		}
+						//	}
+						//}
 						else
 						{
 							var prevDesk = (from dsk in _context.MyDesks
@@ -811,11 +879,15 @@ namespace Backend_UMR_Work_Program.Controllers
 														select stf).FirstOrDefault();
 
 										string subject = $"Rejection for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+
 										string content = $"{WKPCompanyName} rejected WORK PROGRAM application for year {application.YearOfWKP}.";
+
 										var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
+
 										var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
 
 										_helpersController.LogMessages("Rejection of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+
 										return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been rejected successfully.", StatusCode = ResponseCodes.Success };
 									}
 									else
@@ -857,7 +929,9 @@ namespace Backend_UMR_Work_Program.Controllers
 					var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId).FirstOrDefault();
 
 					var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
+
 					var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
+
 					var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
 
 					//Update Staff Desk
@@ -1378,8 +1452,8 @@ namespace Backend_UMR_Work_Program.Controllers
 			try
 			{
 				var processes = await (from prc in _context.ApplicationProccesses
-									   join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
-									   join role in _context.Roles on prc.RoleID equals role.id
+									   join sbu in _context.StrategicBusinessUnits on prc.TargetedToSBU equals sbu.Id
+									   join role in _context.Roles on prc.TargetedToRole equals role.id
 									   where prc.DeleteStatus != true
 									   select new
 									   {
@@ -1562,56 +1636,59 @@ namespace Backend_UMR_Work_Program.Controllers
 				var process = await (from prc in _context.ApplicationProccesses
 									 where prc.ProccessID == id && prc.DeleteStatus != true
 									 select prc).FirstOrDefaultAsync();
+
 				if (process == null)
 				{
 					return BadRequest(new { message = $"Error : Process details could not be found or an invalid ID was supplied." });
 				}
+				//else
+				//{
+				process.Sort = sort;
+				process.RoleID = roleID;
+				process.SBU_ID = sbuID;
+				//process.ProcessStatus=(PROCESS_STATUS)processStatus;
+				//process.ProcessAction=(PROCESS_ACTION)processAction;
+				process.ProcessStatus=processStatus;
+				process.ProcessAction=processAction;
+				process.TriggeredByRole= triggeredByRole;
+				process.TargetedToRole= targetedToRole;
+				process.TriggeredBySBU= triggeredBySBU;
+				process.TargetedToSBU= targetedBySBU;
+				process.UpdatedAt= DateTime.Now;
+				process.UpdatedBy= WKPCompanyEmail;
+
+
+				if (await _context.SaveChangesAsync() > 0)
+				{
+					var processes = await (from prc in _context.ApplicationProccesses
+										   join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
+										   join role in _context.Roles on prc.RoleID equals role.id
+										   where prc.DeleteStatus != true
+										   select new
+										   {
+											   Type = "New",
+											   Sort = prc.Sort,
+											   Role = role.RoleName,
+											   SBU = sbu.SBU_Name,
+											   //Process = prc.Sort,
+											   ProccessAction = prc.ProcessAction,
+											   ProcessStatus = prc.ProcessStatus,
+										   }).ToListAsync();
+					var roles = await _context.Roles.ToListAsync();
+					var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
+
+					return new
+					{
+						Processes = processes,
+						Roles = roles,
+						SBUs = SBUs,
+					};
+				}
 				else
 				{
-					process.Sort = sort;
-					process.RoleID = roleID;
-					process.SBU_ID = sbuID;
-					//process.ProcessStatus=(PROCESS_STATUS)processStatus;
-					//process.ProcessAction=(PROCESS_ACTION)processAction;
-					process.ProcessStatus=processStatus;
-					process.ProcessAction=processAction;
-					process.TriggeredByRole= triggeredByRole;
-					process.TargetedToRole= targetedToRole;
-					process.TriggeredBySBU= triggeredBySBU;
-					process.TargetedToSBU= targetedBySBU;
-					process.UpdatedAt= DateTime.Now;
-					process.UpdatedBy= WKPCompanyEmail;
-
-
-					if (await _context.SaveChangesAsync() > 0)
-					{
-						var processes = await (from prc in _context.ApplicationProccesses
-											   join sbu in _context.StrategicBusinessUnits on prc.SBU_ID equals sbu.Id
-											   join role in _context.Roles on prc.RoleID equals role.id
-											   where prc.DeleteStatus != true
-											   select new
-											   {
-												   Type = "New",
-												   Sort = prc.Sort,
-												   Role = role.RoleName,
-												   SBU = sbu.SBU_Name,
-												   Process = prc.Sort,
-											   }).ToListAsync();
-						var roles = await _context.Roles.ToListAsync();
-						var SBUs = await _context.StrategicBusinessUnits.ToListAsync();
-
-						return new
-						{
-							Processes = processes,
-							Roles = roles,
-							SBUs = SBUs,
-						};
-					}
-					else
-					{
-						return BadRequest(new { message = $"Error : An error occured while trying to edit this process." });
-					}
+					return BadRequest(new { message = $"Error : An error occured while trying to edit this process." });
 				}
+				//}
 			}
 			catch (Exception e)
 			{
