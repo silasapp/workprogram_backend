@@ -601,105 +601,139 @@ namespace Backend_UMR_Work_Program.Controllers
 			}
 		}
 
-		//[HttpPost("PushApplication")]
-		//public async Task<object> PushApplication(int deskID, string comment, string[] selectedApps)
-		//{
-		//	try
-		//	{
-		//		if (selectedApps != null)
-		//		{
-		//			foreach (var b in selectedApps)
-		//			{
-		//				string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
-		//				int appId = int.Parse(appID);
-		//				//get current staff desk
-		//				var get_CurrentStaff = (from stf in _context.staff
-		//										join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
-		//										where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
-		//										select stf).FirstOrDefault();
-		//				var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId).FirstOrDefault();
-		//				var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
-		//				var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
-		//				var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID select d).FirstOrDefaultAsync();
+		[HttpPost("PushApplication")]
+		public async Task<object> PushApplication(int deskID, string comment, string[] selectedApps)
+		{
+			try
+			{
+				if (selectedApps != null)
+				{
+					foreach (var b in selectedApps)
+					{
+						string appID = b.Replace('[', ' ').Replace(']', ' ').Trim();
+						int appId = int.Parse(appID);
+						//get current staff desk
+						var get_CurrentStaff = (from stf in _context.staff
+												join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+												where stf.AdminCompanyInfo_ID == WKPCompanyNumber && stf.DeleteStatus != true
+												select stf).FirstOrDefault();
 
-		//				if (application.FieldID != null)
-		//				{
-		//					var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
-		//				}
+						var staffDesk = _context.MyDesks.Where(a => a.DeskID == deskID && a.AppId == appId).FirstOrDefault();
 
-		//				Task<List<ApplicationProcessModel>> getApplicationProcess = _helpersController.GetApplicationProccess(GeneralModel.New, (int)staffDesk.Sort, (int)get_CurrentStaff.Staff_SBU);
+						var application = _context.Applications.Where(a => a.Id == appId).FirstOrDefault();
 
-		//				if (getApplicationProcess.Result.Count > 0)
-		//				{
-		//					foreach (var staff in getApplicationProcess.Result.ToList())
-		//					{
-		//						//check if next SBU is planning and applications are still 
+						var Company = _context.ADMIN_COMPANY_INFORMATIONs.Where(p => p.Id == application.CompanyID).FirstOrDefault();
 
-		//						var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == staff.SBU_Id select sb).FirstOrDefaultAsync();
+						var concession = await (from d in _context.ADMIN_CONCESSIONS_INFORMATIONs where d.Consession_Id == application.ConcessionID select d).FirstOrDefaultAsync();
 
-		//						if (SBU.SBU_Code == GeneralModel.PLANNING_CODE && staff.RoleName == GeneralModel.Reviewer)
-		//						{
-		//							var AllStaffDesks = await _context.MyDesks.Where(a => a.AppId == appId && a.HasWork != true).ToListAsync();
-		//							if (AllStaffDesks.Count() == 1)
-		//							{
-		//								int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, staff);
-		//							}
+						//if (application.FieldID != null)
+						//{
+						//	var field = _context.COMPANY_FIELDs.Where(p => p.Field_ID == application.FieldID).FirstOrDefault();
+						//}
 
-		//						}
-		//						else
-		//						{
-		//							int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, staff, WKPCompanyEmail);
-		//						}
 
-		//						_helpersController.SaveHistory(application.Id, staff.StaffId, "Moved", comment);
+						var getStaffById = await _helpersController.GetStaffByStaffId(staffDesk.StaffID);
 
-		//						//update staff desk
-		//						staffDesk.HasPushed = true;
-		//						staffDesk.HasWork = true;
-		//						staffDesk.UpdatedAt = DateTime.Now;
-		//						_context.SaveChanges();
+						var staffId = getStaffById?.StaffID;
+						var staffRoleId = getStaffById?.RoleID;
+						var staffSBUId = getStaffById?.Staff_SBU;
+						var getApplicationProcess = await _helpersController.GetApplicationProccessBySBUAndRole(GeneralModel.Push, (int)staffRoleId, (int)staffSBUId);
 
-		//						//send mail to staff
-		//						var getStaff = (from stf in _context.staff
-		//										join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
-		//										where stf.StaffID == staff.StaffId && stf.DeleteStatus != true
-		//										select stf).FirstOrDefault();
+						if (getApplicationProcess.Count > 0)
+						{
+							foreach (var processFlow in getApplicationProcess)
+							{
+								//check if next SBU is planning and applications are still 
 
-		//						string subject = $"Push for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
-		//						string content = $"{WKPCompanyName} have submitted their WORK PROGRAM application for year {application.YearOfWKP}.";
-		//						var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
-		//						var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
+								//var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == processFlow.SBU_Id select sb).FirstOrDefaultAsync();
 
-		//						_helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
-		//						return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
-		//						//}
-		//						//else
-		//						//{
-		//						//    return BadRequest(new { message = "An error occured while trying to submit this application to a staff."});
-		//						//}
+								//if (SBU.SBU_Code == GeneralModel.PLANNING_CODE && processFlow.RoleName == GeneralModel.Reviewer)
+								//{
+								//	var AllStaffDesks = await _context.MyDesks.Where(a => a.AppId == appId && a.HasWork != true).ToListAsync();
+								//	if (AllStaffDesks.Count() == 1)
+								//	{
+								//		int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, processFlow);
+								//	}
 
-		//					}
-		//				}
-		//				else
-		//				{
-		//					return BadRequest(new { message = "An error occured while trying to get process flow for this application." });
-		//				}
-		//			}
-		//		}
-		//		else
-		//		{
-		//			return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
-		//		}
+								//}
+								//else
+								//{
+								//	int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, processFlow, WKPCompanyEmail);
+								//}
 
-		//		return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
-		//	}
-		//	catch (Exception x)
-		//	{
-		//		_helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
-		//		return BadRequest(new { message = $"An error occured while pushing application to staff."+ x.Message.ToString() });
-		//	}
+								//_helpersController.SaveHistory(application.Id, processFlow.StaffId, "Moved", comment);
 
-		//}
+								var getStaffByTargetedRoleAndSBUs = await _helpersController.GetStaffByTargetRoleAndSBU((int)processFlow.TargetedToRole, (int)processFlow.TargetedToSBU);
+
+								var deskTemp = await _helpersController.GetStaffMyDesks(getStaffByTargetedRoleAndSBUs);
+
+
+								var desk = new MyDesk
+								{
+									//save staff desk
+									StaffID = deskTemp.StaffID,
+									AppId = appId,
+									HasPushed = true,
+									HasWork = true,
+									CreatedAt = DateTime.Now,
+									UpdatedAt = DateTime.Now,
+									Comment=comment,
+									LastJobDate= DateTime.Now,
+
+								};
+
+								_context.MyDesks.Update(desk);
+
+								//}
+								var save = await _context.SaveChangesAsync();
+								if (save>0)
+								{
+									var trigeredbyDeskId = await _helpersController.GetDeskIdByStaffIdAndAppId((int)staffId, appId);
+
+									var result = await _helpersController.DeleteDeskIdByDeskId(trigeredbyDeskId);
+								}
+
+								//send mail to staff
+								var getStaff = (from stf in _context.staff
+												join admin in _context.ADMIN_COMPANY_INFORMATIONs on stf.AdminCompanyInfo_ID equals admin.Id
+												where stf.StaffID == deskTemp.StaffID && stf.DeleteStatus != true
+												select stf).FirstOrDefault();
+
+								string subject = $"Push for WORK PROGRAM application with ref: {application.ReferenceNo} ({concession.Concession_Held} - {application.YearOfWKP}).";
+								string content = $"{WKPCompanyName} have submitted their WORK PROGRAM application for year {application.YearOfWKP}.";
+								var emailMsg = _helpersController.SaveMessage(application.Id, getStaff.StaffID, subject, content, "Staff");
+								var sendEmail = _helpersController.SendEmailMessage(getStaff.StaffEmail, getStaff.FirstName, emailMsg, null);
+
+								_helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
+								return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
+								//}
+								//else
+								//{
+								//    return BadRequest(new { message = "An error occured while trying to submit this application to a staff."});
+								//}
+
+							}
+						}
+						else
+						{
+							return BadRequest(new { message = "An error occured while trying to get process flow for this application." });
+						}
+					}
+				}
+				else
+				{
+					return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
+				}
+
+				return BadRequest(new { message = "Error: No application ID was passed for this action to be completed." });
+			}
+			catch (Exception x)
+			{
+				_helpersController.LogMessages($"Approve Error:: {x.Message.ToString()}");
+				return BadRequest(new { message = $"An error occured while pushing application to staff."+ x.Message.ToString() });
+			}
+
+		}
 
 		[HttpPost("RejectApplication")]
 		public async Task<object> RejectApplication(/*[FromBody] ActionModel model,*/ int deskID, string comment, string[] selectedApps, string[] SBU_IDs, string[] selectedTables)

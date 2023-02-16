@@ -3,6 +3,7 @@ using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
+//using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -2926,6 +2927,147 @@ generate:
 			catch (Exception e)
 			{
 				return null;
+			}
+		}
+
+		public async Task<staff> GetStaffByStaffId(int staffId)
+		{
+			try
+			{
+				var getStaff = await _context.staff.FirstOrDefaultAsync(x => x.StaffID==staffId);
+				if (getStaff ==null)
+				{
+					return null;
+				}
+				return getStaff;
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
+
+
+		public async Task<MyDesk> GetStaffMyDesks(List<int> staffIds)
+		{
+			try
+			{
+				var staffDesks = new List<MyDesk>();
+
+				foreach (var staffId in staffIds)
+				{
+					var desk = _context.MyDesks.Where(x => x.StaffID==staffId).FirstOrDefault();
+
+					if (desk !=null)
+					{
+						staffDesks.Add(desk);
+					}
+					else
+					{
+						var newDesk = new MyDesk
+						{
+							//save staff desk
+							StaffID = staffId,
+							AppId = 0,
+							HasPushed = false,
+							HasWork = false,
+							CreatedAt = DateTime.Now,
+							UpdatedAt = DateTime.Now,
+							Comment="",
+							LastJobDate= DateTime.Now,
+						};
+
+						_context.MyDesks.Add(newDesk);
+
+						var savedDesk = await _context.SaveChangesAsync();
+
+						staffDesks.Add(newDesk);
+					}
+
+				}
+				return staffDesks.OrderByDescending(x => x.LastJobDate).FirstOrDefault();
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
+
+		public async Task<int> GetDeskIdByStaffIdAndAppId(int staffId, int appId)
+		{
+			try
+			{
+				var getDesk = await _context.MyDesks.Where(x => x.StaffID==staffId && x.AppId==appId).Select(x => x.DeskID).FirstOrDefaultAsync();
+				if (getDesk >0)
+				{
+					return getDesk;
+				}
+				return 0;
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
+
+		public async Task<int> DeleteDeskIdByDeskId(int deskId)
+		{
+			try
+			{
+				var getDesk = _context.MyDesks.Where(x => x.DeskID==deskId).FirstOrDefault();
+				if (getDesk !=null)
+				{
+
+					_context.MyDesks.Remove(getDesk);
+					var save = await _context.SaveChangesAsync();
+
+					if (save>0)
+					{
+						return 1;
+					}
+
+				}
+				return 0;
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
+
+
+		public async Task<List<int>> GetStaffByTargetRoleAndSBU(int targetedToRole, int targetedToSBU)
+		{
+			try
+			{
+				var getstaffs = await _context.staff.Where(x => x.RoleID==targetedToRole && x.Staff_SBU==targetedToSBU && x.DeleteStatus !=true).Select(x => x.StaffID).ToListAsync();
+
+				return getstaffs;
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
+		}
+
+		public async Task<List<ApplicationProccess>> GetApplicationProccessBySBUAndRole(string processAction, int triggeredByRole = 0, int triggeredBySBU = 0)
+		{
+			try
+			{
+
+				var applicationProcess = await _context.ApplicationProccesses.Where(x => x.TriggeredByRole==triggeredByRole && x.TriggeredBySBU==triggeredBySBU && x.ProcessAction==processAction && x.DeleteStatus !=true).ToListAsync();
+
+				return applicationProcess;
+
+			}
+			catch (Exception e)
+			{
+				throw e;
 			}
 		}
 
