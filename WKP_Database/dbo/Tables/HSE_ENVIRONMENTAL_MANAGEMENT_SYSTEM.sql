@@ -17,15 +17,8 @@
     [EMSFilename]     VARCHAR (100)  NULL,
     [AUDITFilename]   VARCHAR (100)  NULL,
     [COMPANY_ID]      VARCHAR (100)  NULL,
-<<<<<<< HEAD
-    [CompanyNumber]   INT            NULL
-);
-
-=======
     [CompanyNumber]   INT            NULL,
-    [Field_ID]        INT            NULL
+    [Field_ID]        INT            NULL,
+    CONSTRAINT [PK_HSE_ENVIRONMENTAL_MANAGEMENT_SYSTEM] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

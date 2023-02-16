@@ -22,15 +22,7 @@
     [Consession_Type]                                                 VARCHAR (50)  NULL,
     [COMPANY_ID]                                                      VARCHAR (100) NULL,
     [CompanyNumber]                                                   INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                                                        INT           NULL,
     CONSTRAINT [PK_BUDGET_PROPOSAL_IN_NAIRA_AND_DOLLAR_COMPONENT] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

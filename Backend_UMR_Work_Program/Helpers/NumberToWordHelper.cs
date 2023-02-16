@@ -29,6 +29,7 @@ namespace Backend_UMR_Work_Program.Helpers
                 if (words != "")
                     words += " and ";
                 int counter = decPart.ToString().Length;
+
                 switch (counter)
                 {
                     case 1: words += NumWords(decPart) + " Tenths"; break;

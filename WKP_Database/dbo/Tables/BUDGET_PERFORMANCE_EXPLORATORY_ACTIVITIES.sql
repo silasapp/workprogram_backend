@@ -24,15 +24,7 @@
     [Contract_Type]        VARCHAR (50)  NULL,
     [COMPANY_ID]           VARCHAR (100) NULL,
     [CompanyNumber]        INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIES] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]             INT           NULL,
     CONSTRAINT [PK_BUDGET_PERFORMANCE_EXPLORATORY_ACTIVITIES] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

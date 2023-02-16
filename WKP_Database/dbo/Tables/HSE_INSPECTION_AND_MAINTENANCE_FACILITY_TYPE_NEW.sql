@@ -23,15 +23,7 @@
     [If_No_Give_reasonS]                 VARCHAR (3999) NULL,
     [COMPANY_ID]                         VARCHAR (100)  NULL,
     [CompanyNumber]                      INT            NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                           INT            NULL,
     CONSTRAINT [PK_HSE_INSPECTION_AND_MAINTENANCE_FACILITY_TYPE_NEW] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

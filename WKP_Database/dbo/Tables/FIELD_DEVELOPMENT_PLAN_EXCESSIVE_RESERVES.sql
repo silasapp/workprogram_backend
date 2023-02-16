@@ -16,15 +16,10 @@
     [Date_Updated]                   DATETIME       NULL,
     [Consession_Type]                VARCHAR (50)   NULL,
     [COMPANY_ID]                     VARCHAR (100)  NULL,
-<<<<<<< HEAD
-    [CompanyNumber]                  INT            NULL
-);
-
-=======
     [CompanyNumber]                  INT            NULL,
-    [Field_ID]                       INT            NULL
+    [Field_ID]                       INT            NULL,
+    CONSTRAINT [PK_FIELD_DEVELOPMENT_PLAN_EXCESSIVE_RESERVES] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 
 
->>>>>>> origin/main

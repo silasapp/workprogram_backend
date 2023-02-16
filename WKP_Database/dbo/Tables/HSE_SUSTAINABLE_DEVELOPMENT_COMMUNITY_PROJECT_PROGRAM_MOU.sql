@@ -22,15 +22,10 @@
     [Contract_Type]               VARCHAR (50)   NULL,
     [MOUUploadFilename]           VARCHAR (500)  NULL,
     [COMPANY_ID]                  VARCHAR (100)  NULL,
-<<<<<<< HEAD
-    [CompanyNumber]               INT            NULL
-);
-
-=======
     [CompanyNumber]               INT            NULL,
-    [Field_ID]                    INT            NULL
+    [Field_ID]                    INT            NULL,
+    CONSTRAINT [PK_HSE_SUSTAINABLE_DEVELOPMENT_COMMUNITY_PROJECT_PROGRAM_MOU] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 
 
->>>>>>> origin/main

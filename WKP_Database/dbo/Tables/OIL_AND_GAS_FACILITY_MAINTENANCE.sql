@@ -31,15 +31,7 @@
     [Terrain]                                 VARCHAR (50)  NULL,
     [Contract_Type]                           VARCHAR (50)  NULL,
     [CompanyNumber]                           INT           NULL,
-<<<<<<< HEAD
-    CONSTRAINT [PK_OIL_AND_GAS_FACILITY_MAINTENANCE] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-=======
     [Field_ID]                                INT           NULL,
     CONSTRAINT [PK_OIL_AND_GAS_FACILITY_MAINTENANCE] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-
->>>>>>> origin/main

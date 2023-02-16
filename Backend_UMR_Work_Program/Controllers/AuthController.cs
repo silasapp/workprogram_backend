@@ -1,28 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Backend_UMR_Work_Program.Controllers;
+﻿using AutoMapper;
+using Backend_UMR_Work_Program.DataModels;
+using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
+using Backend_UMR_Work_Program.Services;
 using LpgLicense.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using Backend_UMR_Work_Program.Helpers;
-using AutoMapper;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using static Backend_UMR_Work_Program.Models.ViewModel;
-using Backend_UMR_Work_Program.Services;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using static Backend_UMR_Work_Program.Models.ViewModel;
 
 namespace Backend_UMR_Work_Program.Controllers.Authentications
 {
@@ -52,6 +44,9 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
             _helpersController = new HelpersController(_context, _configuration, _httpContextAccessor, _mapper);
             _mapper = mapper;
         }
+
+
+
 
         [HttpPost("UserAuth")]
         public async Task<IActionResult> UserAuth([FromBody] Logine login)
@@ -243,7 +238,7 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
                                     FirstName = res.firstName.ToUpper(),
                                     LastName = res.lastName.ToUpper(),
                                     CreatedAt = DateTime.Now,
-                                    ActiveStatus = false,
+                                    ActiveStatus = true,
                                     DeleteStatus = false,
                                 };
 
@@ -276,29 +271,45 @@ namespace Backend_UMR_Work_Program.Controllers.Authentications
             }
         }
 
-        [HttpPost("Logout")]
+        //[HttpPost]
+        //[Route("log-out")]
+        //public async Task<IActionResult> Logout()
+        //{
+        //    try { 
+        //    string publicKey = _configuration.GetSection("ElpsKeys").GetSection("PK").Value.ToString();
+        //    var elpsLogoff = ElpsServices._elpsBaseUrl + "Account/RemoteLogOff";
+        //    var returnUrl = Url.Action("Index", "Home", null, Request.Scheme);
+
+        //    var frm = "<form action='" + elpsLogoff + "' id='frmTest' method='post'>" +
+        //            "<input type='hidden' name='returnUrl' value='" + returnUrl + "' />" +
+        //            "<input type='hidden' name='appId' value='" + publicKey + "' />" +
+        //            "</form>" +
+        //            "<script>document.getElementById('frmTest').submit();</script>";
+
+        //        var log = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        //        return Content(frm, "text/html");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(ex.Message);
+        //    }
+        //}
+
+
+
+
+
+        [HttpGet]
+        [Route("log-out")]
         public async Task<IActionResult> Logout()
         {
-            try { 
-            string publicKey = _configuration.GetSection("ElpsKeys").GetSection("PK").Value.ToString();
-            var elpsLogoff = ElpsServices._elpsBaseUrl + "Account/RemoteLogOff";
-            var returnUrl = Url.Action("Index", "Home", null, Request.Scheme);
-
-            var frm = "<form action='" + elpsLogoff + "' id='frmTest' method='post'>" +
-                    "<input type='hidden' name='returnUrl' value='" + returnUrl + "' />" +
-                    "<input type='hidden' name='appId' value='" + publicKey + "' />" +
-                    "</form>" +
-                    "<script>document.getElementById('frmTest').submit();</script>";
-         
-                var log = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-                return Content(frm, "text/html");
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-            }
+            var elpsLogOffUrl = $"{_appSettings.elpsBaseUrl}/Account/RemoteLogOff";
+            var returnUrl = $"{_appSettings.LoginUrl}";
+            var frm = "<form action='" + elpsLogOffUrl + "' id='frmTest' method='post'>" + "<input type='hidden' name='returnUrl' value='" + returnUrl + "' />" + "<input type='hidden' name='appId' value='" + _appSettings.PK + "' />" + "</form>" + "<script>document.getElementById('frmTest').submit();</script>";
+            return Content(frm, "text/html");
         }
+
         [HttpPost("ChangePasswordAction")]
         public async Task<IActionResult> ChangePasswordAction(string email, string OldPassword, string NewPassword, string ConfirmPassword)
         {
