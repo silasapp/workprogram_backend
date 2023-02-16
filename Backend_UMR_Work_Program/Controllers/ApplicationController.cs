@@ -1453,22 +1453,24 @@ namespace Backend_UMR_Work_Program.Controllers
 			{
 				var processes = await (from prc in _context.ApplicationProccesses
 									   join sbu in _context.StrategicBusinessUnits on prc.TargetedToSBU equals sbu.Id
+									   join sbu1 in _context.StrategicBusinessUnits on prc.TriggeredBySBU equals sbu1.Id
 									   join role in _context.Roles on prc.TargetedToRole equals role.id
+									   join role1 in _context.Roles on prc.TriggeredByRole equals role1.id
 									   where prc.DeleteStatus != true
 									   select new
 									   {
 										   Id = prc.ProccessID,
 										   Type = "New",
-										   Sort = prc.Sort,
+										   //Sort = prc.Sort,
 										   ProcessAction = prc.ProcessAction,
 										   ProcessStatus = prc.ProcessStatus,
-										   TriggeredByRole = role.RoleName, //prc.TriggeredByRole,
+										   TriggeredByRole = role1.RoleName, //prc.TriggeredByRole,
 										   TargetedToRole = role.RoleName, //prc.TargetedToRole,
-										   TriggeredBySBU = sbu.SBU_Name, //prc.TriggeredBySBU,
+										   TriggeredBySBU = sbu1.SBU_Name, //prc.TriggeredBySBU,
 										   TargetedBySBU = sbu.SBU_Name, //prc.TriggeredBySBU,
-										   Role = role.RoleName,
-										   SBU = sbu.SBU_Name,
-										   Process = prc.Sort,
+																		 //Role = role.RoleName,
+																		 //SBU = sbu.SBU_Name,
+																		 //Process = prc.Sort,
 									   }).ToListAsync();
 
 				var roles = await _context.Roles.ToListAsync();
@@ -1478,7 +1480,7 @@ namespace Backend_UMR_Work_Program.Controllers
 				var processStatuses = new string[] { GeneralModel.Processing, GeneralModel.Submitted, GeneralModel.Rejected, GeneralModel.Approved };
 				return new
 				{
-					Processes = processes.OrderBy(x => x.SBU).ThenBy(x => x.Sort),
+					Processes = processes.OrderBy(x => x.TriggeredBySBU),
 					Roles = roles,
 					SBUs = SBUs,
 					processActions = processActions,
