@@ -3,6 +3,7 @@ using AutoMapper;
 using Backend_UMR_Work_Program.DataModels;
 using Backend_UMR_Work_Program.Helpers;
 using Backend_UMR_Work_Program.Models;
+using Backend_UMR_Work_Program.Models.Enurations;
 //using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -2820,34 +2821,26 @@ generate:
 		//	}
 		//}
 
-		public int RecordStaffDesks(int appID, staff staff, string companyEmail)
+		public int RecordStaffDesks(int appID, staff staff, int FromStaffID, int FromStaffSBU, int FromStaffRoleID, int processID)
 		{
 			try
 			{
 				//if (appProcess != null)
 				//{
+
 				MyDesk drop = new MyDesk()
-
 				{
-
-					//ProcessID = appProcess.ProccessID,
-
+					ProcessID = processID,
 					//Sort = (int)appProcess.Sort,
-
 					AppId = appID,
-
 					StaffID = staff.StaffID,
-
-					FromStaffID = companyEmail,
-
-					FromSBU = (int)staff.Staff_SBU,
-					FromRoleId=(int)staff.RoleID,
-					HasWork = false,
-
+					FromStaffID = FromStaffID,
+					FromSBU = FromStaffSBU,
+					FromRoleId= FromStaffRoleID,
+					HasWork = true,
 					HasPushed = false,
-
-					CreatedAt = DateTime.Now
-
+					CreatedAt = DateTime.Now,
+					ProcessStatus = STAFF_DESK_STATUS.SUBMISSION
 				};
 				_context.MyDesks.Add(drop);
 
@@ -3078,7 +3071,25 @@ generate:
 				var staffLists = new List<staff>();
 				foreach (var item in applicationProccesses)
 				{
-					staffLists=_context.staff.Where(x => x.Staff_SBU==item.TargetedToSBU && x.RoleID==item.TargetedToRole).ToList();
+					var temp = await _context.staff.Where(x => x.Staff_SBU==item.TargetedToSBU && x.RoleID==item.TargetedToRole).FirstOrDefaultAsync();
+					var desk = (from stf in _context.staff
+                                 join dsk in _context.MyDesks on stf.StaffID equals dsk.StaffID
+                                 where stf.Staff_SBU == item.TargetedToSBU && stf.RoleID==item.TargetedToRole
+                                 select dsk).OrderByDescending(d => d.LastJobDate).FirstOrDefault();
+
+                    if(desk != null)
+					{
+						var staff = await _context.staff.Where(s => s.StaffID == desk.StaffID).FirstOrDefaultAsync();
+						
+						if(staff != null)
+						{
+							staffLists.Add(staff);
+						}
+					}
+					else if(temp != null)
+					{
+						staffLists.Add(temp);
+					}
 				}
 				return staffLists;
 			}
@@ -3214,7 +3225,8 @@ generate:
 				StaffID = staffid,
 				Comment = comment,
 				Status = status,
-				CreatedAt = DateTime.Now
+				CreatedAt = DateTime.Now,
+				ActionDate = DateTime.Now,
 			};
 
 			_context.ApplicationDeskHistories.Add(appDeskHistory);
@@ -3231,7 +3243,8 @@ generate:
 				StaffID = staffid,
 				Comment = comment,
 				Status = status,
-				CreatedAt = DateTime.Now
+				CreatedAt = DateTime.Now,
+				ActionDate = DateTime.Now,
 			};
 
 			_context.ApplicationDeskHistories.Add(appDeskHistory);

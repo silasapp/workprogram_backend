@@ -11571,7 +11571,7 @@ public partial class WKP_DBContext : DbContext
 
         modelBuilder.Entity<SBU_ApplicationComment>(entity =>
         {
-            entity.HasNoKey();
+            //entity.HasNoKey();
 
             entity.Property(e => e.ActionStatus)
                 .HasMaxLength(50)
