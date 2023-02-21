@@ -103,26 +103,7 @@ namespace Backend_UMR_Work_Program.Services
 									staff.LastName = elpsstaff.lastName;
 									staff.StaffElpsID = elpsstaff.Id.ToString();
 									//staff.pho
-								} else {
-									var staticResponse = GetStaff("silas.oparaiwu@brandonetech.com", appSettings, webApiResponse);
-									var staticStaff = (StaffResponseDto)staticResponse.Data;
-									var seed = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL.ToLower() == staticStaff.email.ToLower() select a).FirstOrDefaultAsync();
-									if (seed == null) {
-										var staticAdmin = new ADMIN_COMPANY_INFORMATION_Model
-										{
-											EMAIL = email,
-											NAME = staticStaff.lastName + " " + staticStaff.firstName,
-											PHONE_NO = staticStaff.phoneNo,
-											ELPS_ID = staticStaff.Id,
-											Created_by = "System",
-											Date_Created = DateTime.UtcNow,
-											STATUS_ = "Activated",
-											COMPANY_NAME = "Admin"
-										};
-
-										await CreateStaticAdmin(staticAdmin);
-									}
-								}
+								} 
 								//user.FirstName = staff.firstName;
 								//staff.PHONE = elpsstaff();
 								_context.staff.Update(staff);
@@ -131,6 +112,28 @@ namespace Backend_UMR_Work_Program.Services
 								company.Id = staff.AdminCompanyInfo_ID.Value;
                                 //await _userManager.UpdateAsync(user);
                             }
+							else
+							{
+								var staticResponse = GetStaff("damilare.olanrewaju@brandonetech.com", appSettings, webApiResponse);
+								var staticStaff = (StaffResponseDto)staticResponse.Data;
+								var seed = await (from a in _context.ADMIN_COMPANY_INFORMATIONs where a.EMAIL.ToLower() == staticStaff.email.ToLower() select a).FirstOrDefaultAsync();
+								if (seed == null)
+								{
+									var staticAdmin = new ADMIN_COMPANY_INFORMATION_Model
+									{
+										EMAIL = email,
+										NAME = staticStaff.lastName + " " + staticStaff.firstName,
+										PHONE_NO = staticStaff.phoneNo,
+										ELPS_ID = staticStaff.Id,
+										Created_by = "System",
+										Date_Created = DateTime.UtcNow,
+										STATUS_ = "Activated",
+										COMPANY_NAME = "Admin"
+									};
+
+									await CreateStaticAdmin(staticAdmin);
+								}
+							}
 						}
 					}
 					if (response.Message.ToLower().Equals("success"))
@@ -500,11 +503,11 @@ repeat:
 							AdminCompanyInfo_ID=data.Id,
 							StaffElpsID = userModel.ELPS_ID.ToString(),
 							Staff_SBU = userModel.SBU_ID,
-							RoleID = userModel.ROLE_ID,
+							RoleID = 1,
 							LocationID = 1,
 							StaffEmail = data.EMAIL,
-							FirstName = userModel.NAME.Split(",")[0],
-							LastName = userModel.NAME.Split(",")[1],
+							FirstName = userModel.NAME,
+							LastName = "",
 							CreatedAt = DateTime.Now,
 							ActiveStatus = true,
 							DeleteStatus = false,
