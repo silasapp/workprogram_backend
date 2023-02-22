@@ -46,12 +46,12 @@ namespace Backend_UMR_Work_Program.Controllers
         // }
 
 
-        [HttpPost("ViewTable")]
+        [HttpGet("ViewTable")]
         public async Task<FileStreamResult> ViewTable(string tableName)
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection("Server=tcp:workprogramdemosvr.database.windows.net,1433;Initial Catalog=WorkProgramdemo;Persist Security Info=False;User ID=WorkProgadmin;Password=*123brandonetech#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"))
+                using (SqlConnection conn = new SqlConnection("Server=tcp:workprogram.database.windows.net,1433;Initial Catalog=workprogram;Persist Security Info=False;User ID=workprogram;Password=Br@nd0ne;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"))
                 {
                     await conn.OpenAsync();
                     string query0 = $"SELECT * FROM {tableName};";
@@ -65,7 +65,7 @@ namespace Backend_UMR_Work_Program.Controllers
                     wb.SaveAs(fs);
                     fs.Position = 0;
                     var file = new FormFile(fs, 0, fs.Length, "name", "WKPTable");
-                    return File(file.OpenReadStream(), file.ContentType, file.Name);
+                    return File(file.OpenReadStream(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file.Name);
                 }
                
             }
