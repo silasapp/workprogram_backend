@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 //using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Syncfusion.XlsIO.Implementation;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using static Backend_UMR_Work_Program.Models.GeneralModel;
@@ -176,7 +178,7 @@ namespace Backend_UMR_Work_Program.Controllers
 										  join comp in _context.ADMIN_COMPANY_INFORMATIONs on app.CompanyID equals comp.Id
 										  join cmt in _context.SBU_ApplicationComments on app.Id equals cmt.AppID
 										  join sbu in _context.StrategicBusinessUnits on cmt.SBU_ID equals sbu.Id
-										  where app.DeleteStatus != true && cmt.ActionStatus == GeneralModel.Initiated
+										  where app.DeleteStatus != true && cmt.ActionStatus == GeneralModel.Rejected
 										  && app.CompanyID == WKPCompanyNumber
 										  select new Application_Model
 										  {
@@ -699,59 +701,59 @@ namespace Backend_UMR_Work_Program.Controllers
 						{
 							foreach (var processFlow in getApplicationProcess)
 							{
-								//check if next SBU is planning and applications are still 
-
-								//var SBU = await (from sb in _context.StrategicBusinessUnits where sb.Id == processFlow.SBU_Id select sb).FirstOrDefaultAsync();
-
-								//if (SBU.SBU_Code == GeneralModel.PLANNING_CODE && processFlow.RoleName == GeneralModel.Reviewer)
-								//{
-								//	var AllStaffDesks = await _context.MyDesks.Where(a => a.AppId == appId && a.HasWork != true).ToListAsync();
-								//	if (AllStaffDesks.Count() == 1)
-								//	{
-								//		int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, processFlow);
-								//	}
-
-								//}
-								//else
-								//{
-								//	int saveStaffDesk = _helpersController.RecordStaffDesk(application.Id, processFlow, WKPCompanyEmail);
-								//}
-
-								//_helpersController.SaveHistory(application.Id, processFlow.StaffId, "Moved", comment);
-
 								var getStaffByTargetedRoleAndSBUs = await _helpersController.GetStaffByTargetRoleAndSBU((int)processFlow.TargetedToRole, (int)processFlow.TargetedToSBU);
 
-								var deskTemp = await _helpersController.GetStaffMyDesks(getStaffByTargetedRoleAndSBUs);
+								var deskTemp = await _helpersController.GetStaffMyDesks(getStaffByTargetedRoleAndSBUs, appId);
 
-								var desk = new MyDesk
+								if(deskTemp != null)
 								{
-									//save staff desk
-									StaffID = deskTemp.StaffID,
-									FromRoleId = processFlow.TriggeredByRole,
-									FromSBU = (int)processFlow.TriggeredBySBU,
-									FromStaffID = get_CurrentStaff.StaffID,
-									ProcessID = processFlow.ProccessID,
-									AppId = appId,
-									HasPushed = true,
-									HasWork = true,
-									CreatedAt = DateTime.Now,
-									UpdatedAt = DateTime.Now,
-									Comment = comment,
-									LastJobDate = DateTime.Now,
-									ProcessStatus = STAFF_DESK_STATUS.APPROVED,
+									deskTemp.FromRoleId = processFlow.TriggeredByRole;
+									deskTemp.FromSBU = (int)processFlow.TriggeredBySBU;
+									deskTemp.FromStaffID = get_CurrentStaff.StaffID;
+									deskTemp.ProcessID = processFlow.ProccessID;
+									deskTemp.AppId = appId;
+									deskTemp.HasPushed = false;
+									deskTemp.HasWork = true;
+									deskTemp.CreatedAt = DateTime.Now;
+									deskTemp.UpdatedAt = DateTime.Now;
+									deskTemp.Comment = comment;
+									deskTemp.LastJobDate = DateTime.Now;
+									deskTemp.ProcessStatus = STAFF_DESK_STATUS.APPROVED;
 
-								};
-
-								_context.MyDesks.Update(desk);
-
-								//}
-								var save = await _context.SaveChangesAsync();
-								if (save > 0)
+                                    _context.Update(deskTemp);
+                                }
+								else
 								{
-									var trigeredbyDeskId = await _helpersController.GetDeskIdByStaffIdAndAppId((int)staffId, appId);
+									var desk = new MyDesk
+									{
+										//save staff desk
+										StaffID = deskTemp.StaffID,
+										FromRoleId = processFlow.TriggeredByRole,
+										FromSBU = (int)processFlow.TriggeredBySBU,
+										FromStaffID = get_CurrentStaff.StaffID,
+										ProcessID = processFlow.ProccessID,
+										AppId = appId,
+										HasPushed = false,
+										HasWork = true,
+										CreatedAt = DateTime.Now,
+										UpdatedAt = DateTime.Now,
+										Comment = comment,
+										LastJobDate = DateTime.Now,
+										ProcessStatus = STAFF_DESK_STATUS.APPROVED,
 
-									var result = await _helpersController.DeleteDeskIdByDeskId(trigeredbyDeskId);
+									};
+
+									_context.MyDesks.Add(desk);
 								}
+
+                                var save = await _context.SaveChangesAsync();
+                                if (save > 0)
+                                {
+                                    //var trigeredbyDeskId = await _helpersController.GetDeskIdByStaffIdAndAppId((int)staffId, appId);
+                                    //var result = await _helpersController.DeleteDeskIdByDeskId(trigeredbyDeskId);
+
+                                    await _helpersController.UpdateDeskAfterPush(staffDesk, comment, STAFF_DESK_STATUS.APPROVED);
+                                }
 
                                 _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Approval", comment);
 
@@ -769,12 +771,6 @@ namespace Backend_UMR_Work_Program.Controllers
 
                                 _helpersController.LogMessages("Submission of application with REF : " + application.ReferenceNo, WKPCompanyEmail);
                                 return new WebApiResponse { ResponseCode = AppResponseCodes.Success, Message = $"Application for concession {concession.Concession_Held} has been pushed successfully.", StatusCode = ResponseCodes.Success };
-                                //}
-                                //else
-                                //{
-                                //    return BadRequest(new { message = "An error occured while trying to submit this application to a staff."});
-                                //}
-
                             }
                         }
 						else
@@ -848,9 +844,9 @@ namespace Backend_UMR_Work_Program.Controllers
                             {
                                 //save staff desk
                                 StaffID = targetStaffID,
-                                FromRoleId = sourceStaff.RoleID,
-                                FromSBU = (int)sourceStaff.Staff_SBU,
-                                FromStaffID = sourceStaff.StaffID,
+                                FromRoleId = sourceDesk.FromRoleId,
+                                FromSBU = sourceDesk.FromSBU,
+                                FromStaffID = sourceDesk.FromStaffID,
                                 //ProcessID = processFlow.ProccessID,
                                 AppId = appId,
                                 HasPushed = false,
@@ -862,21 +858,22 @@ namespace Backend_UMR_Work_Program.Controllers
                                 ProcessStatus = sourceDesk.ProcessStatus,
                             };
 
-							//await _context.MyDesks.AddAsync(desk);
+							await _context.MyDesks.AddAsync(desk);
                         }
 						else
 						{
 							targetDesk.StaffID = targetStaffID;
-							targetDesk.FromRoleId= sourceStaff.RoleID;
-							targetDesk.FromSBU = (int)sourceStaff.Staff_SBU;
-							targetDesk.FromStaffID = sourceStaff.StaffID;
+							targetDesk.FromRoleId= sourceDesk.FromRoleId;
+							targetDesk.FromSBU = sourceDesk.FromSBU;
+							targetDesk.FromStaffID = sourceDesk.FromStaffID;
 							targetDesk.AppId = appId;
 							targetDesk.HasWork = true;
 							targetDesk.UpdatedAt = DateTime.Now;
 							targetDesk.Comment = sourceDesk.Comment;
 							targetDesk.ProcessStatus = sourceDesk.ProcessStatus;
+							targetDesk.LastJobDate = DateTime.Now;
 
-							//_context.MyDesks.Update(targetDesk);
+							_context.MyDesks.Update(targetDesk);
 						}
 
 
@@ -884,6 +881,8 @@ namespace Backend_UMR_Work_Program.Controllers
                         if (save > 0)
                         {
                             var result = await _helpersController.DeleteDeskIdByDeskId(sourceDesk.DeskID);
+                            //await _helpersController.UpdateDeskAfterMove(sourceDesk, sourceDesk.Comment, STAFF_DESK_STATUS.MOVED);
+
                         }
 
                         _helpersController.SaveHistory(application.Id, sourceStaffID, sourceDesk.ProcessStatus, sourceDesk.Comment);
@@ -1162,8 +1161,6 @@ namespace Backend_UMR_Work_Program.Controllers
 						SBU_IDs_int = null;
 					}
 
-
-
                     foreach (var b in selectedApps)
                     {
                         int appId = b != "undefined" ? int.Parse(b) : 0;
@@ -1238,7 +1235,8 @@ namespace Backend_UMR_Work_Program.Controllers
                                 if (await _context.SaveChangesAsync() > 0)
                                 {
     
-                                    var result = await _helpersController.DeleteDeskIdByDeskId(deskID);
+                                    //var result = await _helpersController.DeleteDeskIdByDeskId(deskID);
+									await _helpersController.UpdateDeskAfterReject(staffDesk, comment, STAFF_DESK_STATUS.REJECTED);
 
                                     _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
 
@@ -1315,17 +1313,17 @@ namespace Backend_UMR_Work_Program.Controllers
 							//                where stf.StaffID == staffDesk.FromStaffID && stf.Staff_SBU == get_CurrentStaff.Staff_SBU && dsk.FromSBU == staffDesk.FromSBU && stf.DeleteStatus != true
 							//                select dsk).FirstOrDefault();
 
-							var prevDesk = await _context.MyDesks.Where<MyDesk>(d => d.StaffID == staffDesk.FromStaffID).FirstOrDefaultAsync();
+							var prevDesk = await _context.MyDesks.Where<MyDesk>(d => d.StaffID == staffDesk.FromStaffID && d.AppId == appId).FirstOrDefaultAsync();
 
                             if (SBU_IDs_int != null && SBU_IDs_int.Length > 0)
                             {
                                 foreach (var SBU in SBU_IDs_int)
                                 {
-                                    if (SBU > 0) //planning rejecting back to a particular SBU
+                                    if (SBU > 0)
                                     {
                                         prevDesk = (from dsk in _context.MyDesks
                                                     join stf in _context.staff on dsk.StaffID equals stf.StaffID
-                                                    where stf.StaffID == staffDesk.FromStaffID && stf.Staff_SBU == SBU && dsk.FromSBU == staffDesk.FromSBU && stf.DeleteStatus != true
+                                                    where stf.StaffID == staffDesk.FromStaffID && dsk.AppId == appId && stf.Staff_SBU == SBU && dsk.FromSBU == staffDesk.FromSBU && stf.DeleteStatus != true
                                                     select dsk).FirstOrDefault();
 										
 										
@@ -1371,7 +1369,9 @@ namespace Backend_UMR_Work_Program.Controllers
 										}
 
 
-                                        var result = await _helpersController.DeleteDeskIdByDeskId(deskID);
+                                        //var result = await _helpersController.DeleteDeskIdByDeskId(deskID);
+                                        await _helpersController.UpdateDeskAfterReject(staffDesk, comment, STAFF_DESK_STATUS.REJECTED);
+
 
                                         _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
 
@@ -1441,9 +1441,11 @@ namespace Backend_UMR_Work_Program.Controllers
 										prevDesk = desk;
                                     }
 
-                                    var result = await _helpersController.DeleteDeskIdByDeskId(deskID);
+                                    //var result = await _helpersController.DeleteDeskIdByDeskId(deskID);
+                                await _helpersController.UpdateDeskAfterReject(staffDesk, comment, STAFF_DESK_STATUS.REJECTED);
 
-                                    _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
+
+                                _helpersController.SaveHistory(application.Id, get_CurrentStaff.StaffID, "Rejection", comment);
 
                                     //send mail to staff
                                     var getStaff = (from stf in _context.staff

@@ -6,5 +6,6 @@
         public static string APPROVED = "APPROVED";
         public static string REJECTED = "REJECTED";
         public static string DELEGATED = "DELEGATED";
+        public static string MOVED = "MOVED";
     }
 }
