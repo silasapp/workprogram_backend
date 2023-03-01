@@ -51,7 +51,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection("Server=tcp:workprogram.database.windows.net,1433;Initial Catalog=workprogram;Persist Security Info=False;User ID=workprogram;Password=Br@nd0ne;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"))
+                using (SqlConnection conn = new SqlConnection("Server=tcp:staging-servers.database.windows.net,1433;Initial Catalog=workprogram;Persist Security Info=False;User ID=serveradmin;Password=*123*brandonetech#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"))
                 {
                     await conn.OpenAsync();
                     string query0 = $"SELECT * FROM {tableName};";
