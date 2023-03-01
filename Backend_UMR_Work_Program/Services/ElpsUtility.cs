@@ -102,15 +102,12 @@ namespace Backend_UMR_Work_Program.Services
 									staff.FirstName = elpsstaff.firstName;
 									staff.LastName = elpsstaff.lastName;
 									staff.StaffElpsID = elpsstaff.Id.ToString();
-									//staff.pho
 								} 
-								//user.FirstName = staff.firstName;
-								//staff.PHONE = elpsstaff();
+								
 								_context.staff.Update(staff);
 								var save = await _context.SaveChangesAsync();
-
 								company.Id = staff.AdminCompanyInfo_ID.Value;
-                                //await _userManager.UpdateAsync(user);
+                                
                             }
 							else
 							{
@@ -130,7 +127,6 @@ namespace Backend_UMR_Work_Program.Services
 										STATUS_ = "Activated",
 										COMPANY_NAME = "Admin"
 									};
-
 									await CreateStaticAdmin(staticAdmin);
 								}
 							}
@@ -157,7 +153,6 @@ namespace Backend_UMR_Work_Program.Services
 
 					if (company != null)
 					{
-
 						response = new WebApiResponse
 						{
 							ResponseCode = AppResponseCodes.Success,
@@ -180,9 +175,7 @@ namespace Backend_UMR_Work_Program.Services
 			}
 			catch (Exception ex)
 			{
-
 				response = new WebApiResponse { ResponseCode = AppResponseCodes.InternalError, Message = "Internal error occured " + ex.ToString(), StatusCode = ResponseCodes.InternalError };
-
 			}
 			return response;
 		}
