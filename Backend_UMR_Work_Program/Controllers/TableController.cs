@@ -51,6 +51,7 @@ namespace Backend_UMR_Work_Program.Controllers
         {
             try
             {
+                var dell = _configuration["Data:Wkpconnect:ConnectionString"];
                 using (SqlConnection conn = new SqlConnection(_configuration["Data:Wkpconnect:ConnectionString"]))
                 {
                     await conn.OpenAsync();
