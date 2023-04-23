@@ -27,23 +27,23 @@ namespace Backend_UMR_Work_Program.Controllers
 
 
 
-        // [HttpPost("REMOVE_USER")]
-        // public async Task<int> REMOVE_USER()
-        // {
-        //     try
-        //     {
-        //         var data = (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.EMAIL == "damilare.olanrewaju@brandonetech.com" select c).ToList();
+        [HttpPost("REMOVE_USER")]
+        public async Task<int> REMOVE_USER()
+        {
+            try
+            {
+                var data = (from c in _context.ADMIN_COMPANY_INFORMATIONs where c.EMAIL == "edori.p.e@nuprc.gov.ng" select c).ToList();
 
-        //         _context.RemoveRange(data);
-        //         return await _context.SaveChangesAsync();
-               
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         return 0;
+                _context.RemoveRange(data);
+                return await _context.SaveChangesAsync();
 
-        //     }
-        // }
+            }
+            catch (Exception e)
+            {
+                return 0;
+
+            }
+        }
 
 
         [HttpGet("ViewTable")]

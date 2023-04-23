@@ -13,6 +13,9 @@
         "packagesPath": "C:\\Users\\prisc\\.nuget\\packages\\",
         "outputPath": "C:\\Workcode\\WorkProgram_BEnd\\Backend_UMR_Work_Program\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
           "C:\\Users\\prisc\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
